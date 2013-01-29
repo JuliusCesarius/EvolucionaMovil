@@ -1,0 +1,24 @@
+﻿@model EvolucionaMovil.Models.CuentaVM
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h1>Delete</h1>
+
+<h3>Are you sure you want to delete this?</h3>
+<fieldset>
+    <legend>Cuenta</legend>
+
+    <div class="display-label">TipoCuenta</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.TipoCuenta)
+    </div>
+
+</fieldset>
+@using (Html.BeginForm()) {
+    <p>
+        <input type="submit" class="freshbutton-blue" value="Delete" /> |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+}

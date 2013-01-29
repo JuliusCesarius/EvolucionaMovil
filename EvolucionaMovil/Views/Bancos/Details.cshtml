@@ -1,0 +1,26 @@
+﻿@model EvolucionaMovil.Models.BancoVM
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h1>Details</h1>
+
+<fieldset>
+    <legend>Banco</legend>
+
+    <div class="display-label">Nombre</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Nombre)
+    </div>
+
+    <div class="display-label">FechaCreacion</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.FechaCreacion)
+    </div>
+
+</fieldset>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id=Model.BancoId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

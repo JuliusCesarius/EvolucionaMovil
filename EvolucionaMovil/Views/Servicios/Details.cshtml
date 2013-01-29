@@ -1,0 +1,31 @@
+﻿@model EvolucionaMovil.Models.ServicioVM
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h1>Details</h1>
+
+<fieldset>
+    <legend>Servicio</legend>
+
+    <div class="display-label">Nombre</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Nombre)
+    </div>
+
+    <div class="display-label">Imagen</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Imagen)
+    </div>
+
+    <div class="display-label">FechaCreacion</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.FechaCreacion)
+    </div>
+
+</fieldset>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id=Model.ServicioId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

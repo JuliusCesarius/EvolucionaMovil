@@ -1,0 +1,87 @@
+﻿@using EvolucionaMovil.Models.Helpers
+@model EvolucionaMovil.Models.ReporteDepositoVM
+@section Javascript{
+    <script src="@Url.Content("~/Scripts/ReportarDeposito.js")" type="text/javascript"></script>
+}
+@{
+    ViewBag.Title = "Reportar Depósito";
+}
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script type="text/javascript" src="http://select-box.googlecode.com/svn/tags/0.2/jquery.selectbox-0.2.min.js"></script>
+<link href="@Url.Content("~/Content/jquery.selectbox-0.2.css")" rel="stylesheet" type="text/css" />
+<div class="formLeft reportadeposito"></div>
+<div class="formRight">
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true)
+    <fieldset>
+        <legend>Reportar Depósito</legend>        
+        <div class="editor-label"><label for="BancoId">Banco</label></div>        
+        <div class="editor-field">
+            @Html.DropDownListFor(model => model.BancoId, new SelectList(ViewBag.Bancos, "BancoId", "Nombre", null), "")
+            @Html.ValidationMessageFor(model => model.BancoId)
+        </div>        
+        <div class="editor-label"><label for="CuentaId">Cuenta</label></div>        
+        <div class="editor-field">
+            <select id="CuentaId" name="CuentaId"></select>
+            <input type="hidden" id="hddCuentaId" value="@Model.CuentaId" />
+            <input type="hidden" id="hddCuentas" value="@Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.Cuentas)"/>
+            @Html.ValidationMessageFor(model => model.CuentaId)
+        </div>
+        <div class="editor-label">
+            <label for="Referencia">Referencia</label>
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Referencia)
+            @Html.ValidationMessageFor(model => model.Referencia)
+        </div>
+        <div class="editor-label">
+            <label for="Monto">Monto</label>
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.Monto, new { @class = "money" })
+            @Html.ValidationMessageFor(model => model.Monto)
+        </div>
+        <div class="editor-label">
+            <label for="Fecha">Fecha</label>
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Fecha)
+            @Html.ValidationMessageFor(model => model.Fecha)
+        </div>
+        @if (Model.CuentasDeposito.Count > 0)
+        {
+                 <div @(Model.CuentasDeposito.Count == 1? "style=display:none":"")>
+                <div>Indique de qué forma será aplicado el depósito</div>
+                    @for (var i = 0; i < Model.CuentasDeposito.Count; i++)
+                    {
+                        <div class="cuentadeposito" >
+                            <label>@Model.CuentasDeposito.ToList()[i].Nombre</label>
+                            <input type="text" name="CuentasDeposito[@i].Monto" id="CuentasDeposito[@i].Monto" value="@Model.CuentasDeposito.ToList()[i].Monto" class="small"/>
+                            <input type="hidden" name="CuentasDeposito[@i].CuentaId" value="@Model.CuentasDeposito.ToList()[i].CuentaId"/>
+                            <input type="hidden" name="CuentasDeposito[@i].Nombre" value="@Model.CuentasDeposito.ToList()[i].Nombre"/>
+                        </div>
+                    }
+            </div>
+       }
+        
+        <p class="nota">Aquí van algunas advertencias y avisos correspondientes al reporte de los depósitos que debe estar conciente el usuario al mommento de estar reportando el servicio.</p>
+        <input type="checkbox" id="acceptTerms"/>
+        <label for="acceptTerms" class="checkbox">Acepto las <a>condiciones de Evoluciona Móvil ®</a></label>
+        @if (ViewBag.Mensajes != null && ViewBag.Mensajes.Count > 0)
+        {
+            <div class="message"><ul>
+            @foreach (var mensaje in ViewBag.Mensajes)
+            {
+                <li>@mensaje</li>
+            }
+            </ul>
+            </div>
+        }
+        <p>
+            <input type="submit" id="btnSave" class="freshbutton-blue" class="freshbutton-blue" value="Guardar" />
+        </p>
+    </fieldset>
+}
+</div>

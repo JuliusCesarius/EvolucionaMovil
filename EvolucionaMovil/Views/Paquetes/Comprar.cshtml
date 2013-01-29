@@ -1,0 +1,47 @@
+﻿@model IEnumerable<EvolucionaMovil.Models.PaqueteVM>
+@section Javascript{
+    <script src="@Url.Content("~/Scripts/Paquetes-comprar.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.formatCurrency.js")" type="text/javascript"></script>
+}
+@{
+    ViewBag.Title = "Index";
+}
+@using (Html.BeginForm())
+{
+<div class="w700 center">
+    <div  class="resumen fl">
+        <h1>Compra de Paquetes</h1>
+        <a href="/Paquetes/Compra">¿Qué son los paquetes?</a>
+    </div>
+    <div  class="resumen fr saldos">
+        <h3>Saldo Actual <span>@ViewData["SaldoActual"]</span></h3>
+        <h3>Eventos <span>@ViewData["Eventos"]</span></h3>
+    </div>
+    <div class="clear"></div>
+
+    <div id="grdPaquetes">
+        <div class="sgBody">
+        @{var i = -1; var n = 0;}
+
+        @foreach (var item in Model)
+        {
+            n++;
+            i++;
+            <div class="sgRow">
+                <span class="paq-name">Paquete @n</span>
+                <span class="paq-eventos">Eventos <span class="fcb">@item.Creditos</span></span>
+                <span class="paq-precio">Precio <span class="fcb">@item.PrecioString</span></span>
+                <span class="paq-precioevento">Precio por Evento <span class="fcb">@item.PrecioPorEvento</span></span>
+                <input type="hidden" name="[@i].PaqueteId" value="@item.PaqueteId" />
+                <input type="checkbox" value="@item.Precio" />
+                <input type="hidden" class="hddSelected" name="[@i].Selected" />
+            </div>
+        }
+        </div>
+    </div>
+    <div class="paq-resumen">
+        <h3>Saldo Final <span class="fcb"><span id="saldoActual" >@ViewData["SaldoActual"]</span> - </span><span id="subtotal" class="fcb fwb">$0.00</span> = <span id="total" class="fwb">@ViewData["SaldoActual"]</span></h3>
+        <input type="submit" class="freshbutton-blue" class="freshbutton-blue" value="Comprar"/>
+    </div>
+</div>
+}

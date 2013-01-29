@@ -1,0 +1,73 @@
+﻿@model EvolucionaMovil.Models.CuentaBancariaVM
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h1>Create</h1>
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+
+@using (Html.BeginForm()) {
+    @Html.ValidationSummary(true)
+    <fieldset>
+        <legend>CuentaBancaria</legend>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.NumeroCuenta)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.NumeroCuenta)
+            @Html.ValidationMessageFor(model => model.NumeroCuenta)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Nombre)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Nombre)
+            @Html.ValidationMessageFor(model => model.Nombre)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Titular)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Titular)
+            @Html.ValidationMessageFor(model => model.Titular)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.ClabeInterbancaria)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.ClabeInterbancaria)
+            @Html.ValidationMessageFor(model => model.ClabeInterbancaria)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.NumeroDeTarjeta)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.NumeroDeTarjeta)
+            @Html.ValidationMessageFor(model => model.NumeroDeTarjeta)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.RFC)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.RFC)
+            @Html.ValidationMessageFor(model => model.RFC)
+        </div>
+
+        <p>
+            <input type="submit" class="freshbutton-blue" value="Create" />
+        </p>
+    </fieldset>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>

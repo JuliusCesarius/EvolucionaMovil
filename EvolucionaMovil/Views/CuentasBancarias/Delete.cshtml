@@ -1,0 +1,53 @@
+﻿@model EvolucionaMovil.Models.CuentaBancariaVM
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h1>Delete</h1>
+
+<h3>Are you sure you want to delete this?</h3>
+<fieldset>
+    <legend>CuentaBancaria</legend>
+
+    <div class="display-label">NumeroCuenta</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.NumeroCuenta)
+    </div>
+
+    <div class="display-label">Nombre</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Nombre)
+    </div>
+
+    <div class="display-label">Titular</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Titular)
+    </div>
+
+    <div class="display-label">ClabeInterbancaria</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.ClabeInterbancaria)
+    </div>
+
+    <div class="display-label">NumeroDeTarjeta</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.NumeroDeTarjeta)
+    </div>
+
+    <div class="display-label">RFC</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.RFC)
+    </div>
+
+    <div class="display-label">FechaCreacion</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.FechaCreacion)
+    </div>
+</fieldset>
+@using (Html.BeginForm()) {
+    <p>
+        <input type="submit" class="freshbutton-blue" value="Delete" /> |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+}

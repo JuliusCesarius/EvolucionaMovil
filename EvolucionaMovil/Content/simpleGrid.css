@@ -1,0 +1,82 @@
+﻿.sgGrid
+{   
+    font-size:14px;
+}
+.sgHeader
+{
+    padding:5px;
+    padding-left:7px;
+    height:20px;
+    color:#fff;
+    border-top:1px #2270ab solid;
+    border-right:1px #18639a solid;
+    border-bottom:1px #0f568b solid;
+    border-left:1px #18639a solid;
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr="#41a5d1",endColorstr="#178bbf");
+    background: -webkit-gradient(linear, left top, left bottom, from(#41a5d1), to(#178bbf));
+    text-shadow:#355782 0 1px 2px;
+    -webkit-text-shadow:#355782 0 1px 2px;
+    -moz-text-shadow:#355782 0 1px 2px;
+    -moz-box-shadow:0 1px 1px rgba(0,0,0,0.3),inset 0 1px 0 #83c5f1;
+    -webkit-box-shadow:0 1px 1px rgba(0,0,0,0.3),inset 0 1px 0 #83c5f1;
+    box-shadow:0 1px 1px rgba(0,0,0,0.3),inset 0 1px 0 #83c5f1;
+}
+.sgColumn
+{    
+    float:left;
+    overflow:hidden;
+}
+.sgBody
+{
+}
+.sgRow
+{
+    border: 1px solid #ddd;
+    padding: 5px;
+    padding-left: 7px;
+    clear: both;
+    height: 20px;
+    overflow: hidden;
+}
+.sgRow:hover
+{
+    background-color:#EFF2F4;
+}
+.sgCell
+{
+    float:left;
+    overflow:hidden;
+    height:20px;
+}
+.sgSelRow{background-color:#DFEDF4}
+.sgHeader, .sgRow
+{ 
+-webkit-border-radius:3px;
+-moz-border-radius:3px;
+-ms-border-radius:3px;
+-o-border-radius:3px;
+border-radius:3px;   
+margin-bottom:5px;
+}
+.sgCell, .sgColumn
+{
+    width:100px;
+    text-overflow: ellipsis;
+}
+.sgPager a,.sgPager a:link,.sgPager a:visited
+{
+    display:inline-block;
+    padding:.5em 1em;
+    text-decoration:none;
+    border:1px solid #DBE4EE;
+}
+.sgPager a.selected,.sgPager a.selected:hover
+{
+    background:none;
+    border:none;
+    color:#DBE4EE;
+}
+.sgPager a:hover
+{
+    background-color:#DBE4EE;
+}

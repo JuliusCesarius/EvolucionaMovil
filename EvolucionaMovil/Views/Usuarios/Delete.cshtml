@@ -1,0 +1,48 @@
+﻿@model EvolucionaMovil.Models.UsuarioVM
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h1>Delete</h1>
+
+<h3>Are you sure you want to delete this?</h3>
+<fieldset>
+    <legend>Usuario</legend>
+
+    <div class="display-label">RolId</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.RolId)
+    </div>
+
+    <div class="display-label">Email</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Email)
+    </div>
+
+    <div class="display-label">Password</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Password)
+    </div>
+
+    <div class="display-label">Bloqueado</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Bloqueado)
+    </div>
+
+    <div class="display-label">FechaCreacion</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.FechaCreacion)
+    </div>
+
+    <div class="display-label">Baja</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Baja)
+    </div>
+</fieldset>
+@using (Html.BeginForm()) {
+    <p>
+        <input type="submit" class="freshbutton-blue" value="Delete" /> |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+}

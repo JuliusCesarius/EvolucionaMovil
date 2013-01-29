@@ -1,0 +1,89 @@
+﻿@model EvolucionaMovil.Models.PayCenterVM
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h1>Delete</h1>
+
+<h3>Are you sure you want to delete this?</h3>
+<fieldset>
+    <legend>PayCenter</legend>
+
+    <div class="display-label">Prospecto</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Prospecto.Email)
+    </div>
+
+    <div class="display-label">Usuario</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Usuario.Email)
+    </div>
+
+    <div class="display-label">IFE</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.IFE)
+    </div>
+
+    <div class="display-label">Comprobante</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Comprobante)
+    </div>
+
+    <div class="display-label">Nombre</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Nombre)
+    </div>
+
+    <div class="display-label">Representante</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Representante)
+    </div>
+
+    <div class="display-label">Domicilio</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Domicilio)
+    </div>
+
+    <div class="display-label">CP</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.CP)
+    </div>
+
+    <div class="display-label">Celular</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Celular)
+    </div>
+
+    <div class="display-label">Telefono</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Telefono)
+    </div>
+
+    <div class="display-label">Email</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Email)
+    </div>
+
+    <div class="display-label">Email2</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Email2)
+    </div>
+
+    <div class="display-label">FechaIngreso</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.FechaIngreso)
+    </div>
+
+    <div class="display-label">FechaCreacion</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.FechaCreacion)
+    </div>
+
+</fieldset>
+@using (Html.BeginForm()) {
+    <p>
+        <input type="submit" class="freshbutton-blue" value="Delete" /> |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+}

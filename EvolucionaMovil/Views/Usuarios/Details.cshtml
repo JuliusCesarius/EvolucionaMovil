@@ -1,0 +1,41 @@
+﻿@model EvolucionaMovil.Models.UsuarioVM
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h1>Details</h1>
+
+<fieldset>
+    <legend>Usuario</legend>
+
+    <div class="display-label">RolId</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.RolId)
+    </div>
+
+    <div class="display-label">Email</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Email)
+    </div>
+
+    <div class="display-label">Password</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Password)
+    </div>
+
+    <div class="display-label">Bloqueado</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Bloqueado)
+    </div>
+
+    <div class="display-label">FechaCreacion</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.FechaCreacion)
+    </div>
+
+</fieldset>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id=Model.UsuarioId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

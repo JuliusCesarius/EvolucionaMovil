@@ -1,0 +1,72 @@
+﻿@model IEnumerable<EvolucionaMovil.Models.CuentaBancariaVM>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table>
+    <tr>
+        <th>
+            NumeroCuenta
+        </th>
+        <th>
+            Nombre
+        </th>
+        <th>
+            Titular
+        </th>
+        <th>
+            ClabeInterbancaria
+        </th>
+        <th>
+            NumeroDeTarjeta
+        </th>
+        <th>
+            RFC
+        </th>
+        <th>
+            FechaCreacion
+        </th>
+        <th>
+            Baja
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.NumeroCuenta)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Nombre)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Titular)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ClabeInterbancaria)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.NumeroDeTarjeta)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.RFC)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.FechaCreacion)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+            @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+            @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+        </td>
+    </tr>
+}
+
+</table>

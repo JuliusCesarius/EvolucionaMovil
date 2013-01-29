@@ -1,0 +1,39 @@
+﻿@model EvolucionaMovil.Models.PaqueteVM
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h1>Delete</h1>
+
+<h3>Are you sure you want to delete this?</h3>
+<fieldset>
+    <legend>Paquete</legend>
+
+    <div class="display-label">Creditos</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Creditos)
+    </div>
+
+    <div class="display-label">Precio</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Precio)
+    </div>
+
+    <div class="display-label">FechaVencimiento</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.FechaVencimiento)
+    </div>
+
+    <div class="display-label">FechaCreacion</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.FechaCreacion)
+    </div>
+
+</fieldset>
+@using (Html.BeginForm()) {
+    <p>
+        <input type="submit" class="freshbutton-blue" value="Delete" /> |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+}

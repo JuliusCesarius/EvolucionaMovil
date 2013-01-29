@@ -1,0 +1,39 @@
+﻿@model EvolucionaMovil.Models.ReporteDepositoVM
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Detalle</h2>
+
+<fieldset>
+    <legend>Depósito</legend>
+
+    <div class="display-label">Banco</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Banco)
+    </div>
+
+    <div class="display-label">Cuenta</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Cuenta)
+    </div>
+
+    <div class="display-label">Referencia</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Referencia)
+    </div>
+
+    <div class="display-label">Monto</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Monto)
+    </div>
+
+    <div class="display-label">Fecha</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Fecha)
+    </div>
+</fieldset>
+<p>
+    <input type="button" class="freshbutton-blue" class="freshbutton-blue" value="Aceptar" onclick="history.back();" />
+</p>

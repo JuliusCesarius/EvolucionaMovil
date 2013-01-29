@@ -1,0 +1,41 @@
+﻿@model IEnumerable<EvolucionaMovil.Models.BancoVM>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table id="grdBancos">
+    <tr>
+        <th width="200">
+            Nombre
+        </th>
+        <th>
+            FechaCreacion
+        </th>
+        <th>
+            Baja
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Nombre)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.FechaCreacion)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.BancoId }) |
+            @Html.ActionLink("Details", "Details", new { id=item.BancoId }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.BancoId })
+        </td>
+    </tr>
+}
+
+</table>

@@ -1,0 +1,54 @@
+﻿@model IEnumerable<EvolucionaMovil.Models.PaqueteVM>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table>
+    <tr>
+        <th>
+            Creditos
+        </th>
+        <th>
+            Precio
+        </th>
+        <th>
+            FechaVencimiento
+        </th>
+        <th>
+            FechaCreacion
+        </th>
+        <th>
+            Baja
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Creditos)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Precio)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.FechaVencimiento)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.FechaCreacion)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.PaqueteId }) |
+            @Html.ActionLink("Details", "Details", new { id=item.PaqueteId }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.PaqueteId })
+        </td>
+    </tr>
+}
+
+</table>
