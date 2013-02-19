@@ -1,0 +1,46 @@
+﻿@model EvolucionaMovil.Models.AbonoVM
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<fieldset>
+    <legend>Abono</legend>
+
+    <div class="display-label">PayCenter</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.PayCenter.IFE)
+    </div>
+    
+    <div class="display-label">Monto</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Monto)
+    </div>
+
+    <div class="display-label">FechaPago</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.FechaPago)
+    </div>
+
+    <div class="display-label">Referencia</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Referencia)
+    </div>
+
+    <div class="display-label">EstatusId</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.EstatusId)
+    </div>
+
+    <div class="display-label">FechaCreacion</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.FechaCreacion)
+    </div>
+
+</fieldset>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id=Model.AbonoId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

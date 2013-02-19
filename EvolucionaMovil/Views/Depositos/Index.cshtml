@@ -1,0 +1,63 @@
+﻿@model IEnumerable<EvolucionaMovil.Models.AbonoVM>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Reportar Depósito", "Report")
+</p>
+<table>
+    <tr>
+        <th>
+            PayCenter
+        </th>
+        <th>
+            Monto
+        </th>
+        <th>
+            FechaPago
+        </th>
+        <th>
+            Referencia
+        </th>
+        <th>
+            EstatusId
+        </th>
+        <th>
+            FechaCreacion
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.PayCenter.IFE)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Monto)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.FechaPago)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Referencia)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EstatusId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.FechaCreacion)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.AbonoId }) |
+            @Html.ActionLink("Details", "Details", new { id=item.AbonoId }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.AbonoId })
+        </td>
+    </tr>
+}
+
+</table>
