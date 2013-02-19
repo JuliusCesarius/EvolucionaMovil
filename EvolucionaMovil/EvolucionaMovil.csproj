@@ -417,7 +417,7 @@
     <Content Include="Views\EstadoDeCuenta\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Paquetes\Comprar.cshtml" />
+    <Content Include="Views\Paquetes\Buy.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Web.Debug.config">

@@ -24,7 +24,7 @@ namespace EvolucionaMovil.Controllers
             return View(repository.ListAll().ToListOfDestination<PaqueteVM>());
         }
 
-        public ViewResult Comprar()
+        public ViewResult Buy()
         {
             //TODO:Obtener paycenterId de cache or something like that
             ViewData["Eventos"] = repository.GetEventosByPayCenter(1);
@@ -36,7 +36,7 @@ namespace EvolucionaMovil.Controllers
         }
 
         [HttpPost]
-        public ViewResult Comprar(IEnumerable<PaqueteVM> model)
+        public ViewResult Buy(IEnumerable<PaqueteVM> model)
         {
             var selected = model.Where(x => x.Selected);
             //TODO:Pasar el payCenterId
