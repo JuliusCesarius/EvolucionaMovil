@@ -14,7 +14,7 @@ namespace EvolucionaMovil.Attributes
         {
             _mask = mask;
         }
-
+          
         public string Mask
         {
             get { return _mask; }
