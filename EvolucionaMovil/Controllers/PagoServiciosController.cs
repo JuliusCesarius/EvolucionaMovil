@@ -63,7 +63,8 @@ namespace EvolucionaMovil.Controllers
                 Mapper.Map(pagoVM, pago);
                 repository.Add(pago);
                 repository.Save();
-                return RedirectToAction("Index");  
+                return RedirectToAction("Index");
+                //Eliminar este comentario
             }
 
             return View(pagoVM);
