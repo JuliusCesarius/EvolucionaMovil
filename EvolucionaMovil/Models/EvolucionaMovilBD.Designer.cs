@@ -31,6 +31,7 @@ using System.Runtime.Serialization;
 [assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_Cuentas_PayCenters", "PayCenter", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.PayCenter), "Cuenta", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EvolucionaMovil.Models.Cuenta), true)]
 [assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_Movimientos_Cuentas", "Cuenta", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.Cuenta), "Movimiento", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EvolucionaMovil.Models.Movimiento), true)]
 [assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_DetallePagos_Pagos", "Pago", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.Pago), "DetallePago", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EvolucionaMovil.Models.DetallePago), true)]
+[assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_Pagos_PayCenters", "PayCenter", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.PayCenter), "Pago", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EvolucionaMovil.Models.Pago), true)]
 [assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_Tickets_Pagos", "Pago", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.Pago), "Ticket", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(EvolucionaMovil.Models.Ticket), true)]
 
 #endregion
@@ -3042,18 +3043,20 @@ namespace EvolucionaMovil.Models
         /// <param name="pagoId">Initial value of the PagoId property.</param>
         /// <param name="servicioId">Initial value of the ServicioId property.</param>
         /// <param name="payCenterId">Initial value of the PayCenterId property.</param>
+        /// <param name="movimientoId">Initial value of the MovimientoId property.</param>
         /// <param name="clienteNombre">Initial value of the ClienteNombre property.</param>
         /// <param name="importe">Initial value of the Importe property.</param>
         /// <param name="servicio">Initial value of the Servicio property.</param>
         /// <param name="status">Initial value of the Status property.</param>
         /// <param name="fechaVencimiento">Initial value of the FechaVencimiento property.</param>
         /// <param name="fechaCreacion">Initial value of the FechaCreacion property.</param>
-        public static Pago CreatePago(global::System.Int32 pagoId, global::System.Int32 servicioId, global::System.Int32 payCenterId, global::System.String clienteNombre, global::System.Decimal importe, global::System.String servicio, global::System.Int16 status, global::System.DateTime fechaVencimiento, global::System.DateTime fechaCreacion)
+        public static Pago CreatePago(global::System.Int32 pagoId, global::System.Int32 servicioId, global::System.Int32 payCenterId, global::System.Int32 movimientoId, global::System.String clienteNombre, global::System.Decimal importe, global::System.String servicio, global::System.Int16 status, global::System.DateTime fechaVencimiento, global::System.DateTime fechaCreacion)
         {
             Pago pago = new Pago();
             pago.PagoId = pagoId;
             pago.ServicioId = servicioId;
             pago.PayCenterId = payCenterId;
+            pago.MovimientoId = movimientoId;
             pago.ClienteNombre = clienteNombre;
             pago.Importe = importe;
             pago.Servicio = servicio;
@@ -3140,6 +3143,30 @@ namespace EvolucionaMovil.Models
         private global::System.Int32 _PayCenterId;
         partial void OnPayCenterIdChanging(global::System.Int32 value);
         partial void OnPayCenterIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 MovimientoId
+        {
+            get
+            {
+                return _MovimientoId;
+            }
+            set
+            {
+                OnMovimientoIdChanging(value);
+                ReportPropertyChanging("MovimientoId");
+                _MovimientoId = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("MovimientoId");
+                OnMovimientoIdChanged();
+            }
+        }
+        private global::System.Int32 _MovimientoId;
+        partial void OnMovimientoIdChanging(global::System.Int32 value);
+        partial void OnMovimientoIdChanged();
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -3307,6 +3334,44 @@ namespace EvolucionaMovil.Models
                 if ((value != null))
                 {
                     ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<DetallePago>("EvolucionaMovilBDModel.FK_DetallePagos_Pagos", "DetallePago", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("EvolucionaMovilBDModel", "FK_Pagos_PayCenters", "PayCenter")]
+        public PayCenter PayCenter
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<PayCenter>("EvolucionaMovilBDModel.FK_Pagos_PayCenters", "PayCenter").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<PayCenter>("EvolucionaMovilBDModel.FK_Pagos_PayCenters", "PayCenter").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<PayCenter> PayCenterReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<PayCenter>("EvolucionaMovilBDModel.FK_Pagos_PayCenters", "PayCenter");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<PayCenter>("EvolucionaMovilBDModel.FK_Pagos_PayCenters", "PayCenter", value);
                 }
             }
         }
@@ -4799,6 +4864,28 @@ namespace EvolucionaMovil.Models
                 if ((value != null))
                 {
                     ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Cuenta>("EvolucionaMovilBDModel.FK_Cuentas_PayCenters", "Cuenta", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("EvolucionaMovilBDModel", "FK_Pagos_PayCenters", "Pago")]
+        public EntityCollection<Pago> Pagos
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Pago>("EvolucionaMovilBDModel.FK_Pagos_PayCenters", "Pago");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Pago>("EvolucionaMovilBDModel.FK_Pagos_PayCenters", "Pago", value);
                 }
             }
         }
