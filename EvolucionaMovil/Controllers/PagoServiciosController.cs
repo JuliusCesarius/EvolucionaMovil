@@ -146,7 +146,7 @@ namespace EvolucionaMovil.Controllers
                     Monto = x.Importe.ToString("C"),
                     FechaCreacion = x.FechaCreacion.ToShortDateString(),
                     FechaVencimiento = x.FechaVencimiento.ToShortDateString(),
-                    Status = x.Estatus
+                    Status = x.Status.ToString()
                 });
             //TODO:Leer Eventos del paycenter
             ViewData["Eventos"] = 56;

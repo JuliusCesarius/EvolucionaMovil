@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Web.Security;
 namespace EvolucionaMovil.Models
 {
     public class PayCenterVM
@@ -29,7 +30,7 @@ namespace EvolucionaMovil.Models
         public string Representante { get; set; }
         [Required]
         public string Telefono { get; set; }
-        public Usuario Usuario { get; set; }
+        public MembershipUser Usuario { get; set; }
         public int UsuarioId { get; set; }
     }
 }

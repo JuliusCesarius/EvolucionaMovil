@@ -76,7 +76,8 @@ namespace EvolucionaMovil.Controllers
             PayCenterVM paycenterVM = new PayCenterVM();
             Mapper.Map(paycenter, paycenterVM);
             ViewBag.ProspectoId = new SelectList(repository.LoadProspectos(), "ProspectoId", "Email", paycenter.ProspectoId);
-            ViewBag.UsuarioId = new SelectList(repository.LoadUsuarios(), "UsuarioId", "Email", paycenter.UsuarioId);
+            //todo:evaluar si es necesario leer el UsuarioId, ya que ahora es el UserName
+            //ViewBag.UsuarioId = new SelectList(repository.LoadUsuarios(), "UsuarioId", "Email", paycenter.UsuarioId);
             return View(paycenterVM);
         }
 

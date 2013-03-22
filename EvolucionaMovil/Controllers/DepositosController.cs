@@ -69,7 +69,7 @@ namespace EvolucionaMovil.Controllers
                 {
                     BancoId = model.BancoId,
                     CuentaBancariaId = model.CuentaId,
-                    EstatusId = enumEstatusMovimiento.Procesando.GetHashCode(),
+                    Status = (Int16)enumEstatusMovimiento.Procesando,
                     FechaCreacion = DateTime.Now,
                     FechaPago = (DateTime)model.Fecha,
                     Monto = (Decimal)model.Monto,

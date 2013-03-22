@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using EvolucionaMovil.Models;
 using cabinet.patterns.clases;
+using System.Web.Security;
 
 namespace EvolucionaMovil.Repositories
 {
@@ -18,9 +19,10 @@ namespace EvolucionaMovil.Repositories
             : base(context)
         {
         }
-        public IEnumerable<Usuario> LoadUsuarios()
+        public IEnumerable<MembershipUser> LoadUsuarios()
         {
-            return base.context.Usuarios.ToList();
+            //todo:Obtener usuario. Aunque no recuerdo para qué, pero la tabla se eliminó y ahora lee los del membership
+            return new List<MembershipUser>();
         }
         public IEnumerable<Cuenta> LoadTipoCuentas(Int32 PayCenterId)
         {

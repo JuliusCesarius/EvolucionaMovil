@@ -37,7 +37,6 @@ namespace cabinet.processPolicies.MVC.Models.Helpers
             Mapper.CreateMap<Prospecto , ProspectoVM>();
             Mapper.CreateMap<Servicio, ServicioVM>();
             Mapper.CreateMap<Ticket, TicketVM>();
-            Mapper.CreateMap<Usuario, UsuarioVM>();
 
             //******************ViewModel to Entity********************//
             Mapper.CreateMap<AbonoVM, Abono>();
@@ -57,7 +56,6 @@ namespace cabinet.processPolicies.MVC.Models.Helpers
             Mapper.CreateMap<ServicioVM, Servicio>()
                     .ForMember(m => m.DetalleServicios, opt => opt.Ignore());
             Mapper.CreateMap<TicketVM, Ticket>();
-            Mapper.CreateMap<UsuarioVM, Usuario>();
         }
     }
 }

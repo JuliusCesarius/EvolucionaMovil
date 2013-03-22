@@ -121,7 +121,6 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BancosController.cs" />
     <Compile Include="Controllers\DepositosController.cs" />
-    <Compile Include="Controllers\UsuariosController.cs" />
     <Compile Include="Controllers\EstadoDeCuentaController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PagoServiciosController.cs" />
@@ -167,7 +166,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\BancosRepository.cs" />
     <Compile Include="Repositories\AbonosRepository.cs" />
-    <Compile Include="Repositories\CuentasBancariasRepository.cs" />
     <Compile Include="Repositories\EstadoDeCuentaRepository.cs" />
     <Compile Include="Repositories\PagoServiciosRepository.cs" />
     <Compile Include="Repositories\PaquetesRepository.cs" />
