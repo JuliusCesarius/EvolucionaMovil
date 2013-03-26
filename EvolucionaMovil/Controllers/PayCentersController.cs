@@ -524,7 +524,7 @@ namespace EvolucionaMovil.Controllers
             //ToDo: Activar validación de IFE y Comprobante cuando se agregue la funcionalidad
             if (string.IsNullOrWhiteSpace(paycenterVM.Nombre) || string.IsNullOrWhiteSpace(paycenterVM.Representante) ||
                 string.IsNullOrWhiteSpace(paycenterVM.UserName) || string.IsNullOrWhiteSpace(paycenterVM.Telefono) ||
-                string.IsNullOrWhiteSpace(paycenterVM.Email) || string.IsNullOrWhiteSpace(paycenterVM.Email2) ||
+                string.IsNullOrWhiteSpace(paycenterVM.Email) || // || string.IsNullOrWhiteSpace(paycenterVM.Email2) ||
                 string.IsNullOrWhiteSpace(paycenterVM.Domicilio) || string.IsNullOrWhiteSpace(paycenterVM.CP) //|| 
                 //string.IsNullOrWhiteSpace(paycenterVM.IFE) || string.IsNullOrWhiteSpace(paycenterVM.Comprobante)
                 )
