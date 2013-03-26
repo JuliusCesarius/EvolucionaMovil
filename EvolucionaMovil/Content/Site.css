@@ -242,13 +242,13 @@ input[type="password"]
     cursor:pointer;
 }
 
-input[type="text"] {
+input[type="text"],input[type="password"] {
 width:345px;
 height:24px;
 position:relative;
 }
 
-input[type="text"],textarea,select,.sbHolder,.sbOptions {
+input[type="text"],input[type="password"],textarea,select,.sbHolder,.sbOptions {
 -webkit-border-radius:3px;
 -moz-border-radius:3px;
 -ms-border-radius:3px;
@@ -881,7 +881,7 @@ div#title {
 
 .ui-datepicker{ z-index: 9999 !important;}
 .formLeft, .formRight{display:inline-block;vertical-align:middle;width:49%}
-.message{background:#FFFFAD;padding:1em;}
+.message{background:#FFFFAD;padding:1em;margin:0.6em 0 0.6em 0}
 .nota{color:#999;font-size:.8em;padding:3px;width:360px}
 .w700{width:700px}
 .center{margin:0 auto}
@@ -955,3 +955,22 @@ legend{font-size:2em;font-weight:400}
 .status .Cancelado{color:#FF6700}
 .sgHeader .cargo,.sgHeader .abono{color:#fff}
 .qtip{cursor: pointer;padding-right:1em;background: url("../Content/themes/base/images/qtip.png") no-repeat 100% 50%;}
+
+/**Prospecto**/
+.titulo h1, .titulo a{display:inline;} 
+.titulo a{margin-left:18%; cursor:pointer;}
+.leyenda{width:362px}
+.alrgt{text-align:right;}
+#preafiliacioninfo{border: none;padding: 0 8.2em 1.4em 1.3em;margin: 0 0 1.5em 0;float:right;width:362px;}
+#preafiliacioninfo a{cursor:pointer;}
+#preafiliacioninfo h3, h4{font-size: 1.3em;}
+
+/*Paycenters*/
+.newPaycenter{padding-top:1.2em;}
+.checkActivo{color:Black; font-size:1.4em !important;}
+#confirmacion,#notfound{font-size: 1.3em;}
+.btnReturn{text-align:right; width:310px; margin:4px;}
+.infoPaycenter h2, .infoPaycenter a{display:inline;}
+.tituloPaycenter{color:#32A6E0;}
+.labelPaycenter{font-size:15px; color:#999;}
+.displayPaycenter{font-size:15px;}
