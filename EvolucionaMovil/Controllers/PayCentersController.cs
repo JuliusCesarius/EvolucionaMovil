@@ -371,7 +371,7 @@ namespace EvolucionaMovil.Controllers
                 if (Exito)
                 {
                     AspNetMembershipProviderWrapper membership = new AspNetMembershipProviderWrapper();
-                    if (!string.IsNullOrWhiteSpace(paycenterVM.NombreCorto))
+                    if (!string.IsNullOrWhiteSpace(paycenterVM.UserName))
                     {
                         try
                         {
