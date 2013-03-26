@@ -108,7 +108,14 @@ namespace EvolucionaMovil.Controllers
                 else
                 {
                     Mapper.Map(paycenter, paycenterVM);
-                    paycenterVM.PayCenterPadre = paycenter.PayCenters2.UserName;
+                    //<author>Julio Avila</author>
+                    //<comments>Se cambió el nombre de la propiedad PayCenters2 a PayCenterPadre</comments>
+                    //<before>
+                    //paycenterVM.PayCenterPadre = paycenter.PayCenters2.UserName;
+                    //</before>
+                    //<after>
+                    paycenterVM.PayCenterPadre = paycenter.PayCenterPadre.UserName;
+                    //</after>
                                         ////Buscar usuario para determinar si está activo
                     //AspNetMembershipProviderWrapper membership = new AspNetMembershipProviderWrapper();
                     //MembershipUser usuario = membership.Get(paycenterVM.Nombre);
@@ -364,7 +371,7 @@ namespace EvolucionaMovil.Controllers
                 if (Exito)
                 {
                     AspNetMembershipProviderWrapper membership = new AspNetMembershipProviderWrapper();
-                    if (!string.IsNullOrWhiteSpace(paycenterVM.UserName))
+                    if (!string.IsNullOrWhiteSpace(paycenterVM.NombreCorto))
                     {
                         try
                         {
