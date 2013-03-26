@@ -96,7 +96,7 @@ namespace EvolucionaMovil.Controllers
                         paycenterVM.Email = prospecto.Email;
                         //ToDo: Agregar la empresa a la tabla
                         paycenterVM.Nombre = prospecto.Empresa;
-                        //paycenterVM.NombreCorto = prospecto.Nombre;
+                        //paycenterVM.UserName = prospecto.Nombre;
                         paycenterVM.Telefono = prospecto.Telefono;
                         paycenterVM.ProspectoId = prospecto.ProspectoId;
                     }
@@ -108,7 +108,7 @@ namespace EvolucionaMovil.Controllers
                 else
                 {
                     Mapper.Map(paycenter, paycenterVM);
-                    paycenterVM.PayCenterPadre = paycenter.PayCenters2.NombreCorto;
+                    paycenterVM.PayCenterPadre = paycenter.PayCenters2.UserName;
                                         ////Buscar usuario para determinar si está activo
                     //AspNetMembershipProviderWrapper membership = new AspNetMembershipProviderWrapper();
                     //MembershipUser usuario = membership.Get(paycenterVM.Nombre);
@@ -149,7 +149,7 @@ namespace EvolucionaMovil.Controllers
             {
                 ModelState.Remove("Password");
                 ModelState.Remove("RepeatPassword");
-                ModelState.Remove("NombreCorto");
+                ModelState.Remove("UserName");
             }
 
             if (ModelState.IsValid)
@@ -200,11 +200,11 @@ namespace EvolucionaMovil.Controllers
                 //Validar si existe el usuario si el paycenter está siendo editado y actualizarlo
                 bool Exito = true;
                 AspNetMembershipProviderWrapper membership = new AspNetMembershipProviderWrapper();
-                if (paycenterVM.PayCenterId > 0 && !string.IsNullOrWhiteSpace(paycenterVM.NombreCorto)) //&& !string.IsNullOrWhiteSpace(paycenterVM.Password))
+                if (paycenterVM.PayCenterId > 0 && !string.IsNullOrWhiteSpace(paycenterVM.UserName)) //&& !string.IsNullOrWhiteSpace(paycenterVM.Password))
                 {
                     try
                     {
-                        MembershipUser usuario = membership.Get(paycenterVM.NombreCorto);
+                        MembershipUser usuario = membership.Get(paycenterVM.UserName);
 
                         if (usuario != null)
                         {
@@ -233,11 +233,11 @@ namespace EvolucionaMovil.Controllers
                         ViewBag.MensajeError = "Se ha producido un error al actualizar el usuario del PayCenter. " + ex.Message;
                     }
                 }
-                else if (!(string.IsNullOrWhiteSpace(paycenterVM.NombreCorto) || string.IsNullOrWhiteSpace(paycenterVM.Password)))
+                else if (!(string.IsNullOrWhiteSpace(paycenterVM.UserName) || string.IsNullOrWhiteSpace(paycenterVM.Password)))
                 {
                     try
                     {
-                        var user = membership.Create(paycenterVM.NombreCorto, paycenterVM.Password, paycenterVM.Email, null, null, false);
+                        var user = membership.Create(paycenterVM.UserName, paycenterVM.Password, paycenterVM.Email, null, null, false);
                         AspNetRoleProviderWrapper membershipRole = new AspNetRoleProviderWrapper();
                         membershipRole.AddToRole(user, "paycenter");
                     }
@@ -294,7 +294,7 @@ namespace EvolucionaMovil.Controllers
             {
                 PayCenterVM paycenterVM = new PayCenterVM();
                 Mapper.Map(paycenter, paycenterVM);
-                paycenterVM.PayCenterPadre = paycenter.PayCenters2.NombreCorto;
+                paycenterVM.PayCenterPadre = paycenter.PayCenters2.UserName;
 
                 ////Buscar usuario para determinar si está activo
                 //AspNetMembershipProviderWrapper membership = new AspNetMembershipProviderWrapper();
@@ -330,7 +330,7 @@ namespace EvolucionaMovil.Controllers
             //ToDo: verificar si hay alguna manera de hacer obligatorio al crear y al actualizar no
             ModelState.Remove("Password");
             ModelState.Remove("RepeatPassword");
-            ModelState.Remove("NombreCorto");
+            ModelState.Remove("UserName");
 
             if (ModelState.IsValid)
             {
@@ -364,11 +364,11 @@ namespace EvolucionaMovil.Controllers
                 if (Exito)
                 {
                     AspNetMembershipProviderWrapper membership = new AspNetMembershipProviderWrapper();
-                    if (!string.IsNullOrWhiteSpace(paycenterVM.NombreCorto))
+                    if (!string.IsNullOrWhiteSpace(paycenterVM.UserName))
                     {
                         try
                         {
-                            MembershipUser usuario = membership.Get(paycenterVM.NombreCorto);
+                            MembershipUser usuario = membership.Get(paycenterVM.UserName);
 
                             if (usuario != null)
                             {
@@ -511,7 +511,7 @@ namespace EvolucionaMovil.Controllers
         {
             //ToDo: Activar validación de IFE y Comprobante cuando se agregue la funcionalidad
             if (string.IsNullOrWhiteSpace(paycenterVM.Nombre) || string.IsNullOrWhiteSpace(paycenterVM.Representante) ||
-                string.IsNullOrWhiteSpace(paycenterVM.NombreCorto) || string.IsNullOrWhiteSpace(paycenterVM.Telefono) ||
+                string.IsNullOrWhiteSpace(paycenterVM.UserName) || string.IsNullOrWhiteSpace(paycenterVM.Telefono) ||
                 string.IsNullOrWhiteSpace(paycenterVM.Email) || string.IsNullOrWhiteSpace(paycenterVM.Email2) ||
                 string.IsNullOrWhiteSpace(paycenterVM.Domicilio) || string.IsNullOrWhiteSpace(paycenterVM.CP) //|| 
                 //string.IsNullOrWhiteSpace(paycenterVM.IFE) || string.IsNullOrWhiteSpace(paycenterVM.Comprobante)

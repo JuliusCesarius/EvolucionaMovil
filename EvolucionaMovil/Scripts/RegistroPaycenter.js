@@ -27,7 +27,7 @@ function BuscarPaycenter() {
             success: function (result) {
                 result = $.parseJSON(result);
                 if (result != null) {
-                    $("#PayCenterPadre").val(result.NombreCorto);
+                    $("#PayCenterPadre").val(result.UserName);
                     $("#PayCenterPadreId").val(result.PayCenterId);
                 }
                 else {

@@ -4,7 +4,7 @@
 
 function bindGrid(options) {
     var columns = [
-         { name: 'NombreCorto', displayName: 'Nombre Corto' },
+         { name: 'UserName', displayName: 'Nombre Corto' },
          { name: 'Representante' },
          { name: 'Nombre', displayName: 'Empresa', width: '120px' },
          { name: 'Telefono', displayName: 'Teléfono' },

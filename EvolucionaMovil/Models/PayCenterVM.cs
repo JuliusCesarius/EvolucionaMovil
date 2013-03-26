@@ -27,7 +27,7 @@ namespace EvolucionaMovil.Models
         [Required(ErrorMessage = "Requerido.")]
         [Display(Name = "Usuario")]
         [CustomValidation(typeof(EvolucionaMovil.Models.BR.PaycenterBR), "UsuarioUnico")]
-        public string NombreCorto { get; set; }
+        public string UserName { get; set; }
         public int PayCenterId { get; set; }
         //public Prospecto Prospecto { get; set; }
         public int ProspectoId { get; set; }

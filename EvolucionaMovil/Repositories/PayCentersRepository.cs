@@ -43,12 +43,12 @@ namespace EvolucionaMovil.Repositories
         {
             Int32 IdBuscar = 0;
             int.TryParse(stringSearch, out IdBuscar);
-            return base.context.PayCenters.FirstOrDefault(x => x.PayCenterId == IdBuscar || x.NombreCorto == stringSearch);
+            return base.context.PayCenters.FirstOrDefault(x => x.PayCenterId == IdBuscar || x.UserName == stringSearch);
         }
 
-        public bool ExisteUsuario(string NombreCorto)
+        public bool ExisteUsuario(string UserName)
         {
-            return context.PayCenters.Any(p => p.NombreCorto == NombreCorto);
+            return context.PayCenters.Any(p => p.UserName == UserName);
         }
     }
 }

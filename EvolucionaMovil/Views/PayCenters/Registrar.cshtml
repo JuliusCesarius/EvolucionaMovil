@@ -116,11 +116,11 @@
             {
                 <h1>Usuario</h1>
                 <div class="editor-label">
-                    @Html.LabelFor(model => model.NombreCorto)
+                    @Html.LabelFor(model => model.UserName)
                 </div>
                 <div class="editor-field">
-                    @Html.EditorFor(model => model.NombreCorto)
-                    @Html.ValidationMessageFor(model => model.NombreCorto)
+                    @Html.EditorFor(model => model.UserName)
+                    @Html.ValidationMessageFor(model => model.UserName)
                 </div>
                 <div class="editor-label">
                     @Html.LabelFor(model => model.Password)
@@ -139,7 +139,7 @@
             }
             else
             { 
-                @Html.HiddenFor(model => model.NombreCorto)
+                @Html.HiddenFor(model => model.UserName)
             }            
         </div>
         <div class="formRight">
