@@ -17,8 +17,7 @@ namespace cabinet.processPolicies.MVC.Models.Helpers
             Mapper.CreateMap<PayCenterVM, PayCenter>()
                     .ForMember(m => m.Abonos, opt => opt.Ignore())
                     .ForMember(m => m.Cuentas, opt => opt.Ignore())
-                    .ForMember(m => m.FechaCreacion, opt => opt.Ignore())
-                    .ForMember(m => m.Parametros.MaximoAFinanciar, opt => opt.MapFrom(vm => Convert.ToDecimal(vm.MaximoAFinanciar)));
+                    .ForMember(m => m.FechaCreacion, opt => opt.Ignore());
             //.ForMember(m => m.Version, opt => opt.MapFrom(vm => string.IsNullOrEmpty(vm.Version)?"1":vm.Version))
             //.ForMember(m => m.Status, opt => opt.MapFrom(vm => Convert.ToInt16(vm.Status)))
 
