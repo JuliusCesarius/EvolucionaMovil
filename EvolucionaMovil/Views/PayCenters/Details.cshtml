@@ -1,86 +1,75 @@
 ﻿@model EvolucionaMovil.Models.PayCenterVM
-
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Información del PayCenter";
 }
 
-<h1>Details</h1>
+<h1 class="tituloPaycenter">@Model.Nombre</h1>
 
 <fieldset>
-    <legend>PayCenter</legend>
+    <legend></legend>
 
-    <div class="display-label">Prospecto</div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.Prospecto.Email)
+    <div class="formLeft">
+        <div class="infoPaycenter">
+            <h2>Información General</h2>
+            @Html.ActionLink("[Editar]", "Edit", new { id = Model.PayCenterId })
+        </div>
+
+        <div class="display-label labelPaycenter">Empresa o Negocio</div>
+        <div class="display-field displayPaycenter">
+            @Html.DisplayFor(model => model.Nombre)
+        </div>
+
+        <div class="display-label labelPaycenter">Nombre del Representante</div>
+        <div class="display-field displayPaycenter">
+            @Html.DisplayFor(model => model.Representante)
+        </div>
+
+        <div class="display-label labelPaycenter">Teléfono</div>
+        <div class="display-field displayPaycenter">
+            @Html.DisplayFor(model => model.Telefono)
+        </div>
+
+        <div class="display-label labelPaycenter">Celular</div>
+        <div class="display-field displayPaycenter">
+            @Html.DisplayFor(model => model.Celular)
+        </div>
+
+        <div class="display-label labelPaycenter">Email</div>
+        <div class="display-field displayPaycenter">
+            @Html.DisplayFor(model => model.Email)
+        </div>
+
+        <div class="display-label labelPaycenter">Email2</div>
+        <div class="display-field displayPaycenter">
+            @Html.DisplayFor(model => model.Email2)
+        </div>
+
+        <div class="display-label labelPaycenter">Domicilio</div>
+        <div class="display-field displayPaycenter">
+            @Html.DisplayFor(model => model.Domicilio)
+        </div>
+
+        <div class="display-label labelPaycenter">Código Postal</div>
+        <div class="display-field displayPaycenter">
+            @Html.DisplayFor(model => model.CP)
+        </div>
+
+        <div class="display-label labelPaycenter">FechaIngreso</div>
+        <div class="display-field displayPaycenter">
+            @Html.DisplayFor(model => model.FechaIngreso)
+        </div>
+
+        <div class="display-label labelPaycenter">IFE</div>
+        <div class="display-field">
+            <a href="@Model.IFE">Ver imagen</a>
+        </div>
+
+        <div class="display-label labelPaycenter">Comprobante Dom.</div>
+        <div class="display-field">
+            <a href="@Model.Comprobante">Ver imagen</a>
+        </div>
     </div>
-
-    <div class="display-label">Usuario</div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.Usuario.Email)
-    </div>
-
-    <div class="display-label">IFE</div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.IFE)
-    </div>
-
-    <div class="display-label">Comprobante</div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.Comprobante)
-    </div>
-
-    <div class="display-label">Nombre</div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.Nombre)
-    </div>
-
-    <div class="display-label">Representante</div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.Representante)
-    </div>
-
-    <div class="display-label">Domicilio</div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.Domicilio)
-    </div>
-
-    <div class="display-label">CP</div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.CP)
-    </div>
-
-    <div class="display-label">Celular</div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.Celular)
-    </div>
-
-    <div class="display-label">Telefono</div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.Telefono)
-    </div>
-
-    <div class="display-label">Email</div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.Email)
-    </div>
-
-    <div class="display-label">Email2</div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.Email2)
-    </div>
-
-    <div class="display-label">FechaIngreso</div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.FechaIngreso)
-    </div>
-
-    <div class="display-label">FechaCreacion</div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.FechaCreacion)
-    </div>
-
 </fieldset>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id=Model.PayCenterId }) |
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Regresar a la lista", "Index")
 </p>
