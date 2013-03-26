@@ -12,19 +12,20 @@ namespace cabinet.processPolicies.MVC.Models.Helpers
         public static void Bootstrap()
         {
             Mapper.CreateMap<Prospecto, ProspectoVM>();
-            Mapper.CreateMap<PayCenter, PayCenterVM>();
-
+            Mapper.CreateMap<PayCenter, PayCenterVM>()
+                    .ForMember(vm => vm.MaximoAFinanciar, opt => opt.MapFrom(m => Math.Round(m.MaximoAFinanciar, 2)));
             Mapper.CreateMap<PayCenterVM, PayCenter>()
                     .ForMember(m => m.Abonos, opt => opt.Ignore())
                     .ForMember(m => m.Cuentas, opt => opt.Ignore())
-                    .ForMember(m => m.FechaCreacion, opt => opt.Ignore());
-                    //.ForMember(m => m.Version, opt => opt.MapFrom(vm => string.IsNullOrEmpty(vm.Version)?"1":vm.Version))
-                    //.ForMember(m => m.Status, opt => opt.MapFrom(vm => Convert.ToInt16(vm.Status)))
+                    .ForMember(m => m.FechaCreacion, opt => opt.Ignore())
+                    .ForMember(m => m.MaximoAFinanciar, opt => opt.MapFrom(vm => Convert.ToDecimal(vm.MaximoAFinanciar)));
+            //.ForMember(m => m.Version, opt => opt.MapFrom(vm => string.IsNullOrEmpty(vm.Version)?"1":vm.Version))
+            //.ForMember(m => m.Status, opt => opt.MapFrom(vm => Convert.ToInt16(vm.Status)))
 
             //******************Entity to ViewModel********************//
             Mapper.CreateMap<Abono, AbonoVM>();
             Mapper.CreateMap<Banco, BancoVM>();
-            Mapper.CreateMap<CompraEvento , CompraEventoVM>();
+            Mapper.CreateMap<CompraEvento, CompraEventoVM>();
             Mapper.CreateMap<CuentaBancaria, CuentaBancariaVM>();
             Mapper.CreateMap<Cuenta, CuentaVM>();
             Mapper.CreateMap<DetallePago, DetallePagoVM>();
@@ -34,9 +35,10 @@ namespace cabinet.processPolicies.MVC.Models.Helpers
             Mapper.CreateMap<Paquete, PaqueteVM>();
             Mapper.CreateMap<PayCenter, PayCenterVM>();
             Mapper.CreateMap<Politica, PoliticaVM>();
-            Mapper.CreateMap<Prospecto , ProspectoVM>();
+            Mapper.CreateMap<Prospecto, ProspectoVM>();
             Mapper.CreateMap<Servicio, ServicioVM>();
             Mapper.CreateMap<Ticket, TicketVM>();
+            Mapper.CreateMap<Usuario, UsuarioVM>();
 
             //******************ViewModel to Entity********************//
             Mapper.CreateMap<AbonoVM, Abono>();
@@ -56,6 +58,7 @@ namespace cabinet.processPolicies.MVC.Models.Helpers
             Mapper.CreateMap<ServicioVM, Servicio>()
                     .ForMember(m => m.DetalleServicios, opt => opt.Ignore());
             Mapper.CreateMap<TicketVM, Ticket>();
+            Mapper.CreateMap<UsuarioVM, Usuario>();
         }
     }
 }

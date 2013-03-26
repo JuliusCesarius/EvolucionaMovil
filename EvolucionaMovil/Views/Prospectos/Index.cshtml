@@ -1,0 +1,71 @@
+﻿@model IEnumerable<EvolucionaMovil.Models.ProspectoVM>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Prospectos</h1>
+
+<p>
+    @Html.ActionLink("Nuevo Registro", "Preafiliacion")
+</p>
+<table>
+    <tr>
+        <th>
+            Email
+        </th>
+        <th>
+            Nombre
+        </th>
+        <th>
+            Empresa
+        </th>
+        <th>
+            Teléfono
+        </th>
+        <th>
+            Celular
+        </th>
+        <th>
+            Comentario
+        </th>
+        <th>
+            Fecha Alta
+        </th>
+        <th>
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Email)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Nombre)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Empresa)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Telefono)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Celular)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Comentario)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.FechaCreacion)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.ProspectoId }) |
+            @Html.ActionLink("Details", "Details", new { id=item.ProspectoId }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.ProspectoId })
+        </td>
+    </tr>
+}
+
+</table>
