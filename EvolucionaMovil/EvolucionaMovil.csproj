@@ -126,6 +126,7 @@
     <Compile Include="Controllers\PagoServiciosController.cs" />
     <Compile Include="Controllers\PaquetesController.cs" />
     <Compile Include="Controllers\PayCentersController.cs" />
+    <Compile Include="Controllers\ProspectosController.cs" />
     <Compile Include="Controllers\ServiciosController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -134,6 +135,8 @@
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\BancoVM.cs" />
     <Compile Include="Models\BR\EstadoCuentaBR.cs" />
+    <Compile Include="Models\BR\PaycenterBR.cs" />
+    <Compile Include="Models\BR\ProspectoBR.cs" />
     <Compile Include="Models\CompraEventoVM.cs" />
     <Compile Include="Models\Enums\enumTipoCuenta.cs" />
     <Compile Include="Models\Helpers\MvcHtmlHelpers.cs" />
@@ -161,6 +164,7 @@
     <Compile Include="Models\ProspectoVM.cs" />
     <Compile Include="Models\ServiceParameterVM.cs" />
     <Compile Include="Models\ServicioVM.cs" />
+    <Compile Include="Models\StringParameterVM.cs" />
     <Compile Include="Models\TicketVM.cs" />
     <Compile Include="Models\UsuarioVM.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -170,6 +174,7 @@
     <Compile Include="Repositories\PagoServiciosRepository.cs" />
     <Compile Include="Repositories\PaquetesRepository.cs" />
     <Compile Include="Repositories\PayCentersRepository.cs" />
+    <Compile Include="Repositories\ProspectosRepository.cs" />
     <Compile Include="Repositories\ServiciosRepository.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -264,7 +269,10 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-1.7.js" />
     <Content Include="Scripts\modernizr-1.7.min.js" />
+    <Content Include="Scripts\PayCenters.js" />
+    <Content Include="Scripts\Preafiliacion.js" />
     <Content Include="Scripts\prefixfree.min.js" />
+    <Content Include="Scripts\RegistroPaycenter.js" />
     <Content Include="Scripts\ReportarDeposito.js" />
     <Content Include="Scripts\simpleGrid.js" />
     <Content Include="Web.config">
@@ -462,6 +470,18 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Depositos\Details.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\PayCenters\NotFound.cshtml" />
+    <Content Include="Views\PayCenters\Registrar.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Prospectos\Confirmacion.cshtml" />
+    <Content Include="Views\Prospectos\Delete.cshtml" />
+    <Content Include="Views\Prospectos\Details.cshtml" />
+    <Content Include="Views\Prospectos\Edit.cshtml" />
+    <Content Include="Views\Prospectos\Index.cshtml" />
+    <Content Include="Views\Prospectos\Preafiliacion.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

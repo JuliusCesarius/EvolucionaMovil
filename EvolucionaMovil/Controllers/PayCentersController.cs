@@ -256,7 +256,15 @@ namespace EvolucionaMovil.Controllers
                         paycenter = repository.LoadById(paycenterVM.PayCenterId);
                         //Esto es porque el prospecto no debe modificar el dato
                         //ToDo: verificar si se puede excluir de otra manera
-                        paycenterVM.MaximoAFinanciar = paycenter.MaximoAFinanciar.ToString();
+
+                        //<author>Julio Avila</author>
+                        //<comments>Se cambió el campo a la tabla parámetros</comments>
+                        //<before>
+                        //paycenterVM.MaximoAFinanciar = paycenter.MaximoAFinanciar.ToString();
+                        //</before>
+                        //<after>
+                        paycenterVM.MaximoAFinanciar = paycenter.Parametros != null && paycenter.Parametros.MaximoAFinanciar != null ? paycenter.Parametros.MaximoAFinanciar.ToString() : string.Empty;
+                        //</after>
                         Mapper.Map(paycenterVM, paycenter);
                     }
                     else
