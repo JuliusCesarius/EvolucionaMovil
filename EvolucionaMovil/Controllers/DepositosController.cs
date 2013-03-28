@@ -25,6 +25,7 @@ namespace EvolucionaMovil.Controllers
 
         public ViewResult Index()
         {
+            //Modificación de prueba José
             var abonos = repository.ListAll().ToListOfDestination<AbonoVM>();
             return View(abonos.ToList());
         }
