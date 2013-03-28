@@ -4,6 +4,7 @@ namespace EvolucionaMovil.Models
 {
     public class ProspectoVM
     {
+        [RegularExpression("^[0-9]{10}", ErrorMessage = "El celular debe contener la lada sin guiones ni paréntesis. P.e. 9999999999")]
         public string Celular { get; set; }
         public string Comentario { get; set; }
         [Required(ErrorMessage = "Campo requerido.")]
@@ -18,6 +19,7 @@ namespace EvolucionaMovil.Models
         public string Nombre { get; set; }
         public int ProspectoId { get; set; }
         [Display(Name = "Teléfono")]
+        [RegularExpression("^[0-9]{10}", ErrorMessage = "El teléfono debe contener la lada sin guiones ni paréntesis. P.e. 9999999999")]
         public string Telefono { get; set; }
     }
 }
