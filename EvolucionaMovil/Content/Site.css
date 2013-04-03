@@ -939,7 +939,7 @@ legend{font-size:2em;font-weight:400}
 #filtros #lblAplicadosOnly, #filtros #aplicadosOnly{cursor:pointer}
 
 .fechacreacion{width:80px !important}
-.clave{width:70px !important}
+.clave{width:85px !important}
 .concepto{width:380px !important}
 .cargo{color:Red;width:80px !important; text-align:right}
 .abono{color:#000;width:80px !important; text-align:right}
