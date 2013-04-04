@@ -18,8 +18,6 @@ using System.Runtime.Serialization;
 [assembly: EdmSchemaAttribute()]
 #region EDM Relationship Metadata
 
-[assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_Abonos_CuentasBancarias", "CuentasBancaria", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.CuentaBancaria), "Abono", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EvolucionaMovil.Models.Abono), true)]
-[assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_Abonos_PayCenters", "PayCenter", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.PayCenter), "Abono", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EvolucionaMovil.Models.Abono), true)]
 [assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_CuentasBancarias_Bancos", "Banco", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.Banco), "CuentasBancaria", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EvolucionaMovil.Models.CuentaBancaria), true)]
 [assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_CompraEventos_Paquetes", "Paquete", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.Paquete), "CompraEvento", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EvolucionaMovil.Models.CompraEvento), true)]
 [assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_DetalleServicios_Servicios", "Servicio", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.Servicio), "DetalleServicio", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EvolucionaMovil.Models.DetalleServicio), true)]
@@ -34,6 +32,8 @@ using System.Runtime.Serialization;
 [assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_Pagos_PayCenters", "PayCenter", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.PayCenter), "Pago", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EvolucionaMovil.Models.Pago), true)]
 [assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_Tickets_Pagos", "Pago", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.Pago), "Ticket", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(EvolucionaMovil.Models.Ticket), true)]
 [assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_Abonos_Cuentas", "Cuenta", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.Cuenta), "Abono", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EvolucionaMovil.Models.Abono), true)]
+[assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_Abonos_CuentasBancarias", "CuentaBancaria", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.CuentaBancaria), "Abono", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EvolucionaMovil.Models.Abono), true)]
+[assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_Abonos_PayCenters", "PayCenter", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.PayCenter), "Abono", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EvolucionaMovil.Models.Abono), true)]
 
 #endregion
 
@@ -84,22 +84,6 @@ namespace EvolucionaMovil.Models
         #endregion
     
         #region ObjectSet Properties
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        public ObjectSet<Abono> Abonos
-        {
-            get
-            {
-                if ((_Abonos == null))
-                {
-                    _Abonos = base.CreateObjectSet<Abono>("Abonos");
-                }
-                return _Abonos;
-            }
-        }
-        private ObjectSet<Abono> _Abonos;
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -372,17 +356,25 @@ namespace EvolucionaMovil.Models
             }
         }
         private ObjectSet<Pago> _Pagos;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<Abono> Abonos
+        {
+            get
+            {
+                if ((_Abonos == null))
+                {
+                    _Abonos = base.CreateObjectSet<Abono>("Abonos");
+                }
+                return _Abonos;
+            }
+        }
+        private ObjectSet<Abono> _Abonos;
 
         #endregion
         #region AddTo Methods
-    
-        /// <summary>
-        /// Deprecated Method for adding a new object to the Abonos EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
-        /// </summary>
-        public void AddToAbonos(Abono abono)
-        {
-            base.AddObject("Abonos", abono);
-        }
     
         /// <summary>
         /// Deprecated Method for adding a new object to the Bancos EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
@@ -519,6 +511,14 @@ namespace EvolucionaMovil.Models
         {
             base.AddObject("Pagos", pago);
         }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the Abonos EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToAbonos(Abono abono)
+        {
+            base.AddObject("Abonos", abono);
+        }
 
         #endregion
     }
@@ -548,10 +548,11 @@ namespace EvolucionaMovil.Models
         /// <param name="monto">Initial value of the Monto property.</param>
         /// <param name="fechaPago">Initial value of the FechaPago property.</param>
         /// <param name="referencia">Initial value of the Referencia property.</param>
+        /// <param name="status">Initial value of the Status property.</param>
         /// <param name="fechaCreacion">Initial value of the FechaCreacion property.</param>
         /// <param name="baja">Initial value of the Baja property.</param>
         /// <param name="cuentaId">Initial value of the CuentaId property.</param>
-        public static Abono CreateAbono(global::System.Int32 abonoId, global::System.Int32 payCenterId, global::System.Int32 bancoId, global::System.Int32 cuentaBancariaId, global::System.Decimal monto, global::System.DateTime fechaPago, global::System.String referencia, global::System.DateTime fechaCreacion, global::System.Boolean baja, global::System.Int32 cuentaId)
+        public static Abono CreateAbono(global::System.Int32 abonoId, global::System.Int32 payCenterId, global::System.Int32 bancoId, global::System.Int32 cuentaBancariaId, global::System.Decimal monto, global::System.DateTime fechaPago, global::System.String referencia, global::System.Int16 status, global::System.DateTime fechaCreacion, global::System.Boolean baja, global::System.Int32 cuentaId)
         {
             Abono abono = new Abono();
             abono.AbonoId = abonoId;
@@ -561,6 +562,7 @@ namespace EvolucionaMovil.Models
             abono.Monto = monto;
             abono.FechaPago = fechaPago;
             abono.Referencia = referencia;
+            abono.Status = status;
             abono.FechaCreacion = fechaCreacion;
             abono.Baja = baja;
             abono.CuentaId = cuentaId;
@@ -744,9 +746,9 @@ namespace EvolucionaMovil.Models
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
         [DataMemberAttribute()]
-        public Nullable<global::System.Int16> Status
+        public global::System.Int16 Status
         {
             get
             {
@@ -761,8 +763,8 @@ namespace EvolucionaMovil.Models
                 OnStatusChanged();
             }
         }
-        private Nullable<global::System.Int16> _Status;
-        partial void OnStatusChanging(Nullable<global::System.Int16> value);
+        private global::System.Int16 _Status;
+        partial void OnStatusChanging(global::System.Int16 value);
         partial void OnStatusChanged();
     
         /// <summary>
@@ -847,16 +849,54 @@ namespace EvolucionaMovil.Models
         [XmlIgnoreAttribute()]
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("EvolucionaMovilBDModel", "FK_Abonos_CuentasBancarias", "CuentasBancaria")]
+        [EdmRelationshipNavigationPropertyAttribute("EvolucionaMovilBDModel", "FK_Abonos_Cuentas", "Cuenta")]
+        public Cuenta Cuenta
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Cuenta>("EvolucionaMovilBDModel.FK_Abonos_Cuentas", "Cuenta").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Cuenta>("EvolucionaMovilBDModel.FK_Abonos_Cuentas", "Cuenta").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<Cuenta> CuentaReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Cuenta>("EvolucionaMovilBDModel.FK_Abonos_Cuentas", "Cuenta");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Cuenta>("EvolucionaMovilBDModel.FK_Abonos_Cuentas", "Cuenta", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("EvolucionaMovilBDModel", "FK_Abonos_CuentasBancarias", "CuentaBancaria")]
         public CuentaBancaria CuentasBancaria
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<CuentaBancaria>("EvolucionaMovilBDModel.FK_Abonos_CuentasBancarias", "CuentasBancaria").Value;
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<CuentaBancaria>("EvolucionaMovilBDModel.FK_Abonos_CuentasBancarias", "CuentaBancaria").Value;
             }
             set
             {
-                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<CuentaBancaria>("EvolucionaMovilBDModel.FK_Abonos_CuentasBancarias", "CuentasBancaria").Value = value;
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<CuentaBancaria>("EvolucionaMovilBDModel.FK_Abonos_CuentasBancarias", "CuentaBancaria").Value = value;
             }
         }
         /// <summary>
@@ -868,13 +908,13 @@ namespace EvolucionaMovil.Models
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<CuentaBancaria>("EvolucionaMovilBDModel.FK_Abonos_CuentasBancarias", "CuentasBancaria");
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<CuentaBancaria>("EvolucionaMovilBDModel.FK_Abonos_CuentasBancarias", "CuentaBancaria");
             }
             set
             {
                 if ((value != null))
                 {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<CuentaBancaria>("EvolucionaMovilBDModel.FK_Abonos_CuentasBancarias", "CuentasBancaria", value);
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<CuentaBancaria>("EvolucionaMovilBDModel.FK_Abonos_CuentasBancarias", "CuentaBancaria", value);
                 }
             }
         }
@@ -913,44 +953,6 @@ namespace EvolucionaMovil.Models
                 if ((value != null))
                 {
                     ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<PayCenter>("EvolucionaMovilBDModel.FK_Abonos_PayCenters", "PayCenter", value);
-                }
-            }
-        }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [XmlIgnoreAttribute()]
-        [SoapIgnoreAttribute()]
-        [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("EvolucionaMovilBDModel", "FK_Abonos_Cuentas", "Cuenta")]
-        public Cuenta Cuenta
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Cuenta>("EvolucionaMovilBDModel.FK_Abonos_Cuentas", "Cuenta").Value;
-            }
-            set
-            {
-                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Cuenta>("EvolucionaMovilBDModel.FK_Abonos_Cuentas", "Cuenta").Value = value;
-            }
-        }
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [BrowsableAttribute(false)]
-        [DataMemberAttribute()]
-        public EntityReference<Cuenta> CuentaReference
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Cuenta>("EvolucionaMovilBDModel.FK_Abonos_Cuentas", "Cuenta");
-            }
-            set
-            {
-                if ((value != null))
-                {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Cuenta>("EvolucionaMovilBDModel.FK_Abonos_Cuentas", "Cuenta", value);
                 }
             }
         }
@@ -1912,28 +1914,6 @@ namespace EvolucionaMovil.Models
         [XmlIgnoreAttribute()]
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("EvolucionaMovilBDModel", "FK_Abonos_CuentasBancarias", "Abono")]
-        public EntityCollection<Abono> Abonos
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Abono>("EvolucionaMovilBDModel.FK_Abonos_CuentasBancarias", "Abono");
-            }
-            set
-            {
-                if ((value != null))
-                {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Abono>("EvolucionaMovilBDModel.FK_Abonos_CuentasBancarias", "Abono", value);
-                }
-            }
-        }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [XmlIgnoreAttribute()]
-        [SoapIgnoreAttribute()]
-        [DataMemberAttribute()]
         [EdmRelationshipNavigationPropertyAttribute("EvolucionaMovilBDModel", "FK_CuentasBancarias_Bancos", "Banco")]
         public Banco Banco
         {
@@ -1962,6 +1942,28 @@ namespace EvolucionaMovil.Models
                 if ((value != null))
                 {
                     ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Banco>("EvolucionaMovilBDModel.FK_CuentasBancarias_Bancos", "Banco", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("EvolucionaMovilBDModel", "FK_Abonos_CuentasBancarias", "Abono")]
+        public EntityCollection<Abono> Abonos
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Abono>("EvolucionaMovilBDModel.FK_Abonos_CuentasBancarias", "Abono");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Abono>("EvolucionaMovilBDModel.FK_Abonos_CuentasBancarias", "Abono", value);
                 }
             }
         }
@@ -4862,28 +4864,6 @@ namespace EvolucionaMovil.Models
         [XmlIgnoreAttribute()]
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("EvolucionaMovilBDModel", "FK_Abonos_PayCenters", "Abono")]
-        public EntityCollection<Abono> Abonos
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Abono>("EvolucionaMovilBDModel.FK_Abonos_PayCenters", "Abono");
-            }
-            set
-            {
-                if ((value != null))
-                {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Abono>("EvolucionaMovilBDModel.FK_Abonos_PayCenters", "Abono", value);
-                }
-            }
-        }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [XmlIgnoreAttribute()]
-        [SoapIgnoreAttribute()]
-        [DataMemberAttribute()]
         [EdmRelationshipNavigationPropertyAttribute("EvolucionaMovilBDModel", "FK_ParametrosPayCenter_PayCenters", "ParametrosPayCenter")]
         public ParametrosPayCenter Parametros
         {
@@ -5054,6 +5034,28 @@ namespace EvolucionaMovil.Models
                 if ((value != null))
                 {
                     ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Pago>("EvolucionaMovilBDModel.FK_Pagos_PayCenters", "Pago", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("EvolucionaMovilBDModel", "FK_Abonos_PayCenters", "Abono")]
+        public EntityCollection<Abono> Abonos
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Abono>("EvolucionaMovilBDModel.FK_Abonos_PayCenters", "Abono");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Abono>("EvolucionaMovilBDModel.FK_Abonos_PayCenters", "Abono", value);
                 }
             }
         }
