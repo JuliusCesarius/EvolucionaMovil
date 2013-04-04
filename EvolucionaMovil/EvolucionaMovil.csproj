@@ -138,8 +138,10 @@
     <Compile Include="Models\BR\PaycenterBR.cs" />
     <Compile Include="Models\BR\ProspectoBR.cs" />
     <Compile Include="Models\CompraEventoVM.cs" />
+    <Compile Include="Models\Enums\EnumRoles.cs" />
     <Compile Include="Models\Enums\enumTipoCuenta.cs" />
     <Compile Include="Models\Helpers\MvcHtmlHelpers.cs" />
+    <Compile Include="Models\HistorialEstatusVM.cs" />
     <Compile Include="Models\PagoServicioVM.cs" />
     <Compile Include="Models\ReporteDepositoVM.cs" />
     <Compile Include="Models\SimpleGridResult.cs" />
