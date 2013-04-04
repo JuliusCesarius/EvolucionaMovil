@@ -172,6 +172,7 @@
     <Compile Include="Repositories\PagoServiciosRepository.cs" />
     <Compile Include="Repositories\PaquetesRepository.cs" />
     <Compile Include="Repositories\PayCentersRepository.cs" />
+    <Compile Include="Repositories\ProspectosRepository.cs" />
     <Compile Include="Repositories\ServiciosRepository.cs" />
   </ItemGroup>
   <ItemGroup>
