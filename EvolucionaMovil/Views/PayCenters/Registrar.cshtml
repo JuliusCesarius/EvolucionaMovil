@@ -1,25 +1,25 @@
 ﻿@model EvolucionaMovil.Models.PayCenterVM
 @{
-    ViewBag.Title = "Editar";
+    ViewBag.Title = "Registro";
 }
 
 <script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/Scripts/RegistroPaycenter.js")" type="text/javascript"></script>
 
-@using (Html.BeginForm()) {
+@using (Html.BeginForm())
+{
     @Html.ValidationSummary(true)
-     <fieldset @if (ViewBag.GuardadoExito != null)
-               {
+    <fieldset @if (Model.Activo)
+              {
                    @Html.AttributeEncode("disabled='disabled'") 
-               }
+              }
     >
-
-        <legend>Modificar PayCenter</legend>
+        <legend>PayCenter</legend>
         @Html.HiddenFor(model => model.ProspectoId)
         @Html.HiddenFor(model => model.PayCenterId)
         @Html.HiddenFor(model => model.PayCenterPadreId)
-        @Html.HiddenFor(model => model.UserName)
+        @*@Html.HiddenFor(model => model.UserName)*@
 
         <div class="formLeft">
             <div class="editor-label">
@@ -36,7 +36,7 @@
                 @Html.EditorFor(model => model.Nombre)
                 @Html.ValidationMessageFor(model => model.Nombre)
             </div>
-           @* <div class="editor-label">
+            @*<div class="editor-label">
                 @Html.LabelFor(model => model.Empresa)
             </div>
             <div class="editor-field">
@@ -112,34 +112,51 @@
                 @Html.EditorFor(model => model.PayCenterPadre)
                 @Html.ValidationMessageFor(model => model.PayCenterPadre)
             </div>
-            <div class="editor-label">
-                @Html.LabelFor(model => model.MaximoAFinanciar)
-            </div>
-            <div class="editor-field">
-                @Html.TextBoxFor(model => model.MaximoAFinanciar, new { @class = "money" })
-                @Html.ValidationMessageFor(model => model.MaximoAFinanciar)
-            </div>
-            <div class="editor-field">
-                @Html.CheckBoxFor(model => model.Activo)
-                <label for="Activo" class="checkActivo checkbox">Activo</label>
-                @Html.ValidationMessageFor(model => model.Activo)
-            </div>
+            @if (Model.PayCenterId == 0)
+            {
+                <h1>Usuario</h1>
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.UserName)
+                </div>
+                <div class="editor-field">
+                    @Html.EditorFor(model => model.UserName)
+                    @Html.ValidationMessageFor(model => model.UserName)
+                </div>
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.Password)
+                </div>
+                <div class="editor-field">
+                    @Html.EditorFor(model => model.Password)
+                    @Html.ValidationMessageFor(model => model.Password)
+                </div>
+                <div class="editor-label">
+                @Html.LabelFor(model => model.RepeatPassword)
+                </div>
+                <div class="editor-field">
+                    @Html.EditorFor(model => model.RepeatPassword)
+                    @Html.ValidationMessageFor(model => model.RepeatPassword)
+                </div>
+            }
+            else
+            { 
+                @Html.HiddenFor(model => model.UserName)
+            }            
         </div>
         <div class="formRight">
         </div>
         <p>
-            <input type="submit" class="freshbutton-blue" value="Actualizar" />
+            <input type="submit" class="freshbutton-blue" value="Guardar" />
         </p>
-        @if (ViewBag.GuardadoExito != null)
+        @if (ViewBag.Mensajes != null)
         {
-            <p class="message">@ViewBag.GuardadoExito</p> 
+            <p class="message">@ViewBag.Mensajes</p> 
         }
         @if (ViewBag.MensajeError != null)
         {
             <p class="error">@ViewBag.MensajeError</p> 
         }
-        <div>
-            @Html.ActionLink("Regresar a la lista", "Index")
-        </div>
     </fieldset>
 }
+@*<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>*@ 

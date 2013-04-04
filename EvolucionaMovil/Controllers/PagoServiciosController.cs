@@ -63,7 +63,8 @@ namespace EvolucionaMovil.Controllers
                 Mapper.Map(pagoVM, pago);
                 repository.Add(pago);
                 repository.Save();
-                return RedirectToAction("Index");  
+                return RedirectToAction("Index");
+                //Eliminar este comentario
             }
 
             return View(pagoVM);
@@ -129,6 +130,7 @@ namespace EvolucionaMovil.Controllers
         private SimpleGridResult<PagoServicioVM> getPagosServicio(ServiceParameterVM Parameters = null)
         {
             var pagos = repository.ListAll();
+            EstadoDeCuentaRepository estadoDeCuentaRepository = new EstadoDeCuentaRepository();
             SimpleGridResult<PagoServicioVM> simpleGridResult = new SimpleGridResult<PagoServicioVM>();
             var pagosServicioVM = pagos.Where(x => Parameters == null
                 || (Parameters.fechaInicio == null || (Parameters.fechaInicio < x.FechaCreacion)
@@ -142,11 +144,12 @@ namespace EvolucionaMovil.Controllers
                     NombreCliente = x.ClienteNombre,
                     PayCenterName = x.PayCenter!=null?x.PayCenter.Nombre:"[Desconocido]",
                     PagoId = x.PagoId,
-                    Comentarios = x.Pagos_Estatus.Any()?x.Pagos_Estatus.Last().Comentarios:string.Empty,
+                    //todo:Optimizar esta consulta para que no haga un load por cada registro que levante.
+                    Comentarios = estadoDeCuentaRepository.LoadById(x.MovimientoId).Movimientos_Estatus.Any() ? estadoDeCuentaRepository.LoadById(x.MovimientoId).Movimientos_Estatus.Last().Comentarios : string.Empty,
                     Monto = x.Importe.ToString("C"),
                     FechaCreacion = x.FechaCreacion.ToShortDateString(),
                     FechaVencimiento = x.FechaVencimiento.ToShortDateString(),
-                    Status = x.Estatus
+                    Status = ((enumEstatusMovimiento)x.Status).ToString()
                 });
             //TODO:Leer Eventos del paycenter
             ViewData["Eventos"] = 56;

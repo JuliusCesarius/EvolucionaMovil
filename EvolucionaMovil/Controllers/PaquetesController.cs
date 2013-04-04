@@ -14,6 +14,7 @@ namespace EvolucionaMovil.Controllers
 {
     public class PaquetesController : Controller
     {
+        //Modificación prueba Karla
         private PaquetesRepository repository = new PaquetesRepository();
 
         //
@@ -65,9 +66,7 @@ namespace EvolucionaMovil.Controllers
                         Monto = p.Precio,
                         PaqueteId = p.PaqueteId,
                         //TODO:pasar el paycenterid
-                        PayCenterId = payCenter.PayCenterId,
-                        //TODO:Analizar si sirve la CuentaId y si está bien de donde la estoy tomando
-                        CuentaId = cuentaId
+                        PayCenterId = payCenter.PayCenterId
                     };
                     repository.Add(compraEvento);
 

@@ -104,7 +104,8 @@
         pageNumber: -1,
         searchString: "",
         fechaInicio: null,
-        fechaFin: null
+        fechaFin: null,
+        data:null
     }
 
     function bindTableGrid(options) {
@@ -113,6 +114,7 @@
         var columns = options.columns;
         var method = options.method;
         var successFunction = options.successFunction;
+        var pageChangeFunction = options.pageChangeFunction;
         var errorFunction = options.errorFunction;
         var completeFunction = options.completeFunction;
         var pageSize = options.pageSize;
@@ -120,28 +122,43 @@
         var searchString = options.searchString;
         var fechaInicio = options.fechaInicio;
         var fechaFin = options.fechaFin;
+        var data = options.data;
 
-        if (Url != undefined) {
+        if (Url != undefined && Url != null) {
             $.ajax(
-        {
-            type: options.method,
-            async: true,
-            contentType: 'application/json; charset=utf-8',
-            dataType: 'html',
-            url: Url,
-            data: JSON.stringify({
-                'pageSize': pageSize,
-                'pageNumber': pageNumber,
-                'searchString': searchString,
-                'fechaInicio': fechaInicio,
-                'fechaFin': fechaFin,
-            }),
-            beforeSend: function (xhr) {
-                $('#' + grdId).addClass('ajaxRefreshing');
-                xhr.setRequestHeader('X-Client', 'jQuery');
-            },
-            success: function (result) {            
-                result = $.parseJSON(result);
+            {
+                type: options.method,
+                async: true,
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'html',
+                url: Url,
+                data: JSON.stringify({
+                    'pageSize': pageSize,
+                    'pageNumber': pageNumber,
+                    'searchString': searchString,
+                    'fechaInicio': fechaInicio,
+                    'fechaFin': fechaFin,
+                }),
+                beforeSend: function (xhr) {
+                    $('#' + grdId).addClass('ajaxRefreshing');
+                    xhr.setRequestHeader('X-Client', 'jQuery');
+                },
+                success: function(result){
+                    result = $.parseJSON(result);
+                    onSuccess(result,grdId,options,columns,successFunction,pageChangeFunction);
+                },
+                complete: function () {
+                    onComplete(grdId,completeFunction);
+                }
+            });
+        }else{
+            if (data!=null){
+                onSuccess(data,grdId,options,columns,successFunction,pageChangeFunction);
+                onComplete(grdId,completeFunction);
+            }
+        }
+    }
+    function onSuccess(result,grdId,options,columns,successFunction,pageChangeFunction) {
                 var currentPage = result.CurrentPage;
                 var pageSize = result.PageSize;
                 var totalRows = result.TotalRows;
@@ -238,6 +255,9 @@
                         if(!$(event.target).hasClass("selected")){
                             options.pageNumber=event.target.innerHTML-1;
                             bindTableGrid(options)
+                            if (pageChangeFunction != undefined){
+                                pageChangeFunction(event);
+                            }
                         }
                     });
                     body.append(pager);
@@ -245,15 +265,12 @@
                 if (successFunction != undefined) {
                     successFunction();
                 }
-            },
-            complete: function () {
+            }
+
+            function onComplete(grdId,completeFunction) {
                 $('#' + grdId + "_container").removeClass('ajaxRefreshing');
                 if (completeFunction != undefined) {
                     completeFunction();
                 }
             }
-        });
-        }
-    }
-
 })(jQuery);

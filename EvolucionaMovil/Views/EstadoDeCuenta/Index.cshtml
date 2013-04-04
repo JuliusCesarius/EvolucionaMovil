@@ -1,4 +1,4 @@
-﻿@model IEnumerable<EvolucionaMovil.Models.EstadoCuentaVM>
+﻿@model EvolucionaMovil.Models.SimpleGridResult<EvolucionaMovil.Models.EstadoCuentaVM>
 @section Javascript{
     <script src="@Url.Content("~/Scripts/EstadoDeCuenta.js")" type="text/javascript"></script>
 }
@@ -10,10 +10,11 @@
     <h1>Estado de Cuenta</h1>
     <h2>Pago servicios</h2>
 </div>
+<form action="/EstadoDeCuenta" method="post"></form>
 <div  class="resumen fr saldos">
     <h3>Saldo Actual <span>@ViewData["SaldoActual"]</span></h3>
     <h3>Eventos <span>@ViewData["Eventos"]</span></h3>
-    <a href="/Paquetes/Comprar">[comprar eventos]</a>
+    <a href="/Paquetes/Buy">[comprar eventos]</a>
 </div>
 <div class="clear"></div>
 <div id="filtros">
@@ -22,19 +23,20 @@
         <label for="fechaInicio">
             Filtrar del
         </label>
-        <input type="text" class="small" id="fechaInicio" />
+        <input type="text" class="small" id="fechaInicio" value="@ViewBag.FechaInicio" />
         al
-        <input class="small" type="text" id="fechaFin" />
+        <input class="small" type="text" id="fechaFin" value="@ViewBag.FechaFin"/>
         Buscar
         <input class="small" type="text" id="searchString" /><input type="button" id="search" /><input
             type="submit" id="Actualizar" class="freshbutton-blue small" value="Actualizar" />
     </div>
-<div class="fl">
-    Últimos
-    <input type="text" id="pageSize" class="small" />
-    movimientos
-    <input type="checkbox" class="small" id="aplicadosOnly" /><label id="lblAplicadosOnly"
-        for="aplicadosOnly">Sólo aplicados</label>
-        </div>
+    <div class="fl">
+        Últimos
+        <input type="text" id="pageSize" class="small" value="@ViewBag.PageSize"/>
+        movimientos
+        <input type="checkbox" class="small" id="aplicadosOnly" @(ViewBag.OnlyAplicados ? "Checked" : "")/>
+        <label id="lblAplicadosOnly" for="aplicadosOnly">Sólo aplicados</label>
+      </div>
 </div>
+<input type="hidden" id="hddData" value="@Newtonsoft.Json.JsonConvert.SerializeObject(Model)" />
 <div id="grdEstadoDeCuenta" />
