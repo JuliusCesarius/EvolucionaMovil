@@ -310,15 +310,15 @@ input[type="submit"].btn::-moz-focus-inner {
 .mvl{margin-top:20px;margin-bottom:20px}
 
 /* fonts */
-.fss{font-size:9px}
-.fsm{font-size:11px}
-.fsl{font-size:12px}
-.fsx{font-size:14px}
-.fsxl{font-size:16px}
-.fsxxl{font-size:18px}
-.fsxxxl{font-size:22px}
-.fwn{font-weight:normal}
-.fwb{font-weight:bold}
+.fss{font-size:.8em!important}
+.fsm{font-size:.9em!important}
+.fsl{font-size:1.2em!important}
+.fsx{font-size:1.4em!important}
+.fsxl{font-size:1.6em!important}
+.fsxxl{font-size:2em!important}
+.fsxxxl{font-size:3em!important}
+.fwn{font-weight:normal!important}
+.fwb{font-weight:bold!important}
 
 /* colores primarios */
 .fcr{color:#32A6E0;} /* red */

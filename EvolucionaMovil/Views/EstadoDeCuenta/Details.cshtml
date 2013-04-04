@@ -1,39 +1,45 @@
 ﻿@model EvolucionaMovil.Models.ReporteDepositoVM
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Detalle Depósito";
 }
 
-<h2>Detalle</h2>
-
-<fieldset>
-    <legend>Depósito</legend>
-
-    <div class="display-label">Banco</div>
+<fieldset class="fwith300">
+    <h2>Información del Depósito</h2>
+    <div class="display-label">Banco / Número de Cuenta</div>
     <div class="display-field">
         @Html.DisplayFor(model => model.Banco)
+        Información
     </div>
 
     <div class="display-label">Cuenta</div>
-    <div class="display-field">
+    <div class="display-field fsl fwb">
         @Html.DisplayFor(model => model.Cuenta)
+        PAGO DE SERVICIOS
     </div>
 
-    <div class="display-label">Referencia</div>
+    <div class="display-label">Referencia Bancaria</div>
     <div class="display-field">
         @Html.DisplayFor(model => model.Referencia)
+        954872934857
     </div>
 
     <div class="display-label">Monto</div>
-    <div class="display-field">
+    <div class="display-field fsxl fwb">
         @Html.DisplayFor(model => model.Monto)
+        $3,200.00
     </div>
 
     <div class="display-label">Fecha</div>
     <div class="display-field">
         @Html.DisplayFor(model => model.Fecha)
+        13/ENE/2013 a las 03:23:23 pm
     </div>
-</fieldset>
-<p>
+
+    <div class="display-label fsl">Status</div>
+    <div class="display-field fwb Rechazado">
+            @Html.DisplayFor(model => model.Fecha)
+            RECHAZADO
+    </div>
     <input type="button" class="freshbutton-blue" class="freshbutton-blue" value="Aceptar" onclick="history.back();" />
-</p>
+</fieldset>
