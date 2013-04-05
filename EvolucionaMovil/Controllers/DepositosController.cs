@@ -56,7 +56,7 @@ namespace EvolucionaMovil.Controllers
                PayCenter = abono.PayCenter.UserName,
                Referencia = abono.Referencia,
                TipoCuenta = ((enumTipoCuenta)abono.Cuenta.TipoCuenta).ToString(), // .Where(x => x.CuentaId == abono.CuentaId).FirstOrDefault().TipoCuenta,   //"[FALTA OBTENER TIPO CUENTA]",(enumTipoCuenta)abono.).ToString(),
-               HistorialEstatusVM = movimiento.Movimientos_Estatus.Select(x=> new HistorialEstatusVM{Fecha = x.FechaCreacion.ToLongTimeString(), Estatus =((enumEstatusMovimiento)x.Status).ToString(),Comentarios = x.Comentarios}).ToList() 
+               HistorialEstatusVM = movimiento.Movimientos_Estatus.Select(x=> new HistorialEstatusVM{Fecha = x.FechaCreacion.ToLongDateString(), Estatus =((enumEstatusMovimiento)x.Status).ToString(),Comentarios = x.Comentarios, UserName = x.UserName }).ToList() 
            };
 
             //TODO:Leer el usuario que viene en la sesión
@@ -113,6 +113,7 @@ namespace EvolucionaMovil.Controllers
                 case "Rechazar":
                     break;
             }
+            return View();
           //  AbonoVM abonoVM = new AbonoVM
           //{
 

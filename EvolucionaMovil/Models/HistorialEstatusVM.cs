@@ -11,5 +11,6 @@ namespace EvolucionaMovil.Models
         public string Estatus { get; set; }
         public string Fecha { get; set; }
         public string Comentarios { get; set; }
+        public string UserName { get; set; }
     }
 }

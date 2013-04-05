@@ -955,7 +955,7 @@ legend{font-size:2em;font-weight:400}
 .status .Procesando, .Procesando{color:#808080}
 .status .Rechazado, .Rechazado{color:#FF1D25}
 .status .Cancelado, .Cancelado{color:#FF6700}
-.sgHeader .cargo,.sgHeader .abono{color:#fff}
+.listHeader .cargo,.listHeader .abono{color:#fff}
 .qtip{cursor: pointer;padding-right:1em;background: url("../Content/themes/base/images/qtip.png") no-repeat 100% 50%;}
 
 /**Prospecto**/
@@ -980,4 +980,21 @@ legend{font-size:2em;font-weight:400}
 .fwith300{width:550px}
 .fwith300 .display-label{width:200px}
 .fwith300 .display-field{width:345px}
-.
+
+
+/*ListGrid*/
+.listHeader{padding:4px;background:#ccc;}
+.listColumn{float:left;overflow:hidden;}
+.listBody{}
+.listRow{border: 1px solid #eee; padding: 0; padding-left: 7px; clear: both; overflow: hidden;}
+.listRow:hover{background-color:#EFF2F4;}
+.listCell{float:left;overflow:hidden;height:20px;}
+.listSelRow{background-color:#aaa}
+.listHeader, .listRow{margin-bottom:5px;}
+.listCell, .listColumn{width:100px;text-overflow: ellipsis;}
+
+#HistorialStatus{margin-top:15px}
+#HistorialStatus .Fecha{height:40px;width:120px}
+#HistorialStatus .Estatus{height:40px;width:65px}
+#HistorialStatus .Usuario{height:40px;width:65px}
+#HistorialStatus .Comentarios{display:inline-table;width:290px}
