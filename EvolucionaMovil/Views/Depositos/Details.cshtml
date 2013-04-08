@@ -1,46 +1,80 @@
 ﻿@model EvolucionaMovil.Models.AbonoVM
-
+@using EvolucionaMovil.Models.Enums; 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Detalle de Depósito";
 }
 
-<h2>Details</h2>
-
-<fieldset>
-    <legend>Abono</legend>
-
+<fieldset class="fwith300">
+    <h2>Información del Depósito</h2>
     <div class="display-label">PayCenter</div>
     <div class="display-field">
-        @Html.DisplayFor(model => model.PayCenter.IFE)
+        @Html.DisplayFor(model => model.PayCenter)
     </div>
-    
-    <div class="display-label">Monto</div>
+
+     <div class="display-label">Tipo de cuenta</div>
+    <div class="display-field fsl fwb">
+        @Html.DisplayFor(model => model.TipoCuenta)
+    </div>
+
+    <div class="display-label">Banco</div>
     <div class="display-field">
-        @Html.DisplayFor(model => model.Monto)
+        @Html.DisplayFor(model => model.Banco )
+    </div>
+
+    <div class="display-label">Cuenta Bancaria</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.CuentaBancaria )
+    </div>
+
+    <div class="display-label ">Monto</div>
+    <div class="display-field fsl fwb">
+        @Html.DisplayFor(model => model.MontoString)
     </div>
 
     <div class="display-label">FechaPago</div>
     <div class="display-field">
         @Html.DisplayFor(model => model.FechaPago)
     </div>
-
+   
     <div class="display-label">Referencia</div>
     <div class="display-field">
         @Html.DisplayFor(model => model.Referencia)
     </div>
 
-    <div class="display-label">EstatusId</div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.EstatusId)
+    <div class="display-label">Estatus</div>
+    <div class="display-field fwb @Model.StatusString">
+        @Html.DisplayFor(model => model.StatusString )
     </div>
 
     <div class="display-label">FechaCreacion</div>
     <div class="display-field">
         @Html.DisplayFor(model => model.FechaCreacion)
     </div>
-
+ @using (Html.BeginForm())
+ {
+    <p>
+    @if (ViewBag.Role == EnumRoles.PayCenter.GetHashCode())
+    {
+        <input type="submit" name="action"  class="freshbutton-blue" value="Cancelar" />
+    }
+    else if (ViewBag.Role == EnumRoles.Staff.GetHashCode() || ViewBag.Role == EnumRoles.Administrator.GetHashCode())
+    {
+        <input type="submit" name="action" class="small freshbutton-blue" value="Aplicar" /> 
+        <input type="button" name="action"  class="small freshbutton-blue" value="Rechazar" />       
+    }  
+  </p>
+ }
+    <div id="HistorialStatus">
+    <div  class="listHeader">Hitórico de Estatus</div>
+    @foreach (var item in Model.HistorialEstatusVM)
+    { 
+       <div class="listRow">
+          <span class="listCell Fecha"> @item.Fecha</span>
+          <span class="listCell Comentarios"> @item.Comentarios </span>    
+          <span class="listCell Usuario"> @item.UserName</span>     
+          <span class="listCell Estatus @item.Estatus fwb"> @item.Estatus </span> 
+        </div> 
+    }
+    </div>
+    <input type="button" name="action"  class="freshbutton-blue" value="Regresar" />
 </fieldset>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id=Model.AbonoId }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
