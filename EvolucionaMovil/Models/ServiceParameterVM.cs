@@ -12,6 +12,6 @@ namespace EvolucionaMovil.Models
         public string searchString { get; set; }
         public DateTime? fechaInicio { get; set; }
         public DateTime? fechaFin { get; set; }
-        public Boolean onlyAplicados { get; set; }
+        public bool onlyAplicados { get; set; }
     }
 }

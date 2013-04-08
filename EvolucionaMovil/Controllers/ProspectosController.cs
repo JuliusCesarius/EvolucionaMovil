@@ -36,7 +36,7 @@ namespace EvolucionaMovil.Controllers
         }
 
         //
-        // GET: /Prospectos/Create
+        // GET: /Prospectos/Preafiliacion
 
         public ActionResult Preafiliacion()
         {
@@ -44,7 +44,7 @@ namespace EvolucionaMovil.Controllers
         }
 
         //
-        // POST: /Prospectos/Create
+        // POST: /Prospectos/Preafiliacion
 
         [HttpPost]
         public ActionResult Preafiliacion(ProspectoVM prospectoVM)

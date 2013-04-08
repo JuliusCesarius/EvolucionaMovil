@@ -25,8 +25,27 @@ namespace EvolucionaMovil.Controllers
 
         public ViewResult Index()
         {
-            return View(getEstadoDeCuenta(new ServiceParameterVM { pageNumber = 0, pageSize = 20 }).Result);
+            ViewBag.PageSize = 10;
+            ViewBag.PageNumber = 0;
+            ViewBag.SearchString = string.Empty;
+            ViewBag.fechaInicio = string.Empty;
+            ViewBag.FechaFin = string.Empty;
+            ViewBag.OnlyAplicados = false;
+            return View(getEstadoDeCuenta(new ServiceParameterVM { pageNumber = 0, pageSize = 20 }));
         }
+
+        [HttpPost]
+        public ViewResult Index(ServiceParameterVM parameters)
+        {
+            ViewBag.PageSize = parameters.pageSize;
+            ViewBag.PageNumber = parameters.pageNumber;
+            ViewBag.SearchString = parameters.searchString;
+            ViewBag.fechaInicio = parameters.fechaInicio != null ? ((DateTime)parameters.fechaInicio).ToShortDateString() : "";
+            ViewBag.FechaFin = parameters.fechaInicio != null ? ((DateTime)parameters.fechaFin).ToShortDateString() : "";
+            ViewBag.OnlyAplicados = parameters.onlyAplicados;
+            return View(getEstadoDeCuenta(parameters));
+        }
+
         [HttpPost]
         public string GetEstadoCuenta(ServiceParameterVM parameters)
         {
