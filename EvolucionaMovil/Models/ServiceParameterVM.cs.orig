@@ -1,0 +1,21 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+
+namespace EvolucionaMovil.Models
+{
+    public class ServiceParameterVM
+    {
+        public int pageSize { get; set; }
+        public int pageNumber { get; set; }
+        public string searchString { get; set; }
+        public DateTime? fechaInicio { get; set; }
+        public DateTime? fechaFin { get; set; }
+<<<<<<< HEAD
+        public Boolean onlyAplicados { get; set; }
+=======
+        public bool onlyAplicados { get; set; }
+>>>>>>> 8f185e21e8f4a70bbcd419285b8f69d4d7ce5e8f
+    }
+}
