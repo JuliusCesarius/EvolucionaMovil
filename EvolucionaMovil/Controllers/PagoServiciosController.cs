@@ -48,7 +48,8 @@ namespace EvolucionaMovil.Controllers
 
         public ActionResult Create()
         {
-            return View();
+            PagoVM pVM = new PagoVM();
+            return View(pVM);
         } 
 
         //

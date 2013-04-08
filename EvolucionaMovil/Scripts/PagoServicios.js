@@ -35,6 +35,7 @@ function bindGrid(options) {
     var columns = [
          { name: 'FechaCreacion', displayName: 'Fecha', cssClass: 'fechacreacion' },
          { name: 'Folio', displayName: 'Folio', cssClass: 'folio' },
+         { name: 'NombreCliente', displayName: 'Cliente', cssClass: 'cliente'},
          { name: 'PayCenterName', displayName: 'Paycenter', cssClass: 'paycenter' },
          { name: 'Servicio', cssClass: 'servicio' },
          { name: 'Status', cssClass: 'status', displayName: 'Estatus', customTemplate: '<span alt="{Comentarios}" class=" {Status} qtip">{Status}</span>' },
@@ -49,6 +50,7 @@ function bindGrid(options) {
     var searchString = options.searchString;
     var fechaInicio = options.fechaInicio;
     var fechaFin = options.fechaFin;
+    var onlyAplicados = $("#aplicadosOnly")[0].checked;
     $("#grdPagoServicios").simpleGrid({
         url: "/PagoServicios/GetPagoServicios",
         columns: columns,
@@ -57,7 +59,8 @@ function bindGrid(options) {
         pageNumber: pageNumber,
         searchString: searchString,
         fechaInicio: fechaInicio,
-        fechaFin: fechaFin
+        fechaFin: fechaFin,
+        onlyAplicados: onlyAplicados,
     });
 }
 
