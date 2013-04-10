@@ -4,6 +4,8 @@
     ViewBag.Title = "Detalle de Depósito";
 }
 
+<script src="@Url.Content("~/Scripts/Abono.js")" type="text/javascript"></script>
+
 <fieldset>
     <legend>Depósito</legend>
 
@@ -54,28 +56,59 @@
 
     <div class="" id="HistorialEstatus">
     <span >Hitórico de Estatus</span>
-    @foreach (var item in Model.HistorialEstatusVM)
-    { 
-       <div>
-          <span> @item.Fecha</span>   
-          <span> @item.Estatus </span> 
-          <span> @item.Comentarios </span> 
-        </div> 
+    @if (Model.HistorialEstatusVM!= null)
+    {
+        foreach (var item in Model.HistorialEstatusVM)
+        { 
+           <div>
+              <span> @item.Fecha</span>   
+              <span> @item.Estatus </span> 
+              <span> @item.Comentarios </span> 
+            </div> 
+        }
     }
     </div>
  @using (Html.BeginForm())
  {
-    <p>
-    @if (ViewBag.Role == EnumRoles.PayCenter.GetHashCode())
-    {
-        <input type="submit" name="action"  class="freshbutton-blue" value="Cancelar" />
-    }
-    else if (ViewBag.Role == EnumRoles.Staff.GetHashCode() || ViewBag.Role == EnumRoles.Administrator.GetHashCode())
-    {
-        <input type="submit" name="action" class="freshbutton-blue" value="Aplicar" /> 
-        <input type="button" name="action"  class="freshbutton-blue" value="Rechazar" />       
-    }  
-  </p>
+     <input type="hidden" name ="AbonoId" value="@Model.AbonoId"/>
+     
+    <div>
+        @if (ViewBag.Role == EnumRoles.PayCenter.GetHashCode())
+        {
+            <input type="button" id="Cancelar"  onclick="MuestraComentario()" name="action"  class="freshbutton-blue" value="Cancelar" />
+             <div id="ComentarioPayCenter" style="display: none;">
+                  <span class="">Cancelar</span>
+                  <div  class="display-label">@Html.LabelFor(model => model.CambioEstatusVM.Comentario)</div>
+                  <div class="display-field">
+                    @Html.EditorFor(model => model.CambioEstatusVM.Comentario)
+                   </div>
+                  <div>
+                         <input type="submit" name="CambioEstatusVM.Estatus"  class="freshbutton-blue" value="Cancelar" />
+                         <input type="button" onclick="OcultaComentario()" id="NoCancelar" name=""  class="freshbutton-blue" value="No Cancelar" />
+                  </div>         
+            </div>
+        }
+        else if (ViewBag.Role == EnumRoles.Staff.GetHashCode() || ViewBag.Role == EnumRoles.Administrator.GetHashCode())
+        {
+          <div>
+            <input type="submit" id = "Aplicar" name="CambioEstatusVM.Estatus" class="freshbutton-blue" value="Aplicar" /> 
+            <input type="button" id = "Rechazar" onclick="MuestraComentario()" class="freshbutton-blue" value="Rechazar" /> 
+            </div>
+            <div id="ComentarioStaff"  style="display: none;"> 
+               <span class="">Rechazar</span>
+               <div class="display-label">Comentario</div>
+               <div class="display-field">
+                    @Html.EditorFor(model => model.CambioEstatusVM.Comentario)
+               </div>
+               <div>
+                         <input type="submit" name="CambioEstatusVM.Estatus"  class="freshbutton-blue" value="Rechazar" />
+                         <input type="button" name="" onclick="OcultaComentario()" class="freshbutton-blue" value="Cancelar" />
+               </div>
+                 
+           </div>  
+        }  
+  </div>
+  <div><p >@ViewBag.mensage</p></div> 
  }
 </fieldset>
 
