@@ -24,7 +24,7 @@
             Referencia
         </th>
         <th>
-            EstatusId
+            Estatus
         </th>
         <th>
             FechaCreacion
@@ -35,7 +35,7 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.PayCenter.IFE)
+            @Html.DisplayFor(modelItem => item.PayCenter)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Monto)
@@ -46,8 +46,8 @@
         <td>
             @Html.DisplayFor(modelItem => item.Referencia)
         </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.EstatusId)
+       <td>
+            @Html.DisplayFor(modelItem => item.StatusString )
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.FechaCreacion)

@@ -52,7 +52,17 @@
     <div class="display-field">
         @Html.DisplayFor(model => model.FechaCreacion)
     </div>
-        
+    @if (Model.HistorialEstatusVM!= null)
+    {
+        foreach (var item in Model.HistorialEstatusVM)
+        { 
+           <div>
+              <span> @item.Fecha</span>   
+              <span> @item.Estatus </span> 
+              <span> @item.Comentarios </span> 
+            </div> 
+        }
+    }
  @using (Html.BeginForm())
  {
      <input type="hidden" name ="AbonoId" value="@Model.AbonoId"/>
@@ -93,24 +103,19 @@
            </div>  
         }  
   </div>
- 
+  <div><p >@ViewBag.mensage</p></div> 
  }
     <div id="HistorialStatus">
     <div  class="listHeader">Hitórico de Estatus</div>
-    @if (Model.HistorialEstatusVM != null)
-    {
-        foreach (var item in Model.HistorialEstatusVM)
-        { 
-           <div class="listRow">
-              <span class="listCell Fecha"> @item.Fecha</span>
-              <span class="listCell Comentarios"> @item.Comentarios </span>    
-              <span class="listCell Usuario"> @item.UserName</span>     
-              <span class="listCell Estatus @item.Estatus fwb"> @item.Estatus </span> 
-            </div> 
-        }
+    @foreach (var item in Model.HistorialEstatusVM)
+    { 
+       <div class="listRow">
+          <span class="listCell Fecha"> @item.Fecha</span>
+          <span class="listCell Comentarios"> @item.Comentarios </span>    
+          <span class="listCell Usuario"> @item.UserName</span>     
+          <span class="listCell Estatus @item.Estatus fwb"> @item.Estatus </span> 
+        </div> 
     }
     </div>
-     <div><p>@ViewBag.mensage</p></div> 
-   
-    <input type="button"  name="Index"  class="freshbutton-blue" value="Regresar" />
+    <input type="button" name="action"  class="freshbutton-blue" value="Regresar" />
 </fieldset>
