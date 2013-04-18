@@ -1,4 +1,4 @@
-@model EvolucionaMovil.Areas.MvcMembership.Models.UserAdministration.RoleViewModel
+@model EvolucionaMovil.Areas.MvcMembership.Models.Users.RoleViewModel
 @{
 	ViewBag.Title = "Role: " + Model.Role;
 	Layout = "~/Views/Shared/_Layout.cshtml";
@@ -16,7 +16,7 @@
 					<span>@key <em>(Deleted)</em></span>
 				}else{
 					@Html.ActionLink(user.UserName, "Details", new{id=user.ProviderUserKey})
-					using(Html.BeginForm("RemoveFromRole", "UserAdministration", new{id = user.ProviderUserKey, role = Model.Role})){
+					using(Html.BeginForm("RemoveFromRole", "Users", new{id = user.ProviderUserKey, role = Model.Role})){
 						<input type="submit" value="Remove From" />
 					}
 				}

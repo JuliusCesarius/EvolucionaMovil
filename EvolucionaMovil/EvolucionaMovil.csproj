@@ -111,11 +111,11 @@
   <ItemGroup>
     <Compile Include="App_Start\MvcMembership.cs" />
     <Compile Include="App_Start\RegisterClientValidationExtensions.cs" />
-    <Compile Include="Areas\MvcMembership\Controllers\UserAdministrationController.cs" />
-    <Compile Include="Areas\MvcMembership\Models\UserAdministration\CreateUserViewModel.cs" />
-    <Compile Include="Areas\MvcMembership\Models\UserAdministration\DetailsViewModel.cs" />
-    <Compile Include="Areas\MvcMembership\Models\UserAdministration\IndexViewModel.cs" />
-    <Compile Include="Areas\MvcMembership\Models\UserAdministration\RoleViewModel.cs" />
+    <Compile Include="Areas\MvcMembership\Controllers\UsersController.cs" />
+    <Compile Include="Areas\MvcMembership\Models\Users\CreateUserViewModel.cs" />
+    <Compile Include="Areas\MvcMembership\Models\Users\DetailsViewModel.cs" />
+    <Compile Include="Areas\MvcMembership\Models\Users\IndexViewModel.cs" />
+    <Compile Include="Areas\MvcMembership\Models\Users\RoleViewModel.cs" />
     <Compile Include="Areas\MvcMembership\MvcMembershipAreaRegistration.cs" />
     <Compile Include="Attributes\MaskAttribute.cs" />
     <Compile Include="Controllers\AccountController.cs" />
@@ -467,22 +467,22 @@
     <Content Include="Areas\MvcMembership\Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Areas\MvcMembership\Views\UserAdministration\UsersRoles.cshtml" />
+    <Content Include="Areas\MvcMembership\Views\Users\UsersRoles.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Areas\MvcMembership\Views\UserAdministration\Role.cshtml" />
+    <Content Include="Areas\MvcMembership\Views\Users\Role.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Areas\MvcMembership\Views\UserAdministration\Password.cshtml" />
+    <Content Include="Areas\MvcMembership\Views\Users\Password.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Areas\MvcMembership\Views\UserAdministration\Index.cshtml" />
+    <Content Include="Areas\MvcMembership\Views\Users\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Areas\MvcMembership\Views\UserAdministration\Details.cshtml" />
+    <Content Include="Areas\MvcMembership\Views\Users\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Areas\MvcMembership\Views\UserAdministration\CreateUser.cshtml" />
+    <Content Include="Areas\MvcMembership\Views\Users\CreateUser.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\cabinet.patterns\cabinet.patterns.csproj">
