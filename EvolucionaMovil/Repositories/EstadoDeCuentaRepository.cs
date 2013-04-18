@@ -7,7 +7,7 @@ using EvolucionaMovil.Models;
 
 namespace EvolucionaMovil.Repositories
 {
-    public class EstadoDeCuentaRepository : RepositoryBase<Movimiento, EvolucionaMovilBDEntities> 
+    public class EstadoDeCuentaRepository : RepositoryBase<Movimiento, EvolucionaMovilBDEntities>
     {
         public EstadoDeCuentaRepository()
             : base()
@@ -25,6 +25,11 @@ namespace EvolucionaMovil.Repositories
         public void AddAbono(Abono abono)
         {
             context.Abonos.AddObject(abono);
+        }
+        public IEnumerable<Movimiento> GetMovimientosByPayCenterId(int PayCenterId)
+        {
+            //ToDo: Checar si hay que validar algún estatus
+            return context.Movimientos.Where(m => m.PayCenterId == PayCenterId && m.Baja == false).OrderByDescending(m => m.FechaCreacion);
         }
     }
 }
