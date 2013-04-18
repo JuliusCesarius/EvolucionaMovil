@@ -75,10 +75,9 @@ function bindGrid(options) {
 
 function edoCuentaLoaded(){
     $(".qtip").qtip({content:$(this).attr("alt")});
-    $(".saldo").each(function (i, item) {
-        if (i == 0) {
-            $(item).addClass($(item).val().replace("$", "") > 0 ? "abono" : "cargo");
-        }
+    $(".sgCell.saldo").each(function (i, item) {
+            var clase = $(item).val().replace("$", "") > 0 ? "abono" : "cargo";
+            $(item).addClass(clase);
     });
 }
 
