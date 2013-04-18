@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using DataAnnotationsExtensions;
 
-namespace EvolucionaMovil.Areas.MvcMembership.Models.UserAdministration
+namespace EvolucionaMovil.Areas.MvcMembership.Models.Users
 {
 	public class CreateUserViewModel
 	{

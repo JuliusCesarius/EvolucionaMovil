@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Web.Security;
 using PagedList;
 
-namespace EvolucionaMovil.Areas.MvcMembership.Models.UserAdministration
+namespace EvolucionaMovil.Areas.MvcMembership.Models.Users
 {
 	public class IndexViewModel
 	{
