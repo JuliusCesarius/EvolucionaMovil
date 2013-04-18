@@ -18,9 +18,9 @@ namespace EvolucionaMovil.Repositories
             : base(context)
         {
         }
-        public IEnumerable<Movimiento> GetMovimientos(int TipoCuentaId = -1)
+        public IEnumerable<Movimiento> GetMovimientos(int TipoCuentaId = -1, int PayCenterId = -1)
         {
-            return context.Movimientos.Where(m => m.CuentaId == TipoCuentaId || TipoCuentaId == -1).OrderByDescending(m => m.FechaCreacion);
+            return context.Movimientos.Where(m => (m.CuentaId == TipoCuentaId || TipoCuentaId == -1) && (m.PayCenterId == PayCenterId || PayCenterId == -1)).OrderByDescending(m => m.FechaCreacion);
         }
         public void AddAbono(Abono abono)
         {

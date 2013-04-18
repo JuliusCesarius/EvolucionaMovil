@@ -14,7 +14,7 @@
     </div>
 
      <div class="display-label">Tipo de cuenta</div>
-    <div class="display-field fsl fwb">
+    <div class="display-field fsx fwb">
         @Html.DisplayFor(model => model.TipoCuenta)
     </div>
 
@@ -29,7 +29,7 @@
     </div>
 
     <div class="display-label ">Monto</div>
-    <div class="display-field fsl fwb">
+    <div class="display-field fsx fwb">
         @Html.DisplayFor(model => model.MontoString)
     </div>
 
@@ -75,10 +75,12 @@
         }
         else if (ViewBag.Role == EnumRoles.Staff.GetHashCode() || ViewBag.Role == EnumRoles.Administrator.GetHashCode())
         {
-          <div>
-            <input type="submit" id = "Aplicar" name="CambioEstatusVM.Estatus" class="freshbutton-blue" value="Aplicar" /> 
-            <input type="button" id = "Rechazar" onclick="MuestraComentario()" class="freshbutton-blue" value="Rechazar" /> 
-            </div>
+            if(ViewBag.Estatus == enumEstatusMovimiento.Procesando.GetHashCode()){
+                <div>
+                    <input type="submit" id = "Aplicar" name="CambioEstatusVM.Estatus" class="freshbutton-blue small" value="Aplicar" /> 
+                    <input type="button" id = "Rechazar" onclick="MuestraComentario()" class="freshbutton-blue small" value="Rechazar" /> 
+                </div>
+            }
             <div id="ComentarioStaff"  style="display: none;"> 
                <span class="">Rechazar</span>
                <div class="display-label">Comentario</div>
@@ -86,8 +88,8 @@
                     @Html.EditorFor(model => model.CambioEstatusVM.Comentario)
                </div>
                <div>
-                         <input type="submit" name="CambioEstatusVM.Estatus"  class="freshbutton-blue" value="Rechazar" />
-                         <input type="button" name="" onclick="OcultaComentario()" class="freshbutton-blue" value="Cancelar" />
+                         <input type="submit" name="CambioEstatusVM.Estatus"  class="freshbutton-blue small" value="Rechazar" />
+                         <input type="button" name="" onclick="OcultaComentario()" class="freshbutton-blue small" value="Cancelar" />
                </div>
                  
            </div>  

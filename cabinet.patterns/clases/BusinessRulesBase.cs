@@ -9,6 +9,6 @@ namespace cabinet.patterns.clases
     public class BusinessRulesBase<T> 
         where T : EntityObject
     {
-
+        //TODO: Implentar código genérico entre business rules
     }
 }

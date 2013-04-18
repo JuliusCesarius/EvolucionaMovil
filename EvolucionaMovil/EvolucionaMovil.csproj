@@ -139,6 +139,7 @@
     <Compile Include="Models\BR\ProspectoBR.cs" />
     <Compile Include="Models\CambioEstatusVM.cs" />
     <Compile Include="Models\CompraEventoVM.cs" />
+    <Compile Include="Models\Enums\enumTipoMovimiento.cs" />
     <Compile Include="Models\Enums\EnumRoles.cs" />
     <Compile Include="Models\Enums\enumTipoCuenta.cs" />
     <Compile Include="Models\Helpers\MvcHtmlHelpers.cs" />
