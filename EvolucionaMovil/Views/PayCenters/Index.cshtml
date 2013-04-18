@@ -12,6 +12,23 @@
     @Html.ActionLink("Nuevo registro", "Registrar")
 </p>
 <h1>PayCenters</h1>
+<div id="filtros">
+    <div class="fr">
+        <label for="fechaInicio">Ingreso del </label>
+        <input type="text" class="small" id="fechaInicio" />
+        al
+        <input class="small" type="text" id="fechaFin" />
+        <input type="submit" id="Actualizar" class="freshbutton-blue small" value="Actualizar" />
+    </div>
+    <div class="fl">
+        Ver
+        <input type="text" id="pageSize" class="small" />
+        registros
+        <input type="radio" id="Todos" name="Estatus" value="Todos" checked="checked" /><label id="lblTodos" for="Todos">Todos</label>
+        <input type="radio" id="Activos" name="Estatus" value="Activo" /><label id="lblActivos" for="Activos">Activos</label>
+        <input type="radio" id="Inactivos" name="Estatus" value="Inactivo" /><label id="lblInactivos" for="Inactivos">Inactivos</label>
+    </div>
+</div>
 <div id="grdPaycenters" />
 @*<table>
     <tr>
