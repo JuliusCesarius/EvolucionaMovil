@@ -52,20 +52,17 @@ namespace EvolucionaMovil.Controllers
             //Aquí van las acciones del PayCenter y Staf para el depósito
             var id = model.AbonoId ;
             var action =model.CambioEstatusVM.Estatus ;
-            string comentario =model.CambioEstatusVM.Comentario  ;
+            string comentario =model.CambioEstatusVM.Comentario.TrimEnd()  ;
              Abono abono = repository.LoadById(id);
              if (id > 0)
              {
-                 //Validar que el estatus actual del abono sea Procesando
-                 if (abono.Status == enumEstatusMovimiento.Procesando.GetHashCode())
+                 //Validar que el estatus actual del abono no este cancelado
+                 if (abono.Status != enumEstatusMovimiento.Cancelado.GetHashCode())
                  {                    
                      //crear ParametrosRepository y crear instancia para obtener el parametro de MinutosProrrogaCancelacion
                      ParametrosRepository parametrosRepository = new ParametrosRepository();
-                     short MinutosProrrogaCancelacion = parametrosRepository.ListAll().FirstOrDefault().MinutosProrrogaCancelacion;
-                     //Si ya pasaron los minutos de prorroga se dispara la excepción con un Throw Ex("No es posible cancelar por eltiempo... blablabla");
-                     TimeSpan ts =  DateTime.Now - abono.FechaCreacion;
-                     if (MinutosProrrogaCancelacion > ts.TotalMinutes)
-                     {
+                     short minutosProrrogaCancelacion = parametrosRepository.ListAll().FirstOrDefault().MinutosProrrogaCancelacion;
+
                          Boolean ComentarioValido = false ;
                          Boolean UsuarioValido = false;
                          int Role = GetRolUser("staff");
@@ -77,25 +74,55 @@ namespace EvolucionaMovil.Controllers
                              switch (action)
                              {
                                  case "Cancelar":
-                                     //Validar el Role del Usario conectado
-                                     if (Role == EnumRoles.PayCenter.GetHashCode())
+                                    //Validar que el estatus actual del abono sea Procesando
+                                     if (abono.Status == enumEstatusMovimiento.Procesando.GetHashCode())
                                      {
-                                         abono.Status = (short)(enumEstatusMovimiento.Cancelado.GetHashCode());
-                                         ViewBag.mensage = "El reporte de depósito ha sido Cancelado exitosamente.";
-                                         UsuarioValido = true;
-                                         ComentarioValido = comentario.TrimEnd() != string.Empty ? true : false;
+                                         //Si ya pasaron los minutos de prorroga se dispara la excepción con un Throw Ex("No es posible cancelar por eltiempo... blablabla");
+                                         TimeSpan ts = DateTime.Now - abono.FechaCreacion;
+                                         if (minutosProrrogaCancelacion > ts.TotalMinutes)
+                                         {
+                                             //Validar el Role del Usario conectado
+                                             if (Role == EnumRoles.PayCenter.GetHashCode())
+                                             {
+                                                 abono.Status = (short)(enumEstatusMovimiento.Cancelado.GetHashCode());
+                                                 //ViewBag.Mensaje = "El reporte de depósito ha sido cancelado exitosamente.";
+                                                 UsuarioValido = true;
+                                                 ComentarioValido = comentario.TrimEnd() != string.Empty ? true : false;
+                                             }
+                                         }
+                                         else
+                                             ViewBag.Mensaje = "No es posible cancelar el abono ya que ha expirado el tiempo de prórroga.";   
                                      }
-                                    
+                                     else
+                                         ViewBag.Mensaje = "No se puede cancelar el depósito sino esta en estatus de procesando.";
+
                                      break;
                                  case "Aplicar":
                                 
                                      //Validar el Role del Usario conectado
                                      if (Role == EnumRoles.Staff.GetHashCode() || Role == EnumRoles.Administrator.GetHashCode())
                                      {
-                                         abono.Status = (short)(enumEstatusMovimiento.Aplicado.GetHashCode());
-                                         ViewBag.mensage = "Se ha guardado exitosamente.";
+
+                                         UsuarioValido = true;   
                                          ComentarioValido = true;
-                                         UsuarioValido = true;
+                                             //Validar que el estatus actual del abono sea Rechazado, entonces necesitamos el comentario
+                                             if (abono.Status == enumEstatusMovimiento.Rechazado.GetHashCode() && comentario == string.Empty)
+                                             {
+                                                 ComentarioValido = false;
+                                             }
+                                             else
+                                             {
+                                                 if (abono.Status != enumEstatusMovimiento.Aplicado.GetHashCode())
+                                                 {
+                                                     abono.Status = (short)(enumEstatusMovimiento.Aplicado.GetHashCode());
+                                                    // ViewBag.Mensaje = "Se ha guardado exitosamente.";
+                                                 }
+                                                 else
+                                                     ViewBag.Mensaje = "No se puede Aplicar el depósito porque ya esta en estatus de aplicado.";
+
+
+                                             }
+
                                      }
                                      
                                      break;
@@ -103,10 +130,17 @@ namespace EvolucionaMovil.Controllers
                                      //Validar el Role del Usario conectado
                                      if (Role == EnumRoles.Staff.GetHashCode() || Role == EnumRoles.Administrator.GetHashCode())
                                      {
-                                         abono.Status = (short)(enumEstatusMovimiento.Rechazado.GetHashCode());
-                                         ViewBag.mensage = "Se ha guardado exitosamente.";
                                          UsuarioValido = true;
                                          ComentarioValido = comentario.TrimEnd() != string.Empty ? true : false;
+                                         if (abono.Status != enumEstatusMovimiento.Rechazado.GetHashCode())
+                                         {
+                                             
+                                             abono.Status = (short)(enumEstatusMovimiento.Rechazado.GetHashCode());
+                                             //ViewBag.Mensaje = "Se ha guardado exitosamente.";
+     
+                                         }
+                                         else
+                                             ViewBag.Mensaje = "No se puede rechazar el depósito porque ya esta en estatus de rechazado.";
                                      }
                                      break;
                              }
@@ -115,51 +149,56 @@ namespace EvolucionaMovil.Controllers
 
                                  //Valida comendario
                                  if (ComentarioValido)
-                                 {  
-                                     movimiento.Status = abono.Status;
-                                     Movimientos_Estatus movimiento_Estatus = new Movimientos_Estatus()
+                                 {
+                                     if (ViewBag.Mensaje == null || ViewBag.Mensaje == string.Empty)
                                      {
-                                         CuentaId = abono.CuentaId,
-                                         FechaCreacion = DateTime.Now,
-                                         MovimientoId = movimiento.MovimientoId,
-                                         PayCenterId = abono.PayCenterId,
-                                         Status = movimiento.Status,
-                                         UserName = "staff", //Todo: Cambiar el user y tomarlo de la sesion
-                                        Comentarios  = comentario 
-                                     };
-                                     movimiento.Movimientos_Estatus.Add(movimiento_Estatus);
-                                     repository.Save();
+                                         movimiento.Status = abono.Status;
+                                         Movimientos_Estatus movimiento_Estatus = new Movimientos_Estatus()
+                                         {
+                                             CuentaId = abono.CuentaId,
+                                             FechaCreacion = DateTime.Now,
+                                             MovimientoId = movimiento.MovimientoId,
+                                             PayCenterId = abono.PayCenterId,
+                                             Status = movimiento.Status,
+                                             UserName = "staff", //Todo: Cambiar el user y tomarlo de la sesion
+                                             Comentarios = comentario
+                                         };
+                                         movimiento.Movimientos_Estatus.Add(movimiento_Estatus);
+                                         repository.Save();
+                                         if   (abono.Status == enumEstatusMovimiento.Cancelado.GetHashCode()){
+                                             ViewBag.Mensaje = "El reporte de depósito ha sido cancelado exitosamente.";
+                                         }
+                                         else{
+                                             ViewBag.Mensaje = "Se ha guardado exitosamente.";
+                                         }
+                                     }
                                      model.CambioEstatusVM.Comentario = string.Empty;
                                      model.CambioEstatusVM.Estatus  = string.Empty;
                                  }
                                  else{
-                                     ViewBag.mensage = "Es necesario agregar un comentario para poder asignar el status.";
+                                     ViewBag.Mensaje = "Es necesario agregar un comentario para poder asignar el estatus.";
                                     }
                              }
                              else
                              {
-                                ViewBag.mensage = "El usuario no es valido.";
+                                 ViewBag.Mensaje = "El usuario no es valido.";
                              }
                          }
                          else
                          {
-                             ViewBag.mensage = "No se encontro el movimiento para el Depósito.";
+                             ViewBag.Mensaje = "No se encontro el movimiento para el depósito.";
                          }
                          //****No es necesario pasar el context (transación) porque solo sirve para consultar.
-                     }
-                     else
-                     {
-                         ViewBag.mensage = "No es posible cancelar el abono ya que ha expirado el tiempo de prórroga.";
-                     }
+                    
 
                  }
                  else
                  {
-                     ViewBag.mensage = "No se puede " + action + " el Depósito sino esta en estatus Procesando.";
+                     ViewBag.Mensaje = "No se puede " + action.ToLower() + " el depósito porque el estatus es cancelado.";
                  }
              }
              else {
-                 ViewBag.mensage = "No existe el Depósito.";
+                 ViewBag.Mensaje = "No existe el depósito.";
              }
            //Llenar el VM con el método de llenado
             AbonoVM abonoVM = FillAbonoVM(id);
@@ -280,7 +319,7 @@ namespace EvolucionaMovil.Controllers
                 movimientoId = movimiento.MovimientoId;
             }
             else {
-                ViewBag.mensage = "No existe el movimiento para el Depósito.";
+                ViewBag.Mensaje = "No existe el movimiento para el depósito.";
             }
           //  var movimiento = estadoDeCuentaRepository.LoadById(movimientoId);
             AbonoVM abonoVM = new AbonoVM
@@ -295,24 +334,24 @@ namespace EvolucionaMovil.Controllers
                 PayCenter = abono.PayCenter.UserName,
                 Referencia = abono.Referencia,
                 TipoCuenta = ((enumTipoCuenta)abono.Cuenta.TipoCuenta).ToString(), 
-                HistorialEstatusVM = movimiento != null ? movimiento.Movimientos_Estatus.Select(x => new HistorialEstatusVM { Fecha = x.FechaCreacion.ToString(), Estatus = ((enumEstatusMovimiento)x.Status).ToString(), Comentarios = x.Comentarios }).ToList() : null 
+                HistorialEstatusVM = movimiento != null ? movimiento.Movimientos_Estatus.OrderByDescending(x => x.FechaCreacion).Select(x => new HistorialEstatusVM { Fecha = x.FechaCreacion.ToString(), Estatus = ((enumEstatusMovimiento)x.Status).ToString(), Comentarios = x.Comentarios, UserName = x.UserName  }) .ToList()  : null 
             };
             return abonoVM;
         }
         private int GetRolUser(string pUser)
         {
             var roles = Roles.GetRolesForUser(pUser);
-            int Rol = 0;
+            int rolUser = 0;
             if (roles.Any(x => x == EnumRoles.PayCenter.ToString()))
             {
-                Rol = EnumRoles.PayCenter.GetHashCode();
+                rolUser = EnumRoles.PayCenter.GetHashCode();
             }
             else if (roles.Any(x => x == EnumRoles.Staff.ToString() || x == EnumRoles.Administrator.ToString()))
             {
-                Rol = EnumRoles.Staff.GetHashCode();
+                rolUser = EnumRoles.Staff.GetHashCode();
             }
 
-            return Rol;
+            return rolUser;
         }
 
   
