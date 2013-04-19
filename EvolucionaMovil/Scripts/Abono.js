@@ -21,7 +21,7 @@ function OcultaComentario() {
 
 }
 
-function MuestraComentario() {
+function MuestraComentario(action) {
     if ($("#ComentarioPayCenter").length) {
         $("#ComentarioPayCenter").css("display", "block");
         $("#Cancelar").css("display", "none");
@@ -31,7 +31,8 @@ function MuestraComentario() {
             $("#ComentarioStaff").css("display", "block");
             $("#Aplicar").css("display", "none");
             $("#Rechazar").css("display", "none");
-
+            $("#action")[0].value = action;
+            $("#actionName")[0].textContent = action;
         }
     }
  }
