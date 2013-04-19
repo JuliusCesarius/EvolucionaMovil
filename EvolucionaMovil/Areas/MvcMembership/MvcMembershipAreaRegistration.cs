@@ -16,7 +16,7 @@ namespace EvolucionaMovil.Areas.MvcMembership
 		{
 			context.MapRoute(
 				"MvcMembership_default",
-				"MvcMembership/{controller}/{action}/{id}",
+				"Administration/{controller}/{action}/{id}",
 				new { action = "Index", id = UrlParameter.Optional }
 			);
 		}

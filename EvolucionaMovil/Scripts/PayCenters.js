@@ -1,6 +1,44 @@
 ﻿$(document).on("ready", function () {
     bindGrid();
+    $("#pageSize").val(20);
+    $("#fechaInicio").datepicker({ "dateFormat": "dd/mm/yy" });
+    $("#fechaFin").datepicker({ "dateFormat": "dd/mm/yy" });
+
+    $("#pageSize").on("change", function () {
+        bindGrid({ pageSize: $("#pageSize").val(), searchString: FiltroEstatus() });
+    });
+    $("#Todos").on("click", function () {
+        bindGrid({ pageSize: $("#pageSize").val(), searchString: FiltroEstatus() });
+    });
+    $("#Activos").on("click", function () {
+        bindGrid({ pageSize: $("#pageSize").val(), searchString: FiltroEstatus() });
+    });
+    $("#Inactivos").on("click", function () {
+        bindGrid({ pageSize: $("#pageSize").val(), searchString: FiltroEstatus() });
+    });
+
+    $("#Actualizar").on("click", function (event) {
+        event.preventDefault();
+        bindGrid({
+            fechaInicio: $("#fechaInicio").val(),
+            fechaFin: $("#fechaFin").val(),
+            pageSize: $("#pageSize").val(),
+            searchString: FiltroEstatus()
+        });
+    });
 });
+
+function FiltroEstatus() {
+    if ($("#Activos").prop("checked")) {
+        return $("#Activos").val();
+    }
+    else if ($("#Inactivos").prop("checked")) {
+        return $("#Inactivos").val();
+    }
+    else {
+        return $("#Todos").val();
+    }
+}
 
 function bindGrid(options) {
     var columns = [
@@ -19,11 +57,17 @@ function bindGrid(options) {
     }
     var pageSize = options.pageSize;
     var pageNumber = options.pageNumber;
+    var searchString = options.searchString;
+    var fechaInicio = options.fechaInicio;
+    var fechaFin = options.fechaFin;
     $("#grdPaycenters").simpleGrid({
         url: "/PayCenters/GetPayCenters",
         columns: columns,
         pageSize: pageSize,
-        pageNumber: pageNumber
+        pageNumber: pageNumber,
+        searchString: searchString,
+        fechaInicio: fechaInicio,
+        fechaFin: fechaFin
     });
 }
 

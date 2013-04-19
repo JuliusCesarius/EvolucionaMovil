@@ -1,4 +1,4 @@
-@model EvolucionaMovil.Areas.MvcMembership.Models.UserAdministration.CreateUserViewModel
+@model EvolucionaMovil.Areas.MvcMembership.Models.Users.CreateUserViewModel
 @{
 	ViewBag.Title = "Create New User";
 	Layout = "~/Views/Shared/_Layout.cshtml";
@@ -9,7 +9,7 @@
 <h2 class="mvcMembership">Create New User</h2>
 
 <div class="mvcMembership-account">
-	@using(Html.BeginForm("CreateUser", "UserAdministration")){ 
+	@using(Html.BeginForm("CreateUser", "Users")){ 
 		@Html.ValidationSummary(true)
 
 	 	<fieldset>

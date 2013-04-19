@@ -6,12 +6,12 @@ using System.Web.Mvc;
 using System.Web.Security;
 using MvcMembership;
 using MvcMembership.Settings;
-using EvolucionaMovil.Areas.MvcMembership.Models.UserAdministration;
+using EvolucionaMovil.Areas.MvcMembership.Models.Users;
 
 namespace EvolucionaMovil.Areas.MvcMembership.Controllers
 {
 	[AuthorizeUnlessOnlyUser(Roles = "Administrator")] // allows access if you're the only user, only validates role if role provider is enabled
-	public class UserAdministrationController : Controller
+	public class UsersController : Controller
 	{
 		private const int PageSize = 10;
 		private const string ResetPasswordBody = "Your new password is: ";
@@ -22,17 +22,17 @@ namespace EvolucionaMovil.Areas.MvcMembership.Controllers
 		private readonly IUserService _userService;
 		private readonly IPasswordService _passwordService;
 
-		public UserAdministrationController()
+		public UsersController()
 			: this(new AspNetMembershipProviderWrapper(), new AspNetRoleProviderWrapper(), new SmtpClientProxy())
 		{
 		}
 
-		public UserAdministrationController(AspNetMembershipProviderWrapper membership, IRolesService roles, ISmtpClient smtp)
+		public UsersController(AspNetMembershipProviderWrapper membership, IRolesService roles, ISmtpClient smtp)
 			: this(membership.Settings, membership, membership, roles, smtp)
 		{
 		}
 
-		public UserAdministrationController(
+		public UsersController(
 			IMembershipSettings membershipSettings,
 			IUserService userService,
 			IPasswordService passwordService,
