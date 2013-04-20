@@ -1,6 +1,6 @@
 ﻿$(document).on("ready", function () {
     $("label").inFieldLabels();
-    jQuery.ajax({ cache: false });
+    //jQuery.ajax({ cache: false });
     $('.money').priceFormat({
         prefix: '',
         suffix: ''
