@@ -38,8 +38,8 @@ namespace EvolucionaMovil.Controllers
         public ViewResult Details(int id)
         {          
              AbonoVM abonoVM = FillAbonoVM(id);
-            //TODO:Leer el usuario que viene en la sesión
-           int RoleUser = GetRolUser("staff");
+            //Leer el usuario que viene en la sesión
+             int RoleUser = GetRolUser(HttpContext.User.Identity.Name);
          
             ViewBag.Role = RoleUser;
             return View(abonoVM);
@@ -52,7 +52,7 @@ namespace EvolucionaMovil.Controllers
             //Aquí van las acciones del PayCenter y Staf para el depósito
             var id = model.AbonoId ;
             var action =model.CambioEstatusVM.Estatus ;
-            string comentario =model.CambioEstatusVM.Comentario.TrimEnd()  ;
+            string comentario = model.CambioEstatusVM.Comentario!= null ? model.CambioEstatusVM.Comentario.TrimEnd(): string.Empty  ;
              Abono abono = repository.LoadById(id);
              if (id > 0)
              {
@@ -65,7 +65,7 @@ namespace EvolucionaMovil.Controllers
 
                          Boolean ComentarioValido = false ;
                          Boolean UsuarioValido = false;
-                         int Role = GetRolUser("staff");
+                         int Role = GetRolUser(HttpContext.User.Identity.Name);
                          var movimiento = abono.Cuenta.Movimientos.Where(x => x.Motivo == enumMotivo.Abono.GetHashCode() && x.Id == abono.AbonoId).FirstOrDefault();
                          //validar que exista el moviento y sino mandar mensaje de error
                                                 
