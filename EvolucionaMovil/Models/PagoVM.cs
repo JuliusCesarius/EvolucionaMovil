@@ -14,12 +14,13 @@ namespace EvolucionaMovil.Models
         public string Estatus { get; set; }
         public DateTime FechaCreacion { get; set; }
         [Required(ErrorMessage = "La fecha de vencimiento es requerida")]
-        public DateTime FechaVencimiento { get; set; }
+        public DateTime? FechaVencimiento { get; set; }
         [Required(ErrorMessage = "El importe es requerido")]
-        public decimal Importe { get; set; }
+        public decimal? Importe { get; set; }
         public int PagoId { get; set; }
         public int PayCenterId { get; set; }
         public int ServicioId { get; set; }
+        public string ServicioNombre { get; set; }
         public IEnumerable<Ticket> Tickets { get; set; }
 
         private IEnumerable<EnumWrapper> _Servicios { get; set; }
@@ -29,17 +30,24 @@ namespace EvolucionaMovil.Models
             {
                 if (_Servicios == null)
                 {
+                    List<EnumWrapper> ls = new List<EnumWrapper>();
                     ServiciosRepository rServicios = new ServiciosRepository();
-                    _Servicios = rServicios.ListAll().Select(x => new EnumWrapper
+                    ls = rServicios.ListAll().Select(x => new EnumWrapper
                     {
                         Text = x.Nombre,
-                        Value = x.ServicioId 
-                    });
-
+                        Value = x.ServicioId
+                    }).ToList();
+                    ls.Insert(0, new EnumWrapper { Text = "Seleccione un Servicio", Value = 0 });
+                    _Servicios = ls;
                 }
                 return _Servicios;
             }
             set { _Servicios = value; }
+        }
+
+        public PagoVM()
+        {
+            ClienteNombre = null;
         }
     }
 }

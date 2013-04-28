@@ -1,4 +1,4 @@
-﻿@model IEnumerable<EvolucionaMovil.Models.PagoServicioVM>
+﻿@model EvolucionaMovil.Models.SimpleGridResult<EvolucionaMovil.Models.PagoServicioVM>
 @section Javascript{
     <script src="@Url.Content("~/Scripts/PagoServicios.js")" type="text/javascript"></script>
 }
@@ -11,6 +11,7 @@
     <h2>
         Pagos registrados</h2>
 </div>
+<form action="/PagoServicios" method="post"></form>
 <div class="resumen fr saldos">
     <h3>
         Saldo Actual <span>@ViewData["SaldoActual"]</span></h3>
@@ -25,19 +26,21 @@
         <label for="fechaInicio">
             Filtrar del
         </label>
-        <input type="text" class="small calendar" id="fechaInicio" />
+        <input type="text" class="small" id="fechaInicio" value="@ViewBag.FechaInicio" />
         al
-        <input class="small calendar" type="text" id="fechaFin" />
+        <input class="small" type="text" id="fechaFin" value="@ViewBag.FechaFin"/>
         Buscar
         <input class="small" type="text" id="searchString" /><input type="button" id="search" /><input
             type="submit" id="Actualizar" class="freshbutton-blue small" value="Actualizar" />
     </div>
     <div class="fl">
         Últimos
-        <input type="text" id="pageSize" class="small" title="20" value="10"></input>
+        <input type="text" id="pageSize" class="small" value="@ViewBag.PageSize"/>
         movimientos
-        <input type="checkbox" class="small" id="aplicadosOnly" /><label id="lblAplicadosOnly"
-            for="aplicadosOnly">Sólo aplicados</label>
+        <input type="checkbox" class="small" id="aplicadosOnly" @(ViewBag.OnlyAplicados ? "Checked" : "")/>
+        <label id="lblAplicadosOnly" for="aplicadosOnly">
+            Sólo aplicados</label>
     </div>
 </div>
+<input type="hidden" id="hddData" value="@Newtonsoft.Json.JsonConvert.SerializeObject(Model)" />
 <div id="grdPagoServicios" />

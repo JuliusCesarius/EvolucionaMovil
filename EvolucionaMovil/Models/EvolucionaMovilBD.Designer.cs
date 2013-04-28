@@ -21,7 +21,6 @@ using System.Runtime.Serialization;
 [assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_CuentasBancarias_Bancos", "Banco", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.Banco), "CuentasBancaria", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EvolucionaMovil.Models.CuentaBancaria), true)]
 [assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_CompraEventos_Paquetes", "Paquete", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.Paquete), "CompraEvento", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EvolucionaMovil.Models.CompraEvento), true)]
 [assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_DetalleServicios_Servicios", "Servicio", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.Servicio), "DetalleServicio", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EvolucionaMovil.Models.DetalleServicio), true)]
-[assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_Movimientos_Estatus_Movimientos", "Movimiento", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.Movimiento), "Movimientos_Estatus", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EvolucionaMovil.Models.Movimientos_Estatus), true)]
 [assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_ParametrosPayCenter_PayCenters", "PayCenter", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.PayCenter), "ParametrosPayCenter", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(EvolucionaMovil.Models.ParametrosPayCenter), true)]
 [assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_PayCenters_PayCenters", "PayCenter", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.PayCenter), "PayCenterPadre", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EvolucionaMovil.Models.PayCenter), true)]
 [assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_PayCenters_Prospectos", "Prospecto", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.Prospecto), "PayCenter", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EvolucionaMovil.Models.PayCenter), true)]
@@ -34,6 +33,7 @@ using System.Runtime.Serialization;
 [assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_Abonos_Cuentas", "Cuenta", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.Cuenta), "Abono", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EvolucionaMovil.Models.Abono), true)]
 [assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_Abonos_CuentasBancarias", "CuentaBancaria", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.CuentaBancaria), "Abono", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EvolucionaMovil.Models.Abono), true)]
 [assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_Abonos_PayCenters", "PayCenter", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.PayCenter), "Abono", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EvolucionaMovil.Models.Abono), true)]
+[assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_Movimientos_Estatus_Movimientos", "Movimiento", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.Movimiento), "Movimientos_Estatus", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EvolucionaMovil.Models.Movimientos_Estatus), true)]
 
 #endregion
 
@@ -184,22 +184,6 @@ namespace EvolucionaMovil.Models
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        public ObjectSet<Movimientos_Estatus> Movimientos_Estatus
-        {
-            get
-            {
-                if ((_Movimientos_Estatus == null))
-                {
-                    _Movimientos_Estatus = base.CreateObjectSet<Movimientos_Estatus>("Movimientos_Estatus");
-                }
-                return _Movimientos_Estatus;
-            }
-        }
-        private ObjectSet<Movimientos_Estatus> _Movimientos_Estatus;
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
         public ObjectSet<Paquete> Paquetes
         {
             get
@@ -212,22 +196,6 @@ namespace EvolucionaMovil.Models
             }
         }
         private ObjectSet<Paquete> _Paquetes;
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        public ObjectSet<Parametro> Parametros
-        {
-            get
-            {
-                if ((_Parametros == null))
-                {
-                    _Parametros = base.CreateObjectSet<Parametro>("Parametros");
-                }
-                return _Parametros;
-            }
-        }
-        private ObjectSet<Parametro> _Parametros;
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -372,6 +340,38 @@ namespace EvolucionaMovil.Models
             }
         }
         private ObjectSet<Abono> _Abonos;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<Movimientos_Estatus> Movimientos_Estatus
+        {
+            get
+            {
+                if ((_Movimientos_Estatus == null))
+                {
+                    _Movimientos_Estatus = base.CreateObjectSet<Movimientos_Estatus>("Movimientos_Estatus");
+                }
+                return _Movimientos_Estatus;
+            }
+        }
+        private ObjectSet<Movimientos_Estatus> _Movimientos_Estatus;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<Parametro> Parametros
+        {
+            get
+            {
+                if ((_Parametros == null))
+                {
+                    _Parametros = base.CreateObjectSet<Parametro>("Parametros");
+                }
+                return _Parametros;
+            }
+        }
+        private ObjectSet<Parametro> _Parametros;
 
         #endregion
         #region AddTo Methods
@@ -425,27 +425,11 @@ namespace EvolucionaMovil.Models
         }
     
         /// <summary>
-        /// Deprecated Method for adding a new object to the Movimientos_Estatus EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
-        /// </summary>
-        public void AddToMovimientos_Estatus(Movimientos_Estatus movimientos_Estatus)
-        {
-            base.AddObject("Movimientos_Estatus", movimientos_Estatus);
-        }
-    
-        /// <summary>
         /// Deprecated Method for adding a new object to the Paquetes EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
         /// </summary>
         public void AddToPaquetes(Paquete paquete)
         {
             base.AddObject("Paquetes", paquete);
-        }
-    
-        /// <summary>
-        /// Deprecated Method for adding a new object to the Parametros EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
-        /// </summary>
-        public void AddToParametros(Parametro parametro)
-        {
-            base.AddObject("Parametros", parametro);
         }
     
         /// <summary>
@@ -518,6 +502,22 @@ namespace EvolucionaMovil.Models
         public void AddToAbonos(Abono abono)
         {
             base.AddObject("Abonos", abono);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the Movimientos_Estatus EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToMovimientos_Estatus(Movimientos_Estatus movimientos_Estatus)
+        {
+            base.AddObject("Movimientos_Estatus", movimientos_Estatus);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the Parametros EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToParametros(Parametro parametro)
+        {
+            base.AddObject("Parametros", parametro);
         }
 
         #endregion
@@ -2800,28 +2800,6 @@ namespace EvolucionaMovil.Models
         [XmlIgnoreAttribute()]
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("EvolucionaMovilBDModel", "FK_Movimientos_Estatus_Movimientos", "Movimientos_Estatus")]
-        public EntityCollection<Movimientos_Estatus> Movimientos_Estatus
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Movimientos_Estatus>("EvolucionaMovilBDModel.FK_Movimientos_Estatus_Movimientos", "Movimientos_Estatus");
-            }
-            set
-            {
-                if ((value != null))
-                {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Movimientos_Estatus>("EvolucionaMovilBDModel.FK_Movimientos_Estatus_Movimientos", "Movimientos_Estatus", value);
-                }
-            }
-        }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [XmlIgnoreAttribute()]
-        [SoapIgnoreAttribute()]
-        [DataMemberAttribute()]
         [EdmRelationshipNavigationPropertyAttribute("EvolucionaMovilBDModel", "FK_Movimientos_Cuentas", "Cuenta")]
         public Cuenta Cuenta
         {
@@ -2850,6 +2828,28 @@ namespace EvolucionaMovil.Models
                 if ((value != null))
                 {
                     ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Cuenta>("EvolucionaMovilBDModel.FK_Movimientos_Cuentas", "Cuenta", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("EvolucionaMovilBDModel", "FK_Movimientos_Estatus_Movimientos", "Movimientos_Estatus")]
+        public EntityCollection<Movimientos_Estatus> Movimientos_Estatus
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Movimientos_Estatus>("EvolucionaMovilBDModel.FK_Movimientos_Estatus_Movimientos", "Movimientos_Estatus");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Movimientos_Estatus>("EvolucionaMovilBDModel.FK_Movimientos_Estatus_Movimientos", "Movimientos_Estatus", value);
                 }
             }
         }
