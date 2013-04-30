@@ -12,6 +12,9 @@ namespace EvolucionaMovil.Models
         public int BancoId { get; set; }
         public string Banco { get; set; }
         [Required]
+        public int CuentaBancariaId { get; set; }
+        public string CuentaBancaria { get; set; }
+        [Required]
         public int CuentaId { get; set; }
         public string Cuenta { get; set; }
         [Required]
@@ -20,8 +23,9 @@ namespace EvolucionaMovil.Models
         [Mask("$999.99")]
         public decimal? Monto { get; set; }
         [Required]
-        public DateTime? Fecha { get; set; }
+        public DateTime? FechaPago { get; set; }
         public ICollection<CuentaDepositoVM> CuentasDeposito { get; set; }
+        public string TipoCuenta { get; set; }
     }
 
     public class CuentaDepositoVM
@@ -29,5 +33,6 @@ namespace EvolucionaMovil.Models
         public string Nombre { get; set; }
         public int CuentaId { get; set; }
         public decimal Monto { get; set; }
+       
     }
 }
