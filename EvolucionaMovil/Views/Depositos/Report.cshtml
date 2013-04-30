@@ -16,18 +16,52 @@
 {
     @Html.ValidationSummary(true)
     <fieldset>
-        <legend>Reportar Depósito</legend>        
+        <legend>Reportar Depósito</legend>  
+
+        @if (Model.CuentasDeposito.Count > 0)
+        {
+            
+                  <div class="editor-label"><label for="CuentaId">Cuentas de depósito.</label></div>        
+                 <div class="editor-field">
+                     @Html.DropDownListFor(model => model.CuentaId, new SelectList(Model.CuentasDeposito, "CuentaId", "Nombre", null), "")
+                     <input type="hidden" id="hddTipoCuenta" name = "TipoCuenta" />
+                      @Html.ValidationMessageFor(model => model.CuentaId)
+                 </div> 
+            
+                 @* <div>
+                 @(Model.CuentasDeposito.Count == 1? "style=display:none":"")
+               <div>Indique de qué forma será aplicado el depósito</div>
+                    @for (var i = 0; i < Model.CuentasDeposito.Count; i++)
+                    {
+                        <div class="cuentadeposito" >
+                            <label>@Model.CuentasDeposito.ToList()[i].Nombre</label>
+                            <input type="text" name="CuentasDeposito[@i].Monto" id="CuentasDeposito[@i].Monto" value="@Model.CuentasDeposito.ToList()[i].Monto" class="small"/>
+                            <input type="hidden" name="CuentasDeposito[@i].CuentaId" value="@Model.CuentasDeposito.ToList()[i].CuentaId"/>
+                            <input type="hidden" name="CuentasDeposito[@i].Nombre" value="@Model.CuentasDeposito.ToList()[i].Nombre"/>
+                        </div>
+                    }
+            </div>*@
+            
+
+           
+           
+        }     
+            @* <div id="Imagen" class="message"  style="display: none;">
+               <label  class="editor-label" for="">motrar upload</label>
+            </div>*@ 
         <div class="editor-label"><label for="BancoId">Banco</label></div>        
         <div class="editor-field">
             @Html.DropDownListFor(model => model.BancoId, new SelectList(ViewBag.Bancos, "BancoId", "Nombre", null), "")
             @Html.ValidationMessageFor(model => model.BancoId)
         </div>        
-        <div class="editor-label"><label for="CuentaId">Cuenta</label></div>        
+        <div class="editor-label" ><label  for="CuentaBancariaId">Cuenta</label></div>        
         <div class="editor-field">
-            <select id="CuentaId" name="CuentaId"></select>
-            <input type="hidden" id="hddCuentaId" value="@Model.CuentaId" />
+            <select id="CuentaBancariaId" name="CuentaBancariaId"><option/></select>
+            <input type="hidden"  id="hddCuentaBancariaId" value="@Model.CuentaBancariaId " />
             <input type="hidden" id="hddCuentas" value="@Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.Cuentas)"/>
-            @Html.ValidationMessageFor(model => model.CuentaId)
+            <input type="hidden" id="hddCuentaBancaria" name="CuentaBancaria"/>
+            <input type="hidden" id="hddBanco" name="Banco"/>
+            @Html.ValidationMessageFor(model => model.CuentaBancariaId)
         </div>
         <div class="editor-label">
             <label for="Referencia">Referencia</label>
@@ -44,27 +78,13 @@
             @Html.ValidationMessageFor(model => model.Monto)
         </div>
         <div class="editor-label">
-            <label for="Fecha">Fecha</label>
+            <label for="FechaPago">Fecha de pago</label>
         </div>
         <div class="editor-field">
-            @Html.EditorFor(model => model.Fecha)
-            @Html.ValidationMessageFor(model => model.Fecha)
+            @Html.EditorFor(model => model.FechaPago)
+            @Html.ValidationMessageFor(model => model.FechaPago)
         </div>
-        @if (Model.CuentasDeposito.Count > 0)
-        {
-                 <div @(Model.CuentasDeposito.Count == 1? "style=display:none":"")>
-                <div>Indique de qué forma será aplicado el depósito</div>
-                    @for (var i = 0; i < Model.CuentasDeposito.Count; i++)
-                    {
-                        <div class="cuentadeposito" >
-                            <label>@Model.CuentasDeposito.ToList()[i].Nombre</label>
-                            <input type="text" name="CuentasDeposito[@i].Monto" id="CuentasDeposito[@i].Monto" value="@Model.CuentasDeposito.ToList()[i].Monto" class="small"/>
-                            <input type="hidden" name="CuentasDeposito[@i].CuentaId" value="@Model.CuentasDeposito.ToList()[i].CuentaId"/>
-                            <input type="hidden" name="CuentasDeposito[@i].Nombre" value="@Model.CuentasDeposito.ToList()[i].Nombre"/>
-                        </div>
-                    }
-            </div>
-       }
+
         
         <p class="nota">Aquí van algunas advertencias y avisos correspondientes al reporte de los depósitos que debe estar conciente el usuario al mommento de estar reportando el servicio.</p>
         <input type="checkbox" id="acceptTerms"/>
@@ -80,7 +100,7 @@
             </div>
         }
         <p>
-            <input type="submit" id="btnSave" class="freshbutton-blue" class="freshbutton-blue" value="Guardar" />
+            <input type="submit" id="btnSave" class="freshbutton-blue"  value="Guardar" />
         </p>
     </fieldset>
 }
