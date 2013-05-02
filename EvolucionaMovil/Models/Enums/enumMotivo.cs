@@ -7,19 +7,21 @@ namespace EvolucionaMovil.Models.Enums
 {
     public enum enumMotivo
     {
-        //Ccompra de saldo
-        Abono,
-        //Ccobro de servicio
+        //(Abono)
+        Deposito,
+        //(Cargo) Cobro de servicio
         Comision,
-        //Entre cuentas
-        Traslado,
-        //Comisión positiva por recomendado
+        //(Abono y Cargo) Entre cuentas y PayCenters
+        Traspaso,
+        //(Abono) Comisión positiva por recomendado o a discreción del Staff
         Bonificacion,
-        //compra de paquetes, etc
-        Cargo,
-        //Usado para pago de servicios
+        //(Cargo) Usado para pago de servicios
+        Cobro,
+        //(Cargo) Usado para pago de servicios
         Pago,
-        //En caso de pagar servicio con saldo negativo
+        //(Cargo) Compra de paquetes, etc
+        Compra,
+        //(Abono y Cargo) En caso de pagar servicio con saldo negativo
         Financiamiento
     }
 }
