@@ -68,6 +68,7 @@
      <input type="hidden" name ="CuentaBancaria" value="@Model.CuentaBancaria "/>
      <input type="hidden" name ="CuentaId" value="@Model.CuentaId"/>
      <input type="hidden" name ="FechaPago" value="@Model.FechaPago"/>
+     <input type="hidden" name ="RutaFichaDeposito" value="@Model.RutaFichaDeposito"/>
     <div>
     @if (@Model.Status != enumEstatusMovimiento.Cancelado.GetHashCode() && @Model.AbonoId == 0)
     {
@@ -94,7 +95,7 @@
  }
     
       @if (ViewBag.Mensajes != null && ViewBag.Mensajes.Count > 0)
-        {
+      {
             <div class="message"><ul>
             @foreach (var mensaje in ViewBag.Mensajes)
             {

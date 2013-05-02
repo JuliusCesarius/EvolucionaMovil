@@ -1,10 +1,11 @@
 ﻿$(document).on("ready", function () {
-    $("#Fecha").datepicker({ "dateFormat": "dd/mm/yy", maxDate: '0' });
+    $("#FechaPago").datepicker({ "dateFormat": "dd/mm/yy", maxDate: '0' });
     $("#btnSave").on("click", Save);
-      $("#CuentaBancariaId").on("change", function () { $("#hddCuentaBancaria").val($("#CuentaBancariaId").find(":selected").text()); });
-  
+    $("#CuentaBancariaId").on("change", function () { $("#hddCuentaBancaria").val($("#CuentaBancariaId").find(":selected").text()); });
+
     // $("#CuentaId").on("change", function () { $("#hddTipoCuenta").val($("#CuentaId").find(":selected").text()); });
-      $("#CuentaId").on("change", CuentaDeposito);
+    $("#CuentaId").on("change", CuentaDeposito);
+    CuentaDeposito();
     $('#BancoId').on("change", BancoIdChanged);
     if ($("#BancoId").val() > 0) {
         $('#BancoId').trigger("change");

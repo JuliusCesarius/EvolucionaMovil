@@ -22,6 +22,7 @@ namespace EvolucionaMovil.Models
         public string PayCenter { get; set; }
         public int PayCenterId { get; set; }
         public string Referencia { get; set; }
+        public string RutaFichaDeposito { get; set; }
         public List<HistorialEstatusVM> HistorialEstatusVM { get; set; }
         public CambioEstatusVM CambioEstatusVM { get; set; }
     }

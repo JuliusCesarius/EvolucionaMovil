@@ -298,7 +298,8 @@ namespace EvolucionaMovil.Controllers
                             FechaPago = (DateTime)model.FechaPago,
                             Monto = (Decimal)model.Monto,
                             PayCenterId = idPayCenter,
-                            Referencia = model.Referencia
+                            Referencia = model.Referencia,
+                            RutaFichaDeposito =model.RutaFichaDeposito 
                         };
                         repository.Add(abono);
                         exito = repository.Save();
