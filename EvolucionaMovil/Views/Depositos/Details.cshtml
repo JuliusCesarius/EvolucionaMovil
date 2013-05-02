@@ -129,5 +129,5 @@
     </div>
      <div><p>@ViewBag.Mensaje</p></div> 
    
-    <input type="button"  name="Index"  class="freshbutton-blue" value="Regresar" />
+    @Html.ActionLink("Regresar", "Index", null, new { @class = "freshbutton-blue" })
 </fieldset>

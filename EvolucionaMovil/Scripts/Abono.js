@@ -14,7 +14,7 @@ function OcultaComentario() {
         if ($("#ComentarioStaff").length) {
             $("#ComentarioStaff").css("display", "none");
             $("#Aplicar").css("display", "inline");
-            $("#Rechazar").css("display", "inline");
+            $("#Imagen").css("display", "inline");
         }
     }
     $("#CambioEstatusVM_Comentario")[0].value = "";
@@ -35,4 +35,10 @@ function MuestraComentario(action) {
             $("#actionName")[0].textContent = action;
         }
     }
- }
+}
+
+function goBack() {
+  parent.history .back();
+   
+}
+   
