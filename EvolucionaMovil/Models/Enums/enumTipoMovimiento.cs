@@ -7,9 +7,9 @@ namespace EvolucionaMovil.Models.Enums
 {
     public enum enumTipoMovimiento
     {
-        //Movimiento de tipo positivo que incrementa el saldo en la cuenta donde se genera
-        Abono,
         //Movimiento de tipo negativo que disminuye el saldo en la cuenta donde se genera
-        Cargo
+        Cargo,
+        //Movimiento de tipo positivo que incrementa el saldo en la cuenta donde se genera
+        Abono
     }
 }

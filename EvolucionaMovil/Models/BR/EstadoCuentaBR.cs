@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using EvolucionaMovil.Repositories;
 using EvolucionaMovil.Models.Enums;
+using System.Data.Objects;
 
 namespace EvolucionaMovil.Models.BR
 {
@@ -13,6 +14,7 @@ namespace EvolucionaMovil.Models.BR
     /// </summary>
     internal class EstadoCuentaBR : cabinet.patterns.clases.BusinessRulesBase<Movimiento>
     {
+        private EvolucionaMovilBDEntities _context;
         private EstadoDeCuentaRepository _estadoDeCuentaRepository;
         private EstadoDeCuentaRepository estadoDeCuentaRepository
         {
@@ -20,15 +22,29 @@ namespace EvolucionaMovil.Models.BR
             {
                 if (_estadoDeCuentaRepository == null)
                 {
-                    _estadoDeCuentaRepository = new EstadoDeCuentaRepository();
+                    _estadoDeCuentaRepository = new EstadoDeCuentaRepository(_context);
                 }
                 return _estadoDeCuentaRepository;
             }
-            set
-            {
-            }
         }
         
+        /// <summary>
+        /// Permite manejar la creación, consulta e interacción con los movimientos del estado de cuenta.
+        /// </summary>
+        /// <param name="Context">El Context debe ser el mismo que utilice el controller para poder crear todo en transacción. Si no se le pasa controller, genera registros directamente.</param>
+        public EstadoCuentaBR(EvolucionaMovilBDEntities Context)
+        {
+            _context = Context;
+        }
+
+        /// <summary>
+        /// Permite manejar la creación, consulta e interacción con los movimientos del estado de cuenta.
+        /// </summary>
+        /// <param name="Context">El Context debe ser el mismo que utilice el controller para poder crear todo en transacción. Si no se le pasa controller, genera registros directamente.</param>
+        public EstadoCuentaBR()
+        {
+        }
+
         #region Saldos
 
         /// <summary>
@@ -55,7 +71,35 @@ namespace EvolucionaMovil.Models.BR
 
         #region Movimientos
 
+        /// <summary>
+        /// Genera el movimiento y genera estatus y clave según condificiones de los BR
+        /// </summary>
+        /// <param name="PayCenterId"></param>
+        /// <param name="TipoMovimiento"></param>
+        /// <param name="CuentaId"></param>
+        /// <param name="Monto"></param>
+        /// <param name="Motivo"></param>
+        /// <param name="?"></param>
+        /// <remarks>BR01.02</remarks>
+        /// <returns></returns>
+        internal Movimiento CrearMovimiento(int PayCenterId, enumTipoMovimiento TipoMovimiento, int CuentaId, decimal Monto, enumMotivo Motivo){
+            Movimiento movimiento = new Movimiento();
 
+            movimiento.Clave = DateTime.Now.ToString("yyyyMMdd") + "0" + ((Int16)Motivo).ToString() + new Random().Next(0,99999).ToString();
+            movimiento.CuentaId = CuentaId;
+            movimiento.FechaCreacion = DateTime.Now;
+            movimiento.IsAbono = TipoMovimiento==enumTipoMovimiento.Abono;
+            movimiento.Monto = Monto;
+            movimiento.Motivo = (Int16)Motivo;
+            movimiento.PayCenterId = PayCenterId;
+            movimiento.Status = (Int16)enumEstatusMovimiento.Procesando;
+            estadoDeCuentaRepository.Add(movimiento);
+            if (_context == null)
+            {
+                estadoDeCuentaRepository.Save();
+            }
+            return movimiento;
+        }
 
         #endregion
 
@@ -70,7 +114,9 @@ namespace EvolucionaMovil.Models.BR
         /// <returns>True si la referencia no está repetida según la regla, y False en caso de que no</returns>
         internal bool IsValidReferenciaDeposito(String Referencia, Int32 BancoId)
         {
-            return !estadoDeCuentaRepository.context.Abonos.Any(x => x.Referencia == Referencia && x.BancoId == BancoId && (x.Status == enumEstatusMovimiento.Procesando.GetHashCode() || x.Status == enumEstatusMovimiento.Aplicado.GetHashCode()));
+            var statusProcesando = (Int16)enumEstatusMovimiento.Procesando.GetHashCode();
+            var statusAplicado = (Int16)enumEstatusMovimiento.Aplicado.GetHashCode();
+            return !estadoDeCuentaRepository.context.Abonos.Any(x => x.Referencia == Referencia && x.BancoId == BancoId && (x.Status == statusProcesando || x.Status == statusAplicado));
         }
 
         #endregion

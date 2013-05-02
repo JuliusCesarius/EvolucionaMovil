@@ -216,22 +216,18 @@ namespace EvolucionaMovil.Controllers
                     }
                 }
 
-                EstadoDeCuentaRepository estadoDeCuentaRepository = new EstadoDeCuentaRepository(repository.context);
+                EstadoCuentaBR estadoCuentaBR = new EstadoCuentaBR(repository.context);
 
                 foreach (var cuentaDepositoVM in model.CuentasDeposito.Where(x => x.Monto > 0))
                 {
-                    Movimiento movimiento = new Movimiento();
-                    //todo:ver como generar la clave de los movimientos
-                    movimiento.Clave = DateTime.Now.ToString("yyyyMMdd");
-                    movimiento.CuentaId = cuentaDepositoVM.CuentaId;
-                    movimiento.FechaCreacion = DateTime.Now;
-                    movimiento.IsAbono = true;
-                    movimiento.Monto = cuentaDepositoVM.Monto;
-                    movimiento.Motivo = (Int16)enumMotivo.Deposito;
-                    movimiento.PayCenterId = 1;
-                    movimiento.Status = (Int16)enumEstatusMovimiento.Procesando;
-
-                    estadoDeCuentaRepository.Add(movimiento);
+                    //TODO:Leer el usuario en este caso HttpResponseSubstitutionCallback PayCenter ();
+                    estadoCuentaBR.CrearMovimiento(
+                        1,
+                        enumTipoMovimiento.Abono,
+                        cuentaDepositoVM.CuentaId,
+                        cuentaDepositoVM.Monto,
+                        enumMotivo.Deposito
+                      );
                 }
 
                 exito = repository.Save();
