@@ -1,0 +1,25 @@
+﻿@{
+    ViewBag.Title = "Elija la imagen de la ficha de depósito.";
+}
+<link href="@Url.Content("~/Content/Site.css")" rel="stylesheet" type="text/css" />
+  <script src="@Url.Content("~/Scripts/jquery-1.8.3.min.js")" type="text/javascript"></script>
+ <script type="text/javascript" src="@Url.Content("/Scripts/UploadImage.js")"></script>
+@using (Html.BeginForm("IndexPartial", "ImgFichaDeposito", FormMethod.Post, new { enctype = "multipart/form-data", id = "formuploadfile" }))
+{
+    <div>
+        <div  >
+       <input type="button" id="btnCargarImagen" class="freshbutton-blue" value="Seleccione la Imagen" name="Command" /><br />
+        <input type="image"  title ="Imagen de la ficha de depósito" style="border:1px;  height: 80px; width: 75%" id ="ImagenFicha"  src ="@ViewBag.Ruta" />  
+         </div>
+        <div style="display:none" ><input type="file" id="uploadfile" name="file" /></div>
+       <div><p>@ViewBag.Nombre</p> </div> 
+        <input type="hidden" id="hddRutaFichaDep" name = "RutaFichaDeposito" value="@ViewBag.Ruta" />
+    </div>
+    if (@ViewBag.Mensajes !=null && @ViewBag.Mensajes != "")
+    {
+    <div id="Imagen" class="message" >
+   @ViewBag.Mensajes
+    </div>
+    }
+}
+

@@ -6,6 +6,7 @@ namespace EvolucionaMovil.Models
     public class PayCenterVM
     {
         //public IEnumerable<Abono> Abonos { get; set; }
+        [RegularExpression("^[0-9]{10}", ErrorMessage = "El celular debe contener la lada sin guiones ni paréntesis. P.e. 9999999999")]
         public string Celular { get; set; }
         public string Comprobante { get; set; }
         [Display(Name = "Código Postal")]
@@ -36,6 +37,7 @@ namespace EvolucionaMovil.Models
         public string Representante { get; set; }
         [Required(ErrorMessage = "Campo requerido.")]
         [Display(Name = "Teléfono")]
+        [RegularExpression("^[0-9]{10}", ErrorMessage = "El teléfono debe contener la lada sin guiones ni paréntesis. P.e. 9999999999")]
         public string Telefono { get; set; }
         //public Usuario Usuario { get; set; }
         public int UsuarioId { get; set; }
@@ -57,5 +59,8 @@ namespace EvolucionaMovil.Models
         public string RepeatPassword { get; set; }
         [Display(Name = "Maximo a financiar")]
         public string MaximoAFinanciar { get; set; }
+        public string SaldoActual { get; set; }
+        public string Eventos { get; set; }
+        public string PagosRealizados { get; set; }
     }
 }

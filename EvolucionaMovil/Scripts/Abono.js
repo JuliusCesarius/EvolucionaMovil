@@ -14,14 +14,14 @@ function OcultaComentario() {
         if ($("#ComentarioStaff").length) {
             $("#ComentarioStaff").css("display", "none");
             $("#Aplicar").css("display", "inline");
-            $("#Rechazar").css("display", "inline");
+            $("#Imagen").css("display", "inline");
         }
     }
     $("#CambioEstatusVM_Comentario")[0].value = "";
 
 }
 
-function MuestraComentario() {
+function MuestraComentario(action) {
     if ($("#ComentarioPayCenter").length) {
         $("#ComentarioPayCenter").css("display", "block");
         $("#Cancelar").css("display", "none");
@@ -31,7 +31,14 @@ function MuestraComentario() {
             $("#ComentarioStaff").css("display", "block");
             $("#Aplicar").css("display", "none");
             $("#Rechazar").css("display", "none");
-
+            $("#action")[0].value = action;
+            $("#actionName")[0].textContent = action;
         }
     }
- }
+}
+
+function goBack() {
+  parent.history .back();
+   
+}
+   
