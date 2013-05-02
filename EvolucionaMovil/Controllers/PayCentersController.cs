@@ -170,9 +170,22 @@ namespace EvolucionaMovil.Controllers
 
             if (ModelState.IsValid)
             {
-                //TODO:Leer valor de la imagen del comprobante y el ife de domicilio
-                paycenterVM.Comprobante = string.Empty;
-                paycenterVM.IFE = string.Empty;
+                //<author>Moisés Cauich</author>
+                //<comments>Ya se traen los valores correspondientes del view, solo cuando sean null se pone cadena vacía.</comments>
+                //<before>
+                //paycenterVM.Comprobante = string.Empty;
+                //paycenterVM.IFE = string.Empty;
+                //</before>
+                //<after>
+                if (paycenterVM.IFE == null) {
+                    paycenterVM.IFE = string.Empty;
+                }
+                if (paycenterVM.Comprobante == null) {
+                    paycenterVM.Comprobante = string.Empty;
+                }
+                paycenterVM.ThumbnailIFE = paycenterVM.IFE.Replace("UploadImages", "UploadImages/Thumbnails");
+                paycenterVM.ThumbnailComprobante = paycenterVM.Comprobante.Replace("UploadImages", "UploadImages/Thumbnails");
+                //</after>           
 
                 //ToDo:Determinar como se van a manejar estos valores
                 paycenterVM.UsuarioId = 1;
@@ -317,6 +330,13 @@ namespace EvolucionaMovil.Controllers
                 //</before>
                 //<after>
 
+                //<author>Moisés Cauich</author>
+                //<comments>Faltó esta linea, en el map esta ligando la propiedad PayCenterPadre del VM que es una cadena con la propiedad PayCenterPadre de la entidad que antes era PayCenters2</comments>
+                //<before>
+                //<after>
+                paycenterVM.PayCenterPadre = paycenter.PayCenterPadre.UserName;
+                //</after>
+
                 ////Buscar usuario para determinar si está activo
                 //AspNetMembershipProviderWrapper membership = new AspNetMembershipProviderWrapper();
                 //MembershipUser usuario = membership.Get(paycenterVM.Nombre);
@@ -355,9 +375,13 @@ namespace EvolucionaMovil.Controllers
 
             if (ModelState.IsValid)
             {
-                //TODO:Leer valor de la imagen del comprobante y el ife de domicilio
-                paycenterVM.Comprobante = "";
-                paycenterVM.IFE = "";
+                //<author>Moisés Cauich</author>
+                //<comments>Ya se traen los valores correspondientes del view.</comments>
+                //<before>
+                //paycenterVM.Comprobante = "";
+                //paycenterVM.IFE = "";
+                //</before>
+                //<after>
 
                 //ToDo:Determinar como se van a manejar estos valores
                 paycenterVM.UsuarioId = 1;
@@ -542,12 +566,11 @@ namespace EvolucionaMovil.Controllers
         /// <returns></returns>
         private bool ValidaActivacion(ref PayCenterVM paycenterVM)
         {
-            //ToDo: Activar validación de IFE y Comprobante cuando se agregue la funcionalidad
             if (string.IsNullOrWhiteSpace(paycenterVM.Nombre) || string.IsNullOrWhiteSpace(paycenterVM.Representante) ||
                 string.IsNullOrWhiteSpace(paycenterVM.UserName) || string.IsNullOrWhiteSpace(paycenterVM.Telefono) ||
                 string.IsNullOrWhiteSpace(paycenterVM.Email) || // || string.IsNullOrWhiteSpace(paycenterVM.Email2) ||
-                string.IsNullOrWhiteSpace(paycenterVM.Domicilio) || string.IsNullOrWhiteSpace(paycenterVM.CP) //|| 
-                //string.IsNullOrWhiteSpace(paycenterVM.IFE) || string.IsNullOrWhiteSpace(paycenterVM.Comprobante)
+                string.IsNullOrWhiteSpace(paycenterVM.Domicilio) || string.IsNullOrWhiteSpace(paycenterVM.CP) || 
+                string.IsNullOrWhiteSpace(paycenterVM.IFE) || string.IsNullOrWhiteSpace(paycenterVM.Comprobante)
                 )
             {
                 return false;

@@ -9,6 +9,7 @@ namespace EvolucionaMovil.Models
         [RegularExpression("^[0-9]{10}", ErrorMessage = "El celular debe contener la lada sin guiones ni paréntesis. P.e. 9999999999")]
         public string Celular { get; set; }
         public string Comprobante { get; set; }
+        public string ThumbnailComprobante { get; set; }
         [Display(Name = "Código Postal")]
         public string CP { get; set; }
         //public IEnumerable<Cuenta> Cuentas { get; set; }
@@ -22,6 +23,7 @@ namespace EvolucionaMovil.Models
         [DataType(DataType.Date)]
         public DateTime? FechaIngreso { get; set; }
         public string IFE { get; set; }
+        public string ThumbnailIFE { get; set; }
         [Required(ErrorMessage = "Campo requerido.")]
         [Display(Name = "Empresa o Negocio")]
         public string Nombre { get; set; }

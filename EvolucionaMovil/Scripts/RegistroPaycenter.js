@@ -4,6 +4,10 @@
         event.preventDefault();
         BuscarPaycenter();
     });
+    $("#btnGuardar").on("click", function (event) {
+        event.preventDefault();
+        $("#FormDatos").submit();
+    });
 
 //    $("#MaximoAFinanciar").on("click", function (event) {
 //        event.preventDefault();

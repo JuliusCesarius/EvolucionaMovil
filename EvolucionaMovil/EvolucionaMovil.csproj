@@ -128,6 +128,7 @@
     <Compile Include="Controllers\PayCentersController.cs" />
     <Compile Include="Controllers\ProspectosController.cs" />
     <Compile Include="Controllers\ServiciosController.cs" />
+    <Compile Include="Controllers\UploadImagesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -170,6 +171,7 @@
     <Compile Include="Models\StringParameterVM.cs" />
     <Compile Include="Models\TicketVM.cs" />
     <Compile Include="Models\UsuarioVM.cs" />
+    <Compile Include="Models\WrappedJsonResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\BancosRepository.cs" />
     <Compile Include="Repositories\AbonosRepository.cs" />
@@ -281,6 +283,7 @@
     <Content Include="Scripts\RegistroPaycenter.js" />
     <Content Include="Scripts\ReportarDeposito.js" />
     <Content Include="Scripts\simpleGrid.js" />
+    <Content Include="Scripts\SubirImagenPaycenter.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
