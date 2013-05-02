@@ -766,7 +766,7 @@
           <Property Type="Int32" Name="CuentaOrigenId" Nullable="false" />
           <Property Type="Int16" Name="Status" Nullable="false" />
           <Property Type="Decimal" Name="SaldoActual" Precision="19" Scale="4" />
-          <Property Type="String" Name="Clave" Nullable="false" MaxLength="13" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Clave" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
           <Property Type="DateTime" Name="FechaCreacion" Nullable="false" />
           <Property Type="Boolean" Name="Baja" Nullable="false" />
           <NavigationProperty Name="Movimientos_Estatus" Relationship="EvolucionaMovilBDModel.FK_Movimientos_Estatus_Movimientos" FromRole="Movimiento" ToRole="Movimientos_Estatus" />

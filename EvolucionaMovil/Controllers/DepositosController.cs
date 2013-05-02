@@ -66,7 +66,7 @@ namespace EvolucionaMovil.Controllers
                          Boolean ComentarioValido = false ;
                          Boolean UsuarioValido = false;
                          int Role = GetRolUser(HttpContext.User.Identity.Name);
-                         var movimiento = abono.Cuenta.Movimientos.Where(x => x.Motivo == enumMotivo.Abono.GetHashCode() && x.Id == abono.AbonoId).FirstOrDefault();
+                         var movimiento = abono.Cuenta.Movimientos.Where(x => x.Motivo == enumMotivo.Deposito.GetHashCode() && x.Id == abono.AbonoId).FirstOrDefault();
                          //validar que exista el moviento y sino mandar mensaje de error
                                                 
                          if (movimiento != null)
@@ -221,7 +221,7 @@ namespace EvolucionaMovil.Controllers
             PayCentersRepository payCentersRepository = new PayCentersRepository();
             bool exito = true;
             
-            if (!(validations.isValidReference(model.Referencia, model.BancoId)))
+            if (!(validations.IsValidReferenciaDeposito(model.Referencia, model.BancoId)))
             {
                 //Preguntar de esta validacion
                 Mensajes.Add("La referencia especificada ya existe en el sistema. Favor de verificarla.");
@@ -266,7 +266,7 @@ namespace EvolucionaMovil.Controllers
         {
             bool exito = true;
             
-            if (!(validations.isValidReference(model.Referencia, model.BancoId)))
+            if (!(validations.IsValidReferenciaDeposito(model.Referencia, model.BancoId)))
             {
                 //todo:Preguntar de esta validacion
                 Mensajes.Add("La referencia especificada ya existe en el sistema. Favor de verificarla.");
@@ -299,18 +299,23 @@ namespace EvolucionaMovil.Controllers
                             Monto = (Decimal)model.Monto,
                             PayCenterId = idPayCenter,
                             Referencia = model.Referencia,
-                            RutaFichaDeposito =model.RutaFichaDeposito 
+                            RutaFichaDeposito = model.RutaFichaDeposito
                         };
                         repository.Add(abono);
+
+                        EstadoCuentaBR estadoCuentaBR = new EstadoCuentaBR(repository.context);
+                        var movimiento = estadoCuentaBR.CrearMovimiento(idPayCenter, enumTipoMovimiento.Abono, model.CuentaId, (Decimal)model.Monto, enumMotivo.Deposito);
+
                         exito = repository.Save();
                         //todo: referencia la clase de estadosDeCuentaBR, y generar movimiento correspondiente.
                         model.AbonoId = abono.AbonoId;
-                        Mensajes.Add("Se ha registrado su depósito con éxito con clave [Clave Movimiento]. En breve será revisado y aplicado.");
+                        Mensajes.Add("Se ha registrado su depósito con éxito con clave " + movimiento.Clave + ". En breve será revisado y aplicado.");
                     }
 
                }
                else
-               {    
+               {
+
                 //EstadoDeCuentaRepository estadoDeCuentaRepository = new EstadoDeCuentaRepository(repository.context);
 
                 //foreach (var cuentaDepositoVM in model.CuentasDeposito.Where(x => x.Monto > 0))
@@ -373,7 +378,7 @@ namespace EvolucionaMovil.Controllers
             //fill estatus movimientos          
             EstadoDeCuentaRepository estadoDeCuentaRepository = new EstadoDeCuentaRepository();
             int movimientoId = 0;
-            var movimiento = abono.Cuenta.Movimientos.Where(x => x.CuentaId == abono.CuentaId && x.Motivo == enumMotivo.Abono.GetHashCode() && x.PayCenterId == abono.PayCenterId && x.Id == abono.AbonoId).FirstOrDefault();
+            var movimiento = abono.Cuenta.Movimientos.Where(x => x.CuentaId == abono.CuentaId && x.Motivo == enumMotivo.Deposito.GetHashCode() && x.PayCenterId == abono.PayCenterId && x.Id == abono.AbonoId).FirstOrDefault();
             if (movimiento != null)
             {
                 movimientoId = movimiento.MovimientoId;

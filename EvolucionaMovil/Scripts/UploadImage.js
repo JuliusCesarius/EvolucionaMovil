@@ -4,6 +4,7 @@ $(document).on("ready", function () {
     //    $('iframe').contents().find("#uploadfile").on("change", SubirImagen);
     window.parent.document.getElementById("hddRutaFichaDeposito").value = $("#hddRutaFichaDep").val();
     $("#uploadfile").on("change", SubirImagen);
+    $("#btnCargarImagen").on("click", CargarImagen);
 });
 
 function SubirImagen()
@@ -11,3 +12,6 @@ function SubirImagen()
     $("#formuploadfile").submit();
 }
 
+function CargarImagen() {
+    $("#uploadfile").click();
+}

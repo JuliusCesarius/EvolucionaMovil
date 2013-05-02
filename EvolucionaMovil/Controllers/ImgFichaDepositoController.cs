@@ -12,6 +12,7 @@ namespace EvolucionaMovil.Controllers
         {
             //ViewBag.Message = "MVC 3 File Upload";
             ViewBag.Ruta = "";
+            ViewBag.Nombre = "";
             return PartialView();
         }
         [HttpPost]
@@ -29,6 +30,7 @@ namespace EvolucionaMovil.Controllers
                     // this is the string you have to save in your DB
                     string filepathToSave = "imgFichaDeposito/" + fileName;
                     ViewBag.Ruta = "/imgFichaDeposito/" + fileName;
+                    ViewBag.Nombre = file.FileName;
                     try
                     {
                         file.SaveAs(path);

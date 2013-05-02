@@ -8,11 +8,11 @@
 {
     <div>
         <div  >
-        <input type="image"  title ="Imagen de la ficha de Depósito" style="border:1px;  height: 80px; width: 75%" id ="ImagenFicha"  src ="@ViewBag.Ruta" />  
+       <input type="button" id="btnCargarImagen" class="freshbutton-blue" value="Seleccione la Imagen" name="Command" /><br />
+        <input type="image"  title ="Imagen de la ficha de depósito" style="border:1px;  height: 80px; width: 75%" id ="ImagenFicha"  src ="@ViewBag.Ruta" />  
          </div>
-        
-        <input type="file" id="uploadfile" name="file" />&nbsp;
-       @* <input type="submit" value="Subir Imagen" name="Command" /><br />*@
+        <div style="display:none" ><input type="file" id="uploadfile" name="file" /></div>
+       <div><p>@ViewBag.Nombre</p> </div> 
         <input type="hidden" id="hddRutaFichaDep" name = "RutaFichaDeposito" value="@ViewBag.Ruta" />
     </div>
     if (@ViewBag.Mensajes !=null && @ViewBag.Mensajes != "")
