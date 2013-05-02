@@ -76,13 +76,14 @@ namespace EvolucionaMovil.Models.BR
         /// </summary>
         /// <param name="PayCenterId"></param>
         /// <param name="TipoMovimiento"></param>
+        /// <param name="Id">Identificador de la entidad que está generando el Movimiento (Deposito, Compra, ATraspaso, etc</param>
         /// <param name="CuentaId"></param>
         /// <param name="Monto"></param>
         /// <param name="Motivo"></param>
         /// <param name="?"></param>
         /// <remarks>BR01.02</remarks>
         /// <returns></returns>
-        internal Movimiento CrearMovimiento(int PayCenterId, enumTipoMovimiento TipoMovimiento, int CuentaId, decimal Monto, enumMotivo Motivo){
+        internal Movimiento CrearMovimiento(int PayCenterId, enumTipoMovimiento TipoMovimiento, int Id, int CuentaId, decimal Monto, enumMotivo Motivo){
             Movimiento movimiento = new Movimiento();
 
             movimiento.Clave = DateTime.Now.ToString("yyyyMMdd") + "0" + ((Int16)Motivo).ToString() + new Random().Next(0,99999).ToString();
@@ -93,6 +94,7 @@ namespace EvolucionaMovil.Models.BR
             movimiento.Motivo = (Int16)Motivo;
             movimiento.PayCenterId = PayCenterId;
             movimiento.Status = (Int16)enumEstatusMovimiento.Procesando;
+            movimiento.Id = Id;
             estadoDeCuentaRepository.Add(movimiento);
             if (_context == null)
             {
