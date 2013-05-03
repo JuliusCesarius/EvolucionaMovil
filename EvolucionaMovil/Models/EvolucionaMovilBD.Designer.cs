@@ -8,12 +8,13 @@
 //------------------------------------------------------------------------------
 
 using System;
+using System.ComponentModel;
+using System.Data.EntityClient;
 using System.Data.Objects;
 using System.Data.Objects.DataClasses;
-using System.Data.EntityClient;
-using System.ComponentModel;
-using System.Xml.Serialization;
+using System.Linq;
 using System.Runtime.Serialization;
+using System.Xml.Serialization;
 
 [assembly: EdmSchemaAttribute()]
 #region EDM Relationship Metadata
@@ -28,12 +29,13 @@ using System.Runtime.Serialization;
 [assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_Tickets_PayCenters", "PayCenter", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.PayCenter), "Ticket", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EvolucionaMovil.Models.Ticket), true)]
 [assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_Cuentas_PayCenters", "PayCenter", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.PayCenter), "Cuenta", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EvolucionaMovil.Models.Cuenta), true)]
 [assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_Movimientos_Cuentas", "Cuenta", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.Cuenta), "Movimiento", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EvolucionaMovil.Models.Movimiento), true)]
-[assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_DetallePagos_Pagos", "Pago", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.Pago), "DetallePago", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EvolucionaMovil.Models.DetallePago), true)]
-[assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_Pagos_PayCenters", "PayCenter", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.PayCenter), "Pago", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EvolucionaMovil.Models.Pago), true)]
-[assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_Tickets_Pagos", "Pago", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.Pago), "Ticket", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(EvolucionaMovil.Models.Ticket), true)]
 [assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_Abonos_Cuentas", "Cuenta", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.Cuenta), "Abono", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EvolucionaMovil.Models.Abono), true)]
 [assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_Abonos_CuentasBancarias", "CuentaBancaria", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.CuentaBancaria), "Abono", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EvolucionaMovil.Models.Abono), true)]
 [assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_Abonos_PayCenters", "PayCenter", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.PayCenter), "Abono", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EvolucionaMovil.Models.Abono), true)]
+[assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_DetallePagos_Pagos", "Pago", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.Pago), "DetallePago", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EvolucionaMovil.Models.DetallePago), true)]
+[assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_Pagos_Movimientos", "Movimiento", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.Movimiento), "Pago", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EvolucionaMovil.Models.Pago), true)]
+[assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_Pagos_PayCenters", "PayCenter", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.PayCenter), "Pago", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EvolucionaMovil.Models.Pago), true)]
+[assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_Tickets_Pagos", "Pago", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.Pago), "Ticket", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(EvolucionaMovil.Models.Ticket), true)]
 
 #endregion
 
@@ -344,22 +346,6 @@ namespace EvolucionaMovil.Models
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        public ObjectSet<Pago> Pagos
-        {
-            get
-            {
-                if ((_Pagos == null))
-                {
-                    _Pagos = base.CreateObjectSet<Pago>("Pagos");
-                }
-                return _Pagos;
-            }
-        }
-        private ObjectSet<Pago> _Pagos;
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
         public ObjectSet<Abono> Abonos
         {
             get
@@ -372,8 +358,25 @@ namespace EvolucionaMovil.Models
             }
         }
         private ObjectSet<Abono> _Abonos;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<Pago> Pagos
+        {
+            get
+            {
+                if ((_Pagos == null))
+                {
+                    _Pagos = base.CreateObjectSet<Pago>("Pagos");
+                }
+                return _Pagos;
+            }
+        }
+        private ObjectSet<Pago> _Pagos;
 
         #endregion
+
         #region AddTo Methods
     
         /// <summary>
@@ -505,27 +508,27 @@ namespace EvolucionaMovil.Models
         }
     
         /// <summary>
-        /// Deprecated Method for adding a new object to the Pagos EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
-        /// </summary>
-        public void AddToPagos(Pago pago)
-        {
-            base.AddObject("Pagos", pago);
-        }
-    
-        /// <summary>
         /// Deprecated Method for adding a new object to the Abonos EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
         /// </summary>
         public void AddToAbonos(Abono abono)
         {
             base.AddObject("Abonos", abono);
         }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the Pagos EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToPagos(Pago pago)
+        {
+            base.AddObject("Pagos", pago);
+        }
 
         #endregion
+
     }
-    
 
     #endregion
-    
+
     #region Entities
     
     /// <summary>
@@ -570,6 +573,7 @@ namespace EvolucionaMovil.Models
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -840,6 +844,7 @@ namespace EvolucionaMovil.Models
         partial void OnCuentaIdChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -958,6 +963,7 @@ namespace EvolucionaMovil.Models
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -988,6 +994,7 @@ namespace EvolucionaMovil.Models
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -1090,6 +1097,7 @@ namespace EvolucionaMovil.Models
         partial void OnBajaChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -1116,6 +1124,7 @@ namespace EvolucionaMovil.Models
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -1154,6 +1163,7 @@ namespace EvolucionaMovil.Models
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -1355,6 +1365,7 @@ namespace EvolucionaMovil.Models
         partial void OnBajaChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -1397,6 +1408,7 @@ namespace EvolucionaMovil.Models
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -1427,6 +1439,7 @@ namespace EvolucionaMovil.Models
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -1532,6 +1545,7 @@ namespace EvolucionaMovil.Models
         partial void OnBajaChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -1618,6 +1632,7 @@ namespace EvolucionaMovil.Models
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -1656,6 +1671,7 @@ namespace EvolucionaMovil.Models
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -1905,6 +1921,7 @@ namespace EvolucionaMovil.Models
         partial void OnBajaChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -1969,6 +1986,7 @@ namespace EvolucionaMovil.Models
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -2001,6 +2019,7 @@ namespace EvolucionaMovil.Models
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -2130,6 +2149,7 @@ namespace EvolucionaMovil.Models
         partial void OnBajaChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -2172,6 +2192,7 @@ namespace EvolucionaMovil.Models
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -2202,6 +2223,7 @@ namespace EvolucionaMovil.Models
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -2379,6 +2401,7 @@ namespace EvolucionaMovil.Models
         partial void OnBajaChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -2421,6 +2444,7 @@ namespace EvolucionaMovil.Models
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -2467,6 +2491,7 @@ namespace EvolucionaMovil.Models
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -2791,6 +2816,7 @@ namespace EvolucionaMovil.Models
         partial void OnBajaChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -2853,8 +2879,31 @@ namespace EvolucionaMovil.Models
                 }
             }
         }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("EvolucionaMovilBDModel", "FK_Pagos_Movimientos", "Pago")]
+        public EntityCollection<Pago> Pagos
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Pago>("EvolucionaMovilBDModel.FK_Pagos_Movimientos", "Pago");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Pago>("EvolucionaMovilBDModel.FK_Pagos_Movimientos", "Pago", value);
+                }
+            }
+        }
 
         #endregion
+
     }
     
     /// <summary>
@@ -2891,6 +2940,7 @@ namespace EvolucionaMovil.Models
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -3098,6 +3148,7 @@ namespace EvolucionaMovil.Models
         partial void OnUserNameChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -3140,6 +3191,7 @@ namespace EvolucionaMovil.Models
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -3158,6 +3210,7 @@ namespace EvolucionaMovil.Models
         /// <param name="pagoId">Initial value of the PagoId property.</param>
         /// <param name="servicioId">Initial value of the ServicioId property.</param>
         /// <param name="payCenterId">Initial value of the PayCenterId property.</param>
+        /// <param name="cuentaId">Initial value of the CuentaId property.</param>
         /// <param name="movimientoId">Initial value of the MovimientoId property.</param>
         /// <param name="clienteNombre">Initial value of the ClienteNombre property.</param>
         /// <param name="importe">Initial value of the Importe property.</param>
@@ -3165,12 +3218,13 @@ namespace EvolucionaMovil.Models
         /// <param name="status">Initial value of the Status property.</param>
         /// <param name="fechaVencimiento">Initial value of the FechaVencimiento property.</param>
         /// <param name="fechaCreacion">Initial value of the FechaCreacion property.</param>
-        public static Pago CreatePago(global::System.Int32 pagoId, global::System.Int32 servicioId, global::System.Int32 payCenterId, global::System.Int32 movimientoId, global::System.String clienteNombre, global::System.Decimal importe, global::System.String servicio, global::System.Int16 status, global::System.DateTime fechaVencimiento, global::System.DateTime fechaCreacion)
+        public static Pago CreatePago(global::System.Int32 pagoId, global::System.Int32 servicioId, global::System.Int32 payCenterId, global::System.Int32 cuentaId, global::System.Int32 movimientoId, global::System.String clienteNombre, global::System.Decimal importe, global::System.String servicio, global::System.Int16 status, global::System.DateTime fechaVencimiento, global::System.DateTime fechaCreacion)
         {
             Pago pago = new Pago();
             pago.PagoId = pagoId;
             pago.ServicioId = servicioId;
             pago.PayCenterId = payCenterId;
+            pago.CuentaId = cuentaId;
             pago.MovimientoId = movimientoId;
             pago.ClienteNombre = clienteNombre;
             pago.Importe = importe;
@@ -3182,6 +3236,7 @@ namespace EvolucionaMovil.Models
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -3258,6 +3313,30 @@ namespace EvolucionaMovil.Models
         private global::System.Int32 _PayCenterId;
         partial void OnPayCenterIdChanging(global::System.Int32 value);
         partial void OnPayCenterIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 CuentaId
+        {
+            get
+            {
+                return _CuentaId;
+            }
+            set
+            {
+                OnCuentaIdChanging(value);
+                ReportPropertyChanging("CuentaId");
+                _CuentaId = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("CuentaId");
+                OnCuentaIdChanged();
+            }
+        }
+        private global::System.Int32 _CuentaId;
+        partial void OnCuentaIdChanging(global::System.Int32 value);
+        partial void OnCuentaIdChanged();
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -3428,6 +3507,7 @@ namespace EvolucionaMovil.Models
         partial void OnFechaCreacionChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -3449,6 +3529,44 @@ namespace EvolucionaMovil.Models
                 if ((value != null))
                 {
                     ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<DetallePago>("EvolucionaMovilBDModel.FK_DetallePagos_Pagos", "DetallePago", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("EvolucionaMovilBDModel", "FK_Pagos_Movimientos", "Movimiento")]
+        public Movimiento Movimiento
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Movimiento>("EvolucionaMovilBDModel.FK_Pagos_Movimientos", "Movimiento").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Movimiento>("EvolucionaMovilBDModel.FK_Pagos_Movimientos", "Movimiento").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<Movimiento> MovimientoReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Movimiento>("EvolucionaMovilBDModel.FK_Pagos_Movimientos", "Movimiento");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Movimiento>("EvolucionaMovilBDModel.FK_Pagos_Movimientos", "Movimiento", value);
                 }
             }
         }
@@ -3530,6 +3648,7 @@ namespace EvolucionaMovil.Models
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -3564,6 +3683,7 @@ namespace EvolucionaMovil.Models
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -3714,6 +3834,7 @@ namespace EvolucionaMovil.Models
         partial void OnBajaChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -3740,6 +3861,7 @@ namespace EvolucionaMovil.Models
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -3776,6 +3898,7 @@ namespace EvolucionaMovil.Models
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -4016,6 +4139,7 @@ namespace EvolucionaMovil.Models
         partial void OnMinutosProrrogaCancelacionChanged();
 
         #endregion
+
     
     }
     
@@ -4051,6 +4175,7 @@ namespace EvolucionaMovil.Models
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -4297,6 +4422,7 @@ namespace EvolucionaMovil.Models
         partial void OnFechaDepositoRequiredChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -4339,6 +4465,7 @@ namespace EvolucionaMovil.Models
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -4393,6 +4520,7 @@ namespace EvolucionaMovil.Models
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -4855,6 +4983,7 @@ namespace EvolucionaMovil.Models
         partial void OnActivoChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -5022,28 +5151,6 @@ namespace EvolucionaMovil.Models
         [XmlIgnoreAttribute()]
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("EvolucionaMovilBDModel", "FK_Pagos_PayCenters", "Pago")]
-        public EntityCollection<Pago> Pagos
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Pago>("EvolucionaMovilBDModel.FK_Pagos_PayCenters", "Pago");
-            }
-            set
-            {
-                if ((value != null))
-                {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Pago>("EvolucionaMovilBDModel.FK_Pagos_PayCenters", "Pago", value);
-                }
-            }
-        }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [XmlIgnoreAttribute()]
-        [SoapIgnoreAttribute()]
-        [DataMemberAttribute()]
         [EdmRelationshipNavigationPropertyAttribute("EvolucionaMovilBDModel", "FK_Abonos_PayCenters", "Abono")]
         public EntityCollection<Abono> Abonos
         {
@@ -5059,8 +5166,31 @@ namespace EvolucionaMovil.Models
                 }
             }
         }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("EvolucionaMovilBDModel", "FK_Pagos_PayCenters", "Pago")]
+        public EntityCollection<Pago> Pagos
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Pago>("EvolucionaMovilBDModel.FK_Pagos_PayCenters", "Pago");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Pago>("EvolucionaMovilBDModel.FK_Pagos_PayCenters", "Pago", value);
+                }
+            }
+        }
 
         #endregion
+
     }
     
     /// <summary>
@@ -5091,6 +5221,7 @@ namespace EvolucionaMovil.Models
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -5193,6 +5324,7 @@ namespace EvolucionaMovil.Models
         partial void OnBajaChanged();
 
         #endregion
+
     
     }
     
@@ -5228,6 +5360,7 @@ namespace EvolucionaMovil.Models
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -5450,6 +5583,7 @@ namespace EvolucionaMovil.Models
         partial void OnBajaChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -5476,6 +5610,7 @@ namespace EvolucionaMovil.Models
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -5508,6 +5643,7 @@ namespace EvolucionaMovil.Models
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -5634,6 +5770,7 @@ namespace EvolucionaMovil.Models
         partial void OnBajaChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -5660,6 +5797,7 @@ namespace EvolucionaMovil.Models
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -5706,6 +5844,7 @@ namespace EvolucionaMovil.Models
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -6024,6 +6163,7 @@ namespace EvolucionaMovil.Models
         partial void OnBajaChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -6104,8 +6244,10 @@ namespace EvolucionaMovil.Models
         }
 
         #endregion
+
     }
 
     #endregion
+
     
 }

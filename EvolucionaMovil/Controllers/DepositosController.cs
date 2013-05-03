@@ -40,7 +40,7 @@ namespace EvolucionaMovil.Controllers
              AbonoVM abonoVM = FillAbonoVM(id);
             //TODO:Leer el usuario que viene en la sesión
            int RoleUser = GetRolUser("staff");
-         
+           ViewBag.Estatus = abonoVM.Status.GetHashCode();
             ViewBag.Role = RoleUser;
             return View(abonoVM);
         }
@@ -66,7 +66,7 @@ namespace EvolucionaMovil.Controllers
                          Boolean ComentarioValido = false ;
                          Boolean UsuarioValido = false;
                          int Role = GetRolUser("staff");
-                         var movimiento = abono.Cuenta.Movimientos.Where(x => x.Motivo == enumMotivo.Abono.GetHashCode() && x.Id == abono.AbonoId).FirstOrDefault();
+                         var movimiento = abono.Cuenta.Movimientos.Where(x => x.Motivo == enumMotivo.Deposito.GetHashCode() && x.Id == abono.AbonoId).FirstOrDefault();
                          //validar que exista el moviento y sino mandar mensaje de error
                                                 
                          if (movimiento != null)
@@ -223,7 +223,7 @@ namespace EvolucionaMovil.Controllers
         public ActionResult Report(ReporteDepositoVM model)
         {
             bool exito = false;
-            exito = validations.isValidReference(model.Referencia, model.BancoId);
+            exito = validations.IsValidReferenciaDeposito(model.Referencia, model.BancoId);
             if (!exito)
             {
                 Mensajes.Add("La referencia especificada ya existe en el sistema. Favor de verificarla.");
@@ -255,22 +255,18 @@ namespace EvolucionaMovil.Controllers
                     }
                 }
 
-                EstadoDeCuentaRepository estadoDeCuentaRepository = new EstadoDeCuentaRepository(repository.context);
+                EstadoCuentaBR estadoCuentaBR = new EstadoCuentaBR(repository.context);
 
                 foreach (var cuentaDepositoVM in model.CuentasDeposito.Where(x => x.Monto > 0))
                 {
-                    Movimiento movimiento = new Movimiento();
-                    //todo:ver como generar la clave de los movimientos
-                    movimiento.Clave = DateTime.Now.ToString("yyyyMMdd");
-                    movimiento.CuentaId = cuentaDepositoVM.CuentaId;
-                    movimiento.FechaCreacion = DateTime.Now;
-                    movimiento.IsAbono = true;
-                    movimiento.Monto = cuentaDepositoVM.Monto;
-                    movimiento.Motivo = (Int16)enumMotivo.Abono;
-                    movimiento.PayCenterId = 1;
-                    movimiento.Status = (Int16)enumEstatusMovimiento.Procesando;
-
-                    estadoDeCuentaRepository.Add(movimiento);
+                    //TODO:Leer el usuario en este caso HttpResponseSubstitutionCallback PayCenter ();
+                    estadoCuentaBR.CrearMovimiento(
+                        1,
+                        enumTipoMovimiento.Abono,
+                        cuentaDepositoVM.CuentaId,
+                        cuentaDepositoVM.Monto,
+                        enumMotivo.Deposito
+                      );
                 }
 
                 exito = repository.Save();
@@ -313,7 +309,7 @@ namespace EvolucionaMovil.Controllers
             //fill estatus movimientos          
             EstadoDeCuentaRepository estadoDeCuentaRepository = new EstadoDeCuentaRepository();
             int movimientoId = 0;
-            var movimiento = abono.Cuenta.Movimientos.Where(x => x.CuentaId == abono.CuentaId && x.Motivo == enumMotivo.Abono.GetHashCode() && x.PayCenterId == abono.PayCenterId && x.Id == abono.AbonoId).FirstOrDefault();
+            var movimiento = abono.Cuenta.Movimientos.Where(x => x.CuentaId == abono.CuentaId && x.Motivo == enumMotivo.Deposito.GetHashCode() && x.PayCenterId == abono.PayCenterId && x.Id == abono.AbonoId).FirstOrDefault();
             if (movimiento != null)
             {
                 movimientoId = movimiento.MovimientoId;
