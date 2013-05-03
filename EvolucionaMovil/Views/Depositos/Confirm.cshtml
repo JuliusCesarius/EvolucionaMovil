@@ -76,10 +76,10 @@
            <div class="display-field fsl fwb">¿Los datos ingresados son correctos?</div>
         
           <div>
-                 <input type="submit" class="freshbutton-blue" value="SI" />
+                 <input type="submit" class="freshbutton-blue small" value="Sí" />
                  @* @Html.ActionLink("No,verificar", "history.back()", null, new { @class = "freshbutton-blue" })*@
                   
-                  <a class="freshbutton-blue" onclick="history.go(-1); return false;" href="#">Back</a><br />     
+                  <a class="freshbutton-blue small" onclick="history.go(-1); return false;" href="#">Back</a><br />     
                    
            </div>         
     }
@@ -87,8 +87,8 @@
     {
         
         <div>
-           @Html.ActionLink("Reportar otro depósito", "Report", null, new { @class = "freshbutton-blue" })
-           @Html.ActionLink("Regresar a lista de depósito", "Index", null, new { @class = "freshbutton-blue" })
+           @Html.ActionLink("Reportar otro depósito", "Report", null, new { @class = "freshbutton-blue small" })
+           @Html.ActionLink("Regresar a lista de depósito", "Index", null, new { @class = "freshbutton-blue small" })
         </div>
     }
   </div>
