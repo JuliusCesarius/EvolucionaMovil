@@ -11,7 +11,9 @@
         $('#BancoId').trigger("change");
         $("#CuentaBancariaId").val($('#hddCuentaBancariaId').val());
     }
-
+    $("#MontoString").on("keyup", function () {
+        $("#Monto").val($("#MontoString").val().replace(",",""));
+    });
     $(".cuentadeposito").each(function (i, item) {
         $("form").validate().settings.rules[$(item).find("input[type=text]").attr("name")] = { "number": true };
     });

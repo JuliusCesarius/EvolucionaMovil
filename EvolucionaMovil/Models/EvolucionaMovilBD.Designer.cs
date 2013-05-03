@@ -32,10 +32,10 @@ using System.Xml.Serialization;
 [assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_DetallePagos_Pagos", "Pago", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.Pago), "DetallePago", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EvolucionaMovil.Models.DetallePago), true)]
 [assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_Pagos_PayCenters", "PayCenter", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.PayCenter), "Pago", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EvolucionaMovil.Models.Pago), true)]
 [assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_Tickets_Pagos", "Pago", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.Pago), "Ticket", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(EvolucionaMovil.Models.Ticket), true)]
+[assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_Pagos_Movimientos", "Movimiento", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.Movimiento), "Pago", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EvolucionaMovil.Models.Pago), true)]
 [assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_Abonos_Cuentas", "Cuenta", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.Cuenta), "Abono", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EvolucionaMovil.Models.Abono), true)]
 [assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_Abonos_CuentasBancarias", "CuentaBancaria", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.CuentaBancaria), "Abono", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EvolucionaMovil.Models.Abono), true)]
 [assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_Abonos_PayCenters", "PayCenter", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.PayCenter), "Abono", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EvolucionaMovil.Models.Abono), true)]
-[assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_Pagos_Movimientos", "Movimiento", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.Movimiento), "Pago", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EvolucionaMovil.Models.Pago), true)]
 
 #endregion
 
@@ -555,8 +555,7 @@ namespace EvolucionaMovil.Models
         /// <param name="fechaCreacion">Initial value of the FechaCreacion property.</param>
         /// <param name="baja">Initial value of the Baja property.</param>
         /// <param name="cuentaId">Initial value of the CuentaId property.</param>
-        /// <param name="rutaFichaDeposito">Initial value of the RutaFichaDeposito property.</param>
-        public static Abono CreateAbono(global::System.Int32 abonoId, global::System.Int32 payCenterId, global::System.Int32 bancoId, global::System.Int32 cuentaBancariaId, global::System.Decimal monto, global::System.DateTime fechaPago, global::System.String referencia, global::System.Int16 status, global::System.DateTime fechaCreacion, global::System.Boolean baja, global::System.Int32 cuentaId, global::System.String rutaFichaDeposito)
+        public static Abono CreateAbono(global::System.Int32 abonoId, global::System.Int32 payCenterId, global::System.Int32 bancoId, global::System.Int32 cuentaBancariaId, global::System.Decimal monto, global::System.DateTime fechaPago, global::System.String referencia, global::System.Int16 status, global::System.DateTime fechaCreacion, global::System.Boolean baja, global::System.Int32 cuentaId)
         {
             Abono abono = new Abono();
             abono.AbonoId = abonoId;
@@ -570,7 +569,6 @@ namespace EvolucionaMovil.Models
             abono.FechaCreacion = fechaCreacion;
             abono.Baja = baja;
             abono.CuentaId = cuentaId;
-            abono.RutaFichaDeposito = rutaFichaDeposito;
             return abono;
         }
 
@@ -848,7 +846,7 @@ namespace EvolucionaMovil.Models
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
         public global::System.String RutaFichaDeposito
         {
@@ -860,7 +858,7 @@ namespace EvolucionaMovil.Models
             {
                 OnRutaFichaDepositoChanging(value);
                 ReportPropertyChanging("RutaFichaDeposito");
-                _RutaFichaDeposito = StructuralObject.SetValidValue(value, false);
+                _RutaFichaDeposito = StructuralObject.SetValidValue(value, true);
                 ReportPropertyChanged("RutaFichaDeposito");
                 OnRutaFichaDepositoChanged();
             }
