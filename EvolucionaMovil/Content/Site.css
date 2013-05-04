@@ -266,12 +266,12 @@ input[type="text"]:hover,textarea:hover,select:hover, .sbHolder:hover {
 border:1px solid #a0a0a0;
 }
 
-input[type="text"].small,textarea.small
+input[type="text"].small,textarea.small,a.small
 {
     padding:0 .5em;
-    width:80px
+    min-width:80px
 }
-input[type="submit"].small, input[type="button"].small {font-size:11px !important;padding:4px 10px !important;}
+input[type="submit"].small, input[type="button"].small,a.small {min-width:80px;font-size:11px !important;padding:4px 10px !important;}
 
 label
 {
@@ -334,6 +334,11 @@ margin-right:3px;
 
 a.freshbutton,a.freshbutton-red,a.freshbutton-blue,a.freshbutton-big,a.freshbutton-lightblue,a.freshbutton-gray,a.freshbutton-green,span.freshbutton,span.freshbutton-red,span.freshbutton-blue,span.freshbutton-big,span.freshbutton-lightblue,span.freshbutton-gray,span.freshbutton-green {
 display:inline-block;
+}
+
+a.freshbutton,a.freshbutton-red,a.freshbutton-blue,a.freshbutton-big,a.freshbutton-lightblue,a.freshbutton-gray,a.freshbutton-green
+{
+color:#fff;text-decoration:none
 }
 
 a.freshbutton:hover,a.freshbutton-red:hover,a.freshbutton-blue:hover,a.freshbutton-big:hover,a.freshbutton-lightblue:hover,a.freshbutton-gray:hover,a.freshbutton-green:hover,span.freshbutton:hover,span.freshbutton-red:hover,span.freshbutton-blue:hover,span.freshbutton-big:hover,span.freshbutton-lightblue:hover,span.freshbutton-gray:hover,span.freshbutton-green:hover {
