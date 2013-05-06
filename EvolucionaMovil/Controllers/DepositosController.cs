@@ -12,9 +12,12 @@ using EvolucionaMovil.Models.Enums;
 using EvolucionaMovil.Repositories;
 using System.Web.Security;
 using System.Net.Mail ;
+using EvolucionaMovil.Models.Classes;
+using EvolucionaMovil.Attributes;
+
 namespace EvolucionaMovil.Controllers
 { 
-    public class DepositosController : Controller
+    public class DepositosController : CustomControllerBase
     {
         private List<string> Mensajes = new List<string>();
         private AbonoRepository repository = new AbonoRepository();
@@ -24,17 +27,19 @@ namespace EvolucionaMovil.Controllers
         //
         // GET: /Depositos/
 
+        [CustomAuthorize(AuthorizedRoles = new [] { enumRoles.PayCenter , enumRoles.Staff })]
         public ViewResult Index()
         {
             //Modificación de prueba José
             var abonos = repository.ListAll().ToListOfDestination<AbonoVM>();
-           
+
             return View(abonos.ToList());
         }
 
         //
         // GET: /Depositos/Details/5
 
+        [CustomAuthorize(AuthorizedRoles = new [] { enumRoles.PayCenter , enumRoles.Staff })]
         public ViewResult Details(int id)
         {          
              AbonoVM abonoVM = FillAbonoVM(id);
@@ -47,6 +52,7 @@ namespace EvolucionaMovil.Controllers
 
 
         [HttpPost]
+        [CustomAuthorize(AuthorizedRoles = new [] { enumRoles.PayCenter , enumRoles.Staff })]
         public ViewResult Details(AbonoVM model)
         {
             //Aquí van las acciones del PayCenter y Staf para el depósito
@@ -82,7 +88,7 @@ namespace EvolucionaMovil.Controllers
                                          if (minutosProrrogaCancelacion > ts.TotalMinutes)
                                          {
                                              //Validar el Role del Usario conectado
-                                             if (Role == EnumRoles.PayCenter.GetHashCode())
+                                             if (Role == enumRoles.PayCenter.GetHashCode())
                                              {
                                                  abono.Status = (short)(enumEstatusMovimiento.Cancelado.GetHashCode());
                                                  //ViewBag.Mensaje = "El reporte de depósito ha sido cancelado exitosamente.";
@@ -100,7 +106,7 @@ namespace EvolucionaMovil.Controllers
                                  case "Aplicar":
                                 
                                      //Validar el Role del Usario conectado
-                                     if (Role == EnumRoles.Staff.GetHashCode() || Role == EnumRoles.Administrator.GetHashCode())
+                                     if (Role == enumRoles.Staff.GetHashCode() || Role == enumRoles.Administrator.GetHashCode())
                                      {
 
                                          UsuarioValido = true;   
@@ -128,7 +134,7 @@ namespace EvolucionaMovil.Controllers
                                      break;
                                  case "Rechazar":
                                      //Validar el Role del Usario conectado
-                                     if (Role == EnumRoles.Staff.GetHashCode() || Role == EnumRoles.Administrator.GetHashCode())
+                                     if (Role == enumRoles.Staff.GetHashCode() || Role == enumRoles.Administrator.GetHashCode())
                                      {
                                          UsuarioValido = true;
                                          ComentarioValido = comentario.TrimEnd() != string.Empty ? true : false;
@@ -206,6 +212,7 @@ namespace EvolucionaMovil.Controllers
             return View(abonoVM);    
         }
 
+        [CustomAuthorize(AuthorizedRoles = new [] { enumRoles.PayCenter , enumRoles.Staff })]
         public ActionResult Report()
         {
           
@@ -215,7 +222,8 @@ namespace EvolucionaMovil.Controllers
             return View(model);
         }
 
-         [HttpPost]
+        [HttpPost]
+        [CustomAuthorize(AuthorizedRoles = new [] { enumRoles.PayCenter , enumRoles.Staff })]
         public ActionResult Report(ReporteDepositoVM model)
         {
             PayCentersRepository payCentersRepository = new PayCentersRepository();
@@ -262,6 +270,7 @@ namespace EvolucionaMovil.Controllers
 
 
         [HttpPost]
+        [CustomAuthorize(AuthorizedRoles = new [] { enumRoles.PayCenter , enumRoles.Staff })]
         public ActionResult Confirm(AbonoVM model)
         {
             bool exito = true;
@@ -307,7 +316,10 @@ namespace EvolucionaMovil.Controllers
                         var movimiento = estadoCuentaBR.CrearMovimiento(idPayCenter, enumTipoMovimiento.Abono,model.AbonoId, model.CuentaId, (Decimal)model.Monto, enumMotivo.Deposito);
 
                         exito = repository.Save();
-                        //todo: referencia la clase de estadosDeCuentaBR, y generar movimiento correspondiente.
+                        //Julius: Tuve que guardar otra vez para guardar el abonoId generado en la BD
+                        estadoCuentaBR.ActualizaReferenciaIdMovimiento(movimiento.MovimientoId, abono.AbonoId);
+                        repository.Save();
+
                         model.AbonoId = abono.AbonoId;
                         Mensajes.Add("Se ha registrado su depósito con éxito con clave " + movimiento.Clave + ". En breve será revisado y aplicado.");
                     }
@@ -407,13 +419,13 @@ namespace EvolucionaMovil.Controllers
         {
             var roles = Roles.GetRolesForUser(pUser);
             int rolUser = 0;
-            if (roles.Any(x => x == EnumRoles.PayCenter.ToString()))
+            if (roles.Any(x => x == enumRoles.PayCenter.ToString()))
             {
-                rolUser = EnumRoles.PayCenter.GetHashCode();
+                rolUser = enumRoles.PayCenter.GetHashCode();
             }
-            else if (roles.Any(x => x == EnumRoles.Staff.ToString() || x == EnumRoles.Administrator.ToString()))
+            else if (roles.Any(x => x == enumRoles.Staff.ToString() || x == enumRoles.Administrator.ToString()))
             {
-                rolUser = EnumRoles.Staff.GetHashCode();
+                rolUser = enumRoles.Staff.GetHashCode();
             }
 
             return rolUser;
