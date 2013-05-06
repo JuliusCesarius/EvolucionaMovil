@@ -53,8 +53,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="clases\BusinessRulesBase.cs" />
+    <Compile Include="clases\CrossValidationMessage.cs" />
     <Compile Include="clases\RepositoryBase.cs" />
+    <Compile Include="enums\enumMessageType.cs" />
     <Compile Include="extensions\ObjectContextExtensor.cs" />
+    <Compile Include="clases\CrossValidation.cs" />
+    <Compile Include="interfaces\ICrossValidation.cs" />
     <Compile Include="interfaces\IRepository.cs" />
     <Compile Include="interfaces\ISoftDeleted.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
