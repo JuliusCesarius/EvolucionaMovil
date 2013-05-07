@@ -1,63 +1,40 @@
-﻿@model IEnumerable<EvolucionaMovil.Models.AbonoVM>
+﻿@model EvolucionaMovil.Models.SimpleGridResult<EvolucionaMovil.Models.AbonoVM>
+@section Javascript{
+    <script src="@Url.Content("~/Scripts/Depositos.js")" type="text/javascript"></script>
+}
 
 @{
     ViewBag.Title = "Index";
 }
+<div  class="resumen fl">
+    <h1>Despósitos</h1>
+    <h2>Reportes realizados</h2>
+</div>
+<form action="/Depositos" method="post"></form>
+<div  class="resumen fr saldos">
 
-<h2>Index</h2>
+</div>
+<div class="clear"></div>
+<div id="filtros">
 
-<p>
-    @Html.ActionLink("Reportar Depósito", "Report")
-</p>
-<table>
-    <tr>
-        <th>
-            PayCenter
-        </th>
-        <th>
-            Monto
-        </th>
-        <th>
-            FechaPago
-        </th>
-        <th>
-            Referencia
-        </th>
-        <th>
-            Estatus
-        </th>
-        <th>
-            FechaCreacion
-        </th>
-        <th></th>
-    </tr>
-
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.PayCenter)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Monto)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.FechaPago)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Referencia)
-        </td>
-       <td>
-            @Html.DisplayFor(modelItem => item.StatusString )
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.FechaCreacion)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.AbonoId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.AbonoId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.AbonoId })
-        </td>
-    </tr>
-}
-
-</table>
+    <div class="fr">
+        <label for="fechaInicio">
+            Filtrar del
+        </label>
+        <input type="text" class="small" id="fechaInicio" value="@ViewBag.FechaInicio" />
+        al
+        <input class="small" type="text" id="fechaFin" value="@ViewBag.FechaFin"/>
+        Buscar
+        <input class="small" type="text" id="searchString" /><input type="button" id="search" /><input
+            type="submit" id="Actualizar" class="freshbutton-blue small" value="Actualizar" />
+    </div>
+    <div class="fl">
+        Últimos
+        <input type="text" id="pageSize" class="small" value="@ViewBag.PageSize"/>
+        movimientos
+        <input type="checkbox" class="small" id="aplicadosOnly" @(ViewBag.OnlyAplicados ? "Checked" : "")/>
+        <label id="lblAplicadosOnly" for="aplicadosOnly">Sólo aplicados</label>
+      </div>
+</div>
+<input type="hidden" id="hddData" value="@Newtonsoft.Json.JsonConvert.SerializeObject(Model)" />
+<div id="grdDepositos" />
