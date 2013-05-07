@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using cabinet.patterns.clases;
 using EvolucionaMovil.Models;
+using EvolucionaMovil.Models.Enums;
 
 namespace EvolucionaMovil.Repositories
 {
@@ -20,7 +21,21 @@ namespace EvolucionaMovil.Repositories
         }
         public IEnumerable<Movimiento> GetMovimientos(int TipoCuentaId = -1, int PayCenterId = -1)
         {
-            return context.Movimientos.Where(m => (m.CuentaId == TipoCuentaId || TipoCuentaId == -1) && (m.PayCenterId == PayCenterId || PayCenterId == -1)).OrderByDescending(m => m.FechaCreacion);
+            return context.Movimientos.Join(context.Cuentas, m => m.CuentaId, c => c.CuentaId, (m, c) => new { m, c })
+                .Where(mc => (mc.c.TipoCuenta == TipoCuentaId || TipoCuentaId == -1) && (mc.m.PayCenterId == PayCenterId || PayCenterId == -1))
+                .Select(mc=>mc.m)
+                .OrderByDescending(m => m.FechaCreacion);
+        }
+        public Decimal GetSaldoActual(int CuentaId)
+        {
+            var estatusAplicado = enumEstatusMovimiento.Aplicado.GetHashCode();
+            var movimientos = context.Movimientos.Where(m => (m.CuentaId == CuentaId && m.Status == estatusAplicado));
+            
+            var cargos = movimientos.Where(m => !m.IsAbono).Sum(x=>(Decimal?)x.Monto);
+            var abonos = movimientos.Where(m => m.IsAbono).Sum(x => (Decimal?)x.Monto);
+            cargos = cargos != null ? cargos : 0;
+            abonos = abonos != null ? abonos : 0;
+            return (decimal)abonos - (decimal)cargos;
         }
         public void AddAbono(Abono abono)
         {

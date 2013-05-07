@@ -117,6 +117,7 @@
     <Compile Include="Areas\MvcMembership\Models\Users\IndexViewModel.cs" />
     <Compile Include="Areas\MvcMembership\Models\Users\RoleViewModel.cs" />
     <Compile Include="Areas\MvcMembership\MvcMembershipAreaRegistration.cs" />
+    <Compile Include="Attributes\CustomAuthorizeAttribute.cs" />
     <Compile Include="Attributes\MaskAttribute.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BancosController.cs" />
@@ -139,8 +140,9 @@
     <Compile Include="Models\BR\PaycenterBR.cs" />
     <Compile Include="Models\BR\ProspectoBR.cs" />
     <Compile Include="Models\CambioEstatusVM.cs" />
+    <Compile Include="Models\Classes\CustomControllerBase.cs" />
     <Compile Include="Models\CompraEventoVM.cs" />
-    <Compile Include="Models\Enums\EnumRoles.cs" />
+    <Compile Include="Models\Enums\enumRoles.cs" />
     <Compile Include="Models\Enums\enumTipoCuenta.cs" />
     <Compile Include="Models\Enums\enumTipoMovimiento.cs" />
     <Compile Include="Models\Helpers\MvcHtmlHelpers.cs" />
