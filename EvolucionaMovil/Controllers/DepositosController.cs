@@ -25,16 +25,31 @@ namespace EvolucionaMovil.Controllers
 
         private EstadoCuentaBR validations = new EstadoCuentaBR();
 
+        [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.Staff })]
+        public string FindPayCenter(string term)
+        {
+            PayCentersRepository payCentersRepository = new PayCentersRepository();
+            var payCenters = payCentersRepository.GetPayCenterBySearchString(term).Select(x => new { label= x.UserName +" - "+ x.Nombre, value = x.PayCenterId }); 
+            return Newtonsoft.Json.JsonConvert.SerializeObject(payCenters);
+        }
+
         //
         // GET: /Depositos/
-
-        [CustomAuthorize(AuthorizedRoles = new [] { enumRoles.PayCenter , enumRoles.Staff })]
+        [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.PayCenter, enumRoles.Staff })]
         public ViewResult Index()
         {
-            //Modificación de prueba José
-            var abonos = repository.ListAll().ToListOfDestination<AbonoVM>();
-
-            return View(abonos.ToList());
+            List<AbonoVM> abonos;
+            if (HttpContext.User.IsInRole(enumRoles.PayCenter.ToString()))
+            {
+                PayCentersRepository payCentersRepository = new PayCentersRepository();
+                int payCenterId = payCentersRepository.GetPayCenterByUserName(HttpContext.User.Identity.Name);
+                abonos = repository.GetByPayCenterId(payCenterId).ToListOfDestination<AbonoVM>().ToList();
+            }
+            else
+            {
+                abonos = repository.ListAll().ToListOfDestination<AbonoVM>().ToList();
+            }
+            return View(abonos);
         }
 
         //
@@ -122,12 +137,17 @@ namespace EvolucionaMovil.Controllers
 
         [CustomAuthorize(AuthorizedRoles = new [] { enumRoles.PayCenter , enumRoles.Staff })]
         public ActionResult Report()
-        {
-          
+        {          
             ReporteDepositoVM model = new ReporteDepositoVM();
             model.CuentasDeposito = CuentaDepositoPayCenter(HttpContext.User.Identity.Name);
             LlenarBancos_Cuentas();
             return View(model);
+        }
+
+        [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.Staff})]
+        public string GetCuentaDepositoPayCenter(int id)
+        {
+            return Newtonsoft.Json.JsonConvert.SerializeObject(CuentaDepositoPayCenter(id));
         }
 
         [HttpPost]
@@ -152,16 +172,21 @@ namespace EvolucionaMovil.Controllers
 
              if (exito)
              {
-
-                 var userPayCenter = payCentersRepository.ListAll().Where(x => x.UserName == HttpContext.User.Identity.Name).ToList();
-                 //.Select(x=> new {UserName = x.UserName , PayCenterId =  x.PayCenterId  }) 
-                 //  int idPayCenter = payCenter.
+                 PayCenter payCenter;
+                 if (HttpContext.User.IsInRole(enumRoles.PayCenter.ToString()))
+                 {
+                     payCenter = payCentersRepository.LoadByIdName(HttpContext.User.Identity.Name);
+                 }
+                 else
+                 {
+                     payCenter = payCentersRepository.LoadById(model.PayCenterId);
+                 }
                  AbonoVM abonoVM = new AbonoVM();
                  Mapper.Map(model, abonoVM);
                  abonoVM.MontoString = ((decimal)model.Monto).ToString("C");
                  abonoVM.Status = (Int16)enumEstatusMovimiento.Procesando;
-                 abonoVM.PayCenterId = userPayCenter[0].PayCenterId;
-                 abonoVM.PayCenter = userPayCenter[0].Nombre;
+                 abonoVM.PayCenterId = payCenter.PayCenterId;
+                 abonoVM.PayCenter = payCenter.Nombre;
                  abonoVM.FechaCreacion = DateTime.Now;
                  abonoVM.FechaPago = (DateTime)model.FechaPago;
                  return View("Confirm", abonoVM);
@@ -200,8 +225,19 @@ namespace EvolucionaMovil.Controllers
             if (exito)
               {
                     //Buscar el payCenter
-                    PayCentersRepository payCentersRepository = new PayCentersRepository();
-                    int idPayCenter = payCentersRepository.GetPayCenterByUserName(HttpContext.User.Identity.Name);
+                    PayCentersRepository payCentersRepository;
+                    int payCenterId = 0;
+
+                    if (HttpContext.User.IsInRole(enumRoles.PayCenter.ToString()))
+                    {
+                        payCentersRepository = new PayCentersRepository();
+                        payCenterId = payCentersRepository.GetPayCenterByUserName(HttpContext.User.Identity.Name);
+                    }
+                    else
+                    {
+                        payCenterId = model.PayCenterId;
+                    }
+
 
                     if (ModelState.IsValid && exito)
                     {
@@ -214,14 +250,14 @@ namespace EvolucionaMovil.Controllers
                             FechaCreacion = DateTime.Now,
                             FechaPago = (DateTime)model.FechaPago,
                             Monto = (Decimal)model.Monto,
-                            PayCenterId = idPayCenter,
+                            PayCenterId = payCenterId,
                             Referencia = model.Referencia,
                             RutaFichaDeposito = model.RutaFichaDeposito
                         };
                         repository.Add(abono);
 
                         EstadoCuentaBR estadoCuentaBR = new EstadoCuentaBR(repository.context);
-                        var movimiento = estadoCuentaBR.CrearMovimiento(idPayCenter, enumTipoMovimiento.Abono,model.AbonoId, model.CuentaId, (Decimal)model.Monto, enumMotivo.Deposito);
+                        var movimiento = estadoCuentaBR.CrearMovimiento(payCenterId, enumTipoMovimiento.Abono,model.AbonoId, model.CuentaId, (Decimal)model.Monto, enumMotivo.Deposito);
 
                         exito = repository.Save();
                         //Julius: Tuve que guardar otra vez para guardar el abonoId generado en la BD
@@ -340,10 +376,14 @@ namespace EvolucionaMovil.Controllers
         }
         private List<CuentaDepositoVM> CuentaDepositoPayCenter(string nameUser)
         {
-             PayCentersRepository payCentersRepository = new PayCentersRepository();
-             int idPayCenter = payCentersRepository.GetPayCenterByUserName(nameUser);
-
-            return payCentersRepository.LoadTipoCuentas(idPayCenter).Select(x => new CuentaDepositoVM { CuentaId = x.CuentaId, Monto = 0, Nombre = ((enumTipoCuenta)x.TipoCuenta).ToString().Replace('_', ' ') }).ToList();
+            PayCentersRepository payCentersRepository = new PayCentersRepository();
+            int payCenterId = payCentersRepository.GetPayCenterByUserName(nameUser);
+            return CuentaDepositoPayCenter(payCenterId);
+        }
+        private List<CuentaDepositoVM> CuentaDepositoPayCenter(int PayCenterId)
+        {
+            PayCentersRepository payCentersRepository = new PayCentersRepository();
+            return payCentersRepository.LoadTipoCuentas(PayCenterId).Select(x => new CuentaDepositoVM { CuentaId = x.CuentaId, Monto = 0, Nombre = ((enumTipoCuenta)x.TipoCuenta).ToString().Replace('_', ' ') }).ToList();
         }
 
         private void LlenarBancos_Cuentas()

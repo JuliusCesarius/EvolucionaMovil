@@ -1,4 +1,5 @@
 ﻿@using EvolucionaMovil.Models.Helpers
+@using EvolucionaMovil.Models.Enums
 @model EvolucionaMovil.Models.ReporteDepositoVM
 
 
@@ -23,34 +24,23 @@
     <fieldset>
         <legend>Reportar Depósito</legend>  
 
-        @if (Model.CuentasDeposito.Count > 0)
-        {
-            
-                  <div class="editor-label"><label for="CuentaId">Cuentas de depósito.</label></div>        
+        
+            @if (HttpContext.Current.User.IsInRole(enumRoles.Staff.ToString()) || HttpContext.Current.User.IsInRole(enumRoles.Administrator.ToString()))
+            {
+                <div class="editor-label"><label for="PayCenterName">PayCenters</label></div>        
                  <div class="editor-field">
-                     @Html.DropDownListFor(model => model.CuentaId, new SelectList(Model.CuentasDeposito, "CuentaId", "Nombre", null), "")
-                     <input type="hidden" id="hddTipoCuenta" name = "TipoCuenta" />
-                      @Html.ValidationMessageFor(model => model.CuentaId)
-                 </div> 
-            
-                 @* <div>
-                 @(Model.CuentasDeposito.Count == 1? "style=display:none":"")
-               <div>Indique de qué forma será aplicado el depósito</div>
-                    @for (var i = 0; i < Model.CuentasDeposito.Count; i++)
-                    {
-                        <div class="cuentadeposito" >
-                            <label>@Model.CuentasDeposito.ToList()[i].Nombre</label>
-                            <input type="text" name="CuentasDeposito[@i].Monto" id="CuentasDeposito[@i].Monto" value="@Model.CuentasDeposito.ToList()[i].Monto" class="small"/>
-                            <input type="hidden" name="CuentasDeposito[@i].CuentaId" value="@Model.CuentasDeposito.ToList()[i].CuentaId"/>
-                            <input type="hidden" name="CuentasDeposito[@i].Nombre" value="@Model.CuentasDeposito.ToList()[i].Nombre"/>
-                        </div>
-                    }
-            </div>*@
-            
-
-           
-           
-        }     
+                    @Html.EditorFor(model => model.PayCenterName)
+                    <input type="hidden" id="hddPayCenterId" name="PayCenterId" />
+                    @Html.ValidationMessageFor(model => model.PayCenterName)
+                 </div>
+            }
+            <div class="editor-label"><label for="CuentaId">Cuentas de depósito.</label></div>        
+            <div class="editor-field">
+                @Html.DropDownListFor(model => model.CuentaId, new SelectList(Model.CuentasDeposito, "CuentaId", "Nombre", null), "")
+                <input type="hidden" id="hddTipoCuenta" name = "TipoCuenta" />
+                @Html.ValidationMessageFor(model => model.CuentaId)
+            </div> 
+             
             <div id="Imagen" @(Model.CuentaId == null || Model.CuentaId <= 0 ? "style=display:none" : "")>
             <input type="hidden" id="hddRutaFichaDeposito" name = "RutaFichaDeposito" />
                 <iframe src="../ImgFichaDeposito/IndexPartial" frameborder="0" style="height: 160px; width: 110%">

@@ -28,6 +28,10 @@ namespace EvolucionaMovil.Models
         public DateTime? FechaPago { get; set; }
         public ICollection<CuentaDepositoVM> CuentasDeposito { get; set; }
         public string TipoCuenta { get; set; }
+        [Required]
+        public string PayCenterName { get; set; }
+        [Required]
+        public int PayCenterId { get; set; }
     }
 
     public class CuentaDepositoVM

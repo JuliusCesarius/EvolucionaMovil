@@ -1,5 +1,34 @@
 ﻿$(document).on("ready", function () {
     $("#FechaPago").datepicker({ "dateFormat": "dd/mm/yy", maxDate: '0' });
+    $("#PayCenterName").autocomplete({
+        source: "FindPayCenter/valor",
+        select: function (event, ui) {
+            var label = ui.item.label;
+            var v = ui.item.value;
+            $('#hddPayCenterId').val(v);
+            // update what is displayed in the textbox
+            $.getJSON("GetCuentaDepositoPayCenter/" + v, function (result) {
+                $("#CuentaId").html("");
+                $.each(result, function (i, item) {
+                    $("#CuentaId").append($('<option/>', {
+                        value: item.CuentaId,
+                        text: item.Nombre
+                    }));
+                    $("#CuentaId").val(0);
+                });
+            });
+            this.value = label;
+            return false;
+        },
+        focus: function (event, ui) {
+            event.preventDefault();
+            $(this).val(ui.item.label);
+        },
+        open: function () {
+            $(this).autocomplete('widget').css('z-index', 100);
+            return false;
+        }
+    });
     $("#btnSave").on("click", Save);
     $("#CuentaBancariaId").on("change", function () { $("#hddCuentaBancaria").val($("#CuentaBancariaId").find(":selected").text()); });
 
@@ -12,7 +41,7 @@
         $("#CuentaBancariaId").val($('#hddCuentaBancariaId').val());
     }
     $("#MontoString").on("keyup", function () {
-        $("#Monto").val($("#MontoString").val().replace(",",""));
+        $("#Monto").val($("#MontoString").val().replace(",", ""));
     });
     $(".cuentadeposito").each(function (i, item) {
         $("form").validate().settings.rules[$(item).find("input[type=text]").attr("name")] = { "number": true };
