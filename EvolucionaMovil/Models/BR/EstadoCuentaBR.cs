@@ -59,6 +59,7 @@ namespace EvolucionaMovil.Models.BR
         /// <returns>Objeto SaldosPagoServicio con los saldos según los movimientos registrados del PayCenter</returns>
         internal SaldosPagoServicio GetSaldosPagoServicio(int PayCenterId)
         {
+            Succeed = true;
             var movimientos = estadoDeCuentaRepository.GetMovimientos(enumTipoCuenta.Pago_de_Servicios.GetHashCode(), PayCenterId);
             SaldosPagoServicio saldosPagoServicio = new SaldosPagoServicio
             {
@@ -104,7 +105,7 @@ namespace EvolucionaMovil.Models.BR
             //BR01.04.b: La creción de un registro de movimiento, deberá venir acompañada de un registro de historial de estatus
             var currentUser = HttpContext.Current.User != null ? HttpContext.Current.User.Identity.Name : string.Empty;
             Int16 nuevoEstatusNumber = movimiento.Status;
-            var movimientos_Estatus = new Movimientos_Estatus { UserName = currentUser, Status = nuevoEstatusNumber };
+            var movimientos_Estatus = new Movimientos_Estatus { PayCenterId = PayCenterId, CuentaId = CuentaId, UserName = currentUser, Status = nuevoEstatusNumber, FechaCreacion = DateTime.Now };
             movimiento.Movimientos_Estatus.Add(movimientos_Estatus);
 
             estadoDeCuentaRepository.Add(movimiento);
@@ -124,6 +125,7 @@ namespace EvolucionaMovil.Models.BR
         /// <returns>El movimiento actualizado</returns>
         internal Movimiento ActualizaReferenciaIdMovimiento(int MovimientoId, int Id)
         {
+            Succeed = true;
             if (Id <= 0)
             {
                 Succeed = false;
@@ -148,6 +150,7 @@ namespace EvolucionaMovil.Models.BR
         /// <returns>El movimiento actualizado</returns>
         internal Movimiento ActualizarMovimiento(int MovimientoId, enumEstatusMovimiento NuevoEstatus, string Comentarios)
         {
+            Succeed = true;
             Movimiento movimiento = estadoDeCuentaRepository.LoadById(MovimientoId);
             if (movimiento == null)
             {
@@ -163,15 +166,7 @@ namespace EvolucionaMovil.Models.BR
                 return null;
             }
 
-            //BR01.04.g: En un movimiento no es posible regresar al estatus Processando
-            if (NuevoEstatus == enumEstatusMovimiento.Procesando && movimiento.Status != enumEstatusMovimiento.Procesando.GetHashCode())
-            {
-                    Succeed = false;
-                    AddValidationMessage(cabinet.patterns.enums.enumMessageType.BRException, "En un movimiento no es posible regresar al estatus Processando");
-                    return null;
-            }
-
-            //BR01.04.d: Únicamente se permite NO guardar un comentario cuando cambia del estatus Procesando a Aplicado
+            //BR01.04.d: Únicamente se permite NO guardar un comentario cuando cambia del estatus Procesando a Aplicado.
             if (string.IsNullOrEmpty(Comentarios))
             {
                 if (movimiento.Status != Enums.enumEstatusMovimiento.Procesando.GetHashCode() || NuevoEstatus != Enums.enumEstatusMovimiento.Aplicado)
@@ -182,43 +177,84 @@ namespace EvolucionaMovil.Models.BR
                 }
             }
 
-            //BR01.04.e: Los estatus Aplicado y Cancelado es un estatus terminal. No es posible volver a cambiar de estatus
-            if (movimiento.Status != enumEstatusMovimiento.Aplicado.GetHashCode() || NuevoEstatus != enumEstatusMovimiento.Cancelado)
+            //BR01.04.e: Los estatus Aplicado y Cancelado es un estatus terminal. No es posible volver a cambiar de estatus.
+            if (movimiento.Status == enumEstatusMovimiento.Cancelado.GetHashCode())
             {
                 Succeed = false;
                 AddValidationMessage(cabinet.patterns.enums.enumMessageType.BRException, "No es posible cambiar de estatus un movimiento Cancelado.");
                 return null;
             }
 
-            //BR01.04.f: Es posible Cancelar una Solicitud de Pago únicamente si se encuentra en estatus Procesando y no ha transcurrido el tiempo en minutos del parámetro global del sistema
-            //Primero verifico si va a cancelar
-            if (NuevoEstatus == enumEstatusMovimiento.Cancelado)
+            switch (NuevoEstatus)
             {
-                if (movimiento.Status != enumEstatusMovimiento.Procesando.GetHashCode())
-                {
+                case enumEstatusMovimiento.Procesando:
+                    //BR01.04.g: En un movimiento no es posible regresar al estatus Processando
                     Succeed = false;
-                    AddValidationMessage(cabinet.patterns.enums.enumMessageType.BRException, "No es posible Cancelar el movimiento si no se encuentra en estatus procesando.");
+                    AddValidationMessage(cabinet.patterns.enums.enumMessageType.BRException, "En un movimiento no es posible regresar al estatus Processando");
                     return null;
-                }
-                else
-                {
-                    ParametrosRepository parametrosRepository = new ParametrosRepository();
-                    var parametrosGlobales = parametrosRepository.GetParametrosGlobales();
-                    var dif = movimiento.FechaCreacion - DateTime.Now;
-                    //Excede los minutos de prórroga?
-                    if (dif.TotalMinutes > parametrosGlobales.MinutosProrrogaCancelacion)
+                case enumEstatusMovimiento.Aplicado:
+                    //BR01.04.i: Un movimiento puede ser Aplicado únicamente si el usuario es de tipo Staff o Administrator.
+                    if (!HttpContext.Current.User.IsInRole(enumRoles.Staff.ToString()) && !HttpContext.Current.User.IsInRole(enumRoles.Administrator.ToString()))
                     {
                         Succeed = false;
-                        AddValidationMessage(cabinet.patterns.enums.enumMessageType.BRException, "No es posible Cancelar el movimiento debido a que ha excedido el tiempo máximo permitido.");
+                        AddValidationMessage(cabinet.patterns.enums.enumMessageType.BRException, "El usuario no tiene permisos de realizar esta acción.");
                         return null;
                     }
-                }
+                    break;
+                case enumEstatusMovimiento.Rechazado:
+                    //BR01.04.j: Un movimiento puede ser Rechazado únicamente si el usuario es de tipo Staff o Administrator.
+                    if (!HttpContext.Current.User.IsInRole(enumRoles.Staff.ToString()) && !HttpContext.Current.User.IsInRole(enumRoles.Administrator.ToString()))
+                    {
+                        Succeed = false;
+                        AddValidationMessage(cabinet.patterns.enums.enumMessageType.BRException, "El usuario no tiene permisos de realizar esta acción.");
+                        return null;
+                    }
+                    break;
+                case enumEstatusMovimiento.Cancelado:
+                    //BR01.04.h: Un movimiento puede ser cancelado únicamente si el usuario es de tipo PayCenter.
+                    if (!HttpContext.Current.User.IsInRole(enumRoles.PayCenter.ToString()))
+                    {
+                        Succeed = false;
+                        AddValidationMessage(cabinet.patterns.enums.enumMessageType.BRException, "El usuario no tiene permisos de realizar esta acción.");
+                        return null;
+                    }
+
+                    //BR01.04.f: Es posible Cancelar una Solicitud de Pago únicamente si se encuentra en estatus Procesando y no ha transcurrido el tiempo en minutos del parámetro global del sistema.
+                    if (movimiento.Status != enumEstatusMovimiento.Procesando.GetHashCode())
+                    {
+                        Succeed = false;
+                        AddValidationMessage(cabinet.patterns.enums.enumMessageType.BRException, "No es posible Cancelar el movimiento si no se encuentra en estatus procesando.");
+                        return null;
+                    }
+                    else
+                    {
+                        ParametrosRepository parametrosRepository = new ParametrosRepository();
+                        var parametrosGlobales = parametrosRepository.GetParametrosGlobales();
+                        var dif = DateTime.Now - movimiento.FechaCreacion;
+                        //Excede los minutos de prórroga?
+                        if (dif.TotalMinutes > parametrosGlobales.MinutosProrrogaCancelacion)
+                        {
+                            Succeed = false;
+                            AddValidationMessage(cabinet.patterns.enums.enumMessageType.BRException, "No es posible Cancelar el movimiento debido a que ha excedido el tiempo máximo permitido (" + parametrosGlobales.MinutosProrrogaCancelacion.ToString() + " minutos).");
+                            return null;
+                        }
+                    }
+                    break;
             }
+
 
             //BR01.04.a: Crear nuevo registro histórico de cambio de estatus
             var currentUser = HttpContext.Current.User != null ? HttpContext.Current.User.Identity.Name : string.Empty;
             Int16 nuevoEstatusNumber = (Int16)NuevoEstatus.GetHashCode();
-            var movimientos_Estatus = new Movimientos_Estatus { Comentarios = Comentarios, UserName = currentUser, Status = nuevoEstatusNumber };
+            movimiento.Status = nuevoEstatusNumber;
+            var movimientos_Estatus = new Movimientos_Estatus { 
+                PayCenterId = movimiento.PayCenterId, 
+                CuentaId = movimiento.CuentaId, 
+                UserName = currentUser, 
+                Status = nuevoEstatusNumber,
+                FechaCreacion = DateTime.Now,
+                Comentarios = Comentarios
+            };
             movimiento.Movimientos_Estatus.Add(movimientos_Estatus);
 
             var saldoActual = estadoDeCuentaRepository.GetSaldoActual(movimiento.CuentaId);

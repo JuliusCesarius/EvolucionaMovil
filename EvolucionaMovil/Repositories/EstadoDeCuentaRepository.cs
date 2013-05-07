@@ -29,9 +29,13 @@ namespace EvolucionaMovil.Repositories
         public Decimal GetSaldoActual(int CuentaId)
         {
             var estatusAplicado = enumEstatusMovimiento.Aplicado.GetHashCode();
-            var cargos = context.Movimientos.Where(m => (m.CuentaId == CuentaId && !m.IsAbono && m.Status == estatusAplicado)).Sum(x=>x.Monto);
-            var abonos = context.Movimientos.Where(m => (m.CuentaId == CuentaId && m.IsAbono && m.Status == estatusAplicado)).Sum(x=>x.Monto);
-            return abonos - cargos;
+            var movimientos = context.Movimientos.Where(m => (m.CuentaId == CuentaId && m.Status == estatusAplicado));
+            
+            var cargos = movimientos.Where(m => !m.IsAbono).Sum(x=>(Decimal?)x.Monto);
+            var abonos = movimientos.Where(m => m.IsAbono).Sum(x => (Decimal?)x.Monto);
+            cargos = cargos != null ? cargos : 0;
+            abonos = abonos != null ? abonos : 0;
+            return (decimal)abonos - (decimal)cargos;
         }
         public void AddAbono(Abono abono)
         {
