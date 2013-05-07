@@ -918,6 +918,31 @@ legend{font-size:2em;font-weight:400}
 .fcb{color:#000}
 
 
+/**GRIDS**/
+.fechacreacion{width:80px !important}
+.clave{width:120px !important}
+.concepto{width:380px !important}
+.cargo{color:Red;width:80px !important; text-align:right}
+.abono{color:#000;width:80px !important; text-align:right}
+.saldo{width:80px !important; text-align:right}
+.status{width:80px !important;}
+.folio{width:100px !important;}
+.monto{width:80px !important;}
+.fechavencimiento{width:80px !important;}
+.servicio{width:380px !important;}
+.status .Aplicado, .Aplicado{color:#000;font-weight:bold}
+.status .Procesando, .Procesando{color:#808080}
+.status .Rechazado, .Rechazado{color:#FF1D25}
+.status .Cancelado, .Cancelado{color:#FF6700}
+.listHeader .cargo,.listHeader .abono{color:#fff}
+.qtip{cursor: pointer;padding-right:1em;background: url("../Content/themes/base/images/qtip.png") no-repeat 100% 50%;}
+.tipocuenta{width:85px !important;}
+.banco{width:250px !important;}
+.fechapago{width:80px !important}
+.referencia{width:120px !important}
+.paycenter{width:100px !important}
+
+
 /**Estado de cuenta**/
 .resumen{height:30px;margin-top:0}
 .resumen h1,.resumen h2,.resumen h3,.resumen a{display:inline-block}
@@ -944,24 +969,6 @@ legend{font-size:2em;font-weight:400}
 #filtros #search{background: url("../Content/themes/base/images/search.png") no-repeat 50% 50%;border:none;cursor:pointer;margin-left:-20px;padding:.3em ;position:absolute;width:16px;z-index:10000}
 #filtros #search:hover{padding:.4em}
 #filtros #lblAplicadosOnly, #filtros #aplicadosOnly{cursor:pointer}
-
-.fechacreacion{width:80px !important}
-.clave{width:85px !important}
-.concepto{width:380px !important}
-.cargo{color:Red;width:80px !important; text-align:right}
-.abono{color:#000;width:80px !important; text-align:right}
-.saldo{width:80px !important; text-align:right}
-.status{width:80px !important;}
-.folio{width:100px !important;}
-.monto{width:80px !important;}
-.fechavencimiento{width:80px !important;}
-.servicio{width:380px !important;}
-.status .Aplicado, .Aplicado{color:#000;font-weight:bold}
-.status .Procesando, .Procesando{color:#808080}
-.status .Rechazado, .Rechazado{color:#FF1D25}
-.status .Cancelado, .Cancelado{color:#FF6700}
-.listHeader .cargo,.listHeader .abono{color:#fff}
-.qtip{cursor: pointer;padding-right:1em;background: url("../Content/themes/base/images/qtip.png") no-repeat 100% 50%;}
 
 /**Prospecto**/
 .titulo h1, .titulo a{display:inline;} 
