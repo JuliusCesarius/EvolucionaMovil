@@ -117,10 +117,12 @@
     <Compile Include="Areas\MvcMembership\Models\Users\IndexViewModel.cs" />
     <Compile Include="Areas\MvcMembership\Models\Users\RoleViewModel.cs" />
     <Compile Include="Areas\MvcMembership\MvcMembershipAreaRegistration.cs" />
+    <Compile Include="Attributes\CustomAuthorizeAttribute.cs" />
     <Compile Include="Attributes\MaskAttribute.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BancosController.cs" />
     <Compile Include="Controllers\DepositosController.cs" />
+    <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\EstadoDeCuentaController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ImgFichaDepositoController.cs" />
@@ -139,8 +141,9 @@
     <Compile Include="Models\BR\PaycenterBR.cs" />
     <Compile Include="Models\BR\ProspectoBR.cs" />
     <Compile Include="Models\CambioEstatusVM.cs" />
+    <Compile Include="Models\Classes\CustomControllerBase.cs" />
     <Compile Include="Models\CompraEventoVM.cs" />
-    <Compile Include="Models\Enums\EnumRoles.cs" />
+    <Compile Include="Models\Enums\enumRoles.cs" />
     <Compile Include="Models\Enums\enumTipoCuenta.cs" />
     <Compile Include="Models\Enums\enumTipoMovimiento.cs" />
     <Compile Include="Models\Helpers\MvcHtmlHelpers.cs" />
@@ -222,6 +225,7 @@
     <Content Include="Content\themes\base\images\ui-icons_454545_256x240.png" />
     <Content Include="Content\themes\base\images\ui-icons_888888_256x240.png" />
     <Content Include="Content\themes\base\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="Content\themes\base\images\unauthorized.jpg" />
     <Content Include="Content\themes\base\jquery.ui.accordion.css" />
     <Content Include="Content\themes\base\jquery.ui.all.css" />
     <Content Include="Content\themes\base\jquery.ui.autocomplete.css" />
@@ -306,6 +310,7 @@
     <Content Include="Views\Web.config" />
     <Content Include="Views\Depositos\Confirm.cshtml" />
     <Content Include="Views\ImgFichaDeposito\IndexPartial.cshtml" />
+    <Content Include="Views\Error\Authorization.cshtml" />
     <None Include="_bin_deployableAssemblies\System.Web.Mvc.dll" />
     <None Include="_bin_deployableAssemblies\WebMatrix.WebData.xml" />
     <None Include="_bin_deployableAssemblies\WebMatrix.WebData.dll" />

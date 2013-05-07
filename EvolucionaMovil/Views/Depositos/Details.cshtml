@@ -60,7 +60,7 @@
     <div>
     @if (@Model.Status != enumEstatusMovimiento.Cancelado.GetHashCode())
     {
-        if (ViewBag.Role == EnumRoles.PayCenter.GetHashCode())
+        if (ViewBag.Role == enumRoles.PayCenter.GetHashCode())
         {
             <input type="button" id="Cancelar"  onclick="MuestraComentario()" name="action"  class="freshbutton-blue" value="Cancelar" />
              <div id="ComentarioPayCenter" style="display: none;">
@@ -76,7 +76,7 @@
                   </div>         
             </div>
         }
-        else if (ViewBag.Role == EnumRoles.Staff.GetHashCode() || ViewBag.Role == EnumRoles.Administrator.GetHashCode())
+        else if (ViewBag.Role == enumRoles.Staff.GetHashCode() || ViewBag.Role == enumRoles.Administrator.GetHashCode())
         {
             //string  action = "";
           <div>
@@ -129,5 +129,5 @@
     </div>
      <div><p>@ViewBag.Mensaje</p></div> 
    
-    @Html.ActionLink("Regresar", "Index", null, new { @class = "freshbutton-blue" })
+    @Html.ActionLink("Regresar", "Index", null, new { @class = "freshbutton-blue small" })
 </fieldset>
