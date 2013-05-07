@@ -34,9 +34,17 @@
         Últimos
         <input type="text" id="pageSize" class="small" value="@ViewBag.PageSize"/>
         movimientos
-        <input type="checkbox" class="small" id="aplicadosOnly" @(ViewBag.OnlyAplicados ? "Checked" : "")/>
+        <input type="checkbox"  name="OnlyAplicados" class="small" id="aplicadosOnly" @(ViewBag.OnlyAplicados ? "Checked" : "")/>
         <label id="lblAplicadosOnly" for="aplicadosOnly">Sólo aplicados</label>
       </div>
 </div>
 <input type="hidden" id="hddData" value="@Newtonsoft.Json.JsonConvert.SerializeObject(Model)" />
 <div id="grdEstadoDeCuenta" />
+
+@if (@ViewBag.Mensajes != null)
+{
+ <div id="Imagen" class="message" >
+ 
+   @ViewBag.Mensajes
+ </div>
+}
