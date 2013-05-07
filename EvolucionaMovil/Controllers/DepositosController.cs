@@ -304,7 +304,7 @@ namespace EvolucionaMovil.Controllers
                         repository.Add(abono);
 
                         EstadoCuentaBR estadoCuentaBR = new EstadoCuentaBR(repository.context);
-                        var movimiento = estadoCuentaBR.CrearMovimiento(idPayCenter, enumTipoMovimiento.Abono, model.CuentaId, (Decimal)model.Monto, enumMotivo.Deposito);
+                        var movimiento = estadoCuentaBR.CrearMovimiento(idPayCenter, enumTipoMovimiento.Abono,model.AbonoId, model.CuentaId, (Decimal)model.Monto, enumMotivo.Deposito);
 
                         exito = repository.Save();
                         //todo: referencia la clase de estadosDeCuentaBR, y generar movimiento correspondiente.

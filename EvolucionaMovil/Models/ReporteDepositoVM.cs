@@ -21,8 +21,9 @@ namespace EvolucionaMovil.Models
         public string Referencia { get; set; }
         public string RutaFichaDeposito { get; set; }
         [Required]
-        [Mask("$999.99")]
+        //[Mask("99999.99")]
         public decimal? Monto { get; set; }
+        public string MontoString { get; set; }
         [Required]
         public DateTime? FechaPago { get; set; }
         public ICollection<CuentaDepositoVM> CuentasDeposito { get; set; }
