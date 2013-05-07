@@ -122,6 +122,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BancosController.cs" />
     <Compile Include="Controllers\DepositosController.cs" />
+    <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\EstadoDeCuentaController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ImgFichaDepositoController.cs" />
@@ -224,6 +225,7 @@
     <Content Include="Content\themes\base\images\ui-icons_454545_256x240.png" />
     <Content Include="Content\themes\base\images\ui-icons_888888_256x240.png" />
     <Content Include="Content\themes\base\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="Content\themes\base\images\unauthorized.jpg" />
     <Content Include="Content\themes\base\jquery.ui.accordion.css" />
     <Content Include="Content\themes\base\jquery.ui.all.css" />
     <Content Include="Content\themes\base\jquery.ui.autocomplete.css" />
@@ -259,6 +261,7 @@
     <Content Include="Scripts\Abono.js" />
     <Content Include="Scripts\additional-methods.js" />
     <Content Include="Scripts\additional-methods.min.js" />
+    <Content Include="Scripts\Depositos.js" />
     <Content Include="Scripts\DetallePayCenter.js" />
     <Content Include="Scripts\jquery.formatCurrency.js" />
     <Content Include="Scripts\Paquetes-comprar.js" />
@@ -308,6 +311,7 @@
     <Content Include="Views\Web.config" />
     <Content Include="Views\Depositos\Confirm.cshtml" />
     <Content Include="Views\ImgFichaDeposito\IndexPartial.cshtml" />
+    <Content Include="Views\Error\Authorization.cshtml" />
     <None Include="_bin_deployableAssemblies\System.Web.Mvc.dll" />
     <None Include="_bin_deployableAssemblies\WebMatrix.WebData.xml" />
     <None Include="_bin_deployableAssemblies\WebMatrix.WebData.dll" />

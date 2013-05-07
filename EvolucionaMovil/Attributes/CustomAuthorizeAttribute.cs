@@ -29,14 +29,23 @@ public class CustomAuthorize : AuthorizeAttribute
     public override void OnAuthorization(AuthorizationContext filterContext)
     {
         base.OnAuthorization(filterContext);
-         
+
         //If its an unauthorized/timed out ajax request go to top window and redirect to logon.
         if (filterContext.Result is HttpUnauthorizedResult && filterContext.HttpContext.Request.IsAjaxRequest())
-                    filterContext.Result = new JavaScriptResult() { Script = "top.location = '/Account/LogOn?Expired=1';" };
- 
+            filterContext.Result = new JavaScriptResult() { Script = "top.location = '/Account/LogOn?Expired=1';" };
+
         //If authorization results in HttpUnauthorizedResult, redirect to error page instead of Logon page.
-        if(filterContext.Result is HttpUnauthorizedResult)
+        if (!filterContext.HttpContext.User.Identity.IsAuthenticated)
+        {
+            filterContext.Result = new RedirectToRouteResult(new System.Web.Routing.RouteValueDictionary {{ "controller", "Account" },
+                                         { "action", "LogOn" },
+                                         { "returnUrl",    filterContext.HttpContext.Request.RawUrl } });//send the user to login page with return url;
+        }
+        else if (filterContext.Result is HttpUnauthorizedResult)
+        {
             filterContext.Result = new RedirectResult("~/Error/Authorization");
+        }
+
     }
     protected override bool AuthorizeCore(HttpContextBase httpContext)
     {

@@ -3,14 +3,14 @@
     ViewBag.Title = "Información del PayCenter";
 }
 
-<fieldset>
+<fieldset class="fwidth300 inline">
     <h1 class="tituloPaycenter">@Model.Nombre</h1>
 
     <legend></legend>
 
     <div class="formLeft">
         <div class="infoPaycenter">
-            <h2>Información General</h2>
+            <h3>Información General</h3>
             @Html.ActionLink("[Editar]", "Edit", new { id = Model.PayCenterId })
         </div>
 
@@ -82,7 +82,7 @@
         </div>
 
         <div class="infoPaycenter">
-            <h2>Información de Cuenta Pago Servicios</h2>
+            <h3>Información de Cuenta Pago Servicios</h3>
             @Html.ActionLink("[Ver Edo. de Cuenta]", "Index", "EstadoDeCuenta")
         </div>
 
@@ -105,7 +105,7 @@
             </div>
         </div>
     </div>
+        <div class="DetailsField">
+    @Html.ActionLink("Regresar", "Index", null, new { @class = "freshbutton-blue small" })
+    </div>
 </fieldset>
-<p>
-    @Html.ActionLink("Regresar a la lista", "Index")
-</p>
