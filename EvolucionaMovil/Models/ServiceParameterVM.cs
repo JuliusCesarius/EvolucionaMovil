@@ -13,5 +13,7 @@ namespace EvolucionaMovil.Models
         public DateTime? fechaInicio { get; set; }
         public DateTime? fechaFin { get; set; }
         public bool onlyAplicados { get; set; }
+        public int PayCenterId { get; set; }
+        public string PayCenterName { get; set; }
     }
 }

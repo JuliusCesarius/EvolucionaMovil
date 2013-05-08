@@ -1,7 +1,7 @@
 ﻿$(document).on("ready", function () {
     $("#FechaPago").datepicker({ "dateFormat": "dd/mm/yy", maxDate: '0' });
     $("#PayCenterName").autocomplete({
-        source: "FindPayCenter/valor",
+        source: "FindPayCenter",
         select: function (event, ui) {
             var label = ui.item.label;
             var v = ui.item.value;

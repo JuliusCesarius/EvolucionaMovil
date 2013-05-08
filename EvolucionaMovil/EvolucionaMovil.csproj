@@ -148,6 +148,7 @@
     <Compile Include="Models\Enums\enumTipoMovimiento.cs" />
     <Compile Include="Models\Helpers\MvcHtmlHelpers.cs" />
     <Compile Include="Models\HistorialEstatusVM.cs" />
+    <Compile Include="Models\Interfaces\IEvolucionaMovil.cs" />
     <Compile Include="Models\PagoServicioVM.cs" />
     <Compile Include="Models\ReporteDepositoVM.cs" />
     <Compile Include="Models\SimpleGridResult.cs" />
@@ -258,6 +259,7 @@
     <Content Include="Content\themes\base\redmond\jquery-ui-1.9.2.custom.css" />
     <Content Include="Content\themes\base\redmond\jquery-ui-1.9.2.custom.min.css" />
     <Content Include="Global.asax" />
+    <Compile Include="Models\DepositoVM.cs" />
     <Content Include="Scripts\Abono.js" />
     <Content Include="Scripts\additional-methods.js" />
     <Content Include="Scripts\additional-methods.min.js" />

@@ -1,4 +1,5 @@
-﻿@model EvolucionaMovil.Models.SimpleGridResult<EvolucionaMovil.Models.AbonoVM>
+﻿@using EvolucionaMovil.Models.Enums
+@model EvolucionaMovil.Models.SimpleGridResult<EvolucionaMovil.Models.DepositoVM>
 @section Javascript{
     <script src="@Url.Content("~/Scripts/Depositos.js")" type="text/javascript"></script>
 }
@@ -10,31 +11,41 @@
     <h1>Despósitos</h1>
     <h2>Reportes realizados</h2>
 </div>
-<form action="/Depositos" method="post"></form>
-<div  class="resumen fr saldos">
-
-</div>
-<div class="clear"></div>
-<div id="filtros">
-
-    <div class="fr">
-        <label for="fechaInicio">
-            Filtrar del
-        </label>
-        <input type="text" class="small" id="fechaInicio" value="@ViewBag.FechaInicio" />
-        al
-        <input class="small" type="text" id="fechaFin" value="@ViewBag.FechaFin"/>
-        Buscar
-        <input class="small" type="text" id="searchString" /><input type="button" id="search" /><input
-            type="submit" id="Actualizar" class="freshbutton-blue small" value="Actualizar" />
+<form action="/Depositos" method="post">
+    <div class="resumen fr saldos">
+        @if (HttpContext.Current.User.IsInRole(enumRoles.Staff.ToString()) || HttpContext.Current.User.IsInRole(enumRoles.Administrator.ToString()))
+        {
+            <div class="editor-label small">
+                <label for="PayCenterName">PayCenters</label>
+            </div>        
+            <div class="editor-field">
+                <input type="text" class="small filtropaycenter" id="PayCenterName" value="@ViewBag.PayCenterName" name="PayCenterName" />
+                <input type="hidden" id="hddPayCenterId" name="PayCenterId" value="@ViewBag.PayCenterId" />
+            </div>
+        }
     </div>
-    <div class="fl">
-        Últimos
-        <input type="text" id="pageSize" class="small" value="@ViewBag.PageSize"/>
-        movimientos
-        <input type="checkbox" class="small" id="aplicadosOnly" @(ViewBag.OnlyAplicados ? "Checked" : "")/>
-        <label id="lblAplicadosOnly" for="aplicadosOnly">Sólo aplicados</label>
-      </div>
-</div>
+    <div class="clear"></div>
+    <div id="filtros">
+
+        <div class="fr">
+            <label for="fechaInicio">
+                Filtrar del
+            </label>
+            <input type="text" class="small" id="fechaInicio" name="fechaInicio" value="@ViewBag.FechaInicio" />
+            al
+            <input class="small" type="text" id="fechaFin" name="fechaFin" value="@ViewBag.FechaFin"/>
+            Buscar
+            <input class="small" type="text" name="searchString" id="searchString" /><input type="button" id="search" /><input
+                type="submit" id="Actualizar" class="freshbutton-blue small" value="Actualizar" />
+        </div>
+        <div class="fl">
+            Últimos
+            <input type="text" id="pageSize" name="pageSize" class="small" value="@ViewBag.PageSize"/>
+            movimientos
+            <input type="checkbox" class="small" id="aplicadosOnly" @(ViewBag.OnlyAplicados ? "Checked" : "")/>
+            <label id="lblAplicadosOnly" for="aplicadosOnly">Sólo aplicados</label>
+          </div>
+    </div>
+</form>
 <input type="hidden" id="hddData" value="@Newtonsoft.Json.JsonConvert.SerializeObject(Model)" />
 <div id="grdDepositos" />
