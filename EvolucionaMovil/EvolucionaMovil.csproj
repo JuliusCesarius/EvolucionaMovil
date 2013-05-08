@@ -146,6 +146,7 @@
     <Compile Include="Models\Enums\enumRoles.cs" />
     <Compile Include="Models\Enums\enumTipoCuenta.cs" />
     <Compile Include="Models\Enums\enumTipoMovimiento.cs" />
+    <Compile Include="Models\EnumWrapper.cs" />
     <Compile Include="Models\Helpers\MvcHtmlHelpers.cs" />
     <Compile Include="Models\HistorialEstatusVM.cs" />
     <Compile Include="Models\Interfaces\IEvolucionaMovil.cs" />
@@ -180,12 +181,14 @@
     <Compile Include="Repositories\BancosRepository.cs" />
     <Compile Include="Repositories\AbonosRepository.cs" />
     <Compile Include="Repositories\EstadoDeCuentaRepository.cs" />
+    <Compile Include="Repositories\MovimientosRepository.cs" />
     <Compile Include="Repositories\PagoServiciosRepository.cs" />
     <Compile Include="Repositories\PaquetesRepository.cs" />
     <Compile Include="Repositories\ParametrosRepository.cs" />
     <Compile Include="Repositories\PayCentersRepository.cs" />
     <Compile Include="Repositories\ProspectosRepository.cs" />
     <Compile Include="Repositories\ServiciosRepository.cs" />
+    <Compile Include="Repositories\TicketRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bancos.css" />
@@ -266,6 +269,7 @@
     <Content Include="Scripts\Depositos.js" />
     <Content Include="Scripts\DetallePayCenter.js" />
     <Content Include="Scripts\jquery.formatCurrency.js" />
+    <Content Include="Scripts\PagoServicios-Create.js" />
     <Content Include="Scripts\Paquetes-comprar.js" />
     <Content Include="Scripts\jquery.maskedinput-1.3.min.js" />
     <Content Include="Scripts\jquery.price_format.1.7.min.js" />
@@ -312,6 +316,7 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Web.config" />
     <Content Include="Views\Depositos\Confirm.cshtml" />
+    <Content Include="Views\PagoServicios\Ticket.cshtml" />
     <Content Include="Views\ImgFichaDeposito\IndexPartial.cshtml" />
     <Content Include="Views\Error\Authorization.cshtml" />
     <None Include="_bin_deployableAssemblies\System.Web.Mvc.dll" />
