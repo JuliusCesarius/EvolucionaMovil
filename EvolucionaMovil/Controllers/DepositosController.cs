@@ -44,7 +44,8 @@ namespace EvolucionaMovil.Controllers
             ViewBag.fechaInicio = string.Empty;
             ViewBag.FechaFin = string.Empty;
             ViewBag.OnlyAplicados = false;
-            return View(getDepositos(new ServiceParameterVM { pageNumber = 0, pageSize = 20 }));
+
+            return View(getDepositos(new ServiceParameterVM { pageNumber = 0, pageSize = 10 }));
         }
 
         [HttpPost]
@@ -57,14 +58,17 @@ namespace EvolucionaMovil.Controllers
             ViewBag.fechaInicio = parameters.fechaInicio != null ? ((DateTime)parameters.fechaInicio).ToShortDateString() : "";
             ViewBag.FechaFin = parameters.fechaInicio != null ? ((DateTime)parameters.fechaFin).ToShortDateString() : "";
             ViewBag.OnlyAplicados = parameters.onlyAplicados;
+            ViewBag.PayCenterId = parameters.PayCenterId;
+            ViewBag.PayCenterName = parameters.PayCenterName;
+
             return View(getDepositos(parameters));
         }
 
         [HttpPost]
+        [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.PayCenter, enumRoles.Staff })]
         public string GetEstadoCuenta(ServiceParameterVM parameters)
         {
             var estadoCuentaResult = getDepositos(parameters);
-
             return Newtonsoft.Json.JsonConvert.SerializeObject(estadoCuentaResult);
         }
 
@@ -410,7 +414,7 @@ namespace EvolucionaMovil.Controllers
             ViewBag.Bancos = bancos;
             ViewBag.Cuentas = bancos.SelectMany(x => x.CuentasBancarias).Select(x => new { BancoId = x.BancoId, CuentaBancariaId = x.CuentaId, NumeroCuenta = x.NumeroCuenta, Titular = x.Titular });
         }
-        private string getBancoId(int BancoId, ref IEnumerable<Banco> Bancos)
+        private string getBancoById(int BancoId, ref IEnumerable<Banco> Bancos)
         {
             string nombreBanco = string.Empty;
             if (Bancos == null)
@@ -427,28 +431,52 @@ namespace EvolucionaMovil.Controllers
                 return banco.Nombre;
             }
         }
-        private SimpleGridResult<AbonoVM> getDepositos(ServiceParameterVM Parameters = null)
-        {
-            //todo: obtener el PaycenterId correcto
-            var depositos = repository.GetByPayCenterId(7);
 
+        private string getCuentaById(int CuentaBancariaId, ref IEnumerable<Banco> Bancos)
+        {
+            string nombreCuenta = string.Empty;
+            if (Bancos == null)
+            {
+                return nombreCuenta;
+            }
+            var cuentaBancaria = Bancos.SelectMany(x => x.CuentasBancarias).Where(x => x.CuentaId == CuentaBancariaId).FirstOrDefault();
+            if (cuentaBancaria == null)
+            {
+                return nombreCuenta;
+            }
+            else
+            {
+                return cuentaBancaria.NumeroCuenta;
+            }
+        }
+
+        private SimpleGridResult<DepositoVM> getDepositos(ServiceParameterVM Parameters = null)
+        {
+            IEnumerable<Abono> depositos;
+            if (PayCenterId == 0)
+            {
+                depositos = repository.ListAll();
+            }
+            else
+            {
+                depositos = repository.GetByPayCenterId(PayCenterId);
+            }
+            
             var bancos = new BancosRepository().ListAll();
 
-            SimpleGridResult<AbonoVM> simpleGridResult = new SimpleGridResult<AbonoVM>();
+            SimpleGridResult<DepositoVM> simpleGridResult = new SimpleGridResult<DepositoVM>();
             var abonosVM = depositos.Where(x => Parameters == null
                 || (Parameters.fechaInicio == null || (Parameters.fechaInicio < x.FechaCreacion)
                     && (Parameters.fechaFin == null || Parameters.fechaFin > x.FechaCreacion)
                 )
-                ).Select(x => new AbonoVM
+                ).Select(x => new DepositoVM
                 {
                     PayCenterId = x.PayCenterId,
-                    Banco = getBancoId(x.BancoId, ref bancos),
-                    BancoId = x.BancoId,
-                    CuentaBancaria = "XXXXXXXX",
-                    CuentaId = x.CuentaId,
-                    FechaPago = x.FechaPago,
-                    FechaCreacion = x.FechaCreacion,
-                    MontoString = x.Monto.ToString("C"),
+                    Banco = getBancoById(x.BancoId, ref bancos),
+                    CuentaBancaria = getCuentaById(x.CuentaBancariaId, ref bancos),
+                    FechaPago = x.FechaPago.ToShortDateString(),
+                    FechaCreacion = x.FechaCreacion.ToShortDateString(),
+                    Monto = x.Monto.ToString("C"),
                     PayCenter = x.PayCenter.UserName,
                     Referencia = x.Referencia,
                     Status = x.Status,

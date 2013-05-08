@@ -286,6 +286,10 @@ label
     cursor:text;
 }
 
+.small label
+{
+    top: 3px;
+}
 select{background:#fff  url("../Content/themes/base/images/select-icon.gif") no-repeat 95% 50%;cursor:pointer;}
 
 .small input[type="text"] {
@@ -927,7 +931,7 @@ legend{font-size:2em;font-weight:400}
 .saldo{width:80px !important; text-align:right}
 .status{width:80px !important;}
 .folio{width:100px !important;}
-.monto{width:80px !important;}
+.monto{text-align:right;width:80px !important;}
 .fechavencimiento{width:80px !important;}
 .servicio{width:380px !important;}
 .status .Aplicado, .Aplicado{color:#000;font-weight:bold}
@@ -936,7 +940,7 @@ legend{font-size:2em;font-weight:400}
 .status .Cancelado, .Cancelado{color:#FF6700}
 .listHeader .cargo,.listHeader .abono{color:#fff}
 .qtip{cursor: pointer;padding-right:1em;background: url("../Content/themes/base/images/qtip.png") no-repeat 100% 50%;}
-.tipocuenta{width:85px !important;}
+.tipocuenta{width:110px !important;}
 .banco{width:250px !important;}
 .fechapago{width:80px !important}
 .referencia{width:120px !important}
@@ -958,12 +962,14 @@ legend{font-size:2em;font-weight:400}
 .cuentadeposito label{display:inline-block;position:static;width:150px;}
 .cuentadeposito input[type="text"]{width:120px}
 
+/**Depositos**/
+.filtropaycenter{width:250px!important;}
 
 .hasDatepicker{background: url("../Content/themes/base/images/calendar.png") no-repeat 95% 50%;cursor:pointer;}
 
 #filtros{border-top:1px solid #999;color:#999;height:28px;padding:0.5em}
 #filtros label{font-size:1em;position:static !important}
-#filtros #pageSize{width:30px}
+#filtros #pageSize{min-width:30px;width:30px;}
 #filtros #fechaInicio, #filtros #fechaFin{width:100px}
 #filtros #searchString{width:160px}
 #filtros #search{background: url("../Content/themes/base/images/search.png") no-repeat 50% 50%;border:none;cursor:pointer;margin-left:-20px;padding:.3em ;position:absolute;width:16px;z-index:10000}
