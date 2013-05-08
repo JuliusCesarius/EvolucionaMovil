@@ -1,0 +1,110 @@
+﻿@model EvolucionaMovil.Models.AbonoVM
+@using EvolucionaMovil.Models.Enums; 
+@{
+    ViewBag.Title = "Detalle de Depósito";
+}
+
+<script src="@Url.Content("~/Scripts/Abono.js")" type="text/javascript"></script>
+
+<fieldset class="fwith300 inline">
+ @using (Html.BeginForm("Confirm", "Depositos/"))
+ {
+    <h2>Información del Depósito</h2>
+    <div class="display-label">PayCenter</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.PayCenter)
+        @Html.HiddenFor(model => model.PayCenterId)
+    </div>
+
+     <div class="display-label">Tipo de cuenta</div>
+    <div class="display-field fsl fwb">
+        @Html.DisplayFor(model => model.TipoCuenta)
+    </div>
+
+    <div class="display-label">Banco</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Banco )
+    </div>
+
+    <div class="display-label">Cuenta Bancaria</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.CuentaBancaria )
+    </div>
+
+    <div class="display-label ">Monto</div>
+    <div class="display-field fsl fwb">
+        @Html.DisplayFor(model => model.MontoString)
+    </div>
+
+    <div class="display-label">FechaPago</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.FechaPago)
+    </div>
+   
+    <div class="display-label">Referencia</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Referencia)
+    </div>
+
+    <div class="display-label">Estatus</div>
+    <div class="display-field fwb @Model.StatusString">
+        @Html.DisplayFor(model => model.StatusString )
+    </div>
+
+    <div class="display-label">FechaCreacion</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.FechaCreacion)
+    </div>
+        
+     <input type="hidden" name ="AbonoId" value="@Model.AbonoId"/>
+     <input type="hidden" name ="PayCenter" value="@Model.PayCenter"/>
+     <input type="hidden" name ="TipoCuenta" value="@Model.TipoCuenta"/>
+     <input type="hidden" name ="Banco" value="@Model.Banco"/>
+     <input type="hidden" name ="CuentaBancaria" value="@Model.CuentaBancaria"/>
+     <input type="hidden" name ="MontoString" value="@Model.MontoString"/>
+     <input type="hidden" name ="Monto" value="@Model.Monto "/>
+     <input type="hidden" name ="Referencia" value="@Model.Referencia"/>
+     <input type="hidden" name ="CuentaBancariaId" value="@Model.CuentaBancariaId"/>
+     <input type="hidden" name ="BancoId" value="@Model.BancoId  "/>
+     <input type="hidden" name ="CuentaBancaria" value="@Model.CuentaBancaria "/>
+     <input type="hidden" name ="CuentaId" value="@Model.CuentaId"/>
+     <input type="hidden" name ="FechaPago" value="@Model.FechaPago"/>
+     <input type="hidden" name ="RutaFichaDeposito" value="@Model.RutaFichaDeposito"/>
+    <div>
+    @if (@Model.Status != enumEstatusMovimiento.Cancelado.GetHashCode() && @Model.AbonoId == 0)
+    {
+       
+           <div class="display-field fsl fwb">¿Los datos ingresados son correctos?</div>
+        
+          <div>
+                 <input type="submit" class="freshbutton-blue small" value="Sí" />
+                 @* @Html.ActionLink("No,verificar", "history.back()", null, new { @class = "freshbutton-blue" })*@
+                  
+                  <a class="freshbutton-blue small" onclick="history.go(-1); return false;" href="#">Back</a><br />     
+                   
+           </div>         
+    }
+    else
+    {
+        
+        <div>
+           @Html.ActionLink("Reportar otro depósito", "Report", null, new { @class = "freshbutton-blue small" })
+           @Html.ActionLink("Regresar a lista de depósito", "Index", null, new { @class = "freshbutton-blue small" })
+        </div>
+    }
+  </div>
+ }
+    
+      @if (ViewBag.Mensajes != null && ViewBag.Mensajes.Count > 0)
+      {
+            <div class="message"><ul>
+            @foreach (var mensaje in ViewBag.Mensajes)
+            {
+                <li>@mensaje</li>
+            }
+            </ul>
+            </div>
+        }
+   
+  
+</fieldset>

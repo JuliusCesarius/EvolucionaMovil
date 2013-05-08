@@ -18,5 +18,9 @@ namespace EvolucionaMovil.Repositories
             : base(context)
         {
         }
+        public IEnumerable<Abono> GetByPayCenterId(int PayCenterId)
+        {
+            return context.Abonos.Where(x => x.PayCenterId == PayCenterId);
+        }
     }
 }

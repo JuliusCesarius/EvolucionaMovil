@@ -78,7 +78,7 @@ namespace EvolucionaMovil.Controllers
                         CuentaOrigenId = 0,
                         FechaCreacion = DateTime.Now,
                         Monto = p.Precio,
-                        Motivo = (short)enumMotivo.Cargo.GetHashCode(),
+                        Motivo = (short)enumMotivo.Compra.GetHashCode(),
                         PayCenterId = payCenter.PayCenterId,
                         Id = paquete.PaqueteId,
                         IsAbono=false,

@@ -10,10 +10,13 @@ using EvolucionaMovil.Repositories;
 using AutoMapper;
 using MvcMembership;
 using System.Web.Security;
+using EvolucionaMovil.Models.Classes;
+using EvolucionaMovil.Attributes;
+using EvolucionaMovil.Models.Enums;
 
 namespace EvolucionaMovil.Controllers
 {
-    public class PayCentersController : Controller
+    public class PayCentersController : CustomControllerBase
     {
         private PayCentersRepository repository = new PayCentersRepository();
 
@@ -48,32 +51,20 @@ namespace EvolucionaMovil.Controllers
             return Newtonsoft.Json.JsonConvert.SerializeObject(paycenterVM);
         }
 
+        [CustomAuthorize(AuthorizedRoles= new []{enumRoles.PayCenter})]
+        public ViewResult Profile()
+        {
+            var payCenter = repository.LoadByIdName(HttpContext.User.Identity.Name);
+            var payCenterVM = FillPayCenterVM(payCenter.PayCenterId);
+            return View("Details", payCenterVM);
+        }
+
         //
         // GET: /PayCenters/Details/5
         public ViewResult Details(int id)
         {
-            PayCenter paycenter = repository.LoadById(id);
-
-            if (paycenter != null)
-            {
-                PayCenterVM paycenterVM = new PayCenterVM();
-                Mapper.Map(paycenter, paycenterVM);
-                //Cargar los movimientos para calcular el saldo
-                EstadoDeCuentaRepository edoCuentaRepository = new EstadoDeCuentaRepository();
-                var edoCuenta = edoCuentaRepository.GetMovimientosByPayCenterId(paycenterVM.PayCenterId);
-                paycenterVM.SaldoActual = (edoCuenta.Where(x => x.IsAbono).Sum(x => x.Monto) - edoCuenta.Where(x => !x.IsAbono).Sum(x => x.Monto)).ToString("C");
-                //Cargar los eventos
-                PaquetesRepository paquetesRepository = new PaquetesRepository();
-                paycenterVM.Eventos = paquetesRepository.GetEventosByPayCenter(paycenterVM.PayCenterId).ToString();
-                //Asignar pagos realizados
-                //ToDo: Checar si hay que validar algún estatus
-                paycenterVM.PagosRealizados = paycenter.Pagos.Count.ToString();
-                return View(paycenterVM);
-            }
-            else
-            {
-                return View("NotFound");
-            }
+            var PayCenterVM = FillPayCenterVM(id);
+            return View(PayCenterVM);
         }
 
         //
@@ -533,6 +524,29 @@ namespace EvolucionaMovil.Controllers
             simpleGridResult.Result = PaycentersVM;
 
             return simpleGridResult;
+        }
+
+        private PayCenterVM FillPayCenterVM(int Id)
+        {
+            PayCenter paycenter = repository.LoadById(Id);
+
+            if (paycenter == null)
+            {
+                return null;
+            }
+            PayCenterVM paycenterVM = new PayCenterVM();
+            Mapper.Map(paycenter, paycenterVM);
+            //Cargar los movimientos para calcular el saldo
+            EstadoDeCuentaRepository edoCuentaRepository = new EstadoDeCuentaRepository();
+            var edoCuenta = edoCuentaRepository.GetMovimientosByPayCenterId(paycenterVM.PayCenterId);
+            paycenterVM.SaldoActual = (edoCuenta.Where(x => x.IsAbono).Sum(x => x.Monto) - edoCuenta.Where(x => !x.IsAbono).Sum(x => x.Monto)).ToString("C");
+            //Cargar los eventos
+            PaquetesRepository paquetesRepository = new PaquetesRepository();
+            paycenterVM.Eventos = paquetesRepository.GetEventosByPayCenter(paycenterVM.PayCenterId).ToString();
+            //Asignar pagos realizados
+            //ToDo: Checar si hay que validar algún estatus
+            paycenterVM.PagosRealizados = paycenter.Pagos.Count.ToString();
+            return paycenterVM;
         }
 
         /// <summary>
