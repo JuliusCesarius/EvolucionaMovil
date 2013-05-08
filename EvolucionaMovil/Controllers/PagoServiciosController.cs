@@ -115,7 +115,7 @@ namespace EvolucionaMovil.Controllers
                                     if (minutosProrrogaCancelacion > ts.TotalMinutes)
                                     {
                                         //Validar el Role del Usario conectado
-                                        if (Role == EnumRoles.PayCenter.GetHashCode())
+                                        if (Role == enumRoles.PayCenter.GetHashCode())
                                         {
                                             pago.Status = (short)(enumEstatusMovimiento.Cancelado.GetHashCode());
                                             //ViewBag.Mensaje = "El reporte de depósito ha sido cancelado exitosamente.";
@@ -133,7 +133,7 @@ namespace EvolucionaMovil.Controllers
                             case "Aplicar":
 
                                 //Validar el Role del Usario conectado
-                                if (Role == EnumRoles.Staff.GetHashCode() || Role == EnumRoles.Administrator.GetHashCode())
+                                if (Role == enumRoles.Staff.GetHashCode() || Role == enumRoles.Administrator.GetHashCode())
                                 {
 
                                     UsuarioValido = true;
@@ -161,7 +161,7 @@ namespace EvolucionaMovil.Controllers
                                 break;
                             case "Rechazar":
                                 //Validar el Role del Usario conectado
-                                if (Role == EnumRoles.Staff.GetHashCode() || Role == EnumRoles.Administrator.GetHashCode())
+                                if (Role == enumRoles.Staff.GetHashCode() || Role == enumRoles.Administrator.GetHashCode())
                                 {
                                     UsuarioValido = true;
                                     ComentarioValido = comentario.TrimEnd() != string.Empty ? true : false;
@@ -501,13 +501,13 @@ namespace EvolucionaMovil.Controllers
         {
             var roles = Roles.GetRolesForUser(pUser);
             int Rol = 0;
-            if (roles.Any(x => x == EnumRoles.PayCenter.ToString()))
+            if (roles.Any(x => x == enumRoles.PayCenter.ToString()))
             {
-                Rol = EnumRoles.PayCenter.GetHashCode();
+                Rol = enumRoles.PayCenter.GetHashCode();
             }
-            else if (roles.Any(x => x == EnumRoles.Staff.ToString() || x == EnumRoles.Administrator.ToString()))
+            else if (roles.Any(x => x == enumRoles.Staff.ToString() || x == enumRoles.Administrator.ToString()))
             {
-                Rol = EnumRoles.Staff.GetHashCode();
+                Rol = enumRoles.Staff.GetHashCode();
             }
 
             return Rol;
