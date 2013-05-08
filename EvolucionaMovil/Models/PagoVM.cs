@@ -45,6 +45,9 @@ namespace EvolucionaMovil.Models
             set { _Servicios = value; }
         }
 
+        public List<HistorialEstatusVM> HistorialEstatusVM { get; set; }
+        public CambioEstatusVM CambioEstatusVM { get; set; }
+
         public PagoVM()
         {
             ClienteNombre = null;

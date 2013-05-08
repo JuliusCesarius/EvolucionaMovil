@@ -26,5 +26,10 @@ namespace EvolucionaMovil.Repositories
         {
             context.Abonos.AddObject(abono);
         }
+        public IEnumerable<Movimiento> GetMovimientosByPayCenterId(int PayCenterId)
+        {
+            //ToDo: Checar si hay que validar algún estatus
+            return context.Movimientos.Where(m => m.PayCenterId == PayCenterId && m.Baja == false).OrderByDescending(m => m.FechaCreacion);
+        }
     }
 }

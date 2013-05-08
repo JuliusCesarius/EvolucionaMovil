@@ -58,6 +58,16 @@ namespace EvolucionaMovil.Controllers
             {
                 PayCenterVM paycenterVM = new PayCenterVM();
                 Mapper.Map(paycenter, paycenterVM);
+                //Cargar los movimientos para calcular el saldo
+                EstadoDeCuentaRepository edoCuentaRepository = new EstadoDeCuentaRepository();
+                var edoCuenta = edoCuentaRepository.GetMovimientosByPayCenterId(paycenterVM.PayCenterId);
+                paycenterVM.SaldoActual = (edoCuenta.Where(x => x.IsAbono).Sum(x => x.Monto) - edoCuenta.Where(x => !x.IsAbono).Sum(x => x.Monto)).ToString("C");
+                //Cargar los eventos
+                PaquetesRepository paquetesRepository = new PaquetesRepository();
+                paycenterVM.Eventos = paquetesRepository.GetEventosByPayCenter(paycenterVM.PayCenterId).ToString();
+                //Asignar pagos realizados
+                //ToDo: Checar si hay que validar algún estatus
+                paycenterVM.PagosRealizados = paycenter.Pagos.Count.ToString();
                 return View(paycenterVM);
             }
             else
@@ -93,8 +103,7 @@ namespace EvolucionaMovil.Controllers
                     if (prospecto != null)
                     {
                         paycenterVM.Celular = prospecto.Celular;
-                        paycenterVM.Email = prospecto.Email;
-                        //ToDo: Agregar la empresa a la tabla
+                        paycenterVM.Email = prospecto.Email;                      
                         paycenterVM.Nombre = prospecto.Empresa;
                         //paycenterVM.UserName = prospecto.Nombre;
                         paycenterVM.Telefono = prospecto.Telefono;
@@ -494,8 +503,20 @@ namespace EvolucionaMovil.Controllers
 
         private SimpleGridResult<PayCenterVM> getPaycenters(ServiceParameterVM Parameters = null)
         {
+            var paycenters = repository.ListAll();
+
+            //Aplicar filtros
+            if (Parameters != null && (Parameters.fechaInicio != null || Parameters.fechaFin != null || Parameters.searchString != null))
+            {
+                paycenters = paycenters.Where(x => (Parameters.fechaInicio == null || Parameters.fechaInicio <= x.FechaIngreso)
+                                            && (Parameters.fechaFin == null || Parameters.fechaFin >= x.FechaIngreso)
+                                            && (Parameters.searchString == null || Parameters.searchString == "Todos"
+                                                || (Parameters.searchString == "Activo" && x.Activo == true)
+                                                || (Parameters.searchString == "Inactivo" && x.Activo == false)));
+            }
+
             SimpleGridResult<PayCenterVM> simpleGridResult = new SimpleGridResult<PayCenterVM>();
-            var PaycentersVM = repository.ListAll().ToListOfDestination<PayCenterVM>();
+            var PaycentersVM = paycenters.ToListOfDestination<PayCenterVM>();
 
             if (Parameters != null)
             {
