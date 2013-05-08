@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Web.Security;
 
-namespace EvolucionaMovil.Areas.MvcMembership.Models.UserAdministration
+namespace EvolucionaMovil.Areas.MvcMembership.Models.Users
 {
 	public class RoleViewModel
 	{

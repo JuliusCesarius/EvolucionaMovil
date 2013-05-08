@@ -895,7 +895,6 @@ label.checkbox{cursor:pointer;font-size:1em;position:static !important}
 legend{font-size:2em;font-weight:400}
 .display-label, .editor-label {margin:0;position:relative;color:#aaa}
 .display-field, .editor-field {margin:0;margin-bottom:5px;position:relative;}
-.display-label, .editor-label, .display-field, .editor-field {display: inline-block;font-size:1.2em}
 .text-box {width: 30em;}
 .text-box.multi-line {height: 6.5em;}
 .tri-state {width: 6em;}
@@ -972,15 +971,23 @@ legend{font-size:2em;font-weight:400}
 .checkActivo{color:Black; font-size:1.4em !important;}
 #confirmacion,#notfound{font-size: 1.3em;}
 .btnReturn{text-align:right; width:310px; margin:4px;}
+.infoPaycenter{margin:14px 0 7px 0}
 .infoPaycenter h2, .infoPaycenter a{display:inline;}
 .tituloPaycenter{color:#32A6E0;}
-.labelPaycenter{font-size:15px; color:#999;}
-.displayPaycenter{font-size:15px;}
+/*.labelsPaycenter{font-size:15px; color:#999; float:left; width:42%;}
+.labelsPaycenter div{height:22px; margin:3px 0 3px 0; position:relative;}
+.fieldsPaycenter{font-size:15px; float:right; width:57%;}
+.fieldsPaycenter div{height:22px; margin:3px 0 3px 0; position:relative;}
+.fieldsPaycenter a{font-size:12px;}*/
+.DetailsField{font-size:15px; margin:3px 0 3px 0; overflow:hidden;}
+.DetailsFieldLabel{color:#999; float:left; width:42%;}
+.DetailsFieldValue{float:right; width:57%;}
+.DetailsFieldValue a{font-size:12px;}
 
 .fwith300{width:550px}
 .fwith300 .display-label{width:200px}
 .fwith300 .display-field{width:345px}
-
+.inline .display-label, .inline .editor-label, .inline .display-field, .inline .editor-field {display: inline-block;font-size:1.2em}
 
 /*ListGrid*/
 .listHeader{padding:4px;background:#ccc;}
