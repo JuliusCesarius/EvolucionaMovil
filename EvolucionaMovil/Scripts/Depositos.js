@@ -22,21 +22,45 @@
     });
     $("#Actualizar").on("click", function (event) {
         event.preventDefault();
-        rebindGrid({
-            fechaInicio: $("#fechaInicio").val(),
-            fechaFin: $("#fechaFin").val(),
-            pageSize: $("#pageSize").val()
-        });
+        rebindGrid({pageSize: $("#pageSize").val()});
+    });
+
+    $("#PayCenterName").on("keyup", function (event) {
+        var code = event.which;
+        if (code == 13) {
+            event.preventDefault();
+            rebindGrid();
+        } else {
+            if ($(this).val() == "") {
+                event.preventDefault();
+                $('#hddPayCenterId').val("");
+            }
+        }
+    });
+
+    $("#PayCenterName").autocomplete({
+        source: "Depositos/FindPayCenter",
+        select: function (event, ui) {
+            var label = ui.item.label;
+            var v = ui.item.value;
+            $('#hddPayCenterId').val(v);
+            this.value = label;
+            return false;
+        },
+        focus: function (event, ui) {
+            event.preventDefault();
+            $(this).val(ui.item.label);
+        },
+        open: function () {
+            $(this).autocomplete('widget').css('z-index', 100);
+            return false;
+        }
     });
 
 });
 
 function rebindGrid(options) {
-    $('<input />').attr('type', 'hidden').attr('name', 'pageSize').attr('value', options.pageSize).appendTo('form');
     $('<input />').attr('type', 'hidden').attr('name', 'pageNumber').attr('value', options.pageNumber).appendTo('form');
-    $('<input />').attr('type', 'hidden').attr('name', 'searchString').attr('value', options.searchString).appendTo('form');
-    $('<input />').attr('type', 'hidden').attr('name', 'fechaInicio').attr('value', options.fechaInicio).appendTo('form');
-    $('<input />').attr('type', 'hidden').attr('name', 'fechaFin').attr('value', options.fechaFin).appendTo('form');
     $("form").submit();
 }
 
@@ -47,9 +71,9 @@ function bindGrid(options) {
          { name: 'Referencia', displayName: 'Referencia', cssClass: 'referencia' },
          { name: 'PayCenter', displayName: 'PayCenter', cssClass: 'PayCenter' },
          { name: 'Banco', displayName: 'Banco/Cuenta', cssClass: 'banco', customTemplate: '<span> {Banco} / {CuentaBancaria}</span>' },
-         { name: 'Status', cssClass: 'status', displayName: 'Estatus', customTemplate: '<span alt="{Motivo}" class=" {Status} qtip">{Status}</span>' },
-         { name: 'Monto', cssClass: 'monto' },
-         { name: 'TipoCuenta', displayName: 'Cuenta Destino', cssClass: 'tipocuenta' }
+         { name: 'TipoCuenta', displayName: 'Cuenta Destino', cssClass: 'tipocuenta' },
+         { name: 'StatusString', cssClass: 'status', displayName: 'Estatus', customTemplate: '<span alt="{Motivo}" class=" {StatusString} qtip">{StatusString}</span>' },
+         { name: 'Monto', displayName: 'Monto', cssClass: 'monto' }
          ];
     if (options == undefined) {
         options = { pageSize: 20, pageNumber: 0 };
@@ -84,7 +108,6 @@ function pageChanged(event) {
     var target = event.currentTarget != undefined ? event.currentTarget : event.srcElement;
     var pageNumber = $(target).text() - 1;
     rebindGrid({
-        pageSize: $("#pageSize").val(),
         pageNumber: pageNumber
     });
 }

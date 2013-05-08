@@ -1,6 +1,10 @@
 ﻿$(document).on("ready", function () {
     $("label").inFieldLabels();
-    jQuery.ajax({ cache: false });
+    $("input").on("click", function () { this.select(); });
+    //Fix de los checkbox que no pasan el valor al form
+    $("[type='checkbox']").on("change", fixCheckbox);
+    $("[type='checkbox']").val($("[type='checkbox']").attr('checked') == "checked");
+    //jQuery.ajax({ cache: false });
     $('.money').priceFormat({
         prefix: '',
         suffix: ''
@@ -18,3 +22,6 @@
     //    };
 });
 
+function fixCheckbox() {
+    $(this).val($(this).attr('checked') == "checked");
+}

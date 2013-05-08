@@ -6,18 +6,45 @@ using EvolucionaMovil.Models.Enums;
 using cabinet.patterns.clases;
 using System.Web.Mvc;
 using cabinet.patterns.interfaces;
+using EvolucionaMovil.Models.Interfaces;
+using EvolucionaMovil.Repositories;
 
 namespace EvolucionaMovil.Models.Classes
 {
-    public class CustomControllerBase:Controller, ICrossValidation
+    public class CustomControllerBase:Controller, ICrossValidation, IEvolucionaMovil
     {
-        //internal const string ADMINISTRATOR_STRING = "Administrator";
-        //internal const string PAYCENTER_STRING = "PayCenter";
-        //internal const string STAFF_STRING = "Staff";
-        //internal const string PROSPECTO_STRING = "Prospecto";
+        private const string HTTPMETHODPOST = "POST";
+        private const string HTTPMETHODGET = "GET";
+        private const string PAYCENTERIDSTRING = "PayCenterId";
 
         private bool _succeed=true;
+        private int _payCenterId = 0;
+        private PayCentersRepository payCentersRepository;
         private List<CrossValidationMessage> _validationMessages;
+
+        protected override void OnActionExecuting(ActionExecutingContext filterContext)
+        {
+            if (payCentersRepository == null)
+            {
+                payCentersRepository = new PayCentersRepository();
+            }
+            if (HttpContext.User.IsInRole(enumRoles.PayCenter.ToString()))
+            {
+                _payCenterId = payCentersRepository.GetPayCenterByUserName(HttpContext.User.Identity.Name);
+            }
+            else
+            {
+                if (filterContext.HttpContext.Request.HttpMethod == HTTPMETHODPOST && filterContext.HttpContext.Request.Form.AllKeys.Contains(PAYCENTERIDSTRING) && !string.IsNullOrEmpty(filterContext.HttpContext.Request.Form.GetValues(PAYCENTERIDSTRING)[0]))
+                {
+                    _payCenterId = Convert.ToInt32(filterContext.HttpContext.Request.Form.GetValues(PAYCENTERIDSTRING)[0]);
+                }
+                else if (filterContext.HttpContext.Request.HttpMethod == HTTPMETHODGET && filterContext.HttpContext.Request.QueryString.AllKeys.Contains(PAYCENTERIDSTRING) && !string.IsNullOrEmpty(filterContext.HttpContext.Request.QueryString.GetValues(PAYCENTERIDSTRING)[0]))
+                {
+                    _payCenterId = Convert.ToInt32(filterContext.HttpContext.Request.QueryString.GetValues(PAYCENTERIDSTRING)[0]);
+                }
+            }
+            base.OnActionExecuting(filterContext);
+        }
 
         public bool AddValidationMessage(int ValidationCode)
         {
@@ -65,6 +92,18 @@ namespace EvolucionaMovil.Models.Classes
             set
             {
                 _validationMessages = value;
+            }
+        }
+
+        public int PayCenterId
+        {
+            get
+            {
+                return _payCenterId;
+            }
+            set
+            {
+                _payCenterId = value;
             }
         }
     }
