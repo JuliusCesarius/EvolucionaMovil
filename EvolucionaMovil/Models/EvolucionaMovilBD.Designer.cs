@@ -8,12 +8,13 @@
 //------------------------------------------------------------------------------
 
 using System;
+using System.ComponentModel;
+using System.Data.EntityClient;
 using System.Data.Objects;
 using System.Data.Objects.DataClasses;
-using System.Data.EntityClient;
-using System.ComponentModel;
-using System.Xml.Serialization;
+using System.Linq;
 using System.Runtime.Serialization;
+using System.Xml.Serialization;
 
 [assembly: EdmSchemaAttribute()]
 #region EDM Relationship Metadata
@@ -30,10 +31,11 @@ using System.Runtime.Serialization;
 [assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_DetallePagos_Pagos", "Pago", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.Pago), "DetallePago", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EvolucionaMovil.Models.DetallePago), true)]
 [assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_Pagos_PayCenters", "PayCenter", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.PayCenter), "Pago", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EvolucionaMovil.Models.Pago), true)]
 [assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_Tickets_Pagos", "Pago", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.Pago), "Ticket", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(EvolucionaMovil.Models.Ticket), true)]
+[assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_Pagos_Movimientos", "Movimiento", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.Movimiento), "Pago", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EvolucionaMovil.Models.Pago), true)]
 [assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_Abonos_Cuentas", "Cuenta", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.Cuenta), "Abono", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EvolucionaMovil.Models.Abono), true)]
 [assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_Abonos_CuentasBancarias", "CuentaBancaria", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.CuentaBancaria), "Abono", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EvolucionaMovil.Models.Abono), true)]
 [assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_Abonos_PayCenters", "PayCenter", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.PayCenter), "Abono", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EvolucionaMovil.Models.Abono), true)]
-[assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_Movimientos_Estatus_Movimientos", "Movimiento", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.Movimiento), "Movimientos_Estatus", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EvolucionaMovil.Models.Movimientos_Estatus), true)]
+[assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_Movimientos_Estatus_Movimientos1", "Movimiento", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.Movimiento), "Movimientos_Estatus", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EvolucionaMovil.Models.Movimientos_Estatus), true)]
 
 #endregion
 
@@ -200,6 +202,22 @@ namespace EvolucionaMovil.Models
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
+        public ObjectSet<Parametro> Parametros
+        {
+            get
+            {
+                if ((_Parametros == null))
+                {
+                    _Parametros = base.CreateObjectSet<Parametro>("Parametros");
+                }
+                return _Parametros;
+            }
+        }
+        private ObjectSet<Parametro> _Parametros;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
         public ObjectSet<ParametrosPayCenter> ParametrosPayCenters
         {
             get
@@ -356,24 +374,9 @@ namespace EvolucionaMovil.Models
             }
         }
         private ObjectSet<Movimientos_Estatus> _Movimientos_Estatus;
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        public ObjectSet<Parametro> Parametros
-        {
-            get
-            {
-                if ((_Parametros == null))
-                {
-                    _Parametros = base.CreateObjectSet<Parametro>("Parametros");
-                }
-                return _Parametros;
-            }
-        }
-        private ObjectSet<Parametro> _Parametros;
 
         #endregion
+
         #region AddTo Methods
     
         /// <summary>
@@ -430,6 +433,14 @@ namespace EvolucionaMovil.Models
         public void AddToPaquetes(Paquete paquete)
         {
             base.AddObject("Paquetes", paquete);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the Parametros EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToParametros(Parametro parametro)
+        {
+            base.AddObject("Parametros", parametro);
         }
     
         /// <summary>
@@ -511,21 +522,13 @@ namespace EvolucionaMovil.Models
         {
             base.AddObject("Movimientos_Estatus", movimientos_Estatus);
         }
-    
-        /// <summary>
-        /// Deprecated Method for adding a new object to the Parametros EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
-        /// </summary>
-        public void AddToParametros(Parametro parametro)
-        {
-            base.AddObject("Parametros", parametro);
-        }
 
         #endregion
+
     }
-    
 
     #endregion
-    
+
     #region Entities
     
     /// <summary>
@@ -570,6 +573,7 @@ namespace EvolucionaMovil.Models
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -838,8 +842,33 @@ namespace EvolucionaMovil.Models
         private global::System.Int32 _CuentaId;
         partial void OnCuentaIdChanging(global::System.Int32 value);
         partial void OnCuentaIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String RutaFichaDeposito
+        {
+            get
+            {
+                return _RutaFichaDeposito;
+            }
+            set
+            {
+                OnRutaFichaDepositoChanging(value);
+                ReportPropertyChanging("RutaFichaDeposito");
+                _RutaFichaDeposito = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("RutaFichaDeposito");
+                OnRutaFichaDepositoChanged();
+            }
+        }
+        private global::System.String _RutaFichaDeposito;
+        partial void OnRutaFichaDepositoChanging(global::System.String value);
+        partial void OnRutaFichaDepositoChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -958,6 +987,7 @@ namespace EvolucionaMovil.Models
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -988,6 +1018,7 @@ namespace EvolucionaMovil.Models
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -1090,6 +1121,7 @@ namespace EvolucionaMovil.Models
         partial void OnBajaChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -1116,6 +1148,7 @@ namespace EvolucionaMovil.Models
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -1154,6 +1187,7 @@ namespace EvolucionaMovil.Models
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -1355,6 +1389,7 @@ namespace EvolucionaMovil.Models
         partial void OnBajaChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -1397,6 +1432,7 @@ namespace EvolucionaMovil.Models
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -1427,6 +1463,7 @@ namespace EvolucionaMovil.Models
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -1532,6 +1569,7 @@ namespace EvolucionaMovil.Models
         partial void OnBajaChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -1618,6 +1656,7 @@ namespace EvolucionaMovil.Models
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -1656,6 +1695,7 @@ namespace EvolucionaMovil.Models
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -1905,6 +1945,7 @@ namespace EvolucionaMovil.Models
         partial void OnBajaChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -1969,6 +2010,7 @@ namespace EvolucionaMovil.Models
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -2001,6 +2043,7 @@ namespace EvolucionaMovil.Models
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -2130,6 +2173,7 @@ namespace EvolucionaMovil.Models
         partial void OnBajaChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -2172,6 +2216,7 @@ namespace EvolucionaMovil.Models
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -2202,6 +2247,7 @@ namespace EvolucionaMovil.Models
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -2379,6 +2425,7 @@ namespace EvolucionaMovil.Models
         partial void OnBajaChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -2421,6 +2468,7 @@ namespace EvolucionaMovil.Models
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -2467,6 +2515,7 @@ namespace EvolucionaMovil.Models
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -2791,6 +2840,7 @@ namespace EvolucionaMovil.Models
         partial void OnBajaChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -2838,23 +2888,46 @@ namespace EvolucionaMovil.Models
         [XmlIgnoreAttribute()]
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("EvolucionaMovilBDModel", "FK_Movimientos_Estatus_Movimientos", "Movimientos_Estatus")]
-        public EntityCollection<Movimientos_Estatus> Movimientos_Estatus
+        [EdmRelationshipNavigationPropertyAttribute("EvolucionaMovilBDModel", "FK_Pagos_Movimientos", "Pago")]
+        public EntityCollection<Pago> Pagos
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Movimientos_Estatus>("EvolucionaMovilBDModel.FK_Movimientos_Estatus_Movimientos", "Movimientos_Estatus");
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Pago>("EvolucionaMovilBDModel.FK_Pagos_Movimientos", "Pago");
             }
             set
             {
                 if ((value != null))
                 {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Movimientos_Estatus>("EvolucionaMovilBDModel.FK_Movimientos_Estatus_Movimientos", "Movimientos_Estatus", value);
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Pago>("EvolucionaMovilBDModel.FK_Pagos_Movimientos", "Pago", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("EvolucionaMovilBDModel", "FK_Movimientos_Estatus_Movimientos1", "Movimientos_Estatus")]
+        public EntityCollection<Movimientos_Estatus> Movimientos_Estatus
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Movimientos_Estatus>("EvolucionaMovilBDModel.FK_Movimientos_Estatus_Movimientos1", "Movimientos_Estatus");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Movimientos_Estatus>("EvolucionaMovilBDModel.FK_Movimientos_Estatus_Movimientos1", "Movimientos_Estatus", value);
                 }
             }
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -2891,6 +2964,7 @@ namespace EvolucionaMovil.Models
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -3098,6 +3172,7 @@ namespace EvolucionaMovil.Models
         partial void OnUserNameChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -3107,16 +3182,16 @@ namespace EvolucionaMovil.Models
         [XmlIgnoreAttribute()]
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("EvolucionaMovilBDModel", "FK_Movimientos_Estatus_Movimientos", "Movimiento")]
+        [EdmRelationshipNavigationPropertyAttribute("EvolucionaMovilBDModel", "FK_Movimientos_Estatus_Movimientos1", "Movimiento")]
         public Movimiento Movimiento
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Movimiento>("EvolucionaMovilBDModel.FK_Movimientos_Estatus_Movimientos", "Movimiento").Value;
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Movimiento>("EvolucionaMovilBDModel.FK_Movimientos_Estatus_Movimientos1", "Movimiento").Value;
             }
             set
             {
-                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Movimiento>("EvolucionaMovilBDModel.FK_Movimientos_Estatus_Movimientos", "Movimiento").Value = value;
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Movimiento>("EvolucionaMovilBDModel.FK_Movimientos_Estatus_Movimientos1", "Movimiento").Value = value;
             }
         }
         /// <summary>
@@ -3128,18 +3203,19 @@ namespace EvolucionaMovil.Models
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Movimiento>("EvolucionaMovilBDModel.FK_Movimientos_Estatus_Movimientos", "Movimiento");
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Movimiento>("EvolucionaMovilBDModel.FK_Movimientos_Estatus_Movimientos1", "Movimiento");
             }
             set
             {
                 if ((value != null))
                 {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Movimiento>("EvolucionaMovilBDModel.FK_Movimientos_Estatus_Movimientos", "Movimiento", value);
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Movimiento>("EvolucionaMovilBDModel.FK_Movimientos_Estatus_Movimientos1", "Movimiento", value);
                 }
             }
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -3165,7 +3241,8 @@ namespace EvolucionaMovil.Models
         /// <param name="status">Initial value of the Status property.</param>
         /// <param name="fechaVencimiento">Initial value of the FechaVencimiento property.</param>
         /// <param name="fechaCreacion">Initial value of the FechaCreacion property.</param>
-        public static Pago CreatePago(global::System.Int32 pagoId, global::System.Int32 servicioId, global::System.Int32 payCenterId, global::System.Int32 movimientoId, global::System.String clienteNombre, global::System.Decimal importe, global::System.String servicio, global::System.Int16 status, global::System.DateTime fechaVencimiento, global::System.DateTime fechaCreacion)
+        /// <param name="cuentaId">Initial value of the CuentaId property.</param>
+        public static Pago CreatePago(global::System.Int32 pagoId, global::System.Int32 servicioId, global::System.Int32 payCenterId, global::System.Int32 movimientoId, global::System.String clienteNombre, global::System.Decimal importe, global::System.String servicio, global::System.Int16 status, global::System.DateTime fechaVencimiento, global::System.DateTime fechaCreacion, global::System.Int32 cuentaId)
         {
             Pago pago = new Pago();
             pago.PagoId = pagoId;
@@ -3178,10 +3255,12 @@ namespace EvolucionaMovil.Models
             pago.Status = status;
             pago.FechaVencimiento = fechaVencimiento;
             pago.FechaCreacion = fechaCreacion;
+            pago.CuentaId = cuentaId;
             return pago;
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -3426,8 +3505,33 @@ namespace EvolucionaMovil.Models
         private global::System.DateTime _FechaCreacion;
         partial void OnFechaCreacionChanging(global::System.DateTime value);
         partial void OnFechaCreacionChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 CuentaId
+        {
+            get
+            {
+                return _CuentaId;
+            }
+            set
+            {
+                OnCuentaIdChanging(value);
+                ReportPropertyChanging("CuentaId");
+                _CuentaId = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("CuentaId");
+                OnCuentaIdChanged();
+            }
+        }
+        private global::System.Int32 _CuentaId;
+        partial void OnCuentaIdChanging(global::System.Int32 value);
+        partial void OnCuentaIdChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -3528,8 +3632,47 @@ namespace EvolucionaMovil.Models
                 }
             }
         }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("EvolucionaMovilBDModel", "FK_Pagos_Movimientos", "Movimiento")]
+        public Movimiento Movimiento
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Movimiento>("EvolucionaMovilBDModel.FK_Pagos_Movimientos", "Movimiento").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Movimiento>("EvolucionaMovilBDModel.FK_Pagos_Movimientos", "Movimiento").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<Movimiento> MovimientoReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Movimiento>("EvolucionaMovilBDModel.FK_Pagos_Movimientos", "Movimiento");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Movimiento>("EvolucionaMovilBDModel.FK_Pagos_Movimientos", "Movimiento", value);
+                }
+            }
+        }
 
         #endregion
+
     }
     
     /// <summary>
@@ -3564,6 +3707,7 @@ namespace EvolucionaMovil.Models
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -3714,6 +3858,7 @@ namespace EvolucionaMovil.Models
         partial void OnBajaChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -3740,6 +3885,7 @@ namespace EvolucionaMovil.Models
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -3776,6 +3922,7 @@ namespace EvolucionaMovil.Models
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -4016,6 +4163,7 @@ namespace EvolucionaMovil.Models
         partial void OnMinutosProrrogaCancelacionChanged();
 
         #endregion
+
     
     }
     
@@ -4051,6 +4199,7 @@ namespace EvolucionaMovil.Models
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -4297,6 +4446,7 @@ namespace EvolucionaMovil.Models
         partial void OnFechaDepositoRequiredChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -4339,6 +4489,7 @@ namespace EvolucionaMovil.Models
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -4393,6 +4544,7 @@ namespace EvolucionaMovil.Models
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -4855,6 +5007,7 @@ namespace EvolucionaMovil.Models
         partial void OnActivoChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -5061,6 +5214,7 @@ namespace EvolucionaMovil.Models
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -5091,6 +5245,7 @@ namespace EvolucionaMovil.Models
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -5193,6 +5348,7 @@ namespace EvolucionaMovil.Models
         partial void OnBajaChanged();
 
         #endregion
+
     
     }
     
@@ -5228,6 +5384,7 @@ namespace EvolucionaMovil.Models
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -5450,6 +5607,7 @@ namespace EvolucionaMovil.Models
         partial void OnBajaChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -5476,6 +5634,7 @@ namespace EvolucionaMovil.Models
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -5508,6 +5667,7 @@ namespace EvolucionaMovil.Models
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -5634,6 +5794,7 @@ namespace EvolucionaMovil.Models
         partial void OnBajaChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -5660,6 +5821,7 @@ namespace EvolucionaMovil.Models
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -5706,6 +5868,7 @@ namespace EvolucionaMovil.Models
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -6024,6 +6187,7 @@ namespace EvolucionaMovil.Models
         partial void OnBajaChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -6104,8 +6268,10 @@ namespace EvolucionaMovil.Models
         }
 
         #endregion
+
     }
 
     #endregion
+
     
 }

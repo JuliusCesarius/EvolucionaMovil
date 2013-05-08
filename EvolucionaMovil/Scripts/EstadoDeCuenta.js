@@ -19,19 +19,52 @@
         var code = event.which; // recommended to use e.which, it's normalized across browsers
         if (code == 13) {
             event.preventDefault();
-            rebindGrid({ pageSize: $("#pageSize").val() });
+            rebindGrid({ 
+            fechaInicio: $("#fechaInicio").val(),
+                fechaFin: $("#fechaFin").val(),
+                pageSize: $("#pageSize").val(),
+                onlyAplicados: $("#aplicadosOnly").prop("checked")
+                });
         }
     });
     $("#Actualizar").on("click", function (event) {
-        event.preventDefault();
-        rebindGrid({
-            fechaInicio: $("#fechaInicio").val(),
-            fechaFin: $("#fechaFin").val(),
-            pageSize: $("#pageSize").val()
-        });
+  
+        if (CompararDosFechas($("#fechaInicio").val(), $("#fechaFin").val())) {
+            alert("La Fecha de inicio no puede ser mayo a la fecha final de busqueda.")
+        }
+        else {
+
+            event.preventDefault();
+            rebindGrid({
+                fechaInicio: $("#fechaInicio").val(),
+                fechaFin: $("#fechaFin").val(),
+                pageSize: $("#pageSize").val(),
+                onlyAplicados: $("#aplicadosOnly")[0].checked
+            });
+        }
     });
 
 });
+
+function CompararDosFechas(fechainicio, fechafin) {
+
+    if (fechainicio != "" || fechafin != "") {
+        if (fechainicio == "")
+            fechainicio = $.format.date(new Date().toString(), "dd/mm/yyyy").toString();
+            //$.datepicker.formatDate('dd/mm/yy', new Date()).toString();
+        if (fechafin == "") {
+            //$.format.date("2009-12-18 10:54:50.546", "dd/MM/yyyy");
+            fechafin = $.format.date(new Date().toString(), "dd/mm/yyyy").toString();
+            $("#fechaFin").val(fechafin);
+        }
+    }
+    var dt1 = fechainicio.split('/');
+    var dt2 = fechafin.split('/');
+    var date1 = new Date(dt1[2], dt1[1]-1, dt1[0]);
+    var date2 = new Date(dt2[2], dt2[1]-1, dt2[0]);
+
+    if ((date1 > date2)) { return true; } else { return false; }
+}
 
 function rebindGrid(options) {
     $('<input />').attr('type', 'hidden').attr('name', 'pageSize').attr('value', options.pageSize).appendTo('form');
@@ -39,6 +72,7 @@ function rebindGrid(options) {
     $('<input />').attr('type', 'hidden').attr('name', 'searchString').attr('value', options.searchString).appendTo('form');
     $('<input />').attr('type', 'hidden').attr('name', 'fechaInicio').attr('value', options.fechaInicio).appendTo('form');
     $('<input />').attr('type', 'hidden').attr('name', 'fechaFin').attr('value', options.fechaFin).appendTo('form');
+    $('<input />').attr('type', 'hidden').attr('name', 'onlyAplicados').attr('value', options.onlyAplicados).appendTo('form');
     $("form").submit();
 }
 
@@ -47,19 +81,21 @@ function bindGrid(options) {
          { name: 'FechaCreacion', displayName: 'Fecha', cssClass: 'fechacreacion' },
          { name: 'Clave', displayName: 'Clave', cssClass: 'clave' },
          { name: 'Concepto', cssClass: 'concepto' },
-         { name: 'Status', cssClass: 'status', displayName: 'Estatus', customTemplate: '<span alt="{Motivo}" class=" {Status} qtip">{Status}</span>' },
+         { name: 'Status', cssClass: 'status', displayName: 'Estatus', customTemplate: '<span alt="{Comentarios}" class=" {Status} qtip">{Status}</span>' },
          { name: 'Abono', cssClass: 'abono' },
          { name: 'Cargo', cssClass: 'cargo' },
          { name: 'Saldo', cssClass: "saldo" }
          ];
     if (options == undefined) {
-        options = { pageSize: 20, pageNumber: 0 };
+        var target = event.currentTarget != undefined ? event.currentTarget : event.srcElement;
+        options = { pageSize: $("#pageSize").val(), pageNumber: target, onlyAplicados: $("#aplicadosOnly").prop("checked") };
     }
     var pageSize = options.pageSize;
     var pageNumber = options.pageNumber;
     var searchString = options.searchString;
     var fechaInicio = options.fechaInicio;
     var fechaFin = options.fechaFin;
+    var onlyAplicados = options.onlyAplicados;
     $("#grdEstadoDeCuenta").simpleGrid({
         data: $.parseJSON($("#hddData").val()),
         columns: columns,
@@ -69,7 +105,8 @@ function bindGrid(options) {
         pageNumber: pageNumber,
         searchString: searchString,
         fechaInicio: fechaInicio,
-        fechaFin: fechaFin
+        fechaFin: fechaFin,
+         onlyAplicados:onlyAplicados
     });
 }
 
@@ -86,6 +123,9 @@ function pageChanged(event) {
     var pageNumber = $(target).text() - 1;
     rebindGrid({ 
         pageSize: $("#pageSize").val(),
-        pageNumber: pageNumber
+        pageNumber: pageNumber,
+        fechaInicio: $("#fechaInicio").val(),
+        fechaFin: $("#fechaFin").val(),
+        onlyAplicados: $("#aplicadosOnly")[0].checked
     });
 }

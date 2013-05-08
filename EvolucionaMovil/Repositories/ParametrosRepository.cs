@@ -9,5 +9,9 @@ namespace EvolucionaMovil.Repositories
 {
     public class ParametrosRepository : RepositoryBase<Parametro , EvolucionaMovilBDEntities>
     {
+        public Parametro GetParametrosGlobales()
+        {
+            return base.ListAll().FirstOrDefault();
+        }
     }
 }
