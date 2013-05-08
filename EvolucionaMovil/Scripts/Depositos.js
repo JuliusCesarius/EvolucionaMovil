@@ -86,6 +86,9 @@ function bindGrid(options) {
     $("#grdDepositos").simpleGrid({
         data: $.parseJSON($("#hddData").val()),
         columns: columns,
+        selectedData: "AbonoId",
+        selectedURL: "Depositos/Details",
+        selectedFunction: grdRowSelected,
         successFunction: depositosLoaded,
         pageChangeFunction: pageChanged,
         pageSize: pageSize,
@@ -94,6 +97,10 @@ function bindGrid(options) {
         fechaInicio: fechaInicio,
         fechaFin: fechaFin
     });
+}
+
+function grdRowSelected(item) {
+    alert(item);
 }
 
 function depositosLoaded() {

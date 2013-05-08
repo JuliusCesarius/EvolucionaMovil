@@ -116,6 +116,10 @@ function bindGrid(options) {
         data: $.parseJSON($("#hddData").val()),
         columns: columns,
         successFunction: edoCuentaLoaded,
+        selectedURL: "EstadoDeCuenta/Details",
+        selectedData: "MovimientoId",
+        selectedFunction: grdRowSelected,
+        successFunction: edoCuentaLoaded,
         pageChangeFunction: pageChanged,
         pageSize: pageSize,
         pageNumber: pageNumber,
@@ -124,6 +128,10 @@ function bindGrid(options) {
         fechaFin: fechaFin,
          onlyAplicados:onlyAplicados
     });
+}
+
+function grdRowSelected(item) {
+    alert(item);
 }
 
 function edoCuentaLoaded(){

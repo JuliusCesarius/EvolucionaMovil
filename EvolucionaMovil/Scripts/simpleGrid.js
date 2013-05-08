@@ -105,7 +105,10 @@
         searchString: "",
         fechaInicio: null,
         fechaFin: null,
-        data:null
+        data:null,
+        selectedData: null,
+        selectedURL: null,
+        selectedFunction: null
     }
 
     function bindTableGrid(options) {
@@ -207,6 +210,21 @@
 
                     var row = jQuery("<div class='sgRow'></div>");
                     row.data("item", item);
+                    if(options!=null & options!=undefined &options.selectedURL!=null){
+                        row.css("cursor","pointer");
+                        row.on("click",function(event){
+                            event.preventDefault();
+                            if(options!=null && options!=undefined){
+                                var dataValue = null;
+                                if(options.selectedData != null){
+                                    dataValue=item[options.selectedData];
+                                }
+                                if(options.selectedURL!=null){
+                                    window.location.href=options.selectedURL+"/"+dataValue;
+                                }
+                            }
+                        });
+                    }
                     body.append(row);
 
                     if (columns == undefined) {
@@ -264,6 +282,18 @@
                 }
                 if (successFunction != undefined) {
                     successFunction();
+                }
+            }
+
+            function onSelected(item,options){
+                if(options!=null && options!=undefined){
+                    var dataValue = null;
+                    if(options.selectedData != null){
+                        dataValue=item[options.selectedData];
+                    }
+                    if(options.selectedURL!=null){
+                        $(window).location=options.selectedURL+"\\"+dataValue;
+                    }
                 }
             }
 
