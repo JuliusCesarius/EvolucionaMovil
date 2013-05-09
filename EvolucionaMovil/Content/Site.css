@@ -62,7 +62,6 @@ header, #header {
     margin-bottom: 0px;
     color: #000;
     padding: 0;
-    padding-bottom:18px;
     border-bottom: 2px solid #32A6E0;
 }
 
@@ -852,8 +851,10 @@ div#title {
     text-align: right;
     color: #32A6E0;    
     position: absolute;
-    top:10px;
-    right: 30px;
+    top:0px;
+    right: 0px;
+    padding:10px 20px 10px 500px;
+    background:#fff
 }
 
 #logindisplay a:link 
@@ -972,7 +973,7 @@ legend{font-size:2em;font-weight:400}
 #filtros #pageSize{min-width:30px;width:30px;}
 #filtros #fechaInicio, #filtros #fechaFin{width:100px}
 #filtros #searchString{width:160px}
-#filtros #search{background: url("../Content/themes/base/images/search.png") no-repeat 50% 50%;border:none;cursor:pointer;margin-left:-20px;padding:.3em ;position:absolute;width:16px;z-index:10000}
+#filtros #search{background: url("../Content/themes/base/images/search.png") no-repeat 50% 50%;border:none;cursor:pointer;margin-left:-20px;padding:.3em ;position:absolute;width:16px;z-index:999}
 #filtros #search:hover{padding:.4em}
 #filtros #lblAplicadosOnly, #filtros #aplicadosOnly{cursor:pointer}
 

@@ -195,6 +195,7 @@
     <Content Include="Content\extracss.css" />
     <Content Include="Content\jquery.selectbox-0.2.css" />
     <Content Include="Content\MasterPage.css" />
+    <Content Include="Content\menu_fall_back.css" />
     <Content Include="Content\MvcMembership.css" />
     <Content Include="Content\normalize.css" />
     <Content Include="Content\PagedList.css" />
