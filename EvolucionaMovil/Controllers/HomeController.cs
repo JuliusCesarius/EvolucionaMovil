@@ -10,9 +10,7 @@ namespace EvolucionaMovil.Controllers
     {
         public ActionResult Index()
         {
-            ViewBag.Message = "Welcome to ASP.NET MVC!";
-
-            return View();
+            return RedirectToAction("Logon","Account");
         }
 
         public ActionResult About()

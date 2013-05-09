@@ -1,6 +1,8 @@
-﻿$(document).on("ready", function () {
+﻿var t;
+$(document).on("ready", function () {
     $("label").inFieldLabels();
     $("input").on("click", function () { this.select(); });
+    t=window.setInterval(fixLabels, 200);
     //Fix de los checkbox que no pasan el valor al form
     $("[type='checkbox']").on("change", fixCheckbox);
     $("[type='checkbox']").val($("[type='checkbox']").attr('checked') == "checked");
@@ -24,4 +26,8 @@
 
 function fixCheckbox() {
     $(this).val($(this).attr('checked') == "checked");
+}
+function fixLabels() {
+    clearInterval(t);
+    $("label").inFieldLabels('refresh');
 }

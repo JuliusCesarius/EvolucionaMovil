@@ -15,6 +15,7 @@
                         text: item.Nombre
                     }));
                     $("#CuentaId").val(0);
+                    $("#CuentaId").trigger("change");
                 });
             });
             this.value = label;
@@ -118,6 +119,7 @@ function BancoIdChanged() {
                         text: item.NumeroCuenta + " - " + item.Titular
                     }));
                 }
+                CuentaBancariaId.trigger("change");
                 if (i == 0) { cdefault = item.CuentaBancariaId; }
             });
 
