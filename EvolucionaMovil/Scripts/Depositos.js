@@ -72,7 +72,7 @@ function bindGrid(options) {
          { name: 'PayCenter', displayName: 'PayCenter', cssClass: 'PayCenter' },
          { name: 'Banco', displayName: 'Banco/Cuenta', cssClass: 'banco', customTemplate: '<span> {Banco} / {CuentaBancaria}</span>' },
          { name: 'TipoCuenta', displayName: 'Cuenta Destino', cssClass: 'tipocuenta' },
-         { name: 'StatusString', cssClass: 'status', displayName: 'Estatus', customTemplate: '<span alt="{Motivo}" class=" {StatusString} qtip">{StatusString}</span>' },
+         { name: 'StatusString', cssClass: 'status', displayName: 'Estatus', customTemplate: '<span alt="{Comentarios}" class=" {StatusString} qtip">{StatusString}</span>' },
          { name: 'Monto', displayName: 'Monto', cssClass: 'monto' }
          ];
     if (options == undefined) {
@@ -100,15 +100,19 @@ function bindGrid(options) {
 }
 
 function grdRowSelected(item) {
-    alert(item);
+    //alert(item);
 }
 
 function depositosLoaded() {
-    $(".qtip").qtip({ content: $(this).attr("alt") });
+    $(".qtip").qtip({ content: $(this).attr("alt"), api: { beforeShow: comentariosBeforeShow, onRender: comentariosBeforeShow} });
     $(".sgCell.saldo").each(function (i, item) {
         var clase = $(item).val().replace("$", "") > 0 ? "abono" : "cargo";
         $(item).addClass(clase);
     });
+}
+
+function comentariosBeforeShow(event, o) {
+   // alert(event);
 }
 
 function pageChanged(event) {

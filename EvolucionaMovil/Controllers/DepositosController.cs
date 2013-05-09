@@ -22,6 +22,18 @@ namespace EvolucionaMovil.Controllers
     {
         private List<string> Mensajes = new List<string>();
         private AbonoRepository repository = new AbonoRepository();
+        private EstadoDeCuentaRepository _estadoDeCuentaRepository;
+        private EstadoDeCuentaRepository EstadoDeCuentaRepository
+        {
+            get
+            {
+                if (_estadoDeCuentaRepository == null)
+                {
+                    _estadoDeCuentaRepository = new EstadoDeCuentaRepository();
+                }
+                return _estadoDeCuentaRepository;
+            }
+        }
 
         private EstadoCuentaBR validations = new EstadoCuentaBR();
 
@@ -119,7 +131,7 @@ namespace EvolucionaMovil.Controllers
                             nuevoEstatus = enumEstatusMovimiento.Rechazado;
                             break;
                     }
-
+                    abono.Status = (Int16)nuevoEstatus;
                     movimiento = estadoCuentaBR.ActualizarMovimiento(movimiento.MovimientoId, nuevoEstatus, comentario);
                     this.Succeed = estadoCuentaBR.Succeed;
                     this.ValidationMessages = estadoCuentaBR.ValidationMessages;
@@ -352,7 +364,6 @@ namespace EvolucionaMovil.Controllers
             var banco = bancosRepository.LoadById(abono.BancoId);
 
             //fill estatus movimientos          
-            EstadoDeCuentaRepository estadoDeCuentaRepository = new EstadoDeCuentaRepository();
             int movimientoId = 0;
             var movimiento = abono.Cuenta.Movimientos.Where(x => x.CuentaId == abono.CuentaId && x.Motivo == enumMotivo.Deposito.GetHashCode() && x.PayCenterId == abono.PayCenterId && x.Id == abono.AbonoId).FirstOrDefault();
             if (movimiento != null)
@@ -449,19 +460,30 @@ namespace EvolucionaMovil.Controllers
                 return cuentaBancaria.NumeroCuenta;
             }
         }
-
+        private string getComentarioCambioEstatus(int AbonoId)
+        {
+            var lastComment = EstadoDeCuentaRepository.GetUltimoCambioEstatus(enumMotivo.Deposito, AbonoId);
+            if (lastComment != null)
+            {
+                return lastComment.Comentarios;
+            }
+            else
+            {
+                return string.Empty;
+            }
+        }
         private SimpleGridResult<DepositoVM> getDepositos(ServiceParameterVM Parameters = null)
         {
             IEnumerable<Abono> depositos;
             if (PayCenterId == 0)
             {
-                depositos = repository.ListAll();
+                depositos = repository.ListAll().OrderByDescending(m => m.FechaCreacion);
             }
             else
             {
-                depositos = repository.GetByPayCenterId(PayCenterId);
+                depositos = repository.GetByPayCenterId(PayCenterId).OrderByDescending(m => m.FechaCreacion);
             }
-            
+
             var bancos = new BancosRepository().ListAll();
 
             SimpleGridResult<DepositoVM> simpleGridResult = new SimpleGridResult<DepositoVM>();
@@ -471,8 +493,10 @@ namespace EvolucionaMovil.Controllers
                 )
                 ).Select(x => new DepositoVM
                 {
+                    AbonoId = x.AbonoId,
                     PayCenterId = x.PayCenterId,
                     Banco = getBancoById(x.BancoId, ref bancos),
+                    Comentarios = getComentarioCambioEstatus(x.AbonoId),
                     CuentaBancaria = getCuentaById(x.CuentaBancariaId, ref bancos),
                     FechaPago = x.FechaPago.ToShortDateString(),
                     FechaCreacion = x.FechaCreacion.ToShortDateString(),
