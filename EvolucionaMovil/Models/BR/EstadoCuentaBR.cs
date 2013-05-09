@@ -162,7 +162,7 @@ namespace EvolucionaMovil.Models.BR
             if (NuevoEstatus.GetHashCode() == movimiento.Status)
             {
                 Succeed = false;
-                AddValidationMessage(cabinet.patterns.enums.enumMessageType.BRException, "No existe cambio de estatus");
+                AddValidationMessage(cabinet.patterns.enums.enumMessageType.BRException, "Ya se encuentra en estatus "+NuevoEstatus.ToString());
                 return null;
             }
 

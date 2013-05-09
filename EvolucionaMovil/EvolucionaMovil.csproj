@@ -210,10 +210,14 @@
     <Content Include="Content\themes\base\images\bg-nav-main-hover.gif" />
     <Content Include="Content\themes\base\images\bg-nav-main.gif" />
     <Content Include="Content\themes\base\images\calendar.png" />
+    <Content Include="Content\themes\base\images\e-ico.png" />
     <Content Include="Content\themes\base\images\evolucionamovil_commingsoon.jpg" />
     <Content Include="Content\themes\base\images\evolucionamovil_logo.png" />
+    <Content Include="Content\themes\base\images\i-ico.png" />
+    <Content Include="Content\themes\base\images\logo-evoluciona-sm.png" />
     <Content Include="Content\themes\base\images\logoComex.png" />
     <Content Include="Content\themes\base\images\logo_evoluciona.jpg" />
+    <Content Include="Content\themes\base\images\ok-ico.png" />
     <Content Include="Content\themes\base\images\qtip.png" />
     <Content Include="Content\themes\base\images\repdep.jpg" />
     <Content Include="Content\themes\base\images\search.png" />
@@ -233,6 +237,7 @@
     <Content Include="Content\themes\base\images\ui-icons_888888_256x240.png" />
     <Content Include="Content\themes\base\images\ui-icons_cd0a0a_256x240.png" />
     <Content Include="Content\themes\base\images\unauthorized.jpg" />
+    <Content Include="Content\themes\base\images\w-ico.png" />
     <Content Include="Content\themes\base\jquery.ui.accordion.css" />
     <Content Include="Content\themes\base\jquery.ui.all.css" />
     <Content Include="Content\themes\base\jquery.ui.autocomplete.css" />

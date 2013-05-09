@@ -141,14 +141,13 @@ namespace EvolucionaMovil.Controllers
                         Succeed = repository.Save();
                         if (Succeed)
                         {
-                            AddValidationMessage(enumMessageType.Message, "El reporte de depósito ha sido " + nuevoEstatus.ToString() + " correctamente");
+                            AddValidationMessage(enumMessageType.Succeed, "El reporte de depósito ha sido " + nuevoEstatus.ToString() + " correctamente");
                         }
                         else
                         {
                             //TODO: implemtar código que traiga mensajes del repositorio
                         }
                     }
-
                 }
                 else
                 {
