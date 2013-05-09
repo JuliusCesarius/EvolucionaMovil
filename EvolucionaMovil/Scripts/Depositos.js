@@ -5,9 +5,7 @@
     }
     $("#fechaInicio").datepicker({ "dateFormat": "dd/mm/yy" });
     $("#fechaFin").datepicker({ "dateFormat": "dd/mm/yy" });
-    if ($(".saldos span").html().indexOf("-") != -1) {
-        $($(".saldos span")[0]).addClass("cargo");
-    }
+
     $("#aplicadosOnly").on("click", function () {
         if ($("#aplicadosOnly").prop("checked")) {
             $(".Rechazado,.Procesando,.Cancelado").parent().parent().hide("blind", {}, 1000);
@@ -23,14 +21,8 @@
         }
     });
     $("#Actualizar").on("click", function (event) {
-  
-        if (CompararDosFechas($("#fechaInicio").val(), $("#fechaFin").val())) {
-            alert("La Fecha de inicio no puede ser mayo a la fecha final de búsqueda.")
-        }
-        else {
-            event.preventDefault();
-            rebindGrid({ pageSize: $("#pageSize").val() });
-        }
+        event.preventDefault();
+        rebindGrid({pageSize: $("#pageSize").val()});
     });
 
     $("#PayCenterName").on("keyup", function (event) {
@@ -67,26 +59,6 @@
 
 });
 
-function CompararDosFechas(fechainicio, fechafin) {
-
-    if (fechainicio != "" || fechafin != "") {
-        if (fechainicio == "")
-            fechainicio = $.format.date(new Date().toString(), "dd/mm/yyyy").toString();
-            //$.datepicker.formatDate('dd/mm/yy', new Date()).toString();
-        if (fechafin == "") {
-            //$.format.date("2009-12-18 10:54:50.546", "dd/MM/yyyy");
-            fechafin = $.format.date(new Date().toString(), "dd/mm/yyyy").toString();
-            $("#fechaFin").val(fechafin);
-        }
-    }
-    var dt1 = fechainicio.split('/');
-    var dt2 = fechafin.split('/');
-    var date1 = new Date(dt1[2], dt1[1]-1, dt1[0]);
-    var date2 = new Date(dt2[2], dt2[1]-1, dt2[0]);
-
-    if ((date1 > date2)) { return true; } else { return false; }
-}
-
 function rebindGrid(options) {
     $('<input />').attr('type', 'hidden').attr('name', 'pageNumber').attr('value', options.pageNumber).appendTo('form');
     $("form").submit();
@@ -94,62 +66,59 @@ function rebindGrid(options) {
 
 function bindGrid(options) {
     var columns = [
-         { name: 'FechaCreacion', displayName: 'Fecha', cssClass: 'fechacreacion' },
-         { name: 'Clave', displayName: 'Clave', cssClass: 'clave' },
-         { name: 'Concepto', cssClass: 'concepto' },
-         { name: 'Status', cssClass: 'status', displayName: 'Estatus', customTemplate: '<span alt="{Comentarios}" class=" {Status} qtip">{Status}</span>' },
-         { name: 'Abono', cssClass: 'abono' },
-         { name: 'Cargo', cssClass: 'cargo' },
-         { name: 'Saldo', cssClass: "saldo" }
+         { name: 'FechaCreacion', displayName: 'Fecha Captura', cssClass: 'fechacreacion' },
+         { name: 'FechaPago', displayName: 'Fecha Pago', cssClass: 'fechapago' },
+         { name: 'Referencia', displayName: 'Referencia', cssClass: 'referencia' },
+         { name: 'PayCenter', displayName: 'PayCenter', cssClass: 'PayCenter' },
+         { name: 'Banco', displayName: 'Banco/Cuenta', cssClass: 'banco', customTemplate: '<span> {Banco} / {CuentaBancaria}</span>' },
+         { name: 'TipoCuenta', displayName: 'Cuenta Destino', cssClass: 'tipocuenta' },
+         { name: 'StatusString', cssClass: 'status', displayName: 'Estatus', customTemplate: '<span alt="{Comentarios}" class=" {StatusString} qtip">{StatusString}</span>' },
+         { name: 'Monto', displayName: 'Monto', cssClass: 'monto' }
          ];
     if (options == undefined) {
-        var target = event.currentTarget != undefined ? event.currentTarget : event.srcElement;
-        options = { pageSize: $("#pageSize").val(), pageNumber: target, onlyAplicados: $("#aplicadosOnly").prop("checked") };
+        options = { pageSize: 20, pageNumber: 0 };
     }
     var pageSize = options.pageSize;
     var pageNumber = options.pageNumber;
     var searchString = options.searchString;
     var fechaInicio = options.fechaInicio;
     var fechaFin = options.fechaFin;
-    var onlyAplicados = options.onlyAplicados;
-    $("#grdEstadoDeCuenta").simpleGrid({
+    $("#grdDepositos").simpleGrid({
         data: $.parseJSON($("#hddData").val()),
         columns: columns,
-        successFunction: edoCuentaLoaded,
-        selectedURL: "EstadoDeCuenta/Details",
-        selectedData: "MovimientoId",
+        selectedData: "AbonoId",
+        selectedURL: "Depositos/Details",
         selectedFunction: grdRowSelected,
-        successFunction: edoCuentaLoaded,
+        successFunction: depositosLoaded,
         pageChangeFunction: pageChanged,
         pageSize: pageSize,
         pageNumber: pageNumber,
         searchString: searchString,
         fechaInicio: fechaInicio,
-        fechaFin: fechaFin,
-         onlyAplicados:onlyAplicados
+        fechaFin: fechaFin
     });
 }
 
 function grdRowSelected(item) {
-    alert(item);
+    //alert(item);
 }
 
-function edoCuentaLoaded(){
-    $(".qtip").qtip({content:$(this).attr("alt")});
+function depositosLoaded() {
+    $(".qtip").qtip({ content: $(this).attr("alt"), api: { beforeShow: comentariosBeforeShow, onRender: comentariosBeforeShow} });
     $(".sgCell.saldo").each(function (i, item) {
-            var clase = $(item).val().replace("$", "") > 0 ? "abono" : "cargo";
-            $(item).addClass(clase);
+        var clase = $(item).val().replace("$", "") > 0 ? "abono" : "cargo";
+        $(item).addClass(clase);
     });
+}
+
+function comentariosBeforeShow(event, o) {
+   // alert(event);
 }
 
 function pageChanged(event) {
     var target = event.currentTarget != undefined ? event.currentTarget : event.srcElement;
     var pageNumber = $(target).text() - 1;
-    rebindGrid({ 
-        pageSize: $("#pageSize").val(),
-        pageNumber: pageNumber,
-        fechaInicio: $("#fechaInicio").val(),
-        fechaFin: $("#fechaFin").val(),
-        onlyAplicados: $("#aplicadosOnly")[0].checked
+    rebindGrid({
+        pageNumber: pageNumber
     });
 }

@@ -26,6 +26,22 @@ namespace EvolucionaMovil.Repositories
                 .Select(mc=>mc.m)
                 .OrderByDescending(m => m.FechaCreacion);
         }
+        /// <summary>
+        /// Obtiene el registro del último registro generado por cambio de estatus
+        /// </summary>
+        /// <param name="Motivo">Motivo por el cual se realizó el movimiento</param>
+        /// <param name="ReferenciaId">Identificador de la tabla (entidad) que generó el movimiento AbonoId, PagoId, etc</param>
+        /// <returns>Último objeto Movimiento_Estatus generado para el movimiento encontrado</returns>
+        /// <remarks>Si se encuentra más de un movimiento con esta combinación de parámetros marcará error porque sólo debe existir máximo 1</remarks>
+        public Movimientos_Estatus GetUltimoCambioEstatus(enumMotivo Motivo, int ReferenciaId)
+        {
+            var motivo = Motivo.GetHashCode();
+            var movimiento = context.Movimientos.Where(x => x.Motivo == motivo && x.Id == ReferenciaId).FirstOrDefault();
+            if(movimiento==null){
+                return null;
+            }
+            return movimiento.Movimientos_Estatus.LastOrDefault();
+        }
         public Decimal GetSaldoActual(int CuentaId)
         {
             var estatusAplicado = enumEstatusMovimiento.Aplicado.GetHashCode();
