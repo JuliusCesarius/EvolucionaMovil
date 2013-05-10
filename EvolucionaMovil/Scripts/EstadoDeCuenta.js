@@ -131,7 +131,7 @@ function bindGrid(options) {
 }
 
 function grdRowSelected(item) {
-    alert(item);
+    //alert(item);
 }
 
 function edoCuentaLoaded(){

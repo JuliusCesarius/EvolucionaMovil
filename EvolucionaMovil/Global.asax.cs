@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using cabinet.processPolicies.MVC.Models.Helpers;
+using EvolucionaMovil.Controllers;
 
 namespace EvolucionaMovil
 {
@@ -27,6 +28,36 @@ namespace EvolucionaMovil
                 "{controller}/{action}/{id}", // URL with parameters
                 new { controller = "Home", action = "Index", id = UrlParameter.Optional } // Parameter defaults
             );
+        }
+
+        protected void Application_Error()
+        {
+            var exception = Server.GetLastError();
+            var httpException = exception as HttpException;
+            Response.Clear();
+            Server.ClearError();
+            var routeData = new RouteData();
+            routeData.Values["controller"] = "Error";
+            routeData.Values["action"] = "General";
+            routeData.Values["exception"] = exception;
+            Response.StatusCode = 500;
+            if (httpException != null)
+            {
+                Response.StatusCode = httpException.GetHttpCode();
+                switch (Response.StatusCode)
+                {
+                    //case 403:
+                    //    routeData.Values["action"] = "Http403";
+                    //    break;
+                    case 404:
+                        routeData.Values["action"] = "NotFound";
+                        break;
+                }
+            }
+
+            IController errorsController = new ErrorController();
+            var rc = new RequestContext(new HttpContextWrapper(Context), routeData);
+            errorsController.Execute(rc);
         }
 
         protected void Application_Start()

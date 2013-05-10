@@ -45,6 +45,7 @@
         </ObjectGroup>
       </Objects>
     </PublishDatabaseSettings>
+    <FilesToIncludeForPublish>AllFilesInProjectFolder</FilesToIncludeForPublish>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AutoMapper">
@@ -131,6 +132,7 @@
     <Compile Include="Controllers\PayCentersController.cs" />
     <Compile Include="Controllers\ProspectosController.cs" />
     <Compile Include="Controllers\ServiciosController.cs" />
+    <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -195,11 +197,13 @@
     <Content Include="Content\extracss.css" />
     <Content Include="Content\jquery.selectbox-0.2.css" />
     <Content Include="Content\MasterPage.css" />
+    <Content Include="Content\menu_fall_back.css" />
     <Content Include="Content\MvcMembership.css" />
     <Content Include="Content\normalize.css" />
     <Content Include="Content\PagedList.css" />
     <Content Include="Content\reset.css" />
     <Content Include="Content\simpleGrid.css" />
+    <Content Include="Content\themes\base\images\404-error.jpg" />
     <Content Include="Content\themes\base\images\background_body_blue.png" />
     <Content Include="Content\themes\base\images\bg-footer.gif" />
     <Content Include="Content\themes\base\images\bg-footer.png" />
@@ -207,10 +211,14 @@
     <Content Include="Content\themes\base\images\bg-nav-main-hover.gif" />
     <Content Include="Content\themes\base\images\bg-nav-main.gif" />
     <Content Include="Content\themes\base\images\calendar.png" />
+    <Content Include="Content\themes\base\images\e-ico.png" />
     <Content Include="Content\themes\base\images\evolucionamovil_commingsoon.jpg" />
     <Content Include="Content\themes\base\images\evolucionamovil_logo.png" />
+    <Content Include="Content\themes\base\images\i-ico.png" />
+    <Content Include="Content\themes\base\images\logo-evoluciona-sm.png" />
     <Content Include="Content\themes\base\images\logoComex.png" />
     <Content Include="Content\themes\base\images\logo_evoluciona.jpg" />
+    <Content Include="Content\themes\base\images\ok-ico.png" />
     <Content Include="Content\themes\base\images\qtip.png" />
     <Content Include="Content\themes\base\images\repdep.jpg" />
     <Content Include="Content\themes\base\images\search.png" />
@@ -230,6 +238,7 @@
     <Content Include="Content\themes\base\images\ui-icons_888888_256x240.png" />
     <Content Include="Content\themes\base\images\ui-icons_cd0a0a_256x240.png" />
     <Content Include="Content\themes\base\images\unauthorized.jpg" />
+    <Content Include="Content\themes\base\images\w-ico.png" />
     <Content Include="Content\themes\base\jquery.ui.accordion.css" />
     <Content Include="Content\themes\base\jquery.ui.all.css" />
     <Content Include="Content\themes\base\jquery.ui.autocomplete.css" />
@@ -319,6 +328,13 @@
     <Content Include="Views\PagoServicios\Ticket.cshtml" />
     <Content Include="Views\ImgFichaDeposito\IndexPartial.cshtml" />
     <Content Include="Views\Error\Authorization.cshtml" />
+    <Content Include="Views\Users\CreateUser.cshtml" />
+    <Content Include="Views\Users\Details.cshtml" />
+    <Content Include="Views\Users\Index.cshtml" />
+    <Content Include="Views\Users\Password.cshtml" />
+    <Content Include="Views\Users\Role.cshtml" />
+    <Content Include="Views\Users\UsersRoles.cshtml" />
+    <Content Include="Views\Error\NotFound.cshtml" />
     <None Include="_bin_deployableAssemblies\System.Web.Mvc.dll" />
     <None Include="_bin_deployableAssemblies\WebMatrix.WebData.xml" />
     <None Include="_bin_deployableAssemblies\WebMatrix.WebData.dll" />
@@ -420,12 +436,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\PagoServicios\Create.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\PagoServicios\Edit.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\PagoServicios\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Paquetes\Index.cshtml" />

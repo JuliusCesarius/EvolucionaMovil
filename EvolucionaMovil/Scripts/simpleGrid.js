@@ -221,7 +221,10 @@
                                 }
                                 if(options.selectedURL!=null){
                                     window.location.href=options.selectedURL+"/"+dataValue;
-                                }
+                                }                                
+                                if(options.selectedFunction!=undefined && options.selectedFunction!=null){
+                                    options.selectedFunction(item);
+                                } 
                             }
                         });
                     }

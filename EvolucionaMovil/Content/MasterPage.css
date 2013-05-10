@@ -439,7 +439,7 @@ nav ul li {
 	border: none;
 	-webkit-box-shadow: none;
 	box-shadow: none;
-	width:100px;
+	width:130px;
 	text-align:center;
 }
 
@@ -465,9 +465,6 @@ nav ul li:hover
 {
     background-color:#F8F9FA; 
     border-bottom:1px solid #32A6E0;
-}
-nav ul li  a:hover {
-	padding-bottom:13px;
 }
 nav ul li a:hover, nav ul li.active a, nav ul li.current-menu-item a {
 	background: none;

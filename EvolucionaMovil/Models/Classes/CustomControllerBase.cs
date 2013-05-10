@@ -46,6 +46,16 @@ namespace EvolucionaMovil.Models.Classes
             base.OnActionExecuting(filterContext);
         }
 
+        protected override void OnActionExecuted(ActionExecutedContext filterContext)
+        {
+            if (ValidationMessages.Count > 0)
+            {
+                ViewBag.MessageType = ValidationMessages.First().MessageType.ToString();
+                ViewBag.ValidationMessages = ValidationMessages;
+            }
+            base.OnActionExecuted(filterContext);
+        }
+
         public bool AddValidationMessage(int ValidationCode)
         {
             //todo:implementar código para levantar el mensaje de la BD cuando esto se implemente
