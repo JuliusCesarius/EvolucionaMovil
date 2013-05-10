@@ -68,9 +68,35 @@ namespace EvolucionaMovil.Controllers
         public ViewResult Details(int id)
         {
             //Cuenta cuenta = repository.LoadById(id);
-            ReporteDepositoVM reporteDepositoVM = new ReporteDepositoVM();
+           
+         Movimiento movimiento =   repository.LoadById(id);
+         PayCentersRepository PayCentersRepository = new PayCentersRepository();
+         PayCenter PayCenter = PayCentersRepository.LoadById(movimiento.PayCenterId);
+
+           int cuentaId = movimiento.Cuenta.CuentaId ;
+           string cuenta  = ((enumTipoCuenta) movimiento.Cuenta.TipoCuenta).ToString();
+            string motivo =((enumMotivo ) movimiento.Motivo).ToString(); 
+              
+            BancosRepository BancoRepository = new BancosRepository();
+            //BancoRepository.LoadById();
+
+            EstadoCuentaVM EstadoCuentaVM = new EstadoCuentaVM()
+            {
+               Clave = movimiento.Clave,
+                MontoString = movimiento.Monto.ToString("C3"),
+                FechaCreacion = movimiento.FechaCreacion.ToString(),
+                Status = ((enumEstatusMovimiento)movimiento.Status).ToString(),
+                Cuenta = cuenta,
+               PayCenter  = PayCenter.Nombre,
+                Motivo = ((enumMotivo)movimiento.Motivo).ToString(),
+                Saldo = (movimiento.SaldoActual!= null ?((decimal)movimiento.SaldoActual).ToString("C3"): "0"),
+                isAbono = movimiento.IsAbono ,
+                HistorialEstatusVM = movimiento.Movimientos_Estatus.OrderByDescending(x => x.FechaCreacion).Where(x => x.Comentarios !="").Select(x => new HistorialEstatusVM { Fecha = x.FechaCreacion.ToString(), Estatus = ((enumEstatusMovimiento)x.Status).ToString(), Comentarios =x.Comentarios, UserName =x.UserName }).ToList()
+            };
+
+         
             //Mapper.Map(cuenta, cuentaVM);
-            return View(reporteDepositoVM);
+            return View(EstadoCuentaVM);
         }
 
         #region Privates

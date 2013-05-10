@@ -1,5 +1,6 @@
 ﻿using System;
 using EvolucionaMovil.Models.Enums;
+using System.Collections.Generic;
 namespace EvolucionaMovil.Models
 {
     public class EstadoCuentaVM
@@ -19,5 +20,11 @@ namespace EvolucionaMovil.Models
         public string FechaCreacion { get; set; }
         public string Status { get; set; }
         public string Motivo { get; set; }
+
+        public string Cuenta { get; set; }
+        public string PayCenter { get; set; }
+        public string MontoString { get; set; }
+        public Boolean isAbono { get; set; }
+        public List<HistorialEstatusVM> HistorialEstatusVM { get; set; }
     }
 }

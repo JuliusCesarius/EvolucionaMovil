@@ -256,21 +256,6 @@ namespace EvolucionaMovil.Controllers
 
             if (exito)
             {
-                //Buscar el payCenter
-                PayCentersRepository payCentersRepository;
-                int payCenterId = 0;
-
-                if (HttpContext.User.IsInRole(enumRoles.PayCenter.ToString()))
-                {
-                    payCentersRepository = new PayCentersRepository();
-                    payCenterId = payCentersRepository.GetPayCenterByUserName(HttpContext.User.Identity.Name);
-                }
-                else
-                {
-                    payCenterId = model.PayCenterId;
-                }
-
-
                 if (ModelState.IsValid && exito)
                 {
                     Abono abono = new Abono
@@ -282,14 +267,14 @@ namespace EvolucionaMovil.Controllers
                         FechaCreacion = DateTime.Now,
                         FechaPago = (DateTime)model.FechaPago,
                         Monto = (Decimal)model.Monto,
-                        PayCenterId = payCenterId,
+                        PayCenterId = PayCenterId,
                         Referencia = model.Referencia,
                         RutaFichaDeposito = model.RutaFichaDeposito
                     };
                     repository.Add(abono);
 
                     EstadoCuentaBR estadoCuentaBR = new EstadoCuentaBR(repository.context);
-                    var movimiento = estadoCuentaBR.CrearMovimiento(payCenterId, enumTipoMovimiento.Abono, model.AbonoId, model.CuentaId, (Decimal)model.Monto, enumMotivo.Deposito);
+                    var movimiento = estadoCuentaBR.CrearMovimiento(PayCenterId, enumTipoMovimiento.Abono, model.AbonoId, model.CuentaId, (Decimal)model.Monto, enumMotivo.Deposito);
 
                     exito = repository.Save();
                     //Julius: Tuve que guardar otra vez para guardar el abonoId generado en la BD
