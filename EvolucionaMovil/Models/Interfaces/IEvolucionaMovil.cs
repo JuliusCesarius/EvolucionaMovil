@@ -8,5 +8,6 @@ namespace EvolucionaMovil.Models.Interfaces
     public interface IEvolucionaMovil
     {
         int PayCenterId { get; set; }
+        string PayCenterName { get; }
     }
 }

@@ -20,7 +20,6 @@ namespace EvolucionaMovil.Controllers
 {
     public class DepositosController : CustomControllerBase
     {
-        private List<string> Mensajes = new List<string>();
         private AbonoRepository repository = new AbonoRepository();
         private EstadoDeCuentaRepository _estadoDeCuentaRepository;
         private EstadoDeCuentaRepository EstadoDeCuentaRepository
@@ -170,7 +169,7 @@ namespace EvolucionaMovil.Controllers
         public ActionResult Report()
         {
             ReporteDepositoVM model = new ReporteDepositoVM();
-            model.CuentasDeposito = CuentaDepositoPayCenter(HttpContext.User.Identity.Name);
+            model.CuentasDeposito = CuentaDepositoPayCenter(PayCenterName);
             LlenarBancos_Cuentas();
             return View(model);
         }
@@ -191,13 +190,13 @@ namespace EvolucionaMovil.Controllers
             if (!(validations.IsValidReferenciaDeposito(model.Referencia, model.BancoId)))
             {
                 //Preguntar de esta validacion
-                Mensajes.Add("La referencia especificada ya existe en el sistema. Favor de verificarla.");
+                AddValidationMessage(enumMessageType.BRException,"La referencia especificada ya existe en el sistema. Favor de verificarla.");
                 exito = false;
             }
 
             if (Convert.ToDateTime(model.FechaPago).CompareTo(DateTime.Now) == 1)
             {
-                Mensajes.Add("La fecha de depósito debe ser menor o igual a la fecha actual.");
+                AddValidationMessage(enumMessageType.BRException, "La fecha de depósito debe ser menor o igual a la fecha actual.");
                 exito = false;
             }
 
@@ -206,7 +205,7 @@ namespace EvolucionaMovil.Controllers
                 PayCenter payCenter;
                 if (HttpContext.User.IsInRole(enumRoles.PayCenter.ToString()))
                 {
-                    payCenter = payCentersRepository.LoadByIdName(HttpContext.User.Identity.Name);
+                    payCenter = payCentersRepository.LoadByIdName(PayCenterName);
                 }
                 else
                 {
@@ -224,12 +223,10 @@ namespace EvolucionaMovil.Controllers
             }
             else
             {
-                model.CuentasDeposito = CuentaDepositoPayCenter(HttpContext.User.Identity.Name);
-                ViewBag.Mensajes = Mensajes;
+                model.CuentasDeposito = CuentaDepositoPayCenter(PayCenterName);
                 LlenarBancos_Cuentas();
                 return View(model);
             }
-
         }
 
 
@@ -242,35 +239,20 @@ namespace EvolucionaMovil.Controllers
             if (!(validations.IsValidReferenciaDeposito(model.Referencia, model.BancoId)))
             {
                 //todo:Preguntar de esta validacion
-                Mensajes.Add("La referencia especificada ya existe en el sistema. Favor de verificarla.");
+                AddValidationMessage(enumMessageType.BRException, "La referencia especificada ya existe en el sistema. Favor de verificarla.");
                 exito = false;
             }
 
             if (Convert.ToDateTime(model.FechaPago).CompareTo(DateTime.Now) == 1)
             {
-                Mensajes.Add("La fecha de depósito debe ser menor o igual a la fecha actual.");
+                AddValidationMessage(enumMessageType.BRException, "La fecha de depósito debe ser menor o igual a la fecha actual.");
                 exito = false;
             }
 
 
             if (exito)
             {
-                //Buscar el payCenter
-                PayCentersRepository payCentersRepository;
-                int payCenterId = 0;
-
-                if (HttpContext.User.IsInRole(enumRoles.PayCenter.ToString()))
-                {
-                    payCentersRepository = new PayCentersRepository();
-                    payCenterId = payCentersRepository.GetPayCenterByUserName(HttpContext.User.Identity.Name);
-                }
-                else
-                {
-                    payCenterId = model.PayCenterId;
-                }
-
-
-                if (ModelState.IsValid && exito)
+                if (ModelState.IsValid)
                 {
                     Abono abono = new Abono
                     {
@@ -281,14 +263,14 @@ namespace EvolucionaMovil.Controllers
                         FechaCreacion = DateTime.Now,
                         FechaPago = (DateTime)model.FechaPago,
                         Monto = (Decimal)model.Monto,
-                        PayCenterId = payCenterId,
+                        PayCenterId = PayCenterId,
                         Referencia = model.Referencia,
                         RutaFichaDeposito = model.RutaFichaDeposito
                     };
                     repository.Add(abono);
 
                     EstadoCuentaBR estadoCuentaBR = new EstadoCuentaBR(repository.context);
-                    var movimiento = estadoCuentaBR.CrearMovimiento(payCenterId, enumTipoMovimiento.Abono, model.AbonoId, model.CuentaId, (Decimal)model.Monto, enumMotivo.Deposito);
+                    var movimiento = estadoCuentaBR.CrearMovimiento(PayCenterId, enumTipoMovimiento.Abono, model.AbonoId, model.CuentaId, (Decimal)model.Monto, enumMotivo.Deposito, PayCenterName);
 
                     exito = repository.Save();
                     //Julius: Tuve que guardar otra vez para guardar el abonoId generado en la BD
@@ -296,50 +278,14 @@ namespace EvolucionaMovil.Controllers
                     repository.Save();
 
                     model.AbonoId = abono.AbonoId;
-                    Mensajes.Add("Se ha registrado su depósito con éxito con clave " + movimiento.Clave + ". En breve será revisado y aplicado.");
+                    AddValidationMessage(enumMessageType.Succeed, "Se ha registrado su depósito con éxito con clave " + movimiento.Clave + ". En breve será revisado y aplicado.");
                 }
-
             }
             else
             {
-
-                //EstadoDeCuentaRepository estadoDeCuentaRepository = new EstadoDeCuentaRepository(repository.context);
-
-                //foreach (var cuentaDepositoVM in model.CuentasDeposito.Where(x => x.Monto > 0))
-                //{
-                //    Movimiento movimiento = new Movimiento();
-                //    //todo:ver como generar la clave de los movimientos
-                //    movimiento.Clave = DateTime.Now.ToString("yyyyMMdd");
-                //    movimiento.CuentaId = cuentaDepositoVM.CuentaId;       
-                //    movimiento.FechaCreacion = DateTime.Now;
-                //    movimiento.IsAbono = true;
-                //    movimiento.Monto = cuentaDepositoVM.Monto;
-                //    movimiento.Motivo = (Int16)enumMotivo.Abono;
-                //    movimiento.PayCenterId = 1;
-                //    movimiento.Status = (Int16)enumEstatusMovimiento.Procesando;
-
-                //    estadoDeCuentaRepository.Add(movimiento);
-                //}
-
-
-
-
-
-
-                //BancosRepository bancosRepository = new BancosRepository();
-                //var bancos = bancosRepository.ListAll().Where(x => x.CuentasBancarias.Count > 0);
-                //ViewBag.Bancos = bancos;
-                //ViewBag.Cuentas = bancos.SelectMany(x => x.CuentasBancarias).Select(x => new { BancoId = x.BancoId, CuentaBancariaId = x.CuentaId, NumeroCuenta = x.NumeroCuenta, Titular = x.Titular });
-                //ReporteDepositoVM model = new ReporteDepositoVM();
-                //model.CuentasDeposito = CuentaDepositoPayCenter(HttpContext.User.Identity.Name);
-                //LlenarBancos_Cuentas();
-
-                Mensajes.Add("No fue posible guardar el reporte de depósito.");
-
-
+                AddValidationMessage(enumMessageType.BRException, "No fue posible guardar el reporte de depósito.");
             }
             model.FechaCreacion = DateTime.Now;
-            ViewBag.Mensajes = Mensajes;
             return View(model);
         }
 

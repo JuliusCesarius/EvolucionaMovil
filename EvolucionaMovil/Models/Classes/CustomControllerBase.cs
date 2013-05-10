@@ -19,18 +19,26 @@ namespace EvolucionaMovil.Models.Classes
 
         private bool _succeed=true;
         private int _payCenterId = 0;
-        private PayCentersRepository payCentersRepository;
+        private string _payCenterName = string.Empty;
+        private PayCentersRepository _payCentersRepository;
+        private PayCentersRepository PayCentersRepository
+        {
+            get
+            {
+                if (_payCentersRepository == null)
+                {
+                    _payCentersRepository = new PayCentersRepository();
+                }
+                return _payCentersRepository;
+            }
+        }
         private List<CrossValidationMessage> _validationMessages;
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            if (payCentersRepository == null)
-            {
-                payCentersRepository = new PayCentersRepository();
-            }
             if (HttpContext.User.IsInRole(enumRoles.PayCenter.ToString()))
             {
-                _payCenterId = payCentersRepository.GetPayCenterByUserName(HttpContext.User.Identity.Name);
+                _payCenterId = _payCentersRepository.GetPayCenterByUserName(HttpContext.User.Identity.Name);
             }
             else
             {
@@ -114,6 +122,22 @@ namespace EvolucionaMovil.Models.Classes
             set
             {
                 _payCenterId = value;
+            }
+        }
+
+        public string PayCenterName
+        {
+            get
+            {
+                if (HttpContext.User.IsInRole(enumRoles.PayCenter.ToString()))
+                {
+                    _payCenterName = HttpContext.User.Identity.Name;
+                }
+                else
+                {
+                    _payCenterName = PayCentersRepository.GetPayCenterNameById(PayCenterId);
+                }
+                return _payCenterName;
             }
         }
     }

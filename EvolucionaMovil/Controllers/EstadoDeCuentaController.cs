@@ -22,6 +22,18 @@ namespace EvolucionaMovil.Controllers
     {
         private List<string> Mensajes = new List<string>();
         private EstadoDeCuentaRepository repository = new EstadoDeCuentaRepository();
+        private EstadoDeCuentaRepository _tempEstadoDeCuentaRepository;
+        private EstadoDeCuentaRepository TempEstadoDeCuentaRepository
+        {
+            get
+            {
+                if (_tempEstadoDeCuentaRepository == null)
+                {
+                    _tempEstadoDeCuentaRepository = new EstadoDeCuentaRepository();
+                }
+                return _tempEstadoDeCuentaRepository;
+            }
+        }
         private decimal _saldo = 0;
         private CultureInfo ci = new CultureInfo("es-MX");
         //
@@ -81,10 +93,11 @@ namespace EvolucionaMovil.Controllers
             base.Dispose(disposing);
         }
 
-        private string getConceptoString(enumMotivo Motivo, int id)
+        private string getConceptoString(Movimiento Movimiento)
         {
             //todo:Devolver formateado el concepto según el motivo
-            return Motivo.ToString();
+            var usuarioOriginal = Movimiento.UserName != null?Movimiento.UserName:"Desconocido";
+            return usuarioOriginal + " - " + ((enumMotivo)Movimiento.Motivo).ToString();
         }
 
         private SimpleGridResult<EstadoCuentaVM> getEstadoDeCuenta(ServiceParameterVM Parameters = null)
@@ -116,8 +129,8 @@ namespace EvolucionaMovil.Controllers
                     Id = x.Id,
                     CuentaOrigenId = x.CuentaOrigenId,
                     Clave = x.Clave,
-                    Comentarios = Comentarios(x),//"TODO:Comentarios",
-                    Concepto = getConceptoString((enumMotivo)x.Motivo, x.Id),
+                    Comentarios = getComentarioCambioEstatus(x),
+                    Concepto = getConceptoString(x),
                     Abono = x.IsAbono ? x.Monto.ToString("C3", ci) : string.Empty,
                     Cargo = !x.IsAbono ? x.Monto.ToString("C3", ci) : string.Empty,
                     Saldo = ((enumEstatusMovimiento)x.Status) == enumEstatusMovimiento.Aplicado ? getSaldoAcumulado(x.IsAbono, x.Monto).ToString("C3", ci) : "-",
@@ -158,26 +171,18 @@ namespace EvolucionaMovil.Controllers
             return simpleGridResult;
         }
 
-        private string Comentarios( Movimiento mov)
+        private string getComentarioCambioEstatus(Movimiento Movimiento)
         {
-          List<HistorialEstatusVM> HistorialEstatusVM = mov.Movimientos_Estatus.OrderByDescending(x => x.FechaCreacion).Where(x => x.MovimientoId == mov.MovimientoId && x.Comentarios !="").Select(x => new HistorialEstatusVM { Fecha = x.FechaCreacion.ToString(), Estatus = ((enumEstatusMovimiento)x.Status).ToString(), Comentarios =x.Comentarios, UserName =x.UserName }).ToList();
-
-            string comentarios= "";
-          foreach (HistorialEstatusVM item in HistorialEstatusVM)
-          {
-              comentarios = " <div class=''>" + "<span class=''>" +
-                  comentarios + item.Comentarios + "</span>" +" - "+ "<span class=''>" + item.Fecha + "</span>"
-                  + " </div>";
-          }
-            return comentarios;
-
-            //<div class="listRow">
-            //  <span class="listCell Estatus @item.Estatus fwb"> @item.Estatus </span>  
-            //  <span class="listCell Comentarios"> @item.Comentarios </span>    
-            //  <span class="listCell Usuario"> @item.UserName</span>     
-            //  <span class="listCell Fecha"> @item.Fecha</span>
-            //</div> 
-
+            //todo:Julius, tuve que recurrir a un repositorio temporal porque marca error en el data reader en producción. Investigar si se puede levantar el detalle de comentarios en el mismo repository
+            var lastComment = TempEstadoDeCuentaRepository.GetUltimoCambioEstatus((enumMotivo)Movimiento.Motivo, Movimiento.Id);
+            if (lastComment != null)
+            {
+                return lastComment.Comentarios;
+            }
+            else
+            {
+                return string.Empty;
+            }
         }
 
         private decimal getSaldoAcumulado(bool IsAbono, decimal Monto)

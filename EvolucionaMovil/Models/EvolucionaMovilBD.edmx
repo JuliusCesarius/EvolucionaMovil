@@ -15,6 +15,7 @@
           <EntitySet Name="DetalleServicios" EntityType="EvolucionaMovilBDModel.Store.DetalleServicios" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Movimientos" EntityType="EvolucionaMovilBDModel.Store.Movimientos" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Movimientos_Estatus" EntityType="EvolucionaMovilBDModel.Store.Movimientos_Estatus" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="MovimientosEmpresa" EntityType="EvolucionaMovilBDModel.Store.MovimientosEmpresa" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Pagos" EntityType="EvolucionaMovilBDModel.Store.Pagos" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Paquetes" EntityType="EvolucionaMovilBDModel.Store.Paquetes" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Parametros" EntityType="EvolucionaMovilBDModel.Store.Parametros" store:Type="Tables" store:Schema="dbo" store:Name="Parametros">
@@ -72,7 +73,7 @@
             <End Role="Cuentas" EntitySet="Cuentas" />
             <End Role="Movimientos" EntitySet="Movimientos" />
           </AssociationSet>
-          <AssociationSet Name="FK_Movimientos_Estatus_Movimientos1" Association="EvolucionaMovilBDModel.Store.FK_Movimientos_Estatus_Movimientos1">
+          <AssociationSet Name="FK_Movimientos_Estatus_Movimientos" Association="EvolucionaMovilBDModel.Store.FK_Movimientos_Estatus_Movimientos">
             <End Role="Movimientos" EntitySet="Movimientos" />
             <End Role="Movimientos_Estatus" EntitySet="Movimientos_Estatus" />
           </AssociationSet>
@@ -214,6 +215,7 @@
           <Property Name="Clave" Type="varchar" Nullable="false" MaxLength="15" />
           <Property Name="FechaCreacion" Type="datetime" Nullable="false" />
           <Property Name="Baja" Type="bit" Nullable="false" />
+          <Property Name="UserName" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="Movimientos_Estatus">
           <Key>
@@ -230,6 +232,22 @@
           <Property Name="Comentarios" Type="varchar" MaxLength="500" />
           <Property Name="FechaCreacion" Type="datetime" Nullable="false" />
           <Property Name="UserName" Type="varchar" Nullable="false" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="MovimientosEmpresa">
+          <Key>
+            <PropertyRef Name="MovimientoEmpresaId" />
+          </Key>
+          <Property Name="MovimientoEmpresaId" Type="int" Nullable="false" />
+          <Property Name="MovimientoOrigenId" Type="int" Nullable="false" />
+          <Property Name="Clave" Type="varchar" Nullable="false" MaxLength="13" />
+          <Property Name="Monto" Type="money" Nullable="false" />
+          <Property Name="Motivo" Type="smallint" Nullable="false" />
+          <Property Name="UserName" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="IsAbono" Type="bit" Nullable="false" />
+          <Property Name="Status" Type="smallint" Nullable="false" />
+          <Property Name="SaldoActual" Type="money" Nullable="false" />
+          <Property Name="FechaCreacion" Type="datetime" Nullable="false" />
+          <Property Name="Baja" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Pagos">
           <Key>
@@ -485,7 +503,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Movimientos_Estatus_Movimientos1">
+        <Association Name="FK_Movimientos_Estatus_Movimientos">
           <End Role="Movimientos" Type="EvolucionaMovilBDModel.Store.Movimientos" Multiplicity="1" />
           <End Role="Movimientos_Estatus" Type="EvolucionaMovilBDModel.Store.Movimientos_Estatus" Multiplicity="*" />
           <ReferentialConstraint>
@@ -680,6 +698,7 @@
             <End Role="Movimiento" EntitySet="Movimientos" />
             <End Role="Movimientos_Estatus" EntitySet="Movimientos_Estatus" />
           </AssociationSet>
+          <EntitySet Name="MovimientosEmpresas" EntityType="EvolucionaMovilBDModel.MovimientosEmpresa" />
           </EntityContainer>
         <EntityType Name="Banco">
           <Key>
@@ -772,6 +791,7 @@
           <NavigationProperty Name="Cuenta" Relationship="EvolucionaMovilBDModel.FK_Movimientos_Cuentas" FromRole="Movimiento" ToRole="Cuenta" />
           <NavigationProperty Name="Pagos" Relationship="EvolucionaMovilBDModel.FK_Pagos_Movimientos" FromRole="Movimiento" ToRole="Pago" />
           <NavigationProperty Name="Movimientos_Estatus" Relationship="EvolucionaMovilBDModel.FK_Movimientos_Estatus_Movimientos1" FromRole="Movimiento" ToRole="Movimientos_Estatus" />
+          <Property Type="String" Name="UserName" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="Paquete">
           <Key>
@@ -1195,6 +1215,22 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="MovimientosEmpresa">
+          <Key>
+            <PropertyRef Name="MovimientoEmpresaId" />
+          </Key>
+          <Property Type="Int32" Name="MovimientoEmpresaId" Nullable="false" />
+          <Property Type="Int32" Name="MovimientoOrigenId" Nullable="false" />
+          <Property Type="String" Name="Clave" Nullable="false" MaxLength="13" FixedLength="false" Unicode="false" />
+          <Property Type="Decimal" Name="Monto" Nullable="false" Precision="19" Scale="4" />
+          <Property Type="Int16" Name="Motivo" Nullable="false" />
+          <Property Type="String" Name="UserName" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="Boolean" Name="IsAbono" Nullable="false" />
+          <Property Type="Int16" Name="Status" Nullable="false" />
+          <Property Type="Decimal" Name="SaldoActual" Nullable="false" Precision="19" Scale="4" />
+          <Property Type="DateTime" Name="FechaCreacion" Nullable="false" />
+          <Property Type="Boolean" Name="Baja" Nullable="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1268,6 +1304,7 @@
           <EntitySetMapping Name="Movimientos">
             <EntityTypeMapping TypeName="EvolucionaMovilBDModel.Movimiento">
               <MappingFragment StoreEntitySet="Movimientos">
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
                 <ScalarProperty Name="Baja" ColumnName="Baja" />
                 <ScalarProperty Name="FechaCreacion" ColumnName="FechaCreacion" />
                 <ScalarProperty Name="Clave" ColumnName="Clave" />
@@ -1466,6 +1503,23 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="MovimientosEmpresas">
+            <EntityTypeMapping TypeName="EvolucionaMovilBDModel.MovimientosEmpresa">
+              <MappingFragment StoreEntitySet="MovimientosEmpresa">
+                <ScalarProperty Name="Baja" ColumnName="Baja" />
+                <ScalarProperty Name="FechaCreacion" ColumnName="FechaCreacion" />
+                <ScalarProperty Name="SaldoActual" ColumnName="SaldoActual" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="IsAbono" ColumnName="IsAbono" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="Motivo" ColumnName="Motivo" />
+                <ScalarProperty Name="Monto" ColumnName="Monto" />
+                <ScalarProperty Name="Clave" ColumnName="Clave" />
+                <ScalarProperty Name="MovimientoOrigenId" ColumnName="MovimientoOrigenId" />
+                <ScalarProperty Name="MovimientoEmpresaId" ColumnName="MovimientoEmpresaId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -1557,8 +1611,8 @@
           <ConnectorPoint PointX="2.75" PointY="11.264150390625" />
         </AssociationConnector>
         <AssociationConnector Association="EvolucionaMovilBDModel.FK_Pagos_Movimientos" >
-          <ConnectorPoint PointX="7.125" PointY="8.0114957682291674" />
-          <ConnectorPoint PointX="4.6875" PointY="8.0114957682291674" />
+          <ConnectorPoint PointX="7.125" PointY="8.107646484375" />
+          <ConnectorPoint PointX="4.6875" PointY="8.107646484375" />
           <ConnectorPoint PointX="4.6875" PointY="8.625" />
         </AssociationConnector>
         <EntityTypeShape EntityType="EvolucionaMovilBDModel.Abono" Width="1.5" PointX="5" PointY="1" Height="3.9033007812500031" />
@@ -1579,6 +1633,7 @@
           <ConnectorPoint PointX="8.625" PointY="5.7497460937500016" />
           <ConnectorPoint PointX="9.125" PointY="5.7497460937500016" />
         </AssociationConnector>
+        <EntityTypeShape EntityType="EvolucionaMovilBDModel.MovimientosEmpresa" Width="1.5" PointX="11.25" PointY="7.5" Height="3.1340950520833335" IsExpanded="true" />
         </Diagram>
     </Diagrams>
   </Designer>

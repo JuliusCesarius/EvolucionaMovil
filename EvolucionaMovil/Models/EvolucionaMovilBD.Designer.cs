@@ -374,6 +374,22 @@ namespace EvolucionaMovil.Models
             }
         }
         private ObjectSet<Movimientos_Estatus> _Movimientos_Estatus;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<MovimientosEmpresa> MovimientosEmpresas
+        {
+            get
+            {
+                if ((_MovimientosEmpresas == null))
+                {
+                    _MovimientosEmpresas = base.CreateObjectSet<MovimientosEmpresa>("MovimientosEmpresas");
+                }
+                return _MovimientosEmpresas;
+            }
+        }
+        private ObjectSet<MovimientosEmpresa> _MovimientosEmpresas;
 
         #endregion
 
@@ -521,6 +537,14 @@ namespace EvolucionaMovil.Models
         public void AddToMovimientos_Estatus(Movimientos_Estatus movimientos_Estatus)
         {
             base.AddObject("Movimientos_Estatus", movimientos_Estatus);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the MovimientosEmpresas EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToMovimientosEmpresas(MovimientosEmpresa movimientosEmpresa)
+        {
+            base.AddObject("MovimientosEmpresas", movimientosEmpresa);
         }
 
         #endregion
@@ -2838,6 +2862,30 @@ namespace EvolucionaMovil.Models
         private global::System.Boolean _Baja;
         partial void OnBajaChanging(global::System.Boolean value);
         partial void OnBajaChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String UserName
+        {
+            get
+            {
+                return _UserName;
+            }
+            set
+            {
+                OnUserNameChanging(value);
+                ReportPropertyChanging("UserName");
+                _UserName = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("UserName");
+                OnUserNameChanged();
+            }
+        }
+        private global::System.String _UserName;
+        partial void OnUserNameChanging(global::System.String value);
+        partial void OnUserNameChanged();
 
         #endregion
 
@@ -3216,6 +3264,323 @@ namespace EvolucionaMovil.Models
 
         #endregion
 
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="EvolucionaMovilBDModel", Name="MovimientosEmpresa")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class MovimientosEmpresa : EntityObject
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new MovimientosEmpresa object.
+        /// </summary>
+        /// <param name="movimientoEmpresaId">Initial value of the MovimientoEmpresaId property.</param>
+        /// <param name="movimientoOrigenId">Initial value of the MovimientoOrigenId property.</param>
+        /// <param name="clave">Initial value of the Clave property.</param>
+        /// <param name="monto">Initial value of the Monto property.</param>
+        /// <param name="motivo">Initial value of the Motivo property.</param>
+        /// <param name="userName">Initial value of the UserName property.</param>
+        /// <param name="isAbono">Initial value of the IsAbono property.</param>
+        /// <param name="status">Initial value of the Status property.</param>
+        /// <param name="saldoActual">Initial value of the SaldoActual property.</param>
+        /// <param name="fechaCreacion">Initial value of the FechaCreacion property.</param>
+        /// <param name="baja">Initial value of the Baja property.</param>
+        public static MovimientosEmpresa CreateMovimientosEmpresa(global::System.Int32 movimientoEmpresaId, global::System.Int32 movimientoOrigenId, global::System.String clave, global::System.Decimal monto, global::System.Int16 motivo, global::System.String userName, global::System.Boolean isAbono, global::System.Int16 status, global::System.Decimal saldoActual, global::System.DateTime fechaCreacion, global::System.Boolean baja)
+        {
+            MovimientosEmpresa movimientosEmpresa = new MovimientosEmpresa();
+            movimientosEmpresa.MovimientoEmpresaId = movimientoEmpresaId;
+            movimientosEmpresa.MovimientoOrigenId = movimientoOrigenId;
+            movimientosEmpresa.Clave = clave;
+            movimientosEmpresa.Monto = monto;
+            movimientosEmpresa.Motivo = motivo;
+            movimientosEmpresa.UserName = userName;
+            movimientosEmpresa.IsAbono = isAbono;
+            movimientosEmpresa.Status = status;
+            movimientosEmpresa.SaldoActual = saldoActual;
+            movimientosEmpresa.FechaCreacion = fechaCreacion;
+            movimientosEmpresa.Baja = baja;
+            return movimientosEmpresa;
+        }
+
+        #endregion
+
+        #region Primitive Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 MovimientoEmpresaId
+        {
+            get
+            {
+                return _MovimientoEmpresaId;
+            }
+            set
+            {
+                if (_MovimientoEmpresaId != value)
+                {
+                    OnMovimientoEmpresaIdChanging(value);
+                    ReportPropertyChanging("MovimientoEmpresaId");
+                    _MovimientoEmpresaId = StructuralObject.SetValidValue(value);
+                    ReportPropertyChanged("MovimientoEmpresaId");
+                    OnMovimientoEmpresaIdChanged();
+                }
+            }
+        }
+        private global::System.Int32 _MovimientoEmpresaId;
+        partial void OnMovimientoEmpresaIdChanging(global::System.Int32 value);
+        partial void OnMovimientoEmpresaIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 MovimientoOrigenId
+        {
+            get
+            {
+                return _MovimientoOrigenId;
+            }
+            set
+            {
+                OnMovimientoOrigenIdChanging(value);
+                ReportPropertyChanging("MovimientoOrigenId");
+                _MovimientoOrigenId = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("MovimientoOrigenId");
+                OnMovimientoOrigenIdChanged();
+            }
+        }
+        private global::System.Int32 _MovimientoOrigenId;
+        partial void OnMovimientoOrigenIdChanging(global::System.Int32 value);
+        partial void OnMovimientoOrigenIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String Clave
+        {
+            get
+            {
+                return _Clave;
+            }
+            set
+            {
+                OnClaveChanging(value);
+                ReportPropertyChanging("Clave");
+                _Clave = StructuralObject.SetValidValue(value, false);
+                ReportPropertyChanged("Clave");
+                OnClaveChanged();
+            }
+        }
+        private global::System.String _Clave;
+        partial void OnClaveChanging(global::System.String value);
+        partial void OnClaveChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Decimal Monto
+        {
+            get
+            {
+                return _Monto;
+            }
+            set
+            {
+                OnMontoChanging(value);
+                ReportPropertyChanging("Monto");
+                _Monto = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("Monto");
+                OnMontoChanged();
+            }
+        }
+        private global::System.Decimal _Monto;
+        partial void OnMontoChanging(global::System.Decimal value);
+        partial void OnMontoChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int16 Motivo
+        {
+            get
+            {
+                return _Motivo;
+            }
+            set
+            {
+                OnMotivoChanging(value);
+                ReportPropertyChanging("Motivo");
+                _Motivo = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("Motivo");
+                OnMotivoChanged();
+            }
+        }
+        private global::System.Int16 _Motivo;
+        partial void OnMotivoChanging(global::System.Int16 value);
+        partial void OnMotivoChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String UserName
+        {
+            get
+            {
+                return _UserName;
+            }
+            set
+            {
+                OnUserNameChanging(value);
+                ReportPropertyChanging("UserName");
+                _UserName = StructuralObject.SetValidValue(value, false);
+                ReportPropertyChanged("UserName");
+                OnUserNameChanged();
+            }
+        }
+        private global::System.String _UserName;
+        partial void OnUserNameChanging(global::System.String value);
+        partial void OnUserNameChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Boolean IsAbono
+        {
+            get
+            {
+                return _IsAbono;
+            }
+            set
+            {
+                OnIsAbonoChanging(value);
+                ReportPropertyChanging("IsAbono");
+                _IsAbono = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("IsAbono");
+                OnIsAbonoChanged();
+            }
+        }
+        private global::System.Boolean _IsAbono;
+        partial void OnIsAbonoChanging(global::System.Boolean value);
+        partial void OnIsAbonoChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int16 Status
+        {
+            get
+            {
+                return _Status;
+            }
+            set
+            {
+                OnStatusChanging(value);
+                ReportPropertyChanging("Status");
+                _Status = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("Status");
+                OnStatusChanged();
+            }
+        }
+        private global::System.Int16 _Status;
+        partial void OnStatusChanging(global::System.Int16 value);
+        partial void OnStatusChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Decimal SaldoActual
+        {
+            get
+            {
+                return _SaldoActual;
+            }
+            set
+            {
+                OnSaldoActualChanging(value);
+                ReportPropertyChanging("SaldoActual");
+                _SaldoActual = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("SaldoActual");
+                OnSaldoActualChanged();
+            }
+        }
+        private global::System.Decimal _SaldoActual;
+        partial void OnSaldoActualChanging(global::System.Decimal value);
+        partial void OnSaldoActualChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.DateTime FechaCreacion
+        {
+            get
+            {
+                return _FechaCreacion;
+            }
+            set
+            {
+                OnFechaCreacionChanging(value);
+                ReportPropertyChanging("FechaCreacion");
+                _FechaCreacion = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("FechaCreacion");
+                OnFechaCreacionChanged();
+            }
+        }
+        private global::System.DateTime _FechaCreacion;
+        partial void OnFechaCreacionChanging(global::System.DateTime value);
+        partial void OnFechaCreacionChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Boolean Baja
+        {
+            get
+            {
+                return _Baja;
+            }
+            set
+            {
+                OnBajaChanging(value);
+                ReportPropertyChanging("Baja");
+                _Baja = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("Baja");
+                OnBajaChanged();
+            }
+        }
+        private global::System.Boolean _Baja;
+        partial void OnBajaChanging(global::System.Boolean value);
+        partial void OnBajaChanged();
+
+        #endregion
+
+    
     }
     
     /// <summary>
