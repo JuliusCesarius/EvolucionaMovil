@@ -203,6 +203,7 @@
     <Content Include="Content\PagedList.css" />
     <Content Include="Content\reset.css" />
     <Content Include="Content\simpleGrid.css" />
+    <Content Include="Content\themes\base\images\404-error.jpg" />
     <Content Include="Content\themes\base\images\background_body_blue.png" />
     <Content Include="Content\themes\base\images\bg-footer.gif" />
     <Content Include="Content\themes\base\images\bg-footer.png" />
@@ -333,6 +334,7 @@
     <Content Include="Views\Users\Password.cshtml" />
     <Content Include="Views\Users\Role.cshtml" />
     <Content Include="Views\Users\UsersRoles.cshtml" />
+    <Content Include="Views\Error\NotFound.cshtml" />
     <None Include="_bin_deployableAssemblies\System.Web.Mvc.dll" />
     <None Include="_bin_deployableAssemblies\WebMatrix.WebData.xml" />
     <None Include="_bin_deployableAssemblies\WebMatrix.WebData.dll" />
