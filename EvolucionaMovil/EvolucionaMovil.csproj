@@ -359,7 +359,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="imgFichaDeposito\" />
+    <Folder Include="recursos\" />
+    <Folder Include="temp\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

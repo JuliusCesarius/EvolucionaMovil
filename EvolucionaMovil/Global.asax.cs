@@ -36,7 +36,7 @@ namespace EvolucionaMovil
             {
                 var exception = Server.GetLastError();
                 var httpException = exception as HttpException;
-                if (httpException != null)
+                if (httpException != null && Response.StatusCode == 404)
                 {
                     Response.Clear();
                     Server.ClearError();

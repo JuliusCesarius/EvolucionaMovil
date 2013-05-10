@@ -4,13 +4,14 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.IO;
+using EvolucionaMovil.Models.Classes;
+using cabinet.patterns.enums;
 namespace EvolucionaMovil.Controllers
 {
-    public class ImgFichaDepositoController:Controller
+    public class ImgFichaDepositoController : CustomControllerBase
     {
         public ActionResult IndexPartial()
         {
-            //ViewBag.Message = "MVC 3 File Upload";
             ViewBag.Ruta = "";
             ViewBag.Nombre = "";
             return PartialView();
@@ -21,15 +22,17 @@ namespace EvolucionaMovil.Controllers
             if (file != null)
             {
                 string extension = file.FileName.Substring(file.FileName.LastIndexOf(".")).ToLower();
-                if (extension == ".png" || extension == ".jpg")
+                if (extension.ToLower() == ".png" || extension.ToLower() == ".jpg")
                 {
-                    // extract only the fielname             
-                    var fileName = Path.GetFileName(file.FileName);
-                    // store the file inside ~/FolderName/User-Image folder             
-                    var path = Path.Combine(Server.MapPath("~/imgFichaDeposito/"), fileName);
-                    // this is the string you have to save in your DB
-                    string filepathToSave = "imgFichaDeposito/" + fileName;
-                    ViewBag.Ruta = "/imgFichaDeposito/" + fileName;
+                    var fileName = "imgtemp_" + DateTime.Now.ToString("yyyyMMdd")  + new Random().Next(0, 99999).ToString()+extension.ToLower();
+                    var directoryTemp = Server.MapPath("~/temp/");
+                    if (!Directory.Exists(directoryTemp))
+                    {
+                        Directory.CreateDirectory(directoryTemp);
+                    }
+                    var path = Path.Combine(directoryTemp, fileName);
+                    string filepathToSave = "temp/" + fileName;
+                    ViewBag.Ruta = "/temp/" + fileName;
                     ViewBag.Nombre = file.FileName;
                     try
                     {
@@ -37,27 +40,19 @@ namespace EvolucionaMovil.Controllers
                     }
                     catch (Exception ex)
                     {
-
-                        ViewBag.Mensajes = "No fue posible guardar la imagen del comprobante. - " + ex.Message;
+                        AddValidationMessage(enumMessageType.UnhandledException, "No fue posible guardar la imagen del comprobante:" + ex.Message);
                     }
-                    
-                    //--------------------------------------------
-
-                    // Code to save file in DB by passing the file path
-
-                    //----------------------------------------------
                 }
                 else
                 {
-                    ViewBag.Mensajes = "La imagen no cumple con el formato correcto.";
+                    AddValidationMessage(enumMessageType.DataValidation, "La imagen no cumple con el formato");
                 }
             }
             else
             {
-                ViewBag.Mensajes = "Seleccione la imagen de la ficha de depósito.";
+                AddValidationMessage(enumMessageType.DataValidation, "Seleccione la imagen de la ficha de depósito.");
             }
             return PartialView();
         }
-
     }
 }
