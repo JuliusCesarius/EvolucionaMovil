@@ -19,12 +19,13 @@
 
     $("#Actualizar").on("click", function (event) {
         event.preventDefault();
-        bindGrid({
-            fechaInicio: $("#fechaInicio").val(),
-            fechaFin: $("#fechaFin").val(),
-            pageSize: $("#pageSize").val(),
-            searchString: FiltroEstatus()
-        });
+        FiltrarRegistros();
+    });
+
+    $("#Confirmacion").dialog({
+        modal: true,
+        resizable: false,
+        autoOpen: false
     });
 });
 
@@ -40,6 +41,21 @@ function FiltroEstatus() {
     }
 }
 
+function FiltrarRegistros() {
+    //Agregar filtro por nombre, se separa de lado del servidor
+    var FiltroCadena = FiltroEstatus();
+    if ($("#nombre").val() != "") {
+        FiltroCadena = FiltroCadena + "," + $("#nombre").val();
+    }
+
+    bindGrid({
+        fechaInicio: $("#fechaInicio").val(),
+        fechaFin: $("#fechaFin").val(),
+        pageSize: $("#pageSize").val(),
+        searchString: FiltroCadena
+    });
+}
+
 function bindGrid(options) {
     var columns = [
          { name: 'UserName', displayName: 'Nombre Corto' },
@@ -49,8 +65,8 @@ function bindGrid(options) {
          { name: 'Celular' },
          { name: 'Email' },
          { name: 'FechaIngreso', displayName: 'Ingreso', formatFunction: FormatoFecha },
-         { name: 'FechaCreacion', displayName: 'Creación', formatFunction: FormatoFecha },
-         { displayName: '', customTemplate: '<a href="/PayCenters/Edit/{PayCenterId}">Editar<a/> | <a href="/PayCenters/Details/{PayCenterId}">Detalles<a/>' }
+//         { name: 'FechaCreacion', displayName: 'Creación', formatFunction: FormatoFecha },
+         { displayName: '', width: '200px', customTemplate: '<a href="/PayCenters/Edit/{PayCenterId}">Editar<a/> | <a href="/PayCenters/Details/{PayCenterId}">Detalles<a/> | <a class="linkActiva" id="Accion{PayCenterId}">{Activo}<a/> | <a class="linkElimina" onclick="MostrarConfirmacion({PayCenterId},\'Eliminar\')">Eliminar<a/>' },
          ];
     if (options == undefined) {
         options = { pageSize: 20, pageNumber: 0 };
@@ -63,6 +79,7 @@ function bindGrid(options) {
     $("#grdPaycenters").simpleGrid({
         url: "/PayCenters/GetPayCenters",
         columns: columns,
+        successFunction: ConfiguraLinkActiva,
         pageSize: pageSize,
         pageNumber: pageNumber,
         searchString: searchString,
@@ -72,10 +89,71 @@ function bindGrid(options) {
 }
 
 function FormatoFecha(value) {
-    value = value.replace(/\-0/g, '-00');
-    value = value.replace(/\-1/g, '-01');
-    value = value.replace(/\-2/g, '-02');
-    value = value.replace(/\-3/g, '-03');
-    value = value.substring(0,12)
-    return $.datepicker.formatDate('dd/mm/yy', new Date(value));
+    //value = value.replace(/\-0/g, '-00');
+    //value = value.replace(/\-1/g, '-01');
+    //value = value.replace(/\-2/g, '-02');
+    //value = value.replace(/\-3/g, '-03');
+    //return $.datepicker.formatDate('dd/mm/yy', value);
+    year = value.substring(0, 4);
+    month = value.substring(5, 7);
+    day = value.substring(8, 10);
+    return day + "/" + month + "/" + year;
+}
+
+function ConfiguraLinkActiva() {
+    $("a.linkActiva").each(function (i, item) {
+        var accion = $(item).html() == "true" ? "Desactivar" : "Activar";
+        var id = $(item).prop("id").replace("Accion", "")
+        $(item).html(accion);
+        $(item).on("click", function (event) {
+            event.preventDefault();
+            MostrarConfirmacion(id, accion);
+        });
+    });
+}
+
+function MostrarConfirmacion(id, accion) {
+    $("#Confirmacion").dialog({
+        title: accion + " PayCenter",
+        buttons: { "Si": function () { EjecutarAccion(id, accion); }, "No": function () { $("#Confirmacion").dialog("close"); } }
+    });
+    $("#MensajeConfirmacion").html("¿Está seguro de querer " + accion.toLowerCase() + " al PayCenter?");
+
+    $("#Confirmacion").dialog("open");
+}
+
+function EjecutarAccion(id, accion) {
+    var urlAccion;
+    var sendData;
+
+    if (accion == "Eliminar"){
+        urlAccion = "/PayCenters/Delete";
+        sendData = { 'id': id };
+    }
+    else {
+        urlAccion = "/PayCenters/Activate";
+        sendData = { 'id': id, 'accion': accion };
+    }
+
+    $.ajax(
+    {
+        type: 'POST',
+        async: false,
+        dataType: 'text',
+        url: urlAccion,
+        data: sendData,
+        success: function (result) {
+            if (result != null) {
+                alert(result);
+            }
+            else {
+                alert("No se ha podido determinar si se ejecutó la acción.");
+            }
+            FiltrarRegistros();
+        },
+        error: function () {
+            alert("Se ha producido un error al ejecutar la acción.");
+        }
+    });
+    $("#Confirmacion").dialog("close");
 }
