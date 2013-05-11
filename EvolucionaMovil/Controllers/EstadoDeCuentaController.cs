@@ -15,6 +15,7 @@ using System.Globalization;
 using System.Threading;
 using EvolucionaMovil.Models.Classes;
 using EvolucionaMovil.Attributes;
+using EvolucionaMovil.Models.Extensions;
 
 namespace EvolucionaMovil.Controllers
 { 
@@ -68,14 +69,6 @@ namespace EvolucionaMovil.Controllers
             return View(getEstadoDeCuenta(parameters));
         }
 
-        [HttpPost]
-        [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.PayCenter, enumRoles.Staff })]
-        public string GetEstadoCuenta(ServiceParameterVM parameters)
-        {
-            var estadoCuentaResult = getEstadoDeCuenta(parameters);
-            return Newtonsoft.Json.JsonConvert.SerializeObject(estadoCuentaResult);
-        }
-
         [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.PayCenter, enumRoles.Staff })]
         public ViewResult Details(int id)
         {
@@ -114,11 +107,12 @@ namespace EvolucionaMovil.Controllers
 
             SimpleGridResult<EstadoCuentaVM> simpleGridResult = new SimpleGridResult<EstadoCuentaVM>();
             var estadosDeCuentaVM = movimientos.Where(x =>
-                (Parameters.onlyAplicados == false ? Parameters == null || Parameters.fechaInicio == null || (Parameters.fechaInicio < x.FechaCreacion)
-                    && (Parameters.fechaFin == null || Parameters.fechaFin > x.FechaCreacion) :
-                    (Parameters.fechaInicio == null || (Parameters.fechaInicio < x.FechaCreacion))
-                    && (Parameters.fechaFin == null || Parameters.fechaFin > x.FechaCreacion) &&
-                    x.Status == enumEstatusMovimiento.Aplicado.GetHashCode()
+                    ( Parameters == null || (                            
+                                (Parameters.fechaInicio == null || (Parameters.fechaInicio < x.FechaCreacion))
+                        && (Parameters.fechaFin == null || Parameters.fechaFin > x.FechaCreacion)
+                        && (Parameters.searchString == null || (x.UserName.ContainsInvariant(Parameters.searchString) || x.Clave.ContainsInvariant(Parameters.searchString) || ((enumMotivo)x.Motivo).ToString().ContainsInvariant(Parameters.searchString) || ((enumEstatusMovimiento)x.Status).ToString().ContainsInvariant(Parameters.searchString)))
+                        && (Parameters.onlyAplicados?x.Status == enumEstatusMovimiento.Aplicado.GetHashCode():true)
+                        )
                     )
                 ).Select(x => new EstadoCuentaVM
                 {

@@ -15,6 +15,7 @@ using System.Net.Mail ;
 using EvolucionaMovil.Models.Classes;
 using EvolucionaMovil.Attributes;
 using cabinet.patterns.enums;
+using EvolucionaMovil.Models.Extensions;
 
 namespace EvolucionaMovil.Controllers
 {
@@ -74,17 +75,6 @@ namespace EvolucionaMovil.Controllers
 
             return View(getDepositos(parameters));
         }
-
-        [HttpPost]
-        [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.PayCenter, enumRoles.Staff })]
-        public string GetEstadoCuenta(ServiceParameterVM parameters)
-        {
-            var estadoCuentaResult = getDepositos(parameters);
-            return Newtonsoft.Json.JsonConvert.SerializeObject(estadoCuentaResult);
-        }
-
-        //
-        // GET: /Depositos/Details/5
 
         [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.PayCenter, enumRoles.Staff })]
         public ViewResult Details(int id)
@@ -432,10 +422,13 @@ namespace EvolucionaMovil.Controllers
             var bancos = new BancosRepository().ListAll();
 
             SimpleGridResult<DepositoVM> simpleGridResult = new SimpleGridResult<DepositoVM>();
-            var abonosVM = depositos.Where(x => Parameters == null
-                || (Parameters.fechaInicio == null || (Parameters.fechaInicio < x.FechaCreacion)
-                    && (Parameters.fechaFin == null || Parameters.fechaFin > x.FechaCreacion)
-                )
+            var abonosVM = depositos.Where(x =>
+                (Parameters == null || (
+                                (Parameters.fechaInicio == null || (Parameters.fechaInicio < x.FechaCreacion))
+                        && (Parameters.fechaFin == null || Parameters.fechaFin > x.FechaCreacion)
+                        && (Parameters.onlyAplicados ? x.Status == enumEstatusMovimiento.Aplicado.GetHashCode() : true)
+                        )
+                    )
                 ).Select(x => new DepositoVM
                 {
                     AbonoId = x.AbonoId,
@@ -452,6 +445,18 @@ namespace EvolucionaMovil.Controllers
                     TipoCuenta = ((enumTipoCuenta)x.Cuenta.TipoCuenta).ToString()
                 });
 
+            //Filtrar por searchString: Lo puse después del primer filtro porque se complicaba obtener los strings de las tablas referenciadas como bancos, cuenta bancaria, etc.
+            if (Parameters != null && !string.IsNullOrEmpty(Parameters.searchString))
+            {
+                abonosVM = abonosVM.Where(x => Parameters.searchString == null || (
+                    x.Referencia.ContainsInvariant(Parameters.searchString) ||
+                    x.Banco.ContainsInvariant(Parameters.searchString) ||
+                    x.CuentaBancaria.ContainsInvariant(Parameters.searchString) ||
+                    x.TipoCuenta.ContainsInvariant(Parameters.searchString) ||
+                    x.StatusString.ContainsInvariant(Parameters.searchString) ||
+                    ((enumEstatusMovimiento)x.Status).ToString().ContainsInvariant(Parameters.searchString)
+                    ));
+            }
             if (Parameters != null)
             {
                 simpleGridResult.CurrentPage = Parameters.pageNumber;
