@@ -48,7 +48,7 @@ namespace EvolucionaMovil.Controllers
             ViewBag.PageNumber = parameters.pageNumber;
             ViewBag.SearchString = parameters.searchString;
             ViewBag.fechaInicio = parameters.fechaInicio != null ? ((DateTime)parameters.fechaInicio).ToShortDateString() : "";
-            ViewBag.FechaFin = parameters.fechaInicio != null ? ((DateTime)parameters.fechaFin).ToShortDateString() : "";
+            ViewBag.FechaFin = parameters.fechaFin != null ? ((DateTime)parameters.fechaFin).ToShortDateString() : "";
             ViewBag.OnlyAplicados = parameters.onlyAplicados;
             return View(getPagosServicio(parameters));
         }

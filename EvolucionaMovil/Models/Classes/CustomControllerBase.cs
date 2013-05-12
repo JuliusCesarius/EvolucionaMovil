@@ -75,6 +75,7 @@ namespace EvolucionaMovil.Models.Classes
             ValidationMessages.Add(new CrossValidationMessage { ValidationCode = ValidationCode });
             return true;
         }
+
         public bool AddValidationMessage(cabinet.patterns.enums.enumMessageType MessageType, string Message)
         {
             if (ValidationMessages == null)

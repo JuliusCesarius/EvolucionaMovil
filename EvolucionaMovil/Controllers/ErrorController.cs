@@ -25,5 +25,10 @@ namespace EvolucionaMovil.Controllers
         {
             return View();
         }
+
+        public ActionResult GenericError(object e)
+        {
+            return View();
+        }
     }
 }

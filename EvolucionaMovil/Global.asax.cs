@@ -6,6 +6,8 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using cabinet.processPolicies.MVC.Models.Helpers;
 using EvolucionaMovil.Controllers;
+using System.Data.SqlClient;
+using EvolucionaMovil.Models.Classes;
 
 namespace EvolucionaMovil
 {
@@ -22,7 +24,7 @@ namespace EvolucionaMovil
         public static void RegisterRoutes(RouteCollection routes)
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
-
+            routes.IgnoreRoute("favicon.ico");
             routes.MapRoute(
                 "Default", // Route name
                 "{controller}/{action}/{id}", // URL with parameters
@@ -32,20 +34,27 @@ namespace EvolucionaMovil
 
         protected void Application_Error()
         {
+            var exception = Server.GetLastError();
+            if (exception.Message == "File does not exist.")
+            {
+                //Todo:Quitar esta validación porque puede suceder en otros casos importantes
+                return;
+            }
             try
             {
-                var exception = Server.GetLastError();
+                ErrorHandler.LogError(exception, null);
+
+                var routeData = new RouteData();
+                routeData.Values["controller"] = "Error";
+                routeData.Values["action"] = "GenericError";
+                routeData.Values["exception"] = exception;
+
+                Response.Clear();
+                Server.ClearError();
+
                 var httpException = exception as HttpException;
                 if (httpException != null && Response.StatusCode == 404)
                 {
-                    Response.Clear();
-                    Server.ClearError();
-                    var routeData = new RouteData();
-                    routeData.Values["controller"] = "Error";
-                    routeData.Values["action"] = "General";
-                    routeData.Values["exception"] = exception;
-                    Response.StatusCode = 500;
-
                     Response.StatusCode = httpException.GetHttpCode();
                     switch (Response.StatusCode)
                     {
@@ -56,14 +65,17 @@ namespace EvolucionaMovil
                             routeData.Values["action"] = "NotFound";
                             break;
                     }
-
-                    IController errorsController = new ErrorController();
-                    var rc = new RequestContext(new HttpContextWrapper(Context), routeData);
-                    errorsController.Execute(rc);
                 }
+
+                IController errorsController = new ErrorController();
+                var rc = new RequestContext(new HttpContextWrapper(Context), routeData);
+                errorsController.Execute(rc);
+                HttpContext.Current.Response.End();
             }
             catch (Exception ex)
             {
+                //Aquí de plano se cicla, mejor llamo a una HTML
+                Response.Redirect("../Error.html");
             }
         }
 

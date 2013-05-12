@@ -40,7 +40,7 @@ namespace EvolucionaMovil.Controllers
                     }
                     catch (Exception ex)
                     {
-                        AddValidationMessage(enumMessageType.UnhandledException, "No fue posible guardar la imagen del comprobante:" + ex.Message);
+                        AddValidationMessage(enumMessageType.UnhandledException, "No fue posible guardar la imagen del comprobante: " + ex.Message);
                     }
                 }
                 else
