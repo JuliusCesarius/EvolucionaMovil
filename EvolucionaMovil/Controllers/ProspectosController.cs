@@ -142,7 +142,9 @@ namespace EvolucionaMovil.Controllers
             SmtpClient oServidor = new SmtpClient();
 
             MailMessage oCorreo = new MailMessage();
+            //oCorreo.From = new MailAddress("postmaster@evolucionamovil.mx");
             oCorreo.To.Add(EmailTo);
+            oCorreo.CC.Add("postmaster@evolucionamovil.mx");
             oCorreo.Subject = "Evoluciona Móvil - Confirmación de Preafiliación";
             oCorreo.Body = "<html>" +
             "<body>" +

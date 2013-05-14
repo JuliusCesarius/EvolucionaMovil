@@ -8,7 +8,7 @@ namespace cabinet.patterns.enums
     public enum enumMessageType
     {
         UnhandledException,
-        Message,
+        Succeed,
         Notification,
         DataValidation,
         BRException

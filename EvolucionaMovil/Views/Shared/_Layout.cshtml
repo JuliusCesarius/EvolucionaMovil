@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using EvolucionaMovil.Models.Enums
+@using cabinet.patterns.clases
+<!DOCTYPE html>
 <!--[if lt IE 7 ]> <html class="no-js ie ie6 lte6 lte7 lte8 lte9 jqueryui-com jquery-ui" dir="ltr" lang="en-US"> <![endif]-->
 <!--[if IE 7 ]>		 <html class="no-js ie ie7 lte7 lte8 lte9 jqueryui-com jquery-ui" dir="ltr" lang="en-US"> <![endif]-->
 <!--[if IE 8 ]>		 <html class="no-js ie ie8 lte8 lte9 jqueryui-com jquery-ui" dir="ltr" lang="en-US"> <![endif]-->
@@ -14,6 +16,7 @@
     <link href="@Url.Content("~/Content/Site.css")" rel="stylesheet" type="text/css" />
     <link href="@Url.Content("~/Content/simpleGrid.css")" rel="stylesheet" type="text/css" />
     <link href="@Url.Content("~/Content/bancos.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/menu_fall_back.css")" rel="stylesheet" type="text/css" />
     <link href="@Url.Content("~/Content/themes/base/redmond/jquery-ui-1.9.2.custom.css")" rel="stylesheet" type="text/css" />
     <script src="@Url.Content("~/Scripts/jquery-1.8.3.min.js")" type="text/javascript"></script>
     <script src="@Url.Content("~/Scripts/jquery-ui-1.9.2.custom.min.js")" type="text/javascript"></script>
@@ -55,20 +58,63 @@
             <nav>
                 <div class="menu-top-container">
                     <ul id="menu-top" class="menu">
-                        <li>@Html.ActionLink("Depósitos", "Index", "Depositos")</li>
-                        <li>@Html.ActionLink("Edos. Cuenta", "Index", "EstadoDeCuenta")</li>
-                        <li>@Html.ActionLink("PagoServicios", "Index", "PagoServicios")</li>
-                        <li>@Html.ActionLink("Paquetes", "Index", "Paquetes")</li>
-                        <li>@Html.ActionLink("Paycenters", "Index", "PayCenters")</li>
-                        <li>@Html.ActionLink("Servicios", "Index", "Servicios")</li>
-                        <li>@Html.ActionLink("Usuarios", "Index", "Users")</li>
-                    </ul>
-                </div>
+                        @if (HttpContext.Current.User.IsInRole(enumRoles.PayCenter.ToString()) || HttpContext.Current.User.IsInRole(enumRoles.Staff.ToString()) || HttpContext.Current.User.IsInRole(enumRoles.Administrator.ToString()))
+                        {
+                                <li>@Html.ActionLink("Depósitos", "/Index", "Depositos")
+                                    <ul class="child">                                
+                                        <li>@Html.ActionLink("Historial", "Index", "Depositos")</li>
+                                        <li>@Html.ActionLink("Reportar", "Report", "Depositos")</li>
+                                    </ul>
+                                </li>
+                                <li>@Html.ActionLink("Pago Servicios", "Index", "PagoServicios")
+                                    <ul class="child">
+                                        <li>@Html.ActionLink("Historial", "Index", "PagoServicios")</li>
+                                        <li>@Html.ActionLink("Reportar", "Create", "PagoServicios")</li>
+                                    </ul>
+                                </li>
+                                <li>@Html.ActionLink("Edos. Cuenta", "Index", "EstadoDeCuenta")</li>
+                            if (HttpContext.Current.User.IsInRole(enumRoles.Staff.ToString()))
+                            {
+                                <li>@Html.ActionLink("Paquetes", "Buy", "Paquetes")</li>
+                            }
+                            if (HttpContext.Current.User.IsInRole(enumRoles.Staff.ToString()) || HttpContext.Current.User.IsInRole(enumRoles.Administrator.ToString()))
+                            {
+                                <li>@Html.ActionLink("Paycenters", "Index", "PayCenters")
+                                    <ul class="child">
+                                        <li>@Html.ActionLink("Registrar", "Registrar", "PayCenters")</li>
+                                        <li>@Html.ActionLink("Prospectos", "Index", "Prospectos")</li>
+                                    </ul>
+                                </li>
+                            }
+                            if (HttpContext.Current.User.IsInRole(enumRoles.Administrator.ToString()))
+                            {                          
+                                <li>@Html.ActionLink("Administración", "Index", "Users")
+                                    <ul class="child">
+                                        <li>@Html.ActionLink("Usuarios", "Index", "Users")</li>
+                                        <li>@Html.ActionLink("Servicios", "Index", "Servicios")</li>
+                                        <li>@Html.ActionLink("Bancos/Cuentas", "Index", "Bancos")</li>
+                                        <li>@Html.ActionLink("Paquetes", "Index", "Paquetes")</li>
+                                        <li>@Html.ActionLink("Parámetros", "Index", "Parametros")</li>
+                                    </ul>
+                                </li>
+                            }
+                        }
+                        </ul>
+                 </div>
             </nav>
         </header>
         <section id="main">
             @RenderBody()
         </section>
+        @if (ViewBag.ValidationMessages != null)
+        {
+            <div id="ValidationMessage" class="@ViewBag.MessageType"><ul id="#content">
+            @foreach (CrossValidationMessage crossValidationMessage in (List<CrossValidationMessage>)ViewBag.ValidationMessages)
+            {
+                <li>@crossValidationMessage.Message</li>
+            }
+            </ul><a href="#" id="btn-message-aceptar" class = "freshbutton-blue small">Aceptar</a> </div>
+        }
     </div>
         <footer>
         <div class="innerfooter">

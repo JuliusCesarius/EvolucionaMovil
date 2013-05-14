@@ -1,7 +1,7 @@
 ﻿$(document).on("ready", function () {
     $("#FechaPago").datepicker({ "dateFormat": "dd/mm/yy", maxDate: '0' });
     $("#PayCenterName").autocomplete({
-        source: "FindPayCenter/valor",
+        source: "FindPayCenter",
         select: function (event, ui) {
             var label = ui.item.label;
             var v = ui.item.value;
@@ -15,6 +15,7 @@
                         text: item.Nombre
                     }));
                     $("#CuentaId").val(0);
+                    $("#CuentaId").trigger("change");
                 });
             });
             this.value = label;
@@ -118,6 +119,7 @@ function BancoIdChanged() {
                         text: item.NumeroCuenta + " - " + item.Titular
                     }));
                 }
+                CuentaBancariaId.trigger("change");
                 if (i == 0) { cdefault = item.CuentaBancariaId; }
             });
 

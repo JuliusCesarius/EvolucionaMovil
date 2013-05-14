@@ -62,8 +62,8 @@ header, #header {
     margin-bottom: 0px;
     color: #000;
     padding: 0;
-    padding-bottom:18px;
     border-bottom: 2px solid #32A6E0;
+    width:100%;
 }
 
 header h1, #header h1 {
@@ -80,6 +80,49 @@ header h1, #header h1 {
 #main {
     padding: 30px 30px 15px 30px;
     background-color: #fff;
+}
+#ValidationMessage
+{
+    display:none;
+    border: 1px solid rgb(204, 204, 204);
+    background: rgb(237, 241, 243);
+    min-height: 45px;
+    position: fixed;
+    width: 100%;
+    top: -1px;
+    left: 0;
+    z-index:1001;
+}
+.DataValidation, .BRException, #ValidationMessage .DataValidation, #ValidationMessage .BRException
+{
+    border-color: rgb(252, 236, 185)!important;
+    background: rgb(255, 255, 192) url('themes/base/images/e-ico.png') no-repeat 10px 50%!important ;
+}
+.Notification, #ValidationMessage .Notification
+{
+    background: rgb(242, 250, 255) url('themes/base/images/i-ico.png') no-repeat 10px 50%!important;
+    border-color: rgb(148, 214, 252)!important;
+}
+.Succeed, .Notification .Succeed
+{
+    background: rgb(213, 253, 213) url('themes/base/images/ok-ico.png') no-repeat 10px 50%!important;
+    border-color: rgb(152, 231, 192)!important;
+}
+#ValidationMessage ul, .message ul{
+margin: 11px 135px 11px 60px;
+font-size: 1.5em;
+color: rgb(66, 72, 90);
+}
+.message ul{margin-right: 20px!important;}
+
+#ValidationMessage #btn-message-aceptar
+{
+    position:absolute;
+    right:20px;
+   top: 50%;
+   height: 16px;
+   margin-top: -16px; /* Half the height */
+   margin-left: -16px; /* Half the width */
 }
 .errorMessage
 {position: absolute;
@@ -286,6 +329,10 @@ label
     cursor:text;
 }
 
+.small label
+{
+    top: 3px;
+}
 select{background:#fff  url("../Content/themes/base/images/select-icon.gif") no-repeat 95% 50%;cursor:pointer;}
 
 .small input[type="text"] {
@@ -848,8 +895,10 @@ div#title {
     text-align: right;
     color: #32A6E0;    
     position: absolute;
-    top:10px;
-    right: 30px;
+    top:0px;
+    right: 0px;
+    padding:10px 20px 10px 500px;
+    background:#fff
 }
 
 #logindisplay a:link 
@@ -888,7 +937,7 @@ div#title {
 
 .ui-datepicker{ z-index: 9999 !important;}
 .formLeft, .formRight{display:inline-block;vertical-align:middle;width:49%}
-.message{background:#FFFFAD;padding:1em;margin:0.6em 0 0.6em 0}
+/*.message{background:#FFFFAD;padding:1em;margin:0.6em 0 0.6em 0}*/
 .nota{color:#999;font-size:.8em;padding:3px;width:360px}
 .w700{width:700px}
 .center{margin:0 auto}
@@ -927,7 +976,7 @@ legend{font-size:2em;font-weight:400}
 .saldo{width:80px !important; text-align:right}
 .status{width:80px !important;}
 .folio{width:100px !important;}
-.monto{width:80px !important;}
+.monto{text-align:right;width:80px !important;}
 .fechavencimiento{width:80px !important;}
 .servicio{width:380px !important;}
 .status .Aplicado, .Aplicado{color:#000;font-weight:bold}
@@ -936,7 +985,7 @@ legend{font-size:2em;font-weight:400}
 .status .Cancelado, .Cancelado{color:#FF6700}
 .listHeader .cargo,.listHeader .abono{color:#fff}
 .qtip{cursor: pointer;padding-right:1em;background: url("../Content/themes/base/images/qtip.png") no-repeat 100% 50%;}
-.tipocuenta{width:85px !important;}
+.tipocuenta{width:110px !important;}
 .banco{width:250px !important;}
 .fechapago{width:80px !important}
 .referencia{width:120px !important}
@@ -958,15 +1007,17 @@ legend{font-size:2em;font-weight:400}
 .cuentadeposito label{display:inline-block;position:static;width:150px;}
 .cuentadeposito input[type="text"]{width:120px}
 
+/**Depositos**/
+.filtropaycenter{width:250px!important;}
 
 .hasDatepicker{background: url("../Content/themes/base/images/calendar.png") no-repeat 95% 50%;cursor:pointer;}
 
 #filtros{border-top:1px solid #999;color:#999;height:28px;padding:0.5em}
 #filtros label{font-size:1em;position:static !important}
-#filtros #pageSize{width:30px}
+#filtros #pageSize{min-width:30px;width:30px;}
 #filtros #fechaInicio, #filtros #fechaFin{width:100px}
 #filtros #searchString{width:160px}
-#filtros #search{background: url("../Content/themes/base/images/search.png") no-repeat 50% 50%;border:none;cursor:pointer;margin-left:-20px;padding:.3em ;position:absolute;width:16px;z-index:10000}
+#filtros #search{background: url("../Content/themes/base/images/search.png") no-repeat 50% 50%;border:none;cursor:pointer;margin-left:-20px;padding:.3em ;position:absolute;width:16px;z-index:999}
 #filtros #search:hover{padding:.4em}
 #filtros #lblAplicadosOnly, #filtros #aplicadosOnly{cursor:pointer}
 
@@ -986,6 +1037,7 @@ legend{font-size:2em;font-weight:400}
 .btnReturn{text-align:right; width:310px; margin:4px;}
 .infoPaycenter{margin:14px 0 7px 0}
 .infoPaycenter h2, .infoPaycenter a{display:inline;}
+.infoPaycenter h2{font-size: 1.5em; color: #000;}
 .tituloPaycenter{color:#32A6E0;}
 /*.labelsPaycenter{font-size:15px; color:#999; float:left; width:42%;}
 .labelsPaycenter div{height:22px; margin:3px 0 3px 0; position:relative;}
@@ -996,6 +1048,19 @@ legend{font-size:2em;font-weight:400}
 .DetailsFieldLabel{color:#999; float:left; width:42%;}
 .DetailsFieldValue{float:right; width:57%;}
 .DetailsFieldValue a{font-size:12px;}
+.formRightPaycenter{vertical-align:top; padding-top:3em;}
+.inputImgPaycenter{width:250px; display:none;}
+.nameImgPayCenter{width:235px !important;}
+.imgPaycenter{border:1px solid #999; height:200px; width:360px; margin: 8px 0 8px 0; text-align:center; }
+.imgPaycenter p{font-size:15px; color:#999;}
+.pbCero{padding-bottom:0px;}
+.footerPaycenter{text-align:right; margin:0 1.4em 0 1.4em; width:86%;}
+.footerPaycenter .message, .footerPaycenter .error {text-align:left;}
+.linkActiva,.linkElimina{cursor:pointer;}
+.PaycenterActivo{background:#AAFFAA;padding:0.3em;margin:0.6em 0 0.6em 0; overflow:hidden;}
+.PaycenterActivo h3{color:Black; margin:0.2em 0 0 0.5em;}
+.PaycenterInactivo{background:#FFAAAA;padding:0.3em;margin:0.6em 0 0.6em 0; overflow:hidden;}
+.PaycenterInactivo h3{color:Black; margin:0.2em 0 0 0.5em;}
 
 .fwith300{width:550px}
 .fwith300 .display-label{width:200px}

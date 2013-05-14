@@ -6,146 +6,200 @@
 <script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/Scripts/RegistroPaycenter.js")" type="text/javascript"></script>
-
-@using (Html.BeginForm())
+<script src="@Url.Content("~/Scripts/SubirImagenPaycenter.js")" type="text/javascript"></script>
+@if (Model.Activo)
+{
+    <script type="text/javascript">
+        $(document).on("ready", function () { 
+            $("input").attr("disabled", true);
+        });                      
+    </script>
+} 
+<div class="formLeft">
+@using (Html.BeginForm("Registrar", "PayCenters", FormMethod.Post, new { id = "FormDatos" }))
 {
     @Html.ValidationSummary(true)
-    <fieldset @if (Model.Activo)
-              {
-                   @Html.AttributeEncode("disabled='disabled'") 
-              }
-    >
+    <fieldset class="pbCero">
         <legend>PayCenter</legend>
         @Html.HiddenFor(model => model.ProspectoId)
         @Html.HiddenFor(model => model.PayCenterId)
         @Html.HiddenFor(model => model.PayCenterPadreId)
+        @Html.HiddenFor(model => model.IFE)
+        @Html.HiddenFor(model => model.Comprobante)
         @*@Html.HiddenFor(model => model.UserName)*@
 
-        <div class="formLeft">
-            <div class="editor-label">
-                @Html.LabelFor(model => model.Representante)
-            </div>
-            <div class="editor-field">
-                @Html.EditorFor(model => model.Representante)
-                @Html.ValidationMessageFor(model => model.Representante)
-            </div>
-            <div class="editor-label">
-                @Html.LabelFor(model => model.Nombre)
-            </div>
-            <div class="editor-field">
-                @Html.EditorFor(model => model.Nombre)
-                @Html.ValidationMessageFor(model => model.Nombre)
-            </div>
-            @*<div class="editor-label">
-                @Html.LabelFor(model => model.Empresa)
-            </div>
-            <div class="editor-field">
-                @Html.EditorFor(model => model.Empresa)
-                @Html.ValidationMessageFor(model => model.Empresa)
-            </div>*@
-            <div class="editor-label">
-                @Html.LabelFor(model => model.Telefono)
-            </div>
-            <div class="editor-field">
-                @Html.EditorFor(model => model.Telefono)
-                @Html.ValidationMessageFor(model => model.Telefono)
-            </div>
-            <div class="editor-label">
-                @Html.LabelFor(model => model.Celular)
-            </div>
-            <div class="editor-field">
-                @Html.EditorFor(model => model.Celular)
-                @Html.ValidationMessageFor(model => model.Celular)
-            </div>
-            <div class="editor-label">
-                @Html.LabelFor(model => model.Email)
-            </div>
-            <div class="editor-field">
-                @Html.EditorFor(model => model.Email)
-                @Html.ValidationMessageFor(model => model.Email)
-            </div>
-            <div class="editor-label">
-                @Html.LabelFor(model => model.Email2)
-            </div>
-            <div class="editor-field">
-                @Html.EditorFor(model => model.Email2)
-                @Html.ValidationMessageFor(model => model.Email2)
-            </div>
-            @* <div class="editor-label">
-                @Html.LabelFor(model => model.IFE)
-            </div>
-            <div class="editor-field">
-                @Html.EditorFor(model => model.IFE)
-                @Html.ValidationMessageFor(model => model.IFE)
-            </div>*@ @*<div class="editor-label">
-                @Html.LabelFor(model => model.Comprobante)
-            </div>
-            <div class="editor-field">
-                @Html.EditorFor(model => model.Comprobante)
-                @Html.ValidationMessageFor(model => model.Comprobante)
-            </div>*@
-            <div class="editor-label">
-                @Html.LabelFor(model => model.Domicilio)
-            </div>
-            <div class="editor-field">
-                @Html.EditorFor(model => model.Domicilio)
-                @Html.ValidationMessageFor(model => model.Domicilio)
-            </div>
-            <div class="editor-label">
-                @Html.LabelFor(model => model.CP)
-            </div>
-            <div class="editor-field">
-                @Html.EditorFor(model => model.CP)
-                @Html.ValidationMessageFor(model => model.CP)
-            </div>
-            <div class="editor-label">
-                @Html.LabelFor(model => model.FechaIngreso)
-            </div>
-            <div class="editor-field">
-                @Html.EditorFor(model => model.FechaIngreso)
-                @Html.ValidationMessageFor(model => model.FechaIngreso)
-            </div>
-            <div class="editor-label">
-                @Html.LabelFor(model => model.PayCenterPadre)
-            </div>
-            <div class="editor-field">
-                @Html.EditorFor(model => model.PayCenterPadre)
-                @Html.ValidationMessageFor(model => model.PayCenterPadre)
-            </div>
-            @if (Model.PayCenterId == 0)
-            {
-                <h1>Usuario</h1>
-                <div class="editor-label">
-                    @Html.LabelFor(model => model.UserName)
-                </div>
-                <div class="editor-field">
-                    @Html.EditorFor(model => model.UserName)
-                    @Html.ValidationMessageFor(model => model.UserName)
-                </div>
-                <div class="editor-label">
-                    @Html.LabelFor(model => model.Password)
-                </div>
-                <div class="editor-field">
-                    @Html.EditorFor(model => model.Password)
-                    @Html.ValidationMessageFor(model => model.Password)
-                </div>
-                <div class="editor-label">
-                @Html.LabelFor(model => model.RepeatPassword)
-                </div>
-                <div class="editor-field">
-                    @Html.EditorFor(model => model.RepeatPassword)
-                    @Html.ValidationMessageFor(model => model.RepeatPassword)
-                </div>
-            }
-            else
-            { 
-                @Html.HiddenFor(model => model.UserName)
-            }            
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Representante)
         </div>
-        <div class="formRight">
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Representante)
+            @Html.ValidationMessageFor(model => model.Representante)
         </div>
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Nombre)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Nombre)
+            @Html.ValidationMessageFor(model => model.Nombre)
+        </div>
+        @*<div class="editor-label">
+            @Html.LabelFor(model => model.Empresa)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Empresa)
+            @Html.ValidationMessageFor(model => model.Empresa)
+        </div>*@
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Telefono)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Telefono)
+            @Html.ValidationMessageFor(model => model.Telefono)
+        </div>
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Celular)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Celular)
+            @Html.ValidationMessageFor(model => model.Celular)
+        </div>
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Email)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Email)
+            @Html.ValidationMessageFor(model => model.Email)
+        </div>
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Email2)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Email2)
+            @Html.ValidationMessageFor(model => model.Email2)
+        </div>
+        @* <div class="editor-label">
+            @Html.LabelFor(model => model.IFE)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.IFE)
+            @Html.ValidationMessageFor(model => model.IFE)
+        </div>*@ @*<div class="editor-label">
+            @Html.LabelFor(model => model.Comprobante)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Comprobante)
+            @Html.ValidationMessageFor(model => model.Comprobante)
+        </div>*@
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Domicilio)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Domicilio)
+            @Html.ValidationMessageFor(model => model.Domicilio)
+        </div>
+        <div class="editor-label">
+            @Html.LabelFor(model => model.CP)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.CP)
+            @Html.ValidationMessageFor(model => model.CP)
+        </div>
+        <div class="editor-label">
+            @Html.LabelFor(model => model.FechaIngreso)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.FechaIngreso)
+            @Html.ValidationMessageFor(model => model.FechaIngreso)
+        </div>
+        <div class="editor-label">
+            @Html.LabelFor(model => model.PayCenterPadre)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.PayCenterPadre)
+            @Html.ValidationMessageFor(model => model.PayCenterPadre)
+        </div>
+        @if (Model.PayCenterId == 0)
+        {
+            <h1>Usuario</h1>
+            <div class="editor-label">
+                @Html.LabelFor(model => model.UserName)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.UserName)
+                @Html.ValidationMessageFor(model => model.UserName)
+            </div>
+            <div class="editor-label">
+                @Html.LabelFor(model => model.Password)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.Password)
+                @Html.ValidationMessageFor(model => model.Password)
+            </div>
+            <div class="editor-label">
+            @Html.LabelFor(model => model.RepeatPassword)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.RepeatPassword)
+                @Html.ValidationMessageFor(model => model.RepeatPassword)
+            </div>
+        }
+        else
+        { 
+            @Html.HiddenFor(model => model.UserName)
+        }
+    </fieldset>
+}
+</div>
+<div class="formRight formRightPaycenter">
+    @using (Html.BeginForm("UploadImage", "UploadImages", FormMethod.Post, 
+    new { enctype = "multipart/form-data", id="ImgFormIFE", name="ImgFormIFE", target="UploadTarget" }))
+    {
+        <input id="SelectImageIFE" type="file" name="imageFile" data-max-size="4194304" class="inputImgPaycenter" />
+        <div class="editor-label">
+            <label for="NameImageIFE">Seleccionar archivo</label>
+        </div>
+        <div class="editor-field">
+            <input type="text" id="NameImageIFE" readonly="readonly" class="nameImgPayCenter" />
+            <input id="SaveImageIFE" type="button" value="Seleccionar" class="freshbutton-blue" />
+        </div>        
+    }
+    <div id="ImageIFE" class="imgPaycenter">
+    @if (string.IsNullOrEmpty(Model.IFE))
+    {
+       <p>IFE</p> 
+    }
+    else
+    { 
+        <img src="@Model.ThumbnailIFE" alt="IFE" />
+    }  
+    </div>
+    @using (Html.BeginForm("UploadImage", "UploadImages", FormMethod.Post, 
+    new { enctype = "multipart/form-data", id="ImgFormComp", name="ImgFormComp", target="UploadTarget" }))
+    {
+        <input id="SelectImageComp" type="file" name="imageFile" data-max-size="4194304" class="inputImgPaycenter" />
+        <div class="editor-label">
+            <label for="NameImageComp">Seleccionar archivo</label>
+        </div>
+        <div class="editor-field">
+            <input type="text" id="NameImageComp" readonly="readonly" class="nameImgPayCenter" />
+        <input id="SaveImageComp" type="button" value="Seleccionar" class="freshbutton-blue" />
+        </div>
+    }
+    <div id="ImageComp"  class="imgPaycenter">
+     @if (string.IsNullOrEmpty(Model.Comprobante))
+    {
+       <p>Comprobante de Domicilio</p> 
+    }
+    else
+    { 
+        <img src="@Model.ThumbnailComprobante" alt="IFE" />
+    } 
+    </div>
+    <iframe id="UploadTarget" name="UploadTarget" style="position: absolute; left: -999em; top: -999em;"></iframe>
+</div>
+<div class="footerPaycenter">
         <p>
-            <input type="submit" class="freshbutton-blue" value="Guardar" />
+            <input type="button" class="freshbutton-blue" id="btnGuardar" value="Guardar" />
         </p>
         @if (ViewBag.Mensajes != null)
         {
@@ -155,8 +209,7 @@
         {
             <p class="error">@ViewBag.MensajeError</p> 
         }
-    </fieldset>
-}
+</div>
 @*<div>
     @Html.ActionLink("Back to List", "Index")
 </div>*@ 

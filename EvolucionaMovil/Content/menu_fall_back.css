@@ -1,0 +1,19 @@
+/* Targeting the second level menu */
+#menu-top li {display:block}
+#menu-top li ul
+{
+    display: none;
+    margin: 2px 0 0 0;
+    position: absolute;
+    width: 130px;
+    height: auto;
+    background: #E9E9E9;
+    z-index:1000;
+}
+#menu-top li ul li { width: 100%;padding:10px 0;border:none}
+#menu-top li ul li a { background: none; border: none; padding: 0 0 0 5px;display: block; cursor:pointer}
+#menu-top li ul li:hover{background: #D4D4D4;}
+
+#menu-top li.current > a { border:none}
+#menu-top li:hover > ul.child { display: block;margin: 0;}
+#menu-top li:hover > ul.child li {border:none}

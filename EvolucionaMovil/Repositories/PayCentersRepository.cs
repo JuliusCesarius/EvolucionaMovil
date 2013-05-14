@@ -57,6 +57,19 @@ namespace EvolucionaMovil.Repositories
             return payCenters;
         }
 
+        public string GetPayCenterNameById(int PayCenterId)
+        {
+            var payCenter = context.PayCenters.Where(p => p.PayCenterId == PayCenterId).FirstOrDefault();
+            if (payCenter != null)
+            {
+                return payCenter.UserName;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         public int GetPayCenterByUserName(string UserName)
         {
             var payCenter = context.PayCenters.Where(p => p.UserName == UserName && p.Baja == false).FirstOrDefault();

@@ -88,7 +88,7 @@ namespace EvolucionaMovil.Models.BR
         /// <param name="?"></param>
         /// <remarks>BR01.02. Este método sólo genera movimientos en estatus Procesando</remarks>
         /// <returns></returns>
-        internal Movimiento CrearMovimiento(int PayCenterId, enumTipoMovimiento TipoMovimiento, int Id, int CuentaId, decimal Monto, enumMotivo Motivo)
+        internal Movimiento CrearMovimiento(int PayCenterId, enumTipoMovimiento TipoMovimiento, int Id, int CuentaId, decimal Monto, enumMotivo Motivo, string PayCenterName)
         {
             Movimiento movimiento = new Movimiento();
 
@@ -100,6 +100,7 @@ namespace EvolucionaMovil.Models.BR
             movimiento.Motivo = (Int16)Motivo;
             movimiento.PayCenterId = PayCenterId;
             movimiento.Status = (Int16)enumEstatusMovimiento.Procesando;
+            movimiento.UserName = PayCenterName;
             movimiento.Id = Id;
 
             //BR01.04.b: La creción de un registro de movimiento, deberá venir acompañada de un registro de historial de estatus
@@ -162,7 +163,7 @@ namespace EvolucionaMovil.Models.BR
             if (NuevoEstatus.GetHashCode() == movimiento.Status)
             {
                 Succeed = false;
-                AddValidationMessage(cabinet.patterns.enums.enumMessageType.BRException, "No existe cambio de estatus");
+                AddValidationMessage(cabinet.patterns.enums.enumMessageType.BRException, "Ya se encuentra en estatus "+NuevoEstatus.ToString());
                 return null;
             }
 

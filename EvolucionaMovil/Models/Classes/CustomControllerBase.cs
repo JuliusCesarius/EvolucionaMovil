@@ -6,18 +6,63 @@ using EvolucionaMovil.Models.Enums;
 using cabinet.patterns.clases;
 using System.Web.Mvc;
 using cabinet.patterns.interfaces;
+using EvolucionaMovil.Models.Interfaces;
+using EvolucionaMovil.Repositories;
 
 namespace EvolucionaMovil.Models.Classes
 {
-    public class CustomControllerBase:Controller, ICrossValidation
+    public class CustomControllerBase:Controller, ICrossValidation, IEvolucionaMovil
     {
-        //internal const string ADMINISTRATOR_STRING = "Administrator";
-        //internal const string PAYCENTER_STRING = "PayCenter";
-        //internal const string STAFF_STRING = "Staff";
-        //internal const string PROSPECTO_STRING = "Prospecto";
+        private const string HTTPMETHODPOST = "POST";
+        private const string HTTPMETHODGET = "GET";
+        private const string PAYCENTERIDSTRING = "PayCenterId";
 
         private bool _succeed=true;
+        private int _payCenterId = 0;
+        private string _payCenterName = string.Empty;
+        private PayCentersRepository _payCentersRepository;
+        private PayCentersRepository PayCentersRepository
+        {
+            get
+            {
+                if (_payCentersRepository == null)
+                {
+                    _payCentersRepository = new PayCentersRepository();
+                }
+                return _payCentersRepository;
+            }
+        }
         private List<CrossValidationMessage> _validationMessages;
+
+        protected override void OnActionExecuting(ActionExecutingContext filterContext)
+        {
+            if (HttpContext.User.IsInRole(enumRoles.PayCenter.ToString()))
+            {
+                _payCenterId = _payCentersRepository.GetPayCenterByUserName(HttpContext.User.Identity.Name);
+            }
+            else
+            {
+                if (filterContext.HttpContext.Request.HttpMethod == HTTPMETHODPOST && filterContext.HttpContext.Request.Form.AllKeys.Contains(PAYCENTERIDSTRING) && !string.IsNullOrEmpty(filterContext.HttpContext.Request.Form.GetValues(PAYCENTERIDSTRING)[0]))
+                {
+                    _payCenterId = Convert.ToInt32(filterContext.HttpContext.Request.Form.GetValues(PAYCENTERIDSTRING)[0]);
+                }
+                else if (filterContext.HttpContext.Request.HttpMethod == HTTPMETHODGET && filterContext.HttpContext.Request.QueryString.AllKeys.Contains(PAYCENTERIDSTRING) && !string.IsNullOrEmpty(filterContext.HttpContext.Request.QueryString.GetValues(PAYCENTERIDSTRING)[0]))
+                {
+                    _payCenterId = Convert.ToInt32(filterContext.HttpContext.Request.QueryString.GetValues(PAYCENTERIDSTRING)[0]);
+                }
+            }
+            base.OnActionExecuting(filterContext);
+        }
+
+        protected override void OnActionExecuted(ActionExecutedContext filterContext)
+        {
+            if (ValidationMessages.Count > 0)
+            {
+                ViewBag.MessageType = ValidationMessages.First().MessageType.ToString();
+                ViewBag.ValidationMessages = ValidationMessages;
+            }
+            base.OnActionExecuted(filterContext);
+        }
 
         public bool AddValidationMessage(int ValidationCode)
         {
@@ -30,6 +75,7 @@ namespace EvolucionaMovil.Models.Classes
             ValidationMessages.Add(new CrossValidationMessage { ValidationCode = ValidationCode });
             return true;
         }
+
         public bool AddValidationMessage(cabinet.patterns.enums.enumMessageType MessageType, string Message)
         {
             if (ValidationMessages == null)
@@ -65,6 +111,34 @@ namespace EvolucionaMovil.Models.Classes
             set
             {
                 _validationMessages = value;
+            }
+        }
+
+        public int PayCenterId
+        {
+            get
+            {
+                return _payCenterId;
+            }
+            set
+            {
+                _payCenterId = value;
+            }
+        }
+
+        public string PayCenterName
+        {
+            get
+            {
+                if (HttpContext.User.IsInRole(enumRoles.PayCenter.ToString()))
+                {
+                    _payCenterName = HttpContext.User.Identity.Name;
+                }
+                else
+                {
+                    _payCenterName = PayCentersRepository.GetPayCenterNameById(PayCenterId);
+                }
+                return _payCenterName;
             }
         }
     }
