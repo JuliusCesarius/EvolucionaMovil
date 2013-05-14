@@ -97,7 +97,7 @@ function bindGrid(options) {
          { name: 'FechaCreacion', displayName: 'Fecha', cssClass: 'fechacreacion' },
          { name: 'Clave', displayName: 'Clave', cssClass: 'clave' },
          { name: 'Concepto', cssClass: 'concepto' },
-         { name: 'Status', cssClass: 'status', displayName: 'Estatus', customTemplate: '<span alt="{Comentarios}" class=" {Status} qtip">{Status}</span>' },
+         { name: 'Status', cssClass: 'status', displayName: 'Estatus', customTemplate: '<span alt="{Comentarios}" class=" {StatusString} qtip">{StatusString}</span>' },
          { name: 'Abono', cssClass: 'abono' },
          { name: 'Cargo', cssClass: 'cargo' },
          { name: 'Saldo', cssClass: "saldo" }

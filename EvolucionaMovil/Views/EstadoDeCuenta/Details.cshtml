@@ -1,42 +1,137 @@
-﻿@model EvolucionaMovil.Models.ReporteDepositoVM
+﻿@model EvolucionaMovil.Models.EstadoCuentaVM 
+@using EvolucionaMovil.Models.Enums; 
 
 @{
     ViewBag.Title = "Detalle de Movimiento";
 }
+<script src="@Url.Content("~/Scripts/EstadoDeCuenta-Details.js")" type="text/javascript"></script>
 
 <fieldset class="fwith300">
     <h2>Información del Movimiento</h2>
-    <div class="display-label">Banco / Número de Cuenta</div>
+      <div class="display-label">Clave</div>
+   <div class="display-field">
+        @Html.DisplayFor(model => model.Clave)
+       
+    </div>
+
+    <div class="display-label">Pay Center</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.PayCenter)
+    </div>
+
+     <div class="display-label">Cuenta de Depósito</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Cuenta)
+    </div>
+
+@*    <div class="display-label">Banco / Número de Cuenta</div>
     <div class="display-field">
         @Html.DisplayFor(model => model.Banco)
-        Información
-    </div>
+    </div>*@
 
-    <div class="display-label">Cuenta</div>
+@*    <div class="display-label">CuentaBancaria</div>
     <div class="display-field fsl fwb">
-        @Html.DisplayFor(model => model.Cuenta)
-        PAGO DE SERVICIOS
-    </div>
+        @Html.DisplayFor(model => model.CuentaBancaria )
+    </div>*@
 
-    <div class="display-label">Referencia Bancaria</div>
+  @*  <div class="display-label">Referencia Bancaria</div>
     <div class="display-field">
         @Html.DisplayFor(model => model.Referencia)
-        954872934857
-    </div>
+    </div>*@
 
     <div class="display-label">Monto</div>
     <div class="display-field fsxl fwb">
-        @Html.DisplayFor(model => model.Monto)
-        $3,200.00
+        @Html.DisplayFor(model => model.MontoString) 
+        
+        @if (@Model.isAbono)
+        { <div class="display-field">(Abono)</div>  }
+                                                    
+    </div>
+     <div class="display-label fsl">Motivo</div>
+     <div class="display-field">
+        @Html.DisplayFor(model => model.Motivo) 
+
+        
     </div>
 
-    <div class="display-label">Fecha Pago</div>
+      <div class="display-label fsl">Status</div>
+     <div class="display-field">
+        @Html.DisplayFor(model => model.StatusString)
+        
+    </div>
+    <div class="display-label">Saldo actual</div>
     <div class="display-field">
-        @Html.DisplayFor(model => model.FechaPago)
-        13/ENE/2013 a las 03:23:23 pm
+        @Html.DisplayFor(model => model.Saldo)
+        
     </div>
 
-    <div></div>
-    <div></div>
-    <input type="button" class="freshbutton-blue" class="freshbutton-blue" value="Aceptar" onclick="history.back();" />
+    <div class="display-label">Fecha de creación</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.FechaCreacion)   
+    </div>
+
+  @using (Html.BeginForm())
+  {
+     <input type="hidden" name ="MovimientoId" value="@Model.MovimientoId "/>
+      <div>
+             @if (@Model.Status != enumEstatusMovimiento.Cancelado.GetHashCode())
+             {
+                 if (ViewBag.RoleUser == enumRoles.Staff.GetHashCode() || ViewBag.Role == enumRoles.Administrator.GetHashCode())
+                 {
+                  <div>
+                 
+                     @if (@Model.Status != enumEstatusMovimiento.Aplicado.GetHashCode() && @Model.Status != enumEstatusMovimiento.Rechazado.GetHashCode() )
+                         {
+                              if (@Model.Status == enumEstatusMovimiento.Rechazado.GetHashCode())
+                              {
+                                <input type="button" id = "Aplicar"  name="CambioEstatusVM.Estatus" class="freshbutton-blue" value="Aplicar" /> 
+                 //onclick="MuestraComentario('Aplicar')"
+                              }
+                              else
+                              {
+                                 <input type="submit" id = "Aplicar" name="CambioEstatusVM.Estatus" class="freshbutton-blue" value="Aplicar" />
+                              }
+                         }
+                      @if (@Model.Status != enumEstatusMovimiento.Rechazado.GetHashCode())
+                        {
+                            <input type="button" id = "Rechazar"  class="freshbutton-blue" value="Rechazar" /> 
+                 //onclick="MuestraComentario('Rechazar')"  style="display: none;"
+                        }
+                     </div>  
+                     <div id="ComentarioStaff" > 
+            
+                         <div id="actionName" class="display-field fsl fwb"></div> 
+                        <div class="display-label">@Html.LabelFor(model => model.CambioEstatusVM.Comentario)</div>
+                         <div class="display-field">@Html.EditorFor(model => model.CambioEstatusVM.Comentario)</div>
+                      <div>
+                         <input type="submit" class="freshbutton-blue" value="Aceptar" />
+                         <input id ="action" type="hidden" name="CambioEstatusVM.Estatus"  class="freshbutton-blue" value="Rechazar" />
+                         <input type="button" name="" onclick="OcultaComentario()" class="freshbutton-blue" value="Cancelar" />
+                        </div>
+                 
+                     </div>  
+                 
+            
+                 }
+             }
+      </div>
+  }
+  
+    <div id="HistorialStatus">
+    <div  class="listHeader">Hitórico de Estatus</div>
+    @if (Model.HistorialEstatusVM != null)
+    {
+        foreach (var item in Model.HistorialEstatusVM)
+        { 
+           <div class="listRow">
+              <span class="listCell Estatus @item.Estatus fwb"> @item.Estatus </span>  
+              <span class="listCell Comentarios"> @item.Comentarios </span>    
+              <span class="listCell Usuario"> @item.UserName</span>     
+              <span class="listCell Fecha"> @item.Fecha</span>
+            </div> 
+        }
+    }
+    </div>
+    @Html.ActionLink("Regresar", "Index", null, new { @class = "freshbutton-blue small" })
+    @*<input type="button" class="freshbutton-blue" value="Aceptar" onclick="history.back();" />*@
 </fieldset>

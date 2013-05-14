@@ -229,6 +229,7 @@
     <Content Include="Content\themes\base\images\logoComex.png" />
     <Content Include="Content\themes\base\images\logo_evoluciona.jpg" />
     <Content Include="Content\themes\base\images\ok-ico.png" />
+    <Content Include="Content\themes\base\images\oops.jpg" />
     <Content Include="Content\themes\base\images\qtip.png" />
     <Content Include="Content\themes\base\images\repdep.jpg" />
     <Content Include="Content\themes\base\images\search.png" />
@@ -289,6 +290,7 @@
     <Content Include="Scripts\Depositos.js" />
     <Content Include="Scripts\DetallePayCenter.js" />
     <Content Include="Scripts\jquery.colorbox-min.js" />
+    <Content Include="Scripts\EstadoDeCuenta-Details.js" />
     <Content Include="Scripts\jquery.formatCurrency.js" />
     <Content Include="Scripts\PagoServicios-Create.js" />
     <Content Include="Scripts\Paquetes-comprar.js" />
