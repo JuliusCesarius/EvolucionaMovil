@@ -18,13 +18,15 @@ namespace EvolucionaMovil.Models
         public string Cargo { get; set; }
         public string Saldo { get; set; }
         public string FechaCreacion { get; set; }
-        public string Status { get; set; }
+        public int Status { get; set; }
         public string Motivo { get; set; }
 
         public string Cuenta { get; set; }
         public string PayCenter { get; set; }
         public string MontoString { get; set; }
+        public string StatusString { get { return ((enumEstatusMovimiento)this.Status).ToString(); } }
         public Boolean isAbono { get; set; }
         public List<HistorialEstatusVM> HistorialEstatusVM { get; set; }
+        public CambioEstatusVM CambioEstatusVM { get; set; }
     }
 }

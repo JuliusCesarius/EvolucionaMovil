@@ -15,6 +15,8 @@ using System.Globalization;
 using System.Threading;
 using EvolucionaMovil.Models.Classes;
 using EvolucionaMovil.Attributes;
+using System.Web.Security;
+using cabinet.patterns.enums;
 
 namespace EvolucionaMovil.Controllers
 { 
@@ -69,36 +71,91 @@ namespace EvolucionaMovil.Controllers
         {
             //Cuenta cuenta = repository.LoadById(id);
            
-         Movimiento movimiento =   repository.LoadById(id);
-         PayCentersRepository PayCentersRepository = new PayCentersRepository();
-         PayCenter PayCenter = PayCentersRepository.LoadById(movimiento.PayCenterId);
-
-           int cuentaId = movimiento.Cuenta.CuentaId ;
-           string cuenta  = ((enumTipoCuenta) movimiento.Cuenta.TipoCuenta).ToString();
-            string motivo =((enumMotivo ) movimiento.Motivo).ToString(); 
-              
-            BancosRepository BancoRepository = new BancosRepository();
-            //BancoRepository.LoadById();
-
-            EstadoCuentaVM EstadoCuentaVM = new EstadoCuentaVM()
-            {
-               Clave = movimiento.Clave,
-                MontoString = movimiento.Monto.ToString("C3"),
-                FechaCreacion = movimiento.FechaCreacion.ToString(),
-                Status = ((enumEstatusMovimiento)movimiento.Status).ToString(),
-                Cuenta = cuenta,
-               PayCenter  = PayCenter.Nombre,
-                Motivo = ((enumMotivo)movimiento.Motivo).ToString(),
-                Saldo = (movimiento.SaldoActual!= null ?((decimal)movimiento.SaldoActual).ToString("C3"): "0"),
-                isAbono = movimiento.IsAbono ,
-                HistorialEstatusVM = movimiento.Movimientos_Estatus.OrderByDescending(x => x.FechaCreacion).Where(x => x.Comentarios !="").Select(x => new HistorialEstatusVM { Fecha = x.FechaCreacion.ToString(), Estatus = ((enumEstatusMovimiento)x.Status).ToString(), Comentarios =x.Comentarios, UserName =x.UserName }).ToList()
-            };
-
-         
-            //Mapper.Map(cuenta, cuentaVM);
-            return View(EstadoCuentaVM);
+            return View(FillEstadoDeCuentaVM(id));
         }
 
+        [HttpPost]
+        [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.Staff })]
+        public ViewResult Details(EstadoCuentaVM  model)
+        {
+            var id = model.MovimientoId ;
+            var action = model.CambioEstatusVM.Estatus;
+            string comentario = model.CambioEstatusVM.Comentario != null ? model.CambioEstatusVM.Comentario.TrimEnd() : string.Empty ;
+            AbonoRepository AbonoRepository;
+            if (id > 0)
+            {
+                Movimiento Movimiento = repository.LoadById(id);
+                if (Movimiento != null)
+                {
+                    AbonoRepository = new AbonoRepository(repository.context);//
+                    Abono abono = AbonoRepository.LoadById(Movimiento.Id);
+                    if (abono != null)
+                    {
+                        if (Movimiento.IsAbono)
+                        {
+                            enumEstatusMovimiento nuevoEstatus = (enumEstatusMovimiento)Movimiento.Status;
+                            switch (action)
+                            {
+                                case "Cancelar":
+                                    nuevoEstatus = enumEstatusMovimiento.Cancelado;
+                                    break;
+                                case "Aplicar":
+                                    nuevoEstatus = enumEstatusMovimiento.Aplicado;
+                                    break;
+                                case "Rechazar":
+                                    nuevoEstatus = enumEstatusMovimiento.Rechazado;
+                                    break;
+                            }
+
+                            EstadoCuentaBR estadoCuentaBR = new EstadoCuentaBR(repository.context);
+
+                          //  Movimiento.Status = (Int16)nuevoEstatus;
+                            abono.Status = (Int16)nuevoEstatus;
+                            
+                            estadoCuentaBR.ActualizarMovimiento(Movimiento.MovimientoId, nuevoEstatus, comentario);
+                            this.Succeed = estadoCuentaBR.Succeed;
+                            this.ValidationMessages = estadoCuentaBR.ValidationMessages;
+
+                            if (Succeed)
+                            {
+                                Succeed= repository.Save();
+                                if (Succeed)
+                                {
+                                    AddValidationMessage(enumMessageType.Succeed, "El movimiento ha sido " + nuevoEstatus.ToString() + " correctamente");
+                                }
+                                else
+                                {
+                                    //TODO: implemtar código que traiga mensajes del repositorio
+                                }
+
+                            }
+                        }
+                        else
+                        {
+                            //todo: Si no es abono que hacer?
+                        }
+                    }
+                    else
+                    {
+                        AddValidationMessage(enumMessageType.BRException, "No se encontro el Abono.");
+                    }
+
+                }
+                else
+                {
+                    AddValidationMessage(enumMessageType.BRException, "No se encontro el movimiento.");
+                }
+
+            }
+            else
+            {
+                AddValidationMessage(enumMessageType.BRException , "El movimiento no es valido.");
+            }
+
+            model = FillEstadoDeCuentaVM(id);
+            return View(model);
+ 
+        }
         #region Privates
 
         protected override void Dispose(bool disposing)
@@ -148,10 +205,8 @@ namespace EvolucionaMovil.Controllers
                     Cargo = !x.IsAbono ? x.Monto.ToString("C3", ci) : string.Empty,
                     Saldo = ((enumEstatusMovimiento)x.Status) == enumEstatusMovimiento.Aplicado ? getSaldoAcumulado(x.IsAbono, x.Monto).ToString("C3", ci) : "-",
                     FechaCreacion = x.FechaCreacion.ToShortDateString(),
-                    Status = ((enumEstatusMovimiento)x.Status).ToString()
-                    //,
-                    //HistorialEstatusVM = Comentarios(x.MovimientoId)
-                    //
+                    Status  = x.Status
+
                 });
 
             //Thread.CurrentThread.CurrentCulture; ;es-MX
@@ -186,7 +241,7 @@ namespace EvolucionaMovil.Controllers
 
         private string Comentarios( Movimiento mov)
         {
-          List<HistorialEstatusVM> HistorialEstatusVM = mov.Movimientos_Estatus.OrderByDescending(x => x.FechaCreacion).Where(x => x.MovimientoId == mov.MovimientoId && x.Comentarios !="").Select(x => new HistorialEstatusVM { Fecha = x.FechaCreacion.ToString(), Estatus = ((enumEstatusMovimiento)x.Status).ToString(), Comentarios =x.Comentarios, UserName =x.UserName }).ToList();
+          List<HistorialEstatusVM> HistorialEstatusVM = mov.Movimientos_Estatus.OrderByDescending(x => x.FechaCreacion).Where(x => x.MovimientoId == mov.MovimientoId && x.Comentarios !="" && x.Comentarios !=null).Select(x => new HistorialEstatusVM { Fecha = x.FechaCreacion.ToString(), Estatus = ((enumEstatusMovimiento)x.Status).ToString(), Comentarios =x.Comentarios, UserName =x.UserName }).ToList();
 
             string comentarios= "";
           foreach (HistorialEstatusVM item in HistorialEstatusVM)
@@ -197,13 +252,6 @@ namespace EvolucionaMovil.Controllers
           }
             return comentarios;
 
-            //<div class="listRow">
-            //  <span class="listCell Estatus @item.Estatus fwb"> @item.Estatus </span>  
-            //  <span class="listCell Comentarios"> @item.Comentarios </span>    
-            //  <span class="listCell Usuario"> @item.UserName</span>     
-            //  <span class="listCell Fecha"> @item.Fecha</span>
-            //</div> 
-
         }
 
         private decimal getSaldoAcumulado(bool IsAbono, decimal Monto)
@@ -212,6 +260,59 @@ namespace EvolucionaMovil.Controllers
             return _saldo;
         }
 
+        private int GetRolUser(string pUser)
+        {
+            var roles = Roles.GetRolesForUser(pUser);
+            int rolUser = 0;
+            if (roles.Any(x => x == enumRoles.PayCenter.ToString()))
+            {
+                rolUser = enumRoles.PayCenter.GetHashCode();
+            }
+            else if (roles.Any(x => x == enumRoles.Staff.ToString() || x == enumRoles.Administrator.ToString()))
+            {
+                rolUser = enumRoles.Staff.GetHashCode();
+            }
+
+            return rolUser;
+        }
+
+        private EstadoCuentaVM  FillEstadoDeCuentaVM(Int32 id)
+        {
+            Movimiento movimiento = repository.LoadById(id);
+            PayCentersRepository PayCentersRepository = new PayCentersRepository();
+            PayCenter PayCenter = PayCentersRepository.LoadById(movimiento.PayCenterId);
+
+            int cuentaId = movimiento.Cuenta.CuentaId;
+            string cuenta = ((enumTipoCuenta)movimiento.Cuenta.TipoCuenta).ToString();
+            string motivo = ((enumMotivo)movimiento.Motivo).ToString();
+
+            BancosRepository BancoRepository = new BancosRepository();
+            //BancoRepository.LoadById();
+
+            EstadoCuentaVM EstadoCuentaVM = new EstadoCuentaVM()
+            {
+                PayCenterId = PayCenterId,
+                MovimientoId = id,
+                Clave = movimiento.Clave,
+                MontoString = movimiento.Monto.ToString("C3"),
+                FechaCreacion = movimiento.FechaCreacion.ToString(),
+                Status = movimiento.Status,
+                Cuenta = cuenta,
+                PayCenter = PayCenter.Nombre,
+                Motivo = ((enumMotivo)movimiento.Motivo).ToString(),
+                Saldo = (movimiento.SaldoActual != null ? ((decimal)movimiento.SaldoActual).ToString("C3") : "0"),
+                isAbono = movimiento.IsAbono,
+                HistorialEstatusVM = movimiento.Movimientos_Estatus.OrderByDescending(x => x.FechaCreacion).Select(x => new HistorialEstatusVM { Fecha = x.FechaCreacion.ToString(), Estatus = ((enumEstatusMovimiento)x.Status).ToString(), Comentarios = x.Comentarios, UserName = x.UserName }).ToList()
+            };
+
+
+            int RoleUser = GetRolUser(HttpContext.User.Identity.Name);
+
+            ViewBag.RoleUser = RoleUser;
+
+            return EstadoCuentaVM;
+
+        }
         #endregion
     }
 }

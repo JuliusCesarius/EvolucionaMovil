@@ -277,6 +277,7 @@
     <Content Include="Scripts\additional-methods.min.js" />
     <Content Include="Scripts\Depositos.js" />
     <Content Include="Scripts\DetallePayCenter.js" />
+    <Content Include="Scripts\EstadoDeCuentaDetails.js" />
     <Content Include="Scripts\jquery.formatCurrency.js" />
     <Content Include="Scripts\PagoServicios-Create.js" />
     <Content Include="Scripts\Paquetes-comprar.js" />
