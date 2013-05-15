@@ -1,23 +1,19 @@
 ﻿$(document).on("ready", function () {
     $("#FechaPago").datepicker({ "dateFormat": "dd/mm/yy", maxDate: '0' });
+    $("#ProveedorId").on("change", proveedorChanged);
+    if (!$("[name='TipoCuenta']").is(':checked')) {
+        $($("[name='TipoCuenta']")[0]).prop('checked', true);
+    }
+    $("[name='TipoCuenta']").on("click", function () {
+        createProvedoresDropdown($(this).val());
+    });
+    createProvedoresDropdown(0);
     $("#PayCenterName").autocomplete({
         source: "FindPayCenter",
         select: function (event, ui) {
             var label = ui.item.label;
             var v = ui.item.value;
             $('#hddPayCenterId').val(v);
-            // update what is displayed in the textbox
-            $.getJSON("GetCuentaDepositoPayCenter/" + v, function (result) {
-                $("#CuentaId").html("");
-                $.each(result, function (i, item) {
-                    $("#CuentaId").append($('<option/>', {
-                        value: item.CuentaId,
-                        text: item.Nombre
-                    }));
-                    $("#CuentaId").val(0);
-                    $("#CuentaId").trigger("change");
-                });
-            });
             this.value = label;
             return false;
         },
@@ -31,7 +27,7 @@
         }
     });
     $("#btnSave").on("click", Save);
-    $("#CuentaBancariaId").on("change", function () { $("#hddCuentaBancaria").val($("#CuentaBancariaId").find(":selected").text()); });
+    $("#CuentaBancariaId").on("change", cuentaBancariaChanged);
 
     // $("#CuentaId").on("change", function () { $("#hddTipoCuenta").val($("#CuentaId").find(":selected").text()); });
     $("#CuentaId").on("change", CuentaDeposito);
@@ -51,6 +47,47 @@
 });
 
 //$("#Rechazar").css("display", "inline");
+
+function proveedorChanged(event) {
+    if ($(event.currentTarget)[0].selectedOptions.length) {
+        var selected = $($(event.currentTarget)[0].selectedOptions[0]).data();
+        createBancosDropdown(selected.Bancos);
+    } else {
+        $("#BancoId").html("");
+    }
+}
+
+function cuentaBancariaChanged() {
+    if ($("#CuentaBancariaId").find(":selected").length > 0) {
+        var cuenta = $($("#CuentaBancariaId").find(":selected")[0]).data();
+        if (cuenta.Detalles != null && cuenta.Detalles != "") {
+            $("#details").html("<label for='det1' ><span class='fwb'>Detalles:</span> " + cuenta.Detalles + "</label>");
+            $("#details").show("blind", {}, 500);
+        } else {
+            $("#details").hide("blind", {}, 500);
+        }
+        if (cuenta.Comprobante) {
+            $("#Imagen").show("blind", {}, 500);
+        } else {
+            $("#Imagen").hide("blind", {}, 500);
+        }
+    } else {
+        $("#Imagen").hide("blind", {}, 500);
+        $("#details").hide("blind", {}, 500);
+    }
+    $("#hddCuentaBancaria").val($("#CuentaBancariaId").find(":selected").text());
+}
+
+function createBancosDropdown(bancos) {
+    $("#BancoId").html("");
+    $.each(bancos, function (i, item) {
+        $("#BancoId").append($('<option/>', {
+            value: item.BancoId,
+            text: item.Nombre
+        }).data(item));
+    });
+    $("#BancoId").trigger("change");
+}
 
 function CuentaDeposito() {
     $("#hddTipoCuenta").val($("#CuentaId").find(":selected").text());
@@ -100,6 +137,20 @@ function Save(event) {
         event.preventDefault();
     }
 }
+function createProvedoresDropdown(TipoCuenta) {
+    $("#ProveedorId").html("");
+    var proveedores = $.parseJSON($("#hddProveedores").val());
+    $.each(proveedores, function (i, item) {
+        if (item.TipoCuenta == TipoCuenta) {
+            $("#ProveedorId").append($('<option/>', {
+                value: item.ProveedorId,
+                text: item.Nombre
+            }).data(item));
+        }
+        //if (i == 0) { cdefault = item.CuentaBancariaId; }
+    });
+    $("#ProveedorId").trigger("change");
+}
 function BancoIdChanged() {
     var bancoId = $(this).val();
     $("#hddBanco").val($("#BancoId").find(":selected").text());
@@ -110,14 +161,14 @@ function BancoIdChanged() {
             CuentaBancariaId.html("<option/>");
             CuentaBancariaId.val(0);
         } else {
-        var cdefault = 0;
-            var cuentas = $.parseJSON($("#hddCuentas").val());
+            var cdefault = 0;
+            var cuentas = $("#BancoId").find(":selected").data().CuentasBancarias;
             $.each(cuentas, function (i, item) {
                 if (item.BancoId == bancoId) {
                     CuentaBancariaId.append($('<option/>', {
-                        value: item.CuentaBancariaId,
-                        text: item.NumeroCuenta + " - " + item.Titular
-                    }));
+                        value: item.CuentaId,
+                        text: item.Caption
+                    }).data(item));
                 }
                 CuentaBancariaId.trigger("change");
                 if (i == 0) { cdefault = item.CuentaBancariaId; }

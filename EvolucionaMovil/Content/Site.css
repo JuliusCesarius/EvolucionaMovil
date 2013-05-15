@@ -275,7 +275,7 @@ input[type="password"]
     border: 1px solid #ccc;
     padding: 5px;
     padding-left: 7px;
-    padding-right: 7px;
+    padding-right: 36px;
     font-size: 1.2em;
     color: #444;
     width:359px;
@@ -328,7 +328,10 @@ label
     zoom: *100;
     cursor:text;
 }
-
+label.radio
+{
+    position:static;cursor:pointer;
+}
 .small label
 {
     top: 3px;
@@ -1020,6 +1023,8 @@ legend{font-size:2em;font-weight:400}
 #filtros #search{background: url("../Content/themes/base/images/search.png") no-repeat 50% 50%;border:none;cursor:pointer;margin-left:-20px;padding:.3em ;position:absolute;width:16px;z-index:999}
 #filtros #search:hover{padding:.4em}
 #filtros #lblAplicadosOnly, #filtros #aplicadosOnly{cursor:pointer}
+#details{padding:.5em;margin-bottom:.5em;background:rgb(242, 250, 255);width:349px}
+#details label{position:static;}
 
 /**Prospecto**/
 .titulo h1, .titulo a{display:inline;} 

@@ -43,34 +43,36 @@ namespace EvolucionaMovil
             try
             {
                 ErrorHandler.LogError(exception, null);
-
-                var routeData = new RouteData();
-                routeData.Values["controller"] = "Error";
-                routeData.Values["action"] = "GenericError";
-                routeData.Values["exception"] = exception;
-
-                Response.Clear();
-                Server.ClearError();
-
-                var httpException = exception as HttpException;
-                if (httpException != null && Response.StatusCode == 404)
+                if (!HttpContext.Current.IsDebuggingEnabled)
                 {
-                    Response.StatusCode = httpException.GetHttpCode();
-                    switch (Response.StatusCode)
-                    {
-                        //case 403:
-                        //    routeData.Values["action"] = "Http403";
-                        //    break;
-                        case 404:
-                            routeData.Values["action"] = "NotFound";
-                            break;
-                    }
-                }
+                    var routeData = new RouteData();
+                    routeData.Values["controller"] = "Error";
+                    routeData.Values["action"] = "GenericError";
+                    routeData.Values["exception"] = exception;
 
-                IController errorsController = new ErrorController();
-                var rc = new RequestContext(new HttpContextWrapper(Context), routeData);
-                errorsController.Execute(rc);
-                HttpContext.Current.Response.End();
+                    Response.Clear();
+                    Server.ClearError();
+
+                    var httpException = exception as HttpException;
+                    if (httpException != null && Response.StatusCode == 404)
+                    {
+                        Response.StatusCode = httpException.GetHttpCode();
+                        switch (Response.StatusCode)
+                        {
+                            //case 403:
+                            //    routeData.Values["action"] = "Http403";
+                            //    break;
+                            case 404:
+                                routeData.Values["action"] = "NotFound";
+                                break;
+                        }
+                    }
+
+                    IController errorsController = new ErrorController();
+                    var rc = new RequestContext(new HttpContextWrapper(Context), routeData);
+                    errorsController.Execute(rc);
+                    HttpContext.Current.Response.End();
+                }
             }
             catch (Exception ex)
             {

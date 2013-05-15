@@ -10,7 +10,7 @@
     <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
     <script type="text/javascript" src="http://select-box.googlecode.com/svn/tags/0.2/jquery.selectbox-0.2.min.js"></script>
    
-    <script src="@Url.Content("~/Scripts/ReportarDeposito.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/Depositos-Report.js")" type="text/javascript"></script>
 }
 
 @{
@@ -34,35 +34,42 @@
                     @Html.ValidationMessageFor(model => model.PayCenterName)
                  </div>
             }
-            <div class="editor-label"><label for="CuentaId">Cuentas de depósito.</label></div>        
+            
             <div class="editor-field">
-                @Html.DropDownListFor(model => model.CuentaId, new SelectList(Model.CuentasDeposito, "CuentaId", "Nombre", null), "")
-                <input type="hidden" id="hddTipoCuenta" name = "TipoCuenta" />
-                @Html.ValidationMessageFor(model => model.CuentaId)
+                <input type="radio" name="TipoCuenta" id="TipoCuenta-Pago_de_Servicios" value="0" />
+                <label class="radio" for="TipoCuenta-Pago_de_Servicios">Pago de Servicios</label>
+                <input type="radio" name="TipoCuenta" id="TipoCuenta-Recargas_Electronicas" value="1" />
+                <label class="radio" for="TipoCuenta-Recargas_Electronicas">Recargas Electrónicas</label>
+            </div> 
+
+            <div class="editor-label"><label for="ProveedorId">Proveedores</label></div>        
+            <div class="editor-field">                
+                <select id="ProveedorId" name="ProveedorId"><option/></select>
+                <input type="hidden" id="hddProveedores" value="@Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.Proveedores)"/>
+                @Html.ValidationMessageFor(model => model.ProveedorId)
             </div> 
              
-            <div id="Imagen" @(Model.CuentaId == null || Model.CuentaId <= 0 ? "style=display:none" : "")>
-            <input type="hidden" id="hddRutaFichaDeposito" name = "RutaFichaDeposito" />
-                <iframe src="../ImgFichaDeposito/IndexPartial" frameborder="0" style="height: 160px; width: 110%">
-                           
-                        
-               </iframe>
-             @* @{Html.RenderPartial("../ImgFichaDeposito/IndexPartial");}*@
-            </div>
         <div class="editor-label"><label for="BancoId">Banco</label></div>        
         <div class="editor-field">
-            @Html.DropDownListFor(model => model.BancoId, new SelectList(ViewBag.Bancos, "BancoId", "Nombre", null), "")
+            <select id="BancoId" name="BancoId"><option/></select>
             @Html.ValidationMessageFor(model => model.BancoId)
-        </div>        
+        </div>
         <div class="editor-label" ><label  for="CuentaBancariaId">Cuenta</label></div>        
         <div class="editor-field">
             <select id="CuentaBancariaId" name="CuentaBancariaId"><option/></select>
             <input type="hidden"  id="hddCuentaBancariaId" value="@Model.CuentaBancariaId " />
-            <input type="hidden" id="hddCuentas" value="@Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.Cuentas)"/>
+            <input type="hidden" id="hddCuentas" value=""/>
             <input type="hidden" id="hddCuentaBancaria" name="CuentaBancaria"/>
             <input type="hidden" id="hddBanco" name="Banco"/>
             @Html.ValidationMessageFor(model => model.CuentaBancariaId)
         </div>
+        <div id="details" style="display:none">
+        </div>
+        <div id="Imagen" style="display:none">
+            <input type="hidden" id="hddRutaFichaDeposito" name = "RutaFichaDeposito" />
+                <iframe src="../ImgFichaDeposito/IndexPartial" frameborder="0" style="height: 160px; width: 110%"></iframe>
+             @* @{Html.RenderPartial("../ImgFichaDeposito/IndexPartial");}*@
+            </div>
         <div class="editor-label">
             <label for="Referencia">Referencia</label>
         </div>

@@ -21,7 +21,7 @@ namespace EvolucionaMovil.Repositories
         }
         public IEnumerable<Movimiento> GetMovimientos(int TipoCuentaId = -1, int PayCenterId = -1)
         {
-            return context.Movimientos.Join(context.Cuentas, m => m.CuentaId, c => c.CuentaId, (m, c) => new { m, c })
+            return context.Movimientos.Join(context.CuentasPayCenters, m => m.CuentaId, c => c.CuentaId, (m, c) => new { m, c })
                 .Where(mc => (mc.c.TipoCuenta == TipoCuentaId || TipoCuentaId == -1) && (mc.m.PayCenterId == PayCenterId || PayCenterId == -1))
                 .Select(mc=>mc.m)
                 .OrderByDescending(m => m.FechaCreacion);

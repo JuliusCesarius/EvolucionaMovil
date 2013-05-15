@@ -157,6 +157,7 @@
     <Compile Include="Models\Helpers\MvcHtmlHelpers.cs" />
     <Compile Include="Models\HistorialEstatusVM.cs" />
     <Compile Include="Models\Interfaces\IEvolucionaMovil.cs" />
+    <Compile Include="Models\ProveedorVM.cs" />
     <Compile Include="Models\PagoServicioVM.cs" />
     <Compile Include="Models\ReporteDepositoVM.cs" />
     <Compile Include="Models\SimpleGridResult.cs" />
@@ -188,6 +189,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\BancosRepository.cs" />
     <Compile Include="Repositories\AbonosRepository.cs" />
+    <Compile Include="Repositories\ProveedoresRepository.cs" />
     <Compile Include="Repositories\ErrorsRepository.cs" />
     <Compile Include="Repositories\EstadoDeCuentaRepository.cs" />
     <Compile Include="Repositories\MovimientosRepository.cs" />
@@ -315,7 +317,7 @@
     <Content Include="Scripts\Preafiliacion.js" />
     <Content Include="Scripts\prefixfree.min.js" />
     <Content Include="Scripts\RegistroPaycenter.js" />
-    <Content Include="Scripts\ReportarDeposito.js" />
+    <Content Include="Scripts\Depositos-Report.js" />
     <Content Include="Scripts\simpleGrid.js" />
     <Content Include="Scripts\UploadImage.js" />
     <Content Include="Scripts\SubirImagenPaycenter.js" />

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using EvolucionaMovil.Models;
 using cabinet.patterns.clases;
+using EvolucionaMovil.Models.Enums;
 
 namespace EvolucionaMovil.Repositories
 {
@@ -24,9 +25,9 @@ namespace EvolucionaMovil.Repositories
         //    return base.context.Usuarios.ToList();
         //}
 
-        public IEnumerable<Cuenta> LoadTipoCuentas(Int32 PayCenterId)
+        public IEnumerable<CuentaPayCenter> LoadTipoCuentas(Int32 PayCenterId)
         {
-            return base.context.Cuentas.Where(x => x.PayCenterId == PayCenterId).ToList();
+            return base.context.CuentasPayCenters.Where(x => x.PayCenterId == PayCenterId).ToList();
         }
 
         //public IEnumerable<Prospecto> LoadProspectos()
@@ -57,6 +58,42 @@ namespace EvolucionaMovil.Repositories
             return payCenters;
         }
 
+        public CuentaPayCenter GetCuentaPayCenter(int PayCenterId, enumTipoCuenta TipoCuenta, int ProveedorId)
+        {
+            var payCenter = context.PayCenters.Where(p => p.PayCenterId == PayCenterId && p.Baja == false).FirstOrDefault();
+            if (payCenter == null)
+            {
+                //todo:Implementar CrossValidationMessages
+            }
+            var cuentasPayCenter = payCenter.CuentasPayCenters.Where(p=>p.ProveedorId == ProveedorId && p.Baja==false).FirstOrDefault();
+            return cuentasPayCenter;
+        }
+        /// <summary>
+        /// Crea el registro de la Cuenta del PayCenter por proveedor. Permite asignar cuentas a un paycenter de forma dinámica
+        /// </summary>
+        /// <param name="PayCenterId"></param>
+        /// <param name="TipoCuenta"></param>
+        /// <param name="ProveedorId"></param>
+        /// <returns>El objeto creado con Id con valor</returns>
+        public CuentaPayCenter CreateCuentaPayCenter(int PayCenterId, enumTipoCuenta TipoCuenta, int ProveedorId)
+        {
+            var cuentaPayCenter = GetCuentaPayCenter(PayCenterId, TipoCuenta, ProveedorId);
+            //Si existe no lo crea
+            if (cuentaPayCenter != null)
+            {
+                //todo:Implementar CrossValidationMessages
+                return null;
+            }
+            cuentaPayCenter = new CuentaPayCenter
+            {
+                PayCenterId = PayCenterId,
+                TipoCuenta = (short)TipoCuenta.GetHashCode(),
+                ProveedorId = ProveedorId
+            };
+            this.context.CuentasPayCenters.AddObject(cuentaPayCenter);
+            this.Save();
+            return cuentaPayCenter;
+        }
         public string GetPayCenterNameById(int PayCenterId)
         {
             var payCenter = context.PayCenters.Where(p => p.PayCenterId == PayCenterId).FirstOrDefault();

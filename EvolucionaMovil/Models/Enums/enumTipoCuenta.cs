@@ -8,9 +8,6 @@ namespace EvolucionaMovil.Models.Enums
     public enum enumTipoCuenta
     {
         Pago_de_Servicios,
-        Telcel,
-        Recarga_Movil,
-        Recargas_Faciles,
-        Otro_Servicio
+        Recargas_Electronicas
     }
 }
