@@ -73,7 +73,7 @@
                                     </ul>
                                 </li>
                                 <li>@Html.ActionLink("Edos. Cuenta", "Index", "EstadoDeCuenta")</li>
-                            if (HttpContext.Current.User.IsInRole(enumRoles.Staff.ToString()))
+                            if (HttpContext.Current.User.IsInRole(enumRoles.PayCenter.ToString()))
                             {
                                 <li>@Html.ActionLink("Paquetes", "Buy", "Paquetes")</li>
                             }
@@ -120,8 +120,7 @@
         <div class="innerfooter">
             <p>
                 <a class="title">Evoluciones Movil ®</a> 
-                <br />Amecameca No. 25 Colonia Altavilla, Ecatepec de Morelos,
-                Edo. de México. <br /><span class="tel">Tel. </span><span class="tel">(55) 57 46 5274</span>
+                <br />México D.F. a @DateTime.Today.ToLongDateString()  @DateTime.Now.ToLongTimeString() <br /><span class="tel">Tel. </span><span class="tel">(55) 57 46 5274</span>
             </p>
             <p class="tar">
                 <a>POLÍTICAS DE CONFIDENCIALIDAD</a><br />

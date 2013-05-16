@@ -1039,6 +1039,7 @@ legend{font-size:2em;font-weight:400}
 .newPaycenter{padding-top:1.2em;}
 .checkActivo{color:Black; font-size:1.4em !important;}
 #confirmacion,#notfound{font-size: 1.3em;}
+#nombre{width:140px}
 .btnReturn{text-align:right; width:310px; margin:4px;}
 .infoPaycenter{margin:14px 0 7px 0}
 .infoPaycenter h2, .infoPaycenter a{display:inline;}
