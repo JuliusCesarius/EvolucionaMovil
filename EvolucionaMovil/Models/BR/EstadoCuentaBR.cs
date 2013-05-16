@@ -107,6 +107,7 @@ namespace EvolucionaMovil.Models.BR
             Int16 nuevoEstatusNumber = movimiento.Status;
             var movimientos_Estatus = new Movimientos_Estatus { PayCenterId = PayCenterId, CuentaId = CuentaId, UserName = currentUser, Status = nuevoEstatusNumber, FechaCreacion = DateTime.Now };
             movimiento.Movimientos_Estatus.Add(movimientos_Estatus);
+            movimiento.UserName = currentUser;
 
             estadoDeCuentaRepository.Add(movimiento);
             if (_context == null)

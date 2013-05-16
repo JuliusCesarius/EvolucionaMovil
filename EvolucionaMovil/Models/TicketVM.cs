@@ -16,8 +16,15 @@ namespace EvolucionaMovil.Models
         public Pago Pago { get; set; }
         public int PagoId { get; set; }
         public int PayCenterId { get; set; }
-        public string ReferenciaBancaria { get; set; }
         public int TicketId { get; set; }
         public string TipoServicio { get; set; }
+        public string Referencia { get; set; }
+
+        public List<DetallePago> DetallePagos { get; set; }
+
+        public TicketVM()
+        {
+            DetallePagos = new List<DetallePago>();
+        }
     }
 }

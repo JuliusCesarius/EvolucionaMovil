@@ -420,12 +420,6 @@
     <Content Include="Views\PagoServicios\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\PagoServicios\Edit.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\PagoServicios\Delete.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Paquetes\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>

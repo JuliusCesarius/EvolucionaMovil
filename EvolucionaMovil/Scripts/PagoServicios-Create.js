@@ -10,9 +10,10 @@ function getDetalleServicio() {
     if (servicioId > 0) {
         $.getJSON("/PagoServicios/getDetalleServicio?servicioId=" + servicioId, function (data) {
             var divCampos = $("#camposAdicionales");
+            divCampos.html("");
             $(data).each(function () {
-                divCampos.html(" <div class='editor-label'><label for='" + this.Campo + "'>" + this.Campo + "</label></div><div id='div" + this.Campo + "'  class='editor-field'></div>");
-                $(("#div" + this.Campo)).append($('<input/>').attr('name', this.Campo).attr('type','Text'));                
+                divCampos.append(" <div class='editor-label'><label for='" + this.Campo + "'>" + this.Campo + "</label></div><div id='div" + this.DetalleServicioId + "'  class='editor-field'></div>");
+                $(("#div" + this.DetalleServicioId)).append($('<input/>').attr('name', this.Campo).attr('type', 'Text'));
             });
         });
     }

@@ -2236,13 +2236,15 @@ namespace EvolucionaMovil.Models
         /// <param name="detalleServicioId">Initial value of the DetalleServicioId property.</param>
         /// <param name="campo">Initial value of the Campo property.</param>
         /// <param name="baja">Initial value of the Baja property.</param>
-        public static DetalleServicio CreateDetalleServicio(global::System.Int32 servicioId, global::System.Int32 detalleServicioId, global::System.String campo, global::System.Boolean baja)
+        /// <param name="esReferencia">Initial value of the EsReferencia property.</param>
+        public static DetalleServicio CreateDetalleServicio(global::System.Int32 servicioId, global::System.Int32 detalleServicioId, global::System.String campo, global::System.Boolean baja, global::System.Boolean esReferencia)
         {
             DetalleServicio detalleServicio = new DetalleServicio();
             detalleServicio.ServicioId = servicioId;
             detalleServicio.DetalleServicioId = detalleServicioId;
             detalleServicio.Campo = campo;
             detalleServicio.Baja = baja;
+            detalleServicio.EsReferencia = esReferencia;
             return detalleServicio;
         }
 
@@ -2423,6 +2425,30 @@ namespace EvolucionaMovil.Models
         private global::System.Boolean _Baja;
         partial void OnBajaChanging(global::System.Boolean value);
         partial void OnBajaChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Boolean EsReferencia
+        {
+            get
+            {
+                return _EsReferencia;
+            }
+            set
+            {
+                OnEsReferenciaChanging(value);
+                ReportPropertyChanging("EsReferencia");
+                _EsReferencia = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("EsReferencia");
+                OnEsReferenciaChanged();
+            }
+        }
+        private global::System.Boolean _EsReferencia;
+        partial void OnEsReferenciaChanging(global::System.Boolean value);
+        partial void OnEsReferenciaChanged();
 
         #endregion
 
@@ -2496,7 +2522,8 @@ namespace EvolucionaMovil.Models
         /// <param name="clave">Initial value of the Clave property.</param>
         /// <param name="fechaCreacion">Initial value of the FechaCreacion property.</param>
         /// <param name="baja">Initial value of the Baja property.</param>
-        public static Movimiento CreateMovimiento(global::System.Int32 payCenterId, global::System.Int32 cuentaId, global::System.Int32 movimientoId, global::System.Decimal monto, global::System.Int16 motivo, global::System.Int32 id, global::System.Boolean isAbono, global::System.Int32 cuentaOrigenId, global::System.Int16 status, global::System.String clave, global::System.DateTime fechaCreacion, global::System.Boolean baja)
+        /// <param name="userName">Initial value of the UserName property.</param>
+        public static Movimiento CreateMovimiento(global::System.Int32 payCenterId, global::System.Int32 cuentaId, global::System.Int32 movimientoId, global::System.Decimal monto, global::System.Int16 motivo, global::System.Int32 id, global::System.Boolean isAbono, global::System.Int32 cuentaOrigenId, global::System.Int16 status, global::System.String clave, global::System.DateTime fechaCreacion, global::System.Boolean baja, global::System.String userName)
         {
             Movimiento movimiento = new Movimiento();
             movimiento.PayCenterId = payCenterId;
@@ -2511,6 +2538,7 @@ namespace EvolucionaMovil.Models
             movimiento.Clave = clave;
             movimiento.FechaCreacion = fechaCreacion;
             movimiento.Baja = baja;
+            movimiento.UserName = userName;
             return movimiento;
         }
 
@@ -2838,6 +2866,30 @@ namespace EvolucionaMovil.Models
         private global::System.Boolean _Baja;
         partial void OnBajaChanging(global::System.Boolean value);
         partial void OnBajaChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String UserName
+        {
+            get
+            {
+                return _UserName;
+            }
+            set
+            {
+                OnUserNameChanging(value);
+                ReportPropertyChanging("UserName");
+                _UserName = StructuralObject.SetValidValue(value, false);
+                ReportPropertyChanged("UserName");
+                OnUserNameChanged();
+            }
+        }
+        private global::System.String _UserName;
+        partial void OnUserNameChanging(global::System.String value);
+        partial void OnUserNameChanged();
 
         #endregion
 

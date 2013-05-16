@@ -1,67 +1,79 @@
 ﻿@model EvolucionaMovil.Models.TicketVM
-
 @{
     ViewBag.Title = "Ticket";
 }
-
-<h2>Ticket</h2>
-
+<h2>
+    Ticket</h2>
 <fieldset>
-    <legend>TicketVM</legend>
-
-    <div class="display-label">Folio</div>
+    <div class="display-label">
+        Servicio</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.TipoServicio)
+    </div>
+    <div class="display-label">
+        Folio</div>
     <div class="display-field">
         @Html.DisplayFor(model => model.Folio)
     </div>
-
-    <div class="display-label">FechaCreacion</div>
+    <div class="display-label">
+        FechaCreacion</div>
     <div class="display-field">
         @Html.DisplayFor(model => model.FechaCreacion)
     </div>
-
-    <div class="display-label">FechaPago</div>
+    <div class="display-label">
+        FechaPago</div>
     <div class="display-field">
         @Html.DisplayFor(model => model.FechaPago)
     </div>
-
-    <div class="display-label">ClienteEmail</div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.ClienteEmail)
-    </div>
-
-    <div class="display-label">ClienteNombre</div>
+    <div class="display-label">
+        ClienteNombre</div>
     <div class="display-field">
         @Html.DisplayFor(model => model.ClienteNombre)
     </div>
-
-    <div class="display-label">ClienteTelefono</div>
+    <div class="display-label">
+        ClienteEmail</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.ClienteEmail)
+    </div>
+    <div class="display-label">
+        ClienteTelefono</div>
     <div class="display-field">
         @Html.DisplayFor(model => model.ClienteTelefono)
     </div>
-
-    <div class="display-label">Comision</div>
+    <div class="display-label">
+        Comision</div>
     <div class="display-field">
         @Html.DisplayFor(model => model.Comision)
     </div>
-
-    <div class="display-label">Importe</div>
+    <div class="display-label">
+        Importe</div>
     <div class="display-field">
         @Html.DisplayFor(model => model.Importe)
     </div>
-
-    <div class="display-label">Leyenda</div>
+    <div class="display-label">
+        Referencia</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Referencia)
+    </div>
+    <div class="display-label">
+        Leyenda</div>
     <div class="display-field">
         @Html.DisplayFor(model => model.Leyenda)
     </div>
-
-    <div class="display-label">ReferenciaBancaria</div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.ReferenciaBancaria)
-    </div>
-
-    <div class="display-label">TipoServicio</div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.TipoServicio)
+    <div id="DetallesServicio">
+        <div class="listHeader">
+            Detalle de servicio</div>
+        <hr />
+        @if (Model.DetallePagos != null)
+        {
+            foreach (var item in Model.DetallePagos)
+            { 
+            <div class="listRow">
+                <span class="listCell fwb">@item.Campo </span><span class="listCell">@item.Valor
+                </span>
+            </div> 
+            }
+        }
     </div>
 </fieldset>
 <p>
