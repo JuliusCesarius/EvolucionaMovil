@@ -239,6 +239,11 @@ namespace EvolucionaMovil.Controllers
                 exito = false;
             }
 
+            if (model.RutaFichaDeposito == null || model.RutaFichaDeposito.TrimEnd() == string.Empty )
+            {
+                AddValidationMessage(enumMessageType.BRException, "Por favor seleccione la imagen de la ficha de depósito");
+                exito = false;
+            }
 
             if (exito)
             {
@@ -322,7 +327,8 @@ namespace EvolucionaMovil.Controllers
                 PayCenter = abono.PayCenter.UserName,
                 Referencia = abono.Referencia,
                 TipoCuenta = ((enumTipoCuenta)abono.Cuenta.TipoCuenta).ToString(),
-                HistorialEstatusVM = movimiento != null ? movimiento.Movimientos_Estatus.OrderByDescending(x => x.FechaCreacion).Select(x => new HistorialEstatusVM { Fecha = x.FechaCreacion.ToString(), Estatus = ((enumEstatusMovimiento)x.Status).ToString(), Comentarios = x.Comentarios, UserName = x.UserName }).ToList() : null
+                HistorialEstatusVM = movimiento != null ? movimiento.Movimientos_Estatus.OrderByDescending(x => x.FechaCreacion).Select(x => new HistorialEstatusVM { Fecha = x.FechaCreacion.ToString(), Estatus = ((enumEstatusMovimiento)x.Status).ToString(), Comentarios = x.Comentarios, UserName = x.UserName }).ToList() : null,
+                RutaFichaDeposito = abono.RutaFichaDeposito 
             };
             return abonoVM;
         }
@@ -400,7 +406,7 @@ namespace EvolucionaMovil.Controllers
             var lastComment = EstadoDeCuentaRepository.GetUltimoCambioEstatus(enumMotivo.Deposito, AbonoId);
             if (lastComment != null)
             {
-                return lastComment.Comentarios;
+                return lastComment.Comentarios== null ? string.Empty : lastComment.Comentarios;
             }
             else
             {

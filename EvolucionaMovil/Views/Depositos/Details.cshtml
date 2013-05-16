@@ -36,11 +36,13 @@
     <div class="display-label">FechaPago</div>
     <div class="display-field">
         @Html.DisplayFor(model => model.FechaPago)
+       
     </div>
    
     <div class="display-label">Referencia</div>
     <div class="display-field">
         @Html.DisplayFor(model => model.Referencia)
+         <input type="button" id="VerImagen" class="freshbutton-blue" value="Ver ficha de depósito" />
     </div>
 
     <div class="display-label">Estatus</div>
@@ -52,7 +54,13 @@
     <div class="display-field">
         @Html.DisplayFor(model => model.FechaCreacion)
     </div>
-        
+    <div id="FichaDeposito" class="listRow" >
+         <div class="display-field fsl fwb">Ficha de depósito</div>
+         <div class="display">
+             <input type="image"  title ="Imagen de la ficha de depósito" style="border:1px;  height: 80px; width: 75%" id ="ImagenFicha"  src ="@Model.RutaFichaDeposito" /> 
+            @*  @Html.DisplayFor(model => model.RutaFichaDeposito )*@
+        </div>
+    </div> 
  @using (Html.BeginForm())
  {
      <input type="hidden" name ="AbonoId" value="@Model.AbonoId"/>
