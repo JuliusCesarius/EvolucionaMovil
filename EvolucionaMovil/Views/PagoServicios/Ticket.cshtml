@@ -5,6 +5,18 @@
 <h2>
     Ticket</h2>
 <fieldset>
+    @if (!string.IsNullOrEmpty(ViewBag.LogoPayCenter))
+    {
+        <img id="logo" src="@ViewBag.LogoPayCenter" />        
+    }
+    else
+    { 
+        <img src="../../Content/Imagen/logodefault.jpg" />
+    }
+    <br />
+    <div >
+        Comisión<span class="display-label"> @ViewBag.Comision</span></div>
+    <br />
     <div class="display-label">
         Servicio</div>
     <div class="display-field">
@@ -76,6 +88,13 @@
         }
     </div>
 </fieldset>
+<div>
+    <p>@ViewBag.Mensaje</p>
+</div>
 <p>
     @Html.ActionLink("Back to List", "Index")
+</p>
+<p>
+    <button id="print" type="button" onclick="window.print(); return false;" class="freshbutton-blue">
+        Imprimir</button>
 </p>

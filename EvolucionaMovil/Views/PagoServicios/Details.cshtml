@@ -68,18 +68,20 @@
         <hr />
         <div id="HistoricoMovimientos">
             <div class="listHeader">
-                Historico Movimientos</div>
-            @if (Model.DetallePagos != null)
-            {
-                foreach (var item in Model.HistorialEstatusVM)
-                { 
-                <div class="listRow">
-                    <span class="listCell Estatus @item.Estatus fwb">@item.Estatus </span><span class="listCell Comentarios">
-                        @item.Comentarios </span><span class="listCell Usuario">@item.UserName</span>
-                    <span class="listCell Fecha">@item.Fecha</span>
-                </div> 
-                }
-            }
+                <a id="desgloseHistorial" href="javascript:toggle();">Historico Movimientos</a>
+            </div>
+            <div id="lsHistorial" style="display: none">
+                @if (Model.DetallePagos != null)
+                {
+                    foreach (var item in Model.HistorialEstatusVM)
+                    { 
+                    <div class="listRow">
+                        <span class="listCell Estatus @item.Estatus fwb">@item.Estatus </span><span class="listCell Comentarios">
+                            @item.Comentarios </span><span class="listCell Usuario">@item.UserName</span>
+                        <span class="listCell Fecha">@item.Fecha</span>
+                    </div> 
+                    }
+                }</div>
         </div>
         <hr />
         <div class="edidor-label">
@@ -112,17 +114,23 @@
                 </div>
                 }
             }
-            <input type="submit" id="btnEnviar" style="display:none" />
+            <input type="submit" id="btnEnviar" style="display: none" />
         </div>
-    <div><p>@ViewBag.Mensaje</p></div> 
+        <div>
+            <p>@ViewBag.Mensaje</p>
+        </div>
     </fieldset>
 }
 <div>
     @Html.ActionLink("Back to List", "Index")
 </div>
-<script type="text/javascript" >
+<script type="text/javascript">
     function asignaStatus(status) {
         $("#CambioEstatusVM_Estatus").val(status);
         $("#btnEnviar").click();
+    }
+    function toggle() {
+        var options = {};
+        $("#lsHistorial").toggle("blind", options, 500);
     }
 </script>

@@ -192,6 +192,7 @@
   <ItemGroup>
     <Content Include="Content\bancos.css" />
     <Content Include="Content\extracss.css" />
+    <Content Include="Content\Imagen\logodefault.jpg" />
     <Content Include="Content\jquery.selectbox-0.2.css" />
     <Content Include="Content\MasterPage.css" />
     <Content Include="Content\MvcMembership.css" />

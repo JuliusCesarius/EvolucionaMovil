@@ -12,7 +12,11 @@
     <h2>
         Pagos registrados</h2>
 </div>
-<form action="/PagoServicios" method="post"></form>
+<form action="/PagoServicios" method="post">
+</form>
+<div>
+    <p>@ViewBag.Mensaje</p>
+</div>
 <div class="resumen fr saldos">
     <h3>
         Saldo Actual <span id="sSaldoActual" title="Detalle de los saldos disponibles">@ViewData["SaldoActual"]</span></h3>
@@ -45,3 +49,5 @@
 </div>
 <input type="hidden" id="hddData" value="@Newtonsoft.Json.JsonConvert.SerializeObject(Model)" />
 <div id="grdPagoServicios" />
+<br />
+
