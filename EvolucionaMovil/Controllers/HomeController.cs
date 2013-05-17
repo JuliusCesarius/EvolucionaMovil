@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using EvolucionaMovil.Repositories;
+using EvolucionaMovil.Models;
+using EvolucionaMovil.Models.Enums;
+using EvolucionaMovil.Models.Extensions;
 
 namespace EvolucionaMovil.Controllers
 {
@@ -10,11 +14,40 @@ namespace EvolucionaMovil.Controllers
     {
         public ActionResult Index()
         {
-            return RedirectToAction("Logon","Account");
+            //string[] lines = System.IO.File.ReadAllLines(@"C:\servicioscampos.txt");
+            //ServiciosRepository serviciosRepository = new ServiciosRepository();
+
+            //foreach (string line in lines)
+            //{
+            //    var campos = line.Split('\t');
+            //    var servicioId = Convert.ToInt32(campos.First());
+            //    var servicio = serviciosRepository.LoadById(servicioId);
+            //    var tipoDato = enumTipoDato.Cadena.GetHashCode();
+            //    for (var i = 2; i < campos.Length - 1; i++)
+            //    {
+            //        var campo = campos[i].Trim();
+            //        if (!string.IsNullOrEmpty(campo) && !campo.ContainsInvariant("Nombre del titular") && !campo.ContainsInvariant("Fecha límite de pago") && !campo.ContainsInvariant("Importe a Pagar"))
+            //        {
+            //            if (campo.ContainsInvariant("fecha"))
+            //            {
+            //                tipoDato = enumTipoDato.Fecha.GetHashCode();
+            //            }
+            //            else if (campo.ContainsInvariant("import"))
+            //            {
+            //                tipoDato = enumTipoDato.Dinero.GetHashCode();
+            //            }
+            //            servicio.DetalleServicios.Add(new DetalleServicio { Campo = campo, Tipo = (short)tipoDato, FechaCreacion = DateTime.Now, ServicioId = servicioId });
+            //        }
+            //    }
+            //}
+            //serviciosRepository.Save();
+            return View();
+            //return RedirectToAction("Logon","Account");
         }
 
         public ActionResult About()
         {
+
             return View();
         }
     }

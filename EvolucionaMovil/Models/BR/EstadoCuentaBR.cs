@@ -61,14 +61,17 @@ namespace EvolucionaMovil.Models.BR
         {
             Succeed = true;
             var movimientos = estadoDeCuentaRepository.GetMovimientos(enumTipoCuenta.Pago_de_Servicios.GetHashCode(), PayCenterId);
+            var abonosAplicados = movimientos.Where(x => x.IsAbono && x.Status == enumEstatusMovimiento.Aplicado.GetHashCode()).Sum(x => x.Monto);
+            var cargosAplicados = movimientos.Where(x => !x.IsAbono && x.Status == enumEstatusMovimiento.Aplicado.GetHashCode()).Sum(x => x.Monto);
             SaldosPagoServicio saldosPagoServicio = new SaldosPagoServicio
             {
-                SaldoActual = (movimientos.Where(x => x.IsAbono && x.Status == enumEstatusMovimiento.Aplicado.GetHashCode()).Sum(x => x.Monto) - movimientos.Where(x => !x.IsAbono && x.Status == enumEstatusMovimiento.Aplicado.GetHashCode()).Sum(x => x.Monto)),
+                SaldoActual = abonosAplicados - cargosAplicados,
                 SaldoPorAbonar = movimientos.Where(x => x.IsAbono && x.Status == enumEstatusMovimiento.Procesando.GetHashCode()).Sum(x => x.Monto),
                 SaldoPorCobrar = movimientos.Where(x => !x.IsAbono && x.Status == enumEstatusMovimiento.Procesando.GetHashCode()).Sum(x => x.Monto),
             };
             saldosPagoServicio.SaldoPendiente = saldosPagoServicio.SaldoPorAbonar - saldosPagoServicio.SaldoPorCobrar;
             saldosPagoServicio.SaldoDisponible = saldosPagoServicio.SaldoActual - saldosPagoServicio.SaldoPorCobrar;
+            saldosPagoServicio.EventosDisponibles = estadoDeCuentaRepository.GetEventosDisponibles(PayCenterId);
             return saldosPagoServicio;
         }
 
@@ -383,6 +386,10 @@ namespace EvolucionaMovil.Models.BR
             /// El Saldo Disponible es el resultante de la resta del Saldo Actual menos el Saldo Por Cobrar.
             /// </summary>
             public decimal SaldoDisponible { get; set; }
+            /// <summary>
+            /// Número de eventos de pago de servicio disponibles
+            /// </summary>
+            public decimal EventosDisponibles { get; set; }
         }
 
     }
