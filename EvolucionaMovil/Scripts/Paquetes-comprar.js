@@ -1,5 +1,6 @@
 ﻿$(document).on("ready", function () {
     $(":checkbox").on("click", checkbox_click);
+    $(":checkbox").each(function (i, item) { $(item).data("precio", $(item).attr("precio")); });
 });
 
 function checkbox_click(event) {
@@ -9,7 +10,7 @@ function checkbox_click(event) {
     $(":checked").parent().find(".hddSelected").val(true);
     $(":checked").parent().addClass("sgSelRow");
     $(":checked").each(function (i, item) {
-        sumPrice += parseFloat($(item).val());
+        sumPrice += parseFloat($(item).data("precio"));
     });
     var saldoActual = $("#saldoActual").html().replace("$", "").replace(",", "");
     var total = saldoActual - sumPrice;

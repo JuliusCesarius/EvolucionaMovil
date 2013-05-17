@@ -239,7 +239,8 @@ namespace EvolucionaMovil.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    model.CuentaId=GetOrCreateCuentaPayCenter(model.TipoCuenta,model.ProveedorId);
+                    PaycenterBR payCenterBR = new PaycenterBR();
+                    model.CuentaId=payCenterBR.GetOrCreateCuentaPayCenter(PayCenterId, model.TipoCuenta,model.ProveedorId);
                     Abono abono = new Abono
                     {
                         BancoId = model.BancoId,
@@ -282,16 +283,6 @@ namespace EvolucionaMovil.Controllers
         }
 
         #region Funciones
-
-        private int GetOrCreateCuentaPayCenter(enumTipoCuenta TipoCuenta, int ProveedorId){
-            PayCentersRepository payCentersRepository = new PayCentersRepository();
-            var cuentaPayCenter = payCentersRepository.GetCuentaPayCenter(PayCenterId, TipoCuenta, ProveedorId);
-            if (cuentaPayCenter == null)
-            {
-                cuentaPayCenter = payCentersRepository.CreateCuentaPayCenter(PayCenterId, TipoCuenta, ProveedorId);
-            }
-            return cuentaPayCenter.CuentaId;
-        }
 
         /// <summary>
         /// LLena el AbonoVM

@@ -26,6 +26,17 @@ namespace EvolucionaMovil.Repositories
                 .Select(mc=>mc.m)
                 .OrderByDescending(m => m.FechaCreacion);
         }
+
+        public int GetEventosDisponibles(int PayCenterId)
+        {
+            //TODO: Implementar lógica cuando se agregue el campo que determine si un pago se realizó con un Evento, y saber si está aplicado o no, y así descontarlo de los disponibles
+            var eventos = context.CompraEventos.Where(x => x.PayCenterId == PayCenterId && x.Consumidos < x.Eventos);
+            int numEventos =0;
+           if( eventos.Count()>0){
+               numEventos = eventos.Sum(x=>x.Eventos);
+           }
+            return numEventos;
+        }
         /// <summary>
         /// Obtiene el registro del último registro generado por cambio de estatus
         /// </summary>

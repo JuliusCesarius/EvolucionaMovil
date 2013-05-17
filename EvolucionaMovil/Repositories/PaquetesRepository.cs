@@ -41,5 +41,15 @@ namespace EvolucionaMovil.Repositories
             }
             return context.CompraEventos.Where(x => x.PayCenterId == PayCenterId).Sum(x =>  x.Eventos - x.Consumidos);
         }
+        public decimal GetPrecioByPaqueteId(int PaqueteId)
+        {
+            var paquete = context.Paquetes.Where(x => x.PaqueteId == PaqueteId && !x.Baja).FirstOrDefault();
+            if (paquete == null)
+            {
+                //TODO:Analizar que debo hacer en caso de que no exista el Id especificado
+                throw new Exception("No se encuentra el objeto con el Id especificado");
+            }
+            return paquete.Precio;
+        }
     }
 }
