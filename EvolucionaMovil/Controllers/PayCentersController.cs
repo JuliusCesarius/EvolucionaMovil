@@ -13,6 +13,7 @@ using System.Web.Security;
 using EvolucionaMovil.Models.Classes;
 using EvolucionaMovil.Attributes;
 using EvolucionaMovil.Models.Enums;
+using EvolucionaMovil.Models.BR;
 
 namespace EvolucionaMovil.Controllers
 {
@@ -34,6 +35,22 @@ namespace EvolucionaMovil.Controllers
         {
             var estadoCuentaResult = getPaycenters(parameters);
             return Newtonsoft.Json.JsonConvert.SerializeObject(estadoCuentaResult);
+        }
+        
+        [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.Staff })]
+        public string GetSaldosPagoServicio(int PayCenterId)
+        {
+            EstadoCuentaBR br = new EstadoCuentaBR();
+            var saldo = br.GetSaldosPagoServicio(PayCenterId);
+            return Newtonsoft.Json.JsonConvert.SerializeObject(saldo);
+        }
+
+        [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.Staff })]
+        public string FindPayCenter(string term)
+        {
+            PayCentersRepository payCentersRepository = new PayCentersRepository();
+            var payCenters = payCentersRepository.GetPayCenterBySearchString(term).Select(x => new { label = x.UserName + " - " + x.Nombre, value = x.PayCenterId });
+            return Newtonsoft.Json.JsonConvert.SerializeObject(payCenters);
         }
 
         [HttpPost]

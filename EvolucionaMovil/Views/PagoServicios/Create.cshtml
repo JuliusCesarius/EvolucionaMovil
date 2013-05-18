@@ -1,4 +1,5 @@
-﻿@model EvolucionaMovil.Models.PagoVM
+﻿@using EvolucionaMovil.Models.Enums
+@model EvolucionaMovil.Models.PagoVM
 @{
     ViewBag.Title = "Create";
 }
@@ -12,13 +13,25 @@
     @Html.ValidationSummary(true)
     <fieldset>
         <legend>Pago</legend>
-        <div class="resumen fr saldos">
+        @{var hiddenString = "style=display:none";}
+
+        <div class="resumen fr saldos" @(Model.PayCenterId > 0 ? string.Empty : hiddenString)>
             <h3>
                 Saldo Actual <span id="saldoActual">@ViewData["SaldoActual"]</span></h3>
             <h3>
                 Eventos <span id="eventoActual">@ViewData["Eventos"]</span></h3>
             <a href="/Paquetes/Buy">[comprar eventos]</a>
         </div>
+        @if (HttpContext.Current.User.IsInRole(enumRoles.Staff.ToString()) || HttpContext.Current.User.IsInRole(enumRoles.Administrator.ToString()))
+        {
+            <div class="editor-label"><label for="PayCenterName">PayCenters</label></div>        
+                <div class="editor-field">
+                @Html.EditorFor(model => model.PayCenterName)
+                <input type="hidden" id="hddPayCenterId" name="PayCenterId" value="@Model.PayCenterId" />
+                @Html.ValidationMessageFor(model => model.PayCenterName)
+                </div>
+        }
+            
         <div class="editor-label">
             @Html.LabelFor(model => model.ServicioId)
         </div>
@@ -52,7 +65,7 @@
         <p>
             <input type="submit" class="freshbutton-blue" value="Create" />
         </p>
-        <div class="resumen fr saldos">
+        <div class="resumen fr saldos"@(Model.PayCenterId > 0 ? string.Empty : hiddenString)>
             <h3>
                 Saldo Final <span id="saldoFinal">@ViewData["SaldoFinal"]</span></h3>
             <h3>

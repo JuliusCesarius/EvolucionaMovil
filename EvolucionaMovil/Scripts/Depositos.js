@@ -39,7 +39,7 @@
     });
 
     $("#PayCenterName").autocomplete({
-        source: "Depositos/FindPayCenter",
+        source: "PayCenters/FindPayCenter",
         select: function (event, ui) {
             var label = ui.item.label;
             var v = ui.item.value;

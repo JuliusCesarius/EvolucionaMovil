@@ -444,6 +444,8 @@
           <Property Name="ClienteTelefono" Type="varchar" Nullable="false" MaxLength="25" />
           <Property Name="FechaCreacion" Type="datetime" Nullable="false" />
           <Property Name="Baja" Type="bit" Nullable="false" />
+          <Property Name="FechaVencimiento" Type="datetime" Nullable="false" />
+          <Property Name="PayCenterName" Type="varchar" Nullable="false" MaxLength="50" />
         </EntityType>
         <Association Name="FK_Abonos_Cuentas">
           <End Role="CuentasPayCenter" Type="EvolucionaMovilBDModel.Store.CuentasPayCenter" Multiplicity="1" />
@@ -996,6 +998,8 @@
           <Property Type="Boolean" Name="Baja" Nullable="false" />
           <NavigationProperty Name="PayCenter" Relationship="EvolucionaMovilBDModel.FK_Tickets_PayCenters" FromRole="Ticket" ToRole="PayCenter" />
           <NavigationProperty Name="Pago" Relationship="EvolucionaMovilBDModel.FK_Tickets_Pagos" FromRole="Ticket" ToRole="Pago" />
+          <Property Type="DateTime" Name="FechaVencimiento" Nullable="false" />
+          <Property Type="String" Name="PayCenterName" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <Association Name="FK_CuentasBancarias_Bancos">
           <End Type="EvolucionaMovilBDModel.Banco" Role="Banco" Multiplicity="1" />
@@ -1553,6 +1557,8 @@
           <EntitySetMapping Name="Tickets">
             <EntityTypeMapping TypeName="EvolucionaMovilBDModel.Ticket">
               <MappingFragment StoreEntitySet="Tickets">
+                <ScalarProperty Name="PayCenterName" ColumnName="PayCenterName" />
+                <ScalarProperty Name="FechaVencimiento" ColumnName="FechaVencimiento" />
                 <ScalarProperty Name="Baja" ColumnName="Baja" />
                 <ScalarProperty Name="FechaCreacion" ColumnName="FechaCreacion" />
                 <ScalarProperty Name="ClienteTelefono" ColumnName="ClienteTelefono" />

@@ -1,100 +1,109 @@
 ﻿@model EvolucionaMovil.Models.TicketVM
+@section Styles{
+    <link href="@Url.Content("~/Content/Ticket.css")" rel="stylesheet" type="text/css" />
+}
 @{
     ViewBag.Title = "Ticket";
 }
-<h2>
-    Ticket</h2>
-<fieldset>
+<div class="formLeft ticketimage"></div>
+<div class="formRight">
+
+<div id="Ticket">
     @if (!string.IsNullOrEmpty(ViewBag.LogoPayCenter))
     {
         <img id="logo" src="@ViewBag.LogoPayCenter" />        
     }
     else
     { 
-        <img src="../../Content/Imagen/logodefault.jpg" />
+        <img id="logo" src="../../Content/themes/base/images/logo_evoluciona.jpg" />
     }
-    <br />
-    <div >
-        Comisión<span class="display-label"> @ViewBag.Comision</span></div>
-    <br />
-    <div class="display-label">
-        Servicio</div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.TipoServicio)
+    <div class="clear">
     </div>
-    <div class="display-label">
-        Folio</div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.Folio)
-    </div>
-    <div class="display-label">
-        FechaCreacion</div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.FechaCreacion)
-    </div>
-    <div class="display-label">
-        FechaPago</div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.FechaPago)
-    </div>
-    <div class="display-label">
-        ClienteNombre</div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.ClienteNombre)
-    </div>
-    <div class="display-label">
-        ClienteEmail</div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.ClienteEmail)
-    </div>
-    <div class="display-label">
-        ClienteTelefono</div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.ClienteTelefono)
-    </div>
-    <div class="display-label">
-        Comision</div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.Comision)
-    </div>
-    <div class="display-label">
-        Importe</div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.Importe)
-    </div>
-    <div class="display-label">
-        Referencia</div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.Referencia)
-    </div>
-    <div class="display-label">
-        Leyenda</div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.Leyenda)
-    </div>
-    <div id="DetallesServicio">
-        <div class="listHeader">
-            Detalle de servicio</div>
-        <hr />
+    <h1>
+        Pago de servicio en Proceso</h1>
+    <h2>
+        Su pago en este momento está siendo procesado.</h2>
+    <span id="Fecha">
+        @Html.DisplayFor(model => model.FechaCreacionString)
+    </span>
+    <span id="Folio">Folio @Html.DisplayFor(model => model.Folio)
+    </span>
+    <fieldset>
+        <div class="display-label">
+            PayCenter</div>
+        <div class="display-field">
+            @Html.DisplayFor(model => model.PayCenterName)
+        </div>
+        <div class="display-label">
+            Servicio</div>
+        <div class="display-field fwb fsl">
+            @Html.DisplayFor(model => model.TipoServicio)
+        </div>
         @if (Model.DetallePagos != null)
         {
             foreach (var item in Model.DetallePagos)
             { 
-            <div class="listRow">
-                <span class="listCell fwb">@item.Campo </span><span class="listCell">@item.Valor
-                </span>
-            </div> 
+            <div class="display-label">
+                @item.Campo</div>
+            <div class="display-field">@item.Valor</div> 
             }
         }
-    </div>
-</fieldset>
-<div>
-    <p>@ViewBag.Mensaje</p>
+        <div class="display-label">
+            Fecha Vencimiento</div>
+        <div class="display-field">
+            @Html.DisplayFor(model => model.FechaVencimientoString)
+        </div>
+        @if (!string.IsNullOrEmpty(Model.ClienteNombre))
+        {
+            <div class="display-label">
+                Nombre Cliente</div>
+            <div class="display-field">
+                @Html.DisplayFor(model => model.ClienteNombre)
+            </div>
+        }
+        @if (!string.IsNullOrEmpty(Model.ClienteEmail))
+        {
+            <div class="display-label">
+                Email Cliente</div>
+            <div class="display-field">
+                @Html.DisplayFor(model => model.ClienteEmail)
+            </div>
+        }
+        @if (!string.IsNullOrEmpty(Model.ClienteTelefono))
+        {
+            <div class="display-label">
+                Teléfono Cliente</div>
+            <div class="display-field">
+                @Html.DisplayFor(model => model.ClienteTelefono)
+            </div>
+        }
+        @if (@ViewBag.MostrarComision == true)
+        {
+            <div class="display-label">
+                Comision</div>
+            <div class="display-field">
+                @Html.DisplayFor(model => model.Comision)
+            </div>
+        }
+        <div class="display-label">
+            Importe</div>
+        <div class="display-field fwb fsxl">
+            @Html.DisplayFor(model => model.ImporteString)
+        </div>
+        @if (!string.IsNullOrEmpty(Model.Leyenda))
+        {
+            <div id="Leyenda">
+                @Html.DisplayFor(model => model.Leyenda)
+            </div>
+        }
+    </fieldset>
+
+
+        <button id="print" type="button" media="print" onclick="window.print(); return false;" class="freshbutton-blue">Imprimir</button>
 </div>
-<p>
-    @Html.ActionLink("Back to List", "Index")
-</p>
-<p>
-    <button id="print" type="button" onclick="window.print(); return false;" class="freshbutton-blue">
-        Imprimir</button>
-</p>
+</div>
+<div class="actions">
+    <a class="freshbutton-blue" href="/PagoServicios/Create">Registrar otro pago</a>
+    <a class="freshbutton-blue" href="/PagoServicios">Ir a Histórico</a>
+    </div>
+    

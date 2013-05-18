@@ -37,14 +37,6 @@ namespace EvolucionaMovil.Controllers
 
         private EstadoCuentaBR validations = new EstadoCuentaBR();
 
-        [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.Staff })]
-        public string FindPayCenter(string term)
-        {
-            PayCentersRepository payCentersRepository = new PayCentersRepository();
-            var payCenters = payCentersRepository.GetPayCenterBySearchString(term).Select(x => new { label = x.UserName + " - " + x.Nombre, value = x.PayCenterId });
-            return Newtonsoft.Json.JsonConvert.SerializeObject(payCenters);
-        }
-
         //
         // GET: /Depositos/
         [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.PayCenter, enumRoles.Staff })]

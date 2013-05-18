@@ -981,7 +981,7 @@ legend{font-size:2em;font-weight:400}
 .folio{width:100px !important;}
 .monto{text-align:right;width:80px !important;}
 .fechavencimiento{width:80px !important;}
-.servicio{width:380px !important;}
+.servicio{width:290px !important;}
 .status .Aplicado, .Aplicado{color:#000;font-weight:bold}
 .status .Procesando, .Procesando{color:#808080}
 .status .Rechazado, .Rechazado{color:#FF1D25}

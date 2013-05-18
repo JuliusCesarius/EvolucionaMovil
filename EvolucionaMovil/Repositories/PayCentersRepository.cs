@@ -58,6 +58,11 @@ namespace EvolucionaMovil.Repositories
             return payCenters;
         }
 
+        public string GetLogotipo(int PayCenterId)
+        {
+            return context.PayCenters.Where(x => x.PayCenterId == PayCenterId).Select(x=>x.Logotipo).FirstOrDefault();
+        }
+
         public CuentaPayCenter GetCuentaPayCenter(int PayCenterId, enumTipoCuenta TipoCuenta, int ProveedorId)
         {
             var payCenter = context.PayCenters.Where(p => p.PayCenterId == PayCenterId && p.Baja == false).FirstOrDefault();

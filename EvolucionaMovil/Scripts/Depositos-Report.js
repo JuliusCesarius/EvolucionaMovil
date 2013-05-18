@@ -9,7 +9,7 @@
     });
     createProvedoresDropdown(0);
     $("#PayCenterName").autocomplete({
-        source: "FindPayCenter",
+        source: "PayCenters/FindPayCenter",
         select: function (event, ui) {
             var label = ui.item.label;
             var v = ui.item.value;

@@ -13,5 +13,9 @@ namespace EvolucionaMovil.Repositories
         {
             return base.ListAll().FirstOrDefault();
         }
+        public ParametrosPayCenter GetParametrosPayCenter(int PayCenterId)
+        {            
+            return base.context.ParametrosPayCenters.FirstOrDefault();
+        }
     }
 }

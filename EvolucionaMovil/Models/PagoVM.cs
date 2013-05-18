@@ -4,9 +4,10 @@ using System.ComponentModel.DataAnnotations;
 using EvolucionaMovil.Repositories;
 using System.Linq;
 using EvolucionaMovil.Models.Enums;
+using EvolucionaMovil.Models.Interfaces;
 namespace EvolucionaMovil.Models
 {
-    public class PagoVM
+    public class PagoVM:IEvolucionaMovil
     {
 
         [Required(ErrorMessage = "El nombre es requerido")]
@@ -16,9 +17,8 @@ namespace EvolucionaMovil.Models
         public DateTime? FechaVencimiento { get; set; }
         [Required(ErrorMessage = "El importe es requerido")]
         public decimal? Importe { get; set; }
-
+        
         public int PagoId { get; set; }
-        public int PayCenterId { get; set; }
 
         public int ServicioId { get; set; }
         public string ServicioNombre { get; set; }
@@ -59,5 +59,8 @@ namespace EvolucionaMovil.Models
             HistorialEstatusVM = new List<HistorialEstatusVM>();
             Estatus = ((enumEstatusMovimiento)Status).ToString();
         }
+
+        public int PayCenterId { get; set; }
+        public string PayCenterName { get; set; }
     }
 }

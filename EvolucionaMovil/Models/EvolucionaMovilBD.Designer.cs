@@ -6964,7 +6964,9 @@ namespace EvolucionaMovil.Models
         /// <param name="clienteTelefono">Initial value of the ClienteTelefono property.</param>
         /// <param name="fechaCreacion">Initial value of the FechaCreacion property.</param>
         /// <param name="baja">Initial value of the Baja property.</param>
-        public static Ticket CreateTicket(global::System.Int32 pagoId, global::System.String folio, global::System.Int32 payCenterId, global::System.String tipoServicio, global::System.String leyenda, global::System.Decimal importe, global::System.Decimal comision, global::System.String clienteNombre, global::System.String clienteEmail, global::System.String clienteTelefono, global::System.DateTime fechaCreacion, global::System.Boolean baja)
+        /// <param name="fechaVencimiento">Initial value of the FechaVencimiento property.</param>
+        /// <param name="payCenterName">Initial value of the PayCenterName property.</param>
+        public static Ticket CreateTicket(global::System.Int32 pagoId, global::System.String folio, global::System.Int32 payCenterId, global::System.String tipoServicio, global::System.String leyenda, global::System.Decimal importe, global::System.Decimal comision, global::System.String clienteNombre, global::System.String clienteEmail, global::System.String clienteTelefono, global::System.DateTime fechaCreacion, global::System.Boolean baja, global::System.DateTime fechaVencimiento, global::System.String payCenterName)
         {
             Ticket ticket = new Ticket();
             ticket.PagoId = pagoId;
@@ -6979,6 +6981,8 @@ namespace EvolucionaMovil.Models
             ticket.ClienteTelefono = clienteTelefono;
             ticket.FechaCreacion = fechaCreacion;
             ticket.Baja = baja;
+            ticket.FechaVencimiento = fechaVencimiento;
+            ticket.PayCenterName = payCenterName;
             return ticket;
         }
 
@@ -7300,6 +7304,54 @@ namespace EvolucionaMovil.Models
         private global::System.Boolean _Baja;
         partial void OnBajaChanging(global::System.Boolean value);
         partial void OnBajaChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.DateTime FechaVencimiento
+        {
+            get
+            {
+                return _FechaVencimiento;
+            }
+            set
+            {
+                OnFechaVencimientoChanging(value);
+                ReportPropertyChanging("FechaVencimiento");
+                _FechaVencimiento = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("FechaVencimiento");
+                OnFechaVencimientoChanged();
+            }
+        }
+        private global::System.DateTime _FechaVencimiento;
+        partial void OnFechaVencimientoChanging(global::System.DateTime value);
+        partial void OnFechaVencimientoChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String PayCenterName
+        {
+            get
+            {
+                return _PayCenterName;
+            }
+            set
+            {
+                OnPayCenterNameChanging(value);
+                ReportPropertyChanging("PayCenterName");
+                _PayCenterName = StructuralObject.SetValidValue(value, false);
+                ReportPropertyChanged("PayCenterName");
+                OnPayCenterNameChanged();
+            }
+        }
+        private global::System.String _PayCenterName;
+        partial void OnPayCenterNameChanging(global::System.String value);
+        partial void OnPayCenterNameChanged();
 
         #endregion
 
