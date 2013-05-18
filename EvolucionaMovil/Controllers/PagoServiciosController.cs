@@ -10,21 +10,30 @@ using EvolucionaMovil.Repositories;
 using AutoMapper;
 using EvolucionaMovil.Models.Enums;
 using System.Web.Security;
+using EvolucionaMovil.Models.Classes;
+using cabinet.patterns.enums;
+using EvolucionaMovil.Attributes;
+using System.Globalization;
+using EvolucionaMovil.Models.BR;
 
 namespace EvolucionaMovil.Controllers
 {
-    public class PagoServiciosController : Controller
+    public class PagoServiciosController : CustomControllerBase
     {
+        #region Repositorios
         private PagoServiciosRepository repository = new PagoServiciosRepository();
         private ServiciosRepository sRepository = new ServiciosRepository();
-        private MovimientosRepository mRepository = new MovimientosRepository();
-        private TicketRepository tRepository = new TicketRepository ();
+        private TicketRepository tRepository = new TicketRepository();
         private PayCentersRepository pRepository = new PayCentersRepository();
         private ParametrosRepository parRepository = new ParametrosRepository();
+        private EstadoDeCuentaRepository eRepository = new EstadoDeCuentaRepository();
+        private PaquetesRepository pqrepository = new PaquetesRepository();
+        private CultureInfo ci = new CultureInfo("es-MX");
+        #endregion
 
-        //
-        // GET: /PagoServicios/
+        private const int PROVEEDOR_EVOLUCIONAMOVIL = 1;
 
+        [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.Staff, enumRoles.PayCenter })]
         public ViewResult Index()
         {
             ViewBag.PageSize = 10;
@@ -36,377 +45,229 @@ namespace EvolucionaMovil.Controllers
             return View(getPagosServicio(new ServiceParameterVM { pageNumber = 0, pageSize = 10 }));
         }
 
-        public ViewResult Ticket(TicketVM tVM)
-        {
-            return View(tVM);
-        }
-
         [HttpPost]
+        [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.Staff, enumRoles.PayCenter })]
         public ViewResult Index(ServiceParameterVM parameters)
         {
             ViewBag.PageSize = parameters.pageSize;
             ViewBag.PageNumber = parameters.pageNumber;
             ViewBag.SearchString = parameters.searchString;
             ViewBag.fechaInicio = parameters.fechaInicio != null ? ((DateTime)parameters.fechaInicio).ToShortDateString() : "";
-            ViewBag.FechaFin = parameters.fechaFin != null ? ((DateTime)parameters.fechaFin).ToShortDateString() : "";
+            ViewBag.FechaFin = parameters.fechaInicio != null ? ((DateTime)parameters.fechaFin).ToShortDateString() : "";
             ViewBag.OnlyAplicados = parameters.onlyAplicados;
             return View(getPagosServicio(parameters));
         }
 
-        [HttpPost]
-        public string GetPagoServicios(ServiceParameterVM parameters)
-        {
-            var pagoServiciosResult = getPagosServicio(parameters);
-
-            return Newtonsoft.Json.JsonConvert.SerializeObject(pagoServiciosResult);
-        }
-
-        //
-        // GET: /PagoServicios/Details/5
-
-
+        [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.Staff, enumRoles.PayCenter })]
         public ViewResult Details(int id)
         {
-            Pago pago = repository.LoadById(id);
-            PagoVM pagoVM = new PagoVM();
-            Mapper.CreateMap<Pago, PagoVM>().ForMember(dest => dest.Servicios, opt => opt.Ignore());
-            Mapper.Map(pago, pagoVM);
-            pagoVM.ServicioNombre = pagoVM.Servicios.Where(x => x.Value == pago.ServicioId).FirstOrDefault().Text;
-
-            //TODO:Leer el usuario que viene en la sesión
-            int RoleUser = GetRolUser("staff");
+            PagoVM pagoVM = FillPagoVM(id);
+            int RoleUser = GetRolUser(HttpContext.User.Identity.Name);
             ViewBag.Role = RoleUser;
 
             return View(pagoVM);
         }
 
         [HttpPost]
-        public ViewResult Details(PagoVM p) //Con esto se actualiza el status del pago
+        [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.Staff, enumRoles.PayCenter })]
+        public ViewResult Details(PagoVM model) //Con esto se actualiza el status del pago
         {
             //Aquí van las acciones del PayCenter y Staf para el depósito
-            var id = p.PagoId;
-            var action = p.CambioEstatusVM.Estatus;
-            string comentario = p.CambioEstatusVM.Comentario.TrimEnd();
-            Pago pago = repository.LoadById(id);
+            var id = model.PagoId;
+            var action = model.CambioEstatusVM.Estatus;
+            string comentario = model.CambioEstatusVM.Comentario != null ? model.CambioEstatusVM.Comentario.TrimEnd() : null;
+            Pago pago = repository.ListAll().Where(x => x.PagoId == model.PagoId).FirstOrDefault();
+
             if (id > 0)
             {
-                //Validar que el estatus actual del abono no este cancelado
-                if (pago.Status != enumEstatusMovimiento.Cancelado.GetHashCode())
+                var movimiento = pago.Movimiento;
+
+                //validar que exista el moviento y sino mandar mensaje de error
+                if (movimiento != null)
                 {
-                    //crear ParametrosRepository y crear instancia para obtener el parametro de MinutosProrrogaCancelacion                   
-                    short minutosProrrogaCancelacion = parRepository.ListAll().FirstOrDefault().MinutosProrrogaCancelacion;
-
-                    Boolean ComentarioValido = false;
-                    Boolean UsuarioValido = false;
-                    int Role = GetRolUser("staff");
-                    Movimiento movimiento = mRepository.LoadById(pago.MovimientoId);
-                    //validar que exista el moviento y sino mandar mensaje de error
-
-                    if (movimiento != null)
+                    EstadoCuentaBR estadoCuentaBR = new EstadoCuentaBR(repository.context);
+                    //Asigno valor default en caso de que entre en ningún case de switch
+                    enumEstatusMovimiento nuevoEstatus = (enumEstatusMovimiento)movimiento.Status;
+                    switch (action)
                     {
-                        switch (action)
+                        case "Cancelado":
+                            nuevoEstatus = enumEstatusMovimiento.Cancelado;
+                            break;
+                        case "Aplicado":
+                            nuevoEstatus = enumEstatusMovimiento.Aplicado;
+                            break;
+                        case "Rechazado":
+                            nuevoEstatus = enumEstatusMovimiento.Rechazado;
+                            break;
+                    }
+
+                    movimiento = estadoCuentaBR.ActualizarMovimiento(pago.MovimientoId, nuevoEstatus, comentario);
+                    Succeed = estadoCuentaBR.Succeed;
+                    ValidationMessages = estadoCuentaBR.ValidationMessages;
+
+                    if (Succeed)
+                    {
+                        pago.Status = movimiento.Status;
+                        Succeed = repository.Save();
+                        if (Succeed)
                         {
-                            case "Cancelar":
-                                //Validar que el estatus actual del abono sea Procesando
-                                if (pago.Status == enumEstatusMovimiento.Procesando.GetHashCode())
-                                {
-                                    //Si ya pasaron los minutos de prorroga se dispara la excepción con un Throw Ex("No es posible cancelar por eltiempo... blablabla");
-                                    TimeSpan ts = DateTime.Now - pago.FechaCreacion;
-                                    if (minutosProrrogaCancelacion > ts.TotalMinutes)
-                                    {
-                                        //Validar el Role del Usario conectado
-                                        if (Role == enumRoles.PayCenter.GetHashCode())
-                                        {
-                                            pago.Status = (short)(enumEstatusMovimiento.Cancelado.GetHashCode());
-                                            //ViewBag.Mensaje = "El reporte de depósito ha sido cancelado exitosamente.";
-                                            UsuarioValido = true;
-                                            ComentarioValido = comentario.TrimEnd() != string.Empty ? true : false;
-                                        }
-                                    }
-                                    else
-                                        ViewBag.Mensaje = "No es posible cancelar el abono ya que ha expirado el tiempo de prórroga.";
-                                }
-                                else
-                                    ViewBag.Mensaje = "No se puede cancelar el depósito sino esta en estatus de procesando.";
-
-                                break;
-                            case "Aplicar":
-
-                                //Validar el Role del Usario conectado
-                                if (Role == enumRoles.Staff.GetHashCode() || Role == enumRoles.Administrator.GetHashCode())
-                                {
-
-                                    UsuarioValido = true;
-                                    ComentarioValido = true;
-                                    //Validar que el estatus actual del abono sea Rechazado, entonces necesitamos el comentario
-                                    if (pago.Status == enumEstatusMovimiento.Rechazado.GetHashCode() && comentario == string.Empty)
-                                    {
-                                        ComentarioValido = false;
-                                    }
-                                    else
-                                    {
-                                        if (pago.Status != enumEstatusMovimiento.Aplicado.GetHashCode())
-                                        {
-                                            pago.Status = (short)(enumEstatusMovimiento.Aplicado.GetHashCode());
-                                            // ViewBag.Mensaje = "Se ha guardado exitosamente.";
-                                        }
-                                        else
-                                            ViewBag.Mensaje = "No se puede Aplicar el depósito porque ya esta en estatus de aplicado.";
-
-
-                                    }
-
-                                }
-
-                                break;
-                            case "Rechazar":
-                                //Validar el Role del Usario conectado
-                                if (Role == enumRoles.Staff.GetHashCode() || Role == enumRoles.Administrator.GetHashCode())
-                                {
-                                    UsuarioValido = true;
-                                    ComentarioValido = comentario.TrimEnd() != string.Empty ? true : false;
-                                    if (pago.Status != enumEstatusMovimiento.Rechazado.GetHashCode())
-                                    {
-
-                                        pago.Status = (short)(enumEstatusMovimiento.Rechazado.GetHashCode());
-                                        //ViewBag.Mensaje = "Se ha guardado exitosamente.";
-                                    }
-                                    else
-                                        ViewBag.Mensaje = "No se puede rechazar el depósito porque ya esta en estatus de rechazado.";
-                                }
-                                break;
-                        }
-                        // valida usuario
-                        if (UsuarioValido)
-                        {
-
-                            //Valida comendario
-                            if (ComentarioValido)
-                            {
-                                if (ViewBag.Mensaje == null || ViewBag.Mensaje == string.Empty)
-                                {
-                                    movimiento.Status = pago.Status;
-                                    Movimientos_Estatus movimiento_Estatus = new Movimientos_Estatus()
-                                    {
-                                        CuentaId = 19, // TODO: Checar de donde sale esto.
-                                        FechaCreacion = DateTime.Now,
-                                        MovimientoId = movimiento.MovimientoId,
-                                        PayCenterId = pago.PayCenterId,
-                                        Status = movimiento.Status,
-                                        UserName = "staff", //Todo: Cambiar el user y tomarlo de la sesion
-                                        Comentarios = comentario
-                                    };
-                                    movimiento.Movimientos_Estatus.Add(movimiento_Estatus);
-                                    repository.Save();
-                                    if (pago.Status == enumEstatusMovimiento.Cancelado.GetHashCode())
-                                    {
-                                        ViewBag.Mensaje = "El reporte de depósito ha sido cancelado exitosamente.";
-                                    }
-                                    else
-                                    {
-                                        ViewBag.Mensaje = "Se ha guardado exitosamente.";
-                                    }
-                                }
-                                p.CambioEstatusVM.Comentario = string.Empty;
-                                p.CambioEstatusVM.Estatus = string.Empty;
-                            }
-                            else
-                            {
-                                ViewBag.Mensaje = "Es necesario agregar un comentario para poder asignar el estatus.";
-                            }
+                            AddValidationMessage(enumMessageType.Succeed, "El reporte de depósito ha sido " + nuevoEstatus.ToString() + " correctamente");
                         }
                         else
                         {
-                            ViewBag.Mensaje = "El usuario no es valido.";
+                            //TODO: implemtar código que traiga mensajes del repositorio
                         }
                     }
-                    else
-                    {
-                        ViewBag.Mensaje = "No se encontro el movimiento para el depósito.";
-                    }
-                    //****No es necesario pasar el context (transación) porque solo sirve para consultar.
-
 
                 }
                 else
                 {
-                    ViewBag.Mensaje = "No se puede " + action.ToLower() + " el depósito porque el estatus es cancelado.";
+                    AddValidationMessage(enumMessageType.BRException, "No se encontró el movimiento para el depósito.");
                 }
+
             }
             else
             {
-                ViewBag.Mensaje = "No existe el depósito.";
+                AddValidationMessage(enumMessageType.BRException, "No existe el depósito.");
             }
-            //Llenar el VM con el método de llenado
-            PagoVM pagoVM = new PagoVM() ; //TODO: Llenar esto
+            ValidationMessages.ForEach(x => ViewBag.Mensaje += x.Message);
 
+            PagoVM pagoVM = FillPagoVM(id);
             return View(pagoVM);
         }
 
-        //
-        // GET: /PagoServicios/Create
-
+        [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.Staff, enumRoles.PayCenter })]
         public ActionResult Create()
         {
             PagoVM pVM = new PagoVM();
-            //TODO: Esto hay que cambiarlo por el metodo generico que haga julio
-            PaquetesRepository repository = new PaquetesRepository();
-            ViewData["Eventos"] = repository.GetEventosByPayCenter(1);
-            var repositoryEstadoDeCuenta = new Repositories.EstadoDeCuentaRepository();
-            var edocuenta = repositoryEstadoDeCuenta.ListAll();
-            ViewData["SaldoActual"] = (edocuenta.Where(x => x.IsAbono).Sum(x => x.Monto) - edocuenta.Where(x => !x.IsAbono).Sum(x => x.Monto)).ToString("C");
+            var paycenter = GetPayCenter();
+
+            if (paycenter != null)
+            {
+                EstadoCuentaBR br = new EstadoCuentaBR(repository.context);
+                var saldo = br.GetSaldosPagoServicio(paycenter.PayCenterId);
+
+                ViewData["Eventos"] = pqrepository.GetEventosByPayCenter(paycenter.PayCenterId);
+                ViewData["SaldoActual"] = saldo.SaldoActual;
+            }
+            else
+                AddValidationMessage(enumMessageType.BRException, "El usuario no tiene un paycenter relacionado válido");
 
             return View(pVM);
         }
 
-        //
-        // POST: /PagoServicios/Create
-
         [HttpPost]
-        public ActionResult Create(PagoVM pagoVM)
+        [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.Staff, enumRoles.PayCenter })]
+        public ActionResult Create(PagoVM model)
         {
-            Pago pago = new Pago();
-            if (ModelState.IsValid)
+            var paycenter = GetPayCenter();
+            if (paycenter != null)
             {
-                #region Leer Configuracion PayCenter
-                PayCenter payCenter = pRepository.LoadById(15); //TODO: Cambiar esto a dinamico
-                #endregion
-
-                #region Crear Movimiento Inicial
-                Movimiento mov = new Movimiento();
-                mov.PayCenterId = 1;
-                mov.CuentaId = 24;// Cuenta a la que pertenece
-                mov.Monto = (Decimal)pagoVM.Importe;
-                mov.Id = 1; //Id de la tabla de pagos
-                mov.IsAbono = false;
-                mov.CuentaOrigenId = 24; //Identificador de la cuenta desde la
-                                         //cual se generó el movimiento en caso
-                                         //de que así aplique. Normalmente
-                                         //aplica con traspasos o comisiones
-                mov.Status = (short)enumEstatusMovimiento.Procesando;
-                mov.SaldoActual = 0;    //Monto del saldo actual de todos los
-                                        //movimientos aplicados de la misma
-                                        //cuenta. Sirve para no perder registro
-                                        //del saldo en el momento del
-                                        //movimiento. Mientras el Status no
-                                        //esté Aplicado, el Saldo actual no se
-                                        //verá afectado.;
-                mov.Clave = "000000";   //Clave que permite identificar el
-                                        //movimiento al usuario. Está formado
-                                        //por 13 dígitos YYMMDDTTCCCCC,
-                                        //donde:
-                                        //YY = 2 últimos digitos del año (ej.13),
-                                        //MM = número del mes (ej. 03)
-                                        //DD = dia del mes (ej. 15)
-                                        //TT = Tipo de cuenta (ej. 03)
-                                        //CCCCC = Consecutivo (ej. 00356)
-
-                mov.FechaCreacion = DateTime.Now;
-                mov.Baja = false;
-                mov.Motivo = (short)enumMotivo.Pago;
-
-                mRepository.Add(mov);
-                mRepository.Save();
-                #endregion
-
-                #region Registro de Pago
-                Mapper.CreateMap<PagoVM, Pago>().ForMember(dest => dest.DetallePagos, opt => opt.Ignore());
-                Mapper.Map(pagoVM, pago);
-                pago.FechaCreacion = DateTime.Now;
-                pago.Servicio = pagoVM.Servicios.Where(x => x.Value == pagoVM.ServicioId).FirstOrDefault().Text;
-                pago.PayCenterId = 15; //TODO:Quitar esto y hacerlo dinamico;  
-                pago.MovimientoId = mov.MovimientoId;
-                
-                var iDetalles = sRepository.ListAll().Where(x => x.ServicioId == pago.ServicioId).FirstOrDefault().DetalleServicios;
-                foreach (DetalleServicio d in iDetalles)
+                Pago pago = new Pago();
+                if (ModelState.IsValid)
                 {
-                    var x1 = Request.Form[d.Campo];
-                    pago.DetallePagos.Add(new DetallePago { Campo = d.Campo, Valor = x1 });
+                    try
+                    {
+                        #region Crear Movimiento Inicial
+                        EstadoCuentaBR br = new EstadoCuentaBR(repository.context);
+                        PaycenterBR payCenterBR = new PaycenterBR();
+                        var cuentaId = payCenterBR.GetOrCreateCuentaPayCenter(PayCenterId, enumTipoCuenta.Pago_de_Servicios, PROVEEDOR_EVOLUCIONAMOVIL);
+                        Movimiento mov = br.CrearMovimiento(PayCenterId, enumTipoMovimiento.Cargo, 0, cuentaId, (Decimal)model.Importe, enumMotivo.Pago, PayCenterName);
+                        #endregion
+
+                        #region Registro de Pago
+                        string Referencia = "";
+                        Mapper.CreateMap<PagoVM, Pago>().ForMember(dest => dest.DetallePagos, opt => opt.Ignore());
+                        Mapper.Map(model, pago);
+                        pago.FechaCreacion = DateTime.Now;
+                        pago.Servicio = model.Servicios.Where(x => x.Value == model.ServicioId).FirstOrDefault().Text;
+                        pago.PayCenterId = PayCenterId;
+                        pago.Movimiento = mov;
+
+                        var iDetalles = sRepository.ListAll().Where(x => x.ServicioId == pago.ServicioId).FirstOrDefault().DetalleServicios;
+                        foreach (DetalleServicio d in iDetalles)
+                        {
+                            var valor = Request.Form[d.Campo];
+                            if (d.EsReferencia)
+                                Referencia = valor;
+
+                            pago.DetallePagos.Add(new DetallePago { Campo = d.Campo, Valor = valor });
+                        }
+
+                        repository.Add(pago);
+                        repository.Save();
+
+                        br.ActualizaReferenciaIdMovimiento(pago.MovimientoId, pago.PagoId);
+                        repository.Save();
+
+                        model.PagoId = pago.PagoId;
+                        #endregion
+
+                        #region Registro Ticket
+                        Ticket oTicket = new Ticket();
+                        oTicket.Baja = false;
+                        oTicket.ClienteEmail = "";
+                        oTicket.ClienteNombre = pago.ClienteNombre;
+                        oTicket.ClienteTelefono = "";
+                        oTicket.Comision = paycenter.Parametros.ComisionPayCenter != null ? (Decimal)paycenter.Parametros.ComisionCliente : 0; //Comision configurada del paycenter
+                        oTicket.FechaCreacion = DateTime.Now;
+                        oTicket.Folio = createFolio(pago.PagoId);
+                        oTicket.Importe = pago.Importe;
+                        oTicket.Leyenda = "";
+                        oTicket.PagoId = pago.PagoId;
+                        oTicket.PayCenterId = pago.PayCenterId;
+                        oTicket.Referencia = "";
+                        oTicket.TipoServicio = pago.Servicio;
+                        oTicket.Referencia = Referencia;
+
+                        tRepository.Add(oTicket);
+                        tRepository.Save();
+                        #endregion
+
+                        return RedirectToAction("Ticket/" + oTicket.PagoId.ToString());
+                    }
+                    catch (Exception e)
+                    {
+                        AddValidationMessage(enumMessageType.BRException, "Ocurrió un error al registrar el pago: " + e.Message);
+                    }
                 }
-                repository.Add(pago);
-                repository.Save();
-                #endregion
-
-                #region Registro Ticket
-                Ticket tVM = new Ticket();
-                tVM.Baja = false;
-                tVM.ClienteEmail = "";
-                tVM.ClienteNombre = pago.ClienteNombre;
-                tVM.ClienteTelefono = "";
-                tVM.Comision = (decimal)payCenter.Parametros.ComisionPayCenter; //Comision configurada del paycenter
-                tVM.FechaCreacion = DateTime.Now;              
-                tVM.Folio = createFolio(pago.PagoId);
-                tVM.Importe = pago.Importe;
-                tVM.Leyenda = "";
-                tVM.PagoId = pago.PagoId;
-                tVM.PayCenterId = pago.PayCenterId;
-                tVM.Referencia = "";
-                tVM.TipoServicio = pago.Servicio;                
-               
-                tRepository.Add(tVM);
-                tRepository.Save();
-
-                TicketVM ticketVM = new TicketVM();
-                Mapper.CreateMap<Ticket, TicketVM>().ForMember(dest => dest.Pago, opt => opt.Ignore());
-                Mapper.Map(tVM , ticketVM);
-                ticketVM.FechaPago = pago.FechaCreacion;
-                #endregion
-
-                return RedirectToAction("Ticket",ticketVM );
+                else
+                    AddValidationMessage(enumMessageType.BRException, "Los datos no son válidos");
             }
+            else
+                AddValidationMessage(enumMessageType.BRException, "El usuario no tiene un paycenter relacionado válido");
 
-            return View(pagoVM);
+            return View(model);
         }
 
-        //
-        // GET: /PagoServicios/Edit/5
-
-        public ActionResult Edit(int id)
+        [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.Staff, enumRoles.PayCenter })]
+        public ViewResult Ticket(int id)
         {
-            PagoVM pagoVM = new PagoVM();
-            Pago pago = repository.LoadById(id);
-            Mapper.Map(pago, pagoVM);
-            return View(pagoVM);
-        }
-
-        //
-        // POST: /PagoServicios/Edit/5
-
-        [HttpPost]
-        public ActionResult Edit(PagoVM pagoVM)
-        {
-            Pago pago = repository.LoadById(pagoVM.PagoId);
-            if (ModelState.IsValid)
+            TicketVM ticketVM = new TicketVM();
+            var paycenter = GetPayCenter();
+            if (paycenter != null)
             {
-                Mapper.Map(pagoVM, pago);
-                repository.Save();
-                pagoVM.PagoId = pago.PagoId;
-                return RedirectToAction("Index");
+                try
+                {
+                    Ticket tVM = tRepository.ListAll().Where(x => x.PagoId == id).FirstOrDefault();
+                    Mapper.CreateMap<Ticket, TicketVM>().ForMember(dest => dest.Pago, opt => opt.Ignore());
+                    Mapper.Map(tVM, ticketVM);
+                    ticketVM.FechaPago = tVM.Pago.FechaCreacion;
+                    tVM.Pago.DetallePagos.ToList().ForEach(x => ticketVM.DetallePagos.Add(x));
+
+                    ViewBag.LogoPayCenter = paycenter.Logotipo;
+                    @ViewBag.Comision = paycenter.Parametros.ComisionPayCenter.ToString() + "%";
+                }
+                catch (Exception e)
+                {
+                    AddValidationMessage(enumMessageType.BRException, "Ocurrio un error al cargar el ticket: " + e.Message);
+                }
             }
-            return View(pagoVM);
-        }
-
-        //
-        // GET: /PagoServicios/Delete/5
-
-        public ActionResult Delete(int id)
-        {
-            PagoVM pagoVM = new PagoVM();
-            Pago pago = repository.LoadById(id);
-            Mapper.Map(pago, pagoVM);
-            return View(pagoVM);
-        }
-
-        //
-        // POST: /PagoServicios/Delete/5
-
-        [HttpPost, ActionName("Delete")]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            Pago pago = repository.LoadById(id);
-            repository.Delete(pago);
-            repository.Save();
-            return RedirectToAction("Index");
+            else
+            {
+                AddValidationMessage(enumMessageType.BRException, "El usuario no tiene un paycenter relacionado válido");
+            }
+            return View(ticketVM);
         }
 
         protected override void Dispose(bool disposing)
@@ -417,56 +278,61 @@ namespace EvolucionaMovil.Controllers
 
         private SimpleGridResult<PagoServicioVM> getPagosServicio(ServiceParameterVM Parameters = null)
         {
-            var pagos = repository.ListAll();
-            EstadoDeCuentaRepository estadoDeCuentaRepository = new EstadoDeCuentaRepository();
             SimpleGridResult<PagoServicioVM> simpleGridResult = new SimpleGridResult<PagoServicioVM>();
+            var paycenter = GetPayCenter();
 
-            var pagosServicioVM = pagos.Where(x => Parameters == null
-                 || (Parameters.fechaInicio == null || (Parameters.fechaInicio < x.FechaCreacion)
-                     && (Parameters.fechaFin == null || Parameters.fechaFin > x.FechaCreacion)
-                 )
-                 ).Select(x => new PagoServicioVM
-                 {
-                     PayCenterId = x.PayCenterId,
-                     Folio = x.Ticket != null ? x.Ticket.Folio : string.Empty,
-                     Servicio = x.Servicio,
-                     NombreCliente = x.ClienteNombre,
-                     PayCenterName = x.PayCenter != null ? x.PayCenter.Nombre : "[Desconocido]",
-                     PagoId = x.PagoId,
-                     //todo:Optimizar esta consulta para que no haga un load por cada registro que levante.
-                     Comentarios = "TODO:Comentarios",
-                     Monto = x.Importe.ToString("C"),
-                     FechaCreacion = x.FechaCreacion.ToShortDateString(),
-                     FechaVencimiento = x.FechaVencimiento.ToShortDateString(),
-                     Status = ((enumEstatusMovimiento)x.Status).ToString()
-                 });
-
-            if (Parameters != null && Parameters.onlyAplicados)
-                pagosServicioVM = pagosServicioVM.Where(x => x.Status == enumEstatusMovimiento.Aplicado.ToString());
-
-            if (Parameters != null && !string.IsNullOrEmpty(Parameters.searchString))
-                pagosServicioVM = pagosServicioVM.Where(x => x.NombreCliente.ToLower().Contains(Parameters.searchString.ToLower()) || x.Servicio.ToLower().Contains(Parameters.searchString.ToLower()));
-            
-            //TODO:Leer Eventos del paycenter
-            ViewData["Eventos"] = 56;
-            //TODO:Checar una mejor forma de traer el saldo (Caché o algo)
-            var repositoryEstadoDeCuenta = new Repositories.EstadoDeCuentaRepository();
-            var edocuenta = repositoryEstadoDeCuenta.ListAll();
-            ViewData["SaldoActual"] = (edocuenta.Where(x => x.IsAbono).Sum(x => x.Monto) - edocuenta.Where(x => !x.IsAbono).Sum(x => x.Monto)).ToString("C");
-
-            if (Parameters != null)
+            if (paycenter != null)
             {
-                simpleGridResult.CurrentPage = Parameters.pageNumber;
-                simpleGridResult.PageSize = Parameters.pageSize;
-                if (Parameters.pageSize > 0)
+                var pagos = repository.ListAll();
+                var movimientos = eRepository.GetMovimientos();
+                EstadoCuentaBR br = new EstadoCuentaBR(repository.context);
+
+                var pagosServicioVM = pagos.OrderByDescending(y => y.PagoId).Where(x => Parameters == null
+                     || (Parameters.fechaInicio == null || (Parameters.fechaInicio < x.FechaCreacion)
+                         && (Parameters.fechaFin == null || Parameters.fechaFin > x.FechaCreacion)
+                     )
+                     ).Select(x => new PagoServicioVM
+                     {
+                         PayCenterId = x.PayCenterId,
+                         Folio = x.Ticket != null ? x.Ticket.Folio : "NA",
+                         Servicio = x.Servicio,
+                         NombreCliente = x.ClienteNombre,
+                         PayCenterName = x.PayCenter != null ? x.PayCenter.Nombre : "[Desconocido]",
+                         PagoId = x.PagoId,
+                         //todo:Optimizar esta consulta para que no haga un load por cada registro que levante.
+                         Comentarios = x.Movimiento.Movimientos_Estatus.Count > 0 ? x.Movimiento.Movimientos_Estatus.OrderByDescending(y => y.Movimiento_EstatusId).FirstOrDefault().Comentarios : "Sin comentarios",
+                         Monto = x.Importe.ToString("C"),
+                         FechaCreacion = x.FechaCreacion.ToShortDateString(),
+                         FechaVencimiento = x.FechaVencimiento.ToShortDateString(),
+                         Status = ((enumEstatusMovimiento)x.Status).ToString()
+                     });
+
+                if (Parameters != null && Parameters.onlyAplicados)
+                    pagosServicioVM = pagosServicioVM.Where(x => x.Status == enumEstatusMovimiento.Aplicado.ToString());
+
+                if (Parameters != null && !string.IsNullOrEmpty(Parameters.searchString))
+                    pagosServicioVM = pagosServicioVM.Where(x => x.NombreCliente.ToLower().Contains(Parameters.searchString.ToLower()) || x.Servicio.ToLower().Contains(Parameters.searchString.ToLower()));
+
+                ViewData["Eventos"] = pqrepository.GetEventosByPayCenter(paycenter.PayCenterId);
+                var saldo = br.GetSaldosPagoServicio(paycenter.PayCenterId);
+                ViewData["SaldoActual"] = saldo.SaldoActual;
+
+                if (Parameters != null)
                 {
-                    var pageNumber = Parameters.pageNumber >= 0 ? Parameters.pageNumber : 0;
-                    simpleGridResult.CurrentPage = pageNumber;
-                    simpleGridResult.TotalRows = pagosServicioVM.Count();
-                    pagosServicioVM = pagosServicioVM.Skip(pageNumber * Parameters.pageSize).Take(Parameters.pageSize);
+                    simpleGridResult.CurrentPage = Parameters.pageNumber;
+                    simpleGridResult.PageSize = Parameters.pageSize;
+                    if (Parameters.pageSize > 0)
+                    {
+                        var pageNumber = Parameters.pageNumber >= 0 ? Parameters.pageNumber : 0;
+                        simpleGridResult.CurrentPage = pageNumber;
+                        simpleGridResult.TotalRows = pagosServicioVM.Count();
+                        pagosServicioVM = pagosServicioVM.Skip(pageNumber * Parameters.pageSize).Take(Parameters.pageSize);
+                    }
                 }
+                simpleGridResult.Result = pagosServicioVM;
             }
-            simpleGridResult.Result = pagosServicioVM;
+            else
+                AddValidationMessage(enumMessageType.BRException, "El usuario no tiene un paycenter relacionado válido");
 
             return simpleGridResult;
         }
@@ -511,6 +377,58 @@ namespace EvolucionaMovil.Controllers
             }
 
             return Rol;
+        }
+
+        [NonAction]
+        private PayCenter GetPayCenter(int Id = 0)
+        {
+            //Buscar el payCenter
+            if (Id == 0)
+            {
+                if (HttpContext.User.IsInRole(enumRoles.PayCenter.ToString()))
+                {
+                    Id = pRepository.GetPayCenterByUserName(HttpContext.User.Identity.Name);
+                }
+            }
+            PayCenter payCenter = pRepository.LoadById(Id);
+
+            return payCenter;
+        }
+
+        [NonAction]
+        private PagoVM FillPagoVM(Int32 id)
+        {
+            PagoVM pagoVM = new PagoVM();
+            try
+            {
+                Pago pago = repository.ListAll().Where(x => x.PagoId == id).FirstOrDefault();
+                Mapper.CreateMap<Pago, PagoVM>().ForMember(dest => dest.Servicios, opt => opt.Ignore());
+                Mapper.Map(pago, pagoVM);
+                pagoVM.ServicioNombre = pagoVM.Servicios.Where(x => x.Value == pago.ServicioId).FirstOrDefault().Text;
+                pagoVM.Estatus = ((enumEstatusMovimiento)pago.Status).ToString();
+
+                foreach (Movimientos_Estatus m in pago.Movimiento.Movimientos_Estatus.OrderByDescending(x => x.Movimiento_EstatusId))
+                {
+                    HistorialEstatusVM h = new HistorialEstatusVM();
+                    h.Comentarios = m.Comentarios;
+                    h.Estatus = ((enumEstatusMovimiento)m.Status).ToString();
+                    h.Fecha = m.FechaCreacion.ToShortDateString();
+                    h.UserName = m.UserName;
+                    pagoVM.HistorialEstatusVM.Add(h);
+                }
+            }
+            catch (Exception e)
+            {
+                AddValidationMessage(enumMessageType.BRException, "Ocurrio un error al recuperar la información del pago: " + e.Message);
+            }
+            return pagoVM;
+        }
+
+        [HttpPost]
+        public string GetPagoServicios(ServiceParameterVM parameters)
+        {
+            var pagoServiciosResult = getPagosServicio(parameters);
+            return Newtonsoft.Json.JsonConvert.SerializeObject(pagoServiciosResult);
         }
     }
 }
