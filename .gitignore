@@ -28,7 +28,7 @@ _ReSharper*/
 *.vssscc
 $tf*/
 EvolucionaMovil/UploadImages/
-EvolucionaMovil.Publish.xml
+EvolucionaMovil/EvolucionaMovil.Publish.xml
 *.orig
 Web.config
 ErrorLog.txt
