@@ -48,7 +48,7 @@ function rebindGrid(options) {
 function bindGrid(options) {
     var columns = [
          { name: 'FechaCreacion', displayName: 'Fecha', cssClass: 'fechacreacion' },
-         { name: 'Folio', displayName: 'Folio', cssClass: 'folio', customTemplate: '<a href="Details/{PagoId}">{Folio}</a>' },
+         { name: 'Folio', displayName: 'Folio', cssClass: 'folio', customTemplate: '<a href="/PagoServicios/Details/{PagoId}">{Folio}</a>' },
          { name: 'NombreCliente', displayName: 'Cliente', cssClass: 'cliente'},
          { name: 'PayCenterName', displayName: 'Paycenter', cssClass: 'paycenter' },
          { name: 'Servicio', cssClass: 'servicio' },
