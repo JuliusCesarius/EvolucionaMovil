@@ -53,6 +53,7 @@ function getDetalleServicio() {
                 $(divEditor).append($('<span/>').attr('data-valmsg-for', nombre).attr('data-valmsg-replace', true).addClass('field-validation-error'));
                 setValidation(nombre, this.Tipo);
             });
+            $("label").inFieldLabels();
             $.validator.unobtrusive.parseDynamicContent($(divCampos));
         });
     }
