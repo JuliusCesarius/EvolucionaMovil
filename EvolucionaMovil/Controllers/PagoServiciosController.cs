@@ -92,13 +92,13 @@ namespace EvolucionaMovil.Controllers
                     enumEstatusMovimiento nuevoEstatus = (enumEstatusMovimiento)movimiento.Status;
                     switch (action)
                     {
-                        case "Cancelado":
+                        case "Cancelar":
                             nuevoEstatus = enumEstatusMovimiento.Cancelado;
                             break;
-                        case "Aplicado":
+                        case "Aplicar":
                             nuevoEstatus = enumEstatusMovimiento.Aplicado;
                             break;
-                        case "Rechazado":
+                        case "Rechazar":
                             nuevoEstatus = enumEstatusMovimiento.Rechazado;
                             break;
                     }
@@ -399,8 +399,8 @@ namespace EvolucionaMovil.Controllers
                 Pago pago = repository.ListAll().Where(x => x.PagoId == id).FirstOrDefault();
                 Mapper.CreateMap<Pago, PagoVM>().ForMember(dest => dest.Servicios, opt => opt.Ignore());
                 Mapper.Map(pago, pagoVM);
+                pagoVM.PayCenterName = pago.PayCenter.Nombre;
                 pagoVM.ServicioNombre = pagoVM.Servicios.Where(x => x.Value == pago.ServicioId).FirstOrDefault().Text;
-                pagoVM.Estatus = ((enumEstatusMovimiento)pago.Status).ToString();
 
                 foreach (Movimientos_Estatus m in pago.Movimiento.Movimientos_Estatus.OrderByDescending(x => x.Movimiento_EstatusId))
                 {

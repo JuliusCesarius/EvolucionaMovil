@@ -88,7 +88,9 @@ function CompararDosFechas(fechainicio, fechafin) {
 }
 
 function rebindGrid(options) {
-    $('<input />').attr('type', 'hidden').attr('name', 'pageNumber').attr('value', options.pageNumber).appendTo('form');
+    if (options != undefined) {
+        $('<input />').attr('type', 'hidden').attr('name', 'pageNumber').attr('value', options.pageNumber).appendTo('form');
+    }
     $("form").submit();
 }
 

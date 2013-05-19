@@ -15,8 +15,11 @@ namespace EvolucionaMovil.Models
         public DateTime FechaCreacion { get; set; }
         [Required(ErrorMessage = "La fecha de vencimiento es requerida")]
         public DateTime? FechaVencimiento { get; set; }
+        public string FechaCreacionString { get { return FechaCreacion.ToString("dd/MMMM/yyy") + " " + FechaCreacion.ToShortTimeString(); } }
+        public String FechaVencimientoString { get { return ((DateTime)FechaVencimiento).ToString("dd/MMMM/yyy"); } }
         [Required(ErrorMessage = "El importe es requerido")]
         public decimal? Importe { get; set; }
+        public string ImporteString { get { return ((decimal)Importe).ToString("C"); } }
         
         public int PagoId { get; set; }
 
@@ -24,7 +27,7 @@ namespace EvolucionaMovil.Models
         public string ServicioNombre { get; set; }
 
         public int Status { get; set; }
-        public string Estatus { get; set; }
+        public string StatusString { get { return ((enumEstatusMovimiento)this.Status).ToString(); } }
 
         private IEnumerable<EnumWrapper> _Servicios { get; set; }
         public IEnumerable<EnumWrapper> Servicios
@@ -57,7 +60,6 @@ namespace EvolucionaMovil.Models
             ClienteNombre = null;
             DetallePagos = new List<DetallePago>();
             HistorialEstatusVM = new List<HistorialEstatusVM>();
-            Estatus = ((enumEstatusMovimiento)Status).ToString();
         }
 
         public int PayCenterId { get; set; }

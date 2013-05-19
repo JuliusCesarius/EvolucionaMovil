@@ -102,6 +102,8 @@ function bindGrid(options) {
         columns: columns,
         successFunction: edoCuentaLoaded,
         pageChangeFunction: pageChanged,
+        selectedData: "PagoId",
+        selectedURL: "PagoServicios/Details",
         pageSize: pageSize,
         pageNumber: pageNumber,
         searchString: searchString,

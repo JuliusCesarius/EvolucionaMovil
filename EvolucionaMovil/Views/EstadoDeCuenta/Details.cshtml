@@ -124,7 +124,7 @@
         foreach (var item in Model.HistorialEstatusVM)
         { 
            <div class="listRow">
-              <span class="listCell Estatus @item.Estatus fwb"> @item.Estatus </span>  
+              <span class="listCell Estatus fwb"> <span class="@item.Estatus ">@item.Estatus </span></span>  
               <span class="listCell Comentarios"> @item.Comentarios </span>    
               <span class="listCell Usuario"> @item.UserName</span>     
               <span class="listCell Fecha"> @item.Fecha</span>

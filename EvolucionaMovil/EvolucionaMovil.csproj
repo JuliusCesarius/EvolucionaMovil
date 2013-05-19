@@ -290,7 +290,8 @@
     <Content Include="Error.html" />
     <Content Include="Global.asax" />
     <Compile Include="Models\DepositoVM.cs" />
-    <Content Include="Scripts\Abono.js" />
+    <Content Include="Scripts\PagoServicios-Details.js" />
+    <Content Include="Scripts\Depositos-Details.js" />
     <Content Include="Scripts\additional-methods.js" />
     <Content Include="Scripts\additional-methods.min.js" />
     <Content Include="Scripts\Depositos.js" />
