@@ -13,6 +13,9 @@ namespace EvolucionaMovil.Repositories
             : base()
         {
         }
-
+        public Ticket LoadByPagoId(int PagoId)
+        {
+            return context.Tickets.Where(x => x.PagoId == PagoId).FirstOrDefault();
+        }
     }
 }

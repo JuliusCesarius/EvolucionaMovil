@@ -9,5 +9,10 @@ namespace EvolucionaMovil.Repositories
 {
     public class ServiciosRepository : RepositoryBase<Servicio, EvolucionaMovilBDEntities>
     {
+        public IEnumerable<DetalleServicio> LoadDetallesServicioByServicioID(int ServicioId)
+        {
+            var detallesServicio = context.DetalleServicios.Where(x => !x.Baja && x.ServicioId == ServicioId);
+            return detallesServicio;
+        }
     }
 }

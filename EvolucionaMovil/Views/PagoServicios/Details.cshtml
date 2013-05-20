@@ -59,6 +59,11 @@
         <div class="display-field fwb fsxl ">
             <span class="@Model.StatusString">@Html.DisplayFor(model => model.StatusString)</span>
         </div>
+        <div class="display-label">
+            Ticket</div>
+        <div class="display-field">
+            @Html.ActionLink("[Ver Ticket]", "Ticket", new { id = Model.PagoId })
+        </div>
  
  @using (Html.BeginForm())
  {

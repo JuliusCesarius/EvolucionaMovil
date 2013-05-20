@@ -5,9 +5,10 @@ using EvolucionaMovil.Repositories;
 using System.Linq;
 using EvolucionaMovil.Models.Enums;
 using EvolucionaMovil.Models.Interfaces;
+using DataAnnotationsExtensions;
 namespace EvolucionaMovil.Models
 {
-    public class PagoVM:IEvolucionaMovil
+    public class PagoVM : IEvolucionaMovil
     {
 
         [Required(ErrorMessage = "El nombre es requerido")]
@@ -17,12 +18,13 @@ namespace EvolucionaMovil.Models
         public DateTime? FechaVencimiento { get; set; }
         public string FechaCreacionString { get { return FechaCreacion.ToString("dd/MMMM/yyy") + " " + FechaCreacion.ToShortTimeString(); } }
         public String FechaVencimientoString { get { return ((DateTime)FechaVencimiento).ToString("dd/MMMM/yyy"); } }
+        [Min(10)]
         [Required(ErrorMessage = "El importe es requerido")]
         public decimal? Importe { get; set; }
-        public string ImporteString { get { return ((decimal)Importe).ToString("C"); } }
-        
-        public int PagoId { get; set; }
+        public string ImporteString { get { return Importe.HasValue ? ((decimal)Importe).ToString("C") : null; } }
 
+        public int PagoId { get; set; }
+        [Min(1)]
         public int ServicioId { get; set; }
         public string ServicioNombre { get; set; }
 

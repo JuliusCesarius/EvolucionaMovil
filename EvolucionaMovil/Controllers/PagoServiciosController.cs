@@ -22,7 +22,7 @@ namespace EvolucionaMovil.Controllers
     {
         #region Repositorios
         private PagoServiciosRepository repository = new PagoServiciosRepository();
-        private ServiciosRepository sRepository = new ServiciosRepository();
+        private ServiciosRepository serviciosRepository = new ServiciosRepository();
         private TicketRepository tRepository = new TicketRepository();
         private PayCentersRepository pRepository = new PayCentersRepository();
         private ParametrosRepository parRepository = new ParametrosRepository();
@@ -157,6 +157,11 @@ namespace EvolucionaMovil.Controllers
                 AddValidationMessage(enumMessageType.DataValidation, "Por favor, seleccione primero un PayCenter.");
                 return View(model);
             }
+            if (model.Importe <= 0)
+            {
+                AddValidationMessage(enumMessageType.DataValidation, "El importe no puede ser menor a $0.00.");
+                return View(model);
+            }
             if (ModelState.IsValid)
             {
                 try
@@ -173,12 +178,11 @@ namespace EvolucionaMovil.Controllers
                     string Referencia = "";
                     Mapper.CreateMap<PagoVM, Pago>().ForMember(dest => dest.DetallePagos, opt => opt.Ignore());
                     Mapper.Map(model, pago);
-                    pago.FechaCreacion = DateTime.Now;
                     pago.Servicio = model.Servicios.Where(x => x.Value == model.ServicioId).FirstOrDefault().Text;
                     pago.PayCenterId = PayCenterId;
                     pago.Movimiento = mov;
 
-                    var iDetalles = sRepository.ListAll().Where(x => x.ServicioId == pago.ServicioId).FirstOrDefault().DetalleServicios;
+                    var iDetalles = serviciosRepository.LoadDetallesServicioByServicioID(pago.ServicioId);
                     foreach (DetalleServicio d in iDetalles)
                     {
                         var valor = Request.Form[d.Campo.Replace(' ','_')];
@@ -198,33 +202,45 @@ namespace EvolucionaMovil.Controllers
                     #endregion
 
                     #region Registro Ticket
-                    Ticket oTicket = new Ticket();
-                    oTicket.Baja = false;
-                    oTicket.ClienteEmail = "";
-                    oTicket.ClienteNombre = pago.ClienteNombre;
-                    oTicket.ClienteTelefono = "";
-                    //Verifica
-                    ParametrosRepository parametrosRepository = new ParametrosRepository();
-                    var parametrosPayCenter = parametrosRepository.GetParametrosPayCenter(PayCenterId);
-                    //Si tiene configurada la comisión que mostrará al cliente, se toma el valor para mostrar en el ticket
-                    oTicket.Comision = (parametrosPayCenter != null && parametrosPayCenter.ComisionCliente != null ? (Decimal)parametrosPayCenter.ComisionCliente : 0); //Comision configurada del paycenter
-                    oTicket.FechaCreacion = DateTime.Now;
-                    oTicket.Folio = createFolio(pago.PagoId);
-                    oTicket.Importe = pago.Importe;
-                    var parametrosGlobales = parametrosRepository.GetParametrosGlobales();
-                    oTicket.Leyenda = parametrosGlobales != null ? parametrosGlobales.LeyendaTicket : null;
-                    oTicket.PagoId = pago.PagoId;
-                    oTicket.PayCenterId = pago.PayCenterId;
-                    oTicket.Referencia = "";
-                    oTicket.TipoServicio = pago.Servicio;
-                    oTicket.Referencia = Referencia;
-                    oTicket.PayCenterName = PayCenterName;
+                    try
+                    {
 
-                    tRepository.Add(oTicket);
-                    tRepository.Save();
+                        //Verifica si tiene configurada la comisión que mostrará al cliente, se toma el valor para mostrar en el ticket
+                        ParametrosRepository parametrosRepository = new ParametrosRepository();
+                        var parametrosPayCenter = parametrosRepository.GetParametrosPayCenter(PayCenterId);
+                        var parametrosGlobales = parametrosRepository.GetParametrosGlobales();
+
+                        Ticket ticket = new Ticket();
+                        ticket.ClienteEmail = "";
+                        ticket.ClienteNombre = pago.ClienteNombre;
+                        ticket.ClienteTelefono = "";
+                        ticket.Comision = (parametrosPayCenter != null && parametrosPayCenter.ComisionCliente != null ? (Decimal)parametrosPayCenter.ComisionCliente : 0); //Comision configurada del paycenter
+                        ticket.FechaCreacion = DateTime.Now;
+                        ticket.Folio = createFolio(pago.PagoId);
+                        ticket.Importe = pago.Importe;
+                        ticket.Leyenda = parametrosGlobales != null ? parametrosGlobales.LeyendaTicket : null;
+                        ticket.PagoId = pago.PagoId;
+                        ticket.PayCenterId = pago.PayCenterId;
+                        ticket.TipoServicio = pago.Servicio;
+                        ticket.Referencia = Referencia;
+                        ticket.PayCenterName = PayCenterName;
+                        ticket.FechaVencimiento = pago.FechaVencimiento;
+
+                        tRepository.Add(ticket);
+                        Succeed = tRepository.Save();
+                        if (!Succeed)
+                        {
+                            AddValidationMessage(enumMessageType.UnhandledException, "Su pago ha sido Registrado con éxito. Sin embargo, no se pudo generar el ticket, favor de comunicarse con un ejecutivo. ");
+                        }
+                        return RedirectToAction("Ticket/" + ticket.PagoId.ToString());
+                    }
+                    catch (Exception ex)
+                    {
+                        AddValidationMessage(enumMessageType.UnhandledException, "Su pago ha sido Registrado con éxito. Sin embargo, no se pudo generar el ticket, favor de comunicarse con un ejecutivo. ");
+                        return View(model);
+                    }
+
                     #endregion
-
-                    return RedirectToAction("Ticket/" + oTicket.PagoId.ToString());
                 }
                 catch (Exception e)
                 {
@@ -242,7 +258,12 @@ namespace EvolucionaMovil.Controllers
         public ViewResult Ticket(int id)
         {
             TicketVM ticketVM = new TicketVM();
-            Ticket ticket = tRepository.ListAll().Where(x => x.PagoId == id).FirstOrDefault();
+            Ticket ticket = tRepository.LoadByPagoId(id);
+            if (ticket == null)
+            {
+                AddValidationMessage(enumMessageType.UnhandledException, "No se ha encontrado el Ticket");
+                return View(new TicketVM());
+            }
             Mapper.CreateMap<Ticket, TicketVM>().ForMember(dest => dest.Pago, opt => opt.Ignore());
             Mapper.Map(ticket, ticketVM);
             ticketVM.FechaVencimiento = ticket.Pago.FechaCreacion;
@@ -336,7 +357,7 @@ namespace EvolucionaMovil.Controllers
         public JsonResult getDetalleServicio(int servicioId)
         {
             List<DetalleServicioVM> lsDetalles = new List<DetalleServicioVM>();
-            var iDetalles = sRepository.ListAll().Where(x => x.ServicioId == servicioId).FirstOrDefault().DetalleServicios;
+            var iDetalles = serviciosRepository.ListAll().Where(x => x.ServicioId == servicioId).FirstOrDefault().DetalleServicios;
             foreach (DetalleServicio d in iDetalles)
             {
                 DetalleServicioVM dVm = new DetalleServicioVM();

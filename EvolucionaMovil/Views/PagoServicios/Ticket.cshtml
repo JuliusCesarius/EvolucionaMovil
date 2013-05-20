@@ -30,7 +30,7 @@
     </span>
     <fieldset>
         <div class="display-label">
-            PayCenter</div>
+            Vendedor</div>
         <div class="display-field">
             @Html.DisplayFor(model => model.PayCenterName)
         </div>
@@ -96,10 +96,25 @@
                 @Html.DisplayFor(model => model.Leyenda)
             </div>
         }
+        <div id="footer1">
+                "ESTE COMPROBANTE NO ES VÁLIDO PARA EFECTOS FISCALES EN TERMINOS DE OFICIO DE NO 325-SAT-VII-B-2650 DE FECHA 1 DE DICIEMBRE DE 1997"
+        </div>
     </fieldset>
-
-
+    <div id="printOptions">
+    
         <button id="print" type="button" media="print" onclick="window.print(); return false;" class="freshbutton-blue">Imprimir</button>
+        <input type="checkbox" id="chkExpand" onclick="setWidth()" />
+        <label for="chkExpand" id="lblExpand">Ajustar ancho del ticket a hoja de impresión</label>    
+            <script type="text/javascript">
+                function setWidth() {
+                    if ($("#chkExpand").prop("checked")) {
+                        $("head").append($('<style media="print"> body, #Ticket {width:100%!important} </style>'));
+                    } else {
+                        $('style[media="print"]').remove();
+                    }
+                }
+            </script>
+        </div>
 </div>
 </div>
 <div class="actions">

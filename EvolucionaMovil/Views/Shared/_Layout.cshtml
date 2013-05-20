@@ -63,16 +63,16 @@
                     <ul id="menu-top" class="menu">
                         @if (HttpContext.Current.User.IsInRole(enumRoles.PayCenter.ToString()) || HttpContext.Current.User.IsInRole(enumRoles.Staff.ToString()) || HttpContext.Current.User.IsInRole(enumRoles.Administrator.ToString()))
                         {
-                                <li>@Html.ActionLink("Depósitos", "/Index", "Depositos")
-                                    <ul class="child">                                
-                                        <li>@Html.ActionLink("Historial", "Index", "Depositos")</li>
+                                <li>@Html.ActionLink("Depósitos", "Index", "Depositos")
+                                    <ul class="child">
                                         <li>@Html.ActionLink("Reportar", "Report", "Depositos")</li>
+                                        <li>@Html.ActionLink("Historial", "Index", "Depositos")</li>
                                     </ul>
                                 </li>
                                 <li>@Html.ActionLink("Pago Servicios", "Index", "PagoServicios")
                                     <ul class="child">
-                                        <li>@Html.ActionLink("Historial", "Index", "PagoServicios")</li>
                                         <li>@Html.ActionLink("Reportar", "Create", "PagoServicios")</li>
+                                        <li>@Html.ActionLink("Historial", "Index", "PagoServicios")</li>
                                     </ul>
                                 </li>
                                 <li>@Html.ActionLink("Edos. Cuenta", "Index", "EstadoDeCuenta")</li>
