@@ -2,9 +2,9 @@
 @using EvolucionaMovil.Models.Enums
 @model EvolucionaMovil.Models.ReporteDepositoVM
 
-
+@section Styles{
 <link href="@Url.Content("~/Content/jquery.selectbox-0.2.css")" rel="stylesheet" type="text/css" />
-
+}
 @section Javascript{
     <script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
     <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
@@ -30,7 +30,7 @@
                 <div class="editor-label"><label for="PayCenterName">PayCenters</label></div>        
                  <div class="editor-field">
                     @Html.EditorFor(model => model.PayCenterName)
-                    <input type="hidden" id="hddPayCenterId" name="PayCenterId" />
+                    <input type="hidden" id="hddPayCenterId" name="PayCenterId" value="@Model.PayCenterId" />
                     @Html.ValidationMessageFor(model => model.PayCenterName)
                  </div>
             }

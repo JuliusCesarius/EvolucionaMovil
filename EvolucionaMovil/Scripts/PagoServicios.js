@@ -5,8 +5,10 @@
     }
     $("#fechaInicio").datepicker({ "dateFormat": "dd/mm/yy" });
     $("#fechaFin").datepicker({ "dateFormat": "dd/mm/yy" });
-    if ($(".saldos span").html().indexOf("-") != -1) {
-        $($(".saldos span")[0]).addClass("cargo");
+    if ($(".saldos span").length > 0) {
+        if ($(".saldos span").html().indexOf("-") != -1) {
+            $($(".saldos span")[0]).addClass("cargo");
+        }
     }
     $("#aplicadosOnly").on("click", function () {
         if ($("#aplicadosOnly").prop("checked")) {
@@ -33,15 +35,44 @@
         });
     });
 
+    $("#PayCenterName").on("keyup", function (event) {
+        var code = event.which;
+        if (code == 13) {
+            event.preventDefault();
+            rebindGrid();
+        } else {
+            if ($(this).val() == "") {
+                event.preventDefault();
+                $('#hddPayCenterId').val("");
+            }
+        }
+    });
+
+    $("#PayCenterName").autocomplete({
+        source: "PayCenters/FindPayCenter",
+        select: function (event, ui) {
+            var label = ui.item.label;
+            var v = ui.item.value;
+            $('#hddPayCenterId').val(v);
+            this.value = label;
+            return false;
+        },
+        focus: function (event, ui) {
+            event.preventDefault();
+            $(this).val(ui.item.label);
+        },
+        open: function () {
+            $(this).autocomplete('widget').css('z-index', 100);
+            return false;
+        }
+    });
+
 });
 
 function rebindGrid(options) {
-    $('<input />').attr('type', 'hidden').attr('name', 'pageSize').attr('value', options.pageSize).appendTo('form');
-    $('<input />').attr('type', 'hidden').attr('name', 'pageNumber').attr('value', options.pageNumber).appendTo('form');
-    $('<input />').attr('type', 'hidden').attr('name', 'searchString').attr('value', options.searchString).appendTo('form');
-    $('<input />').attr('type', 'hidden').attr('name', 'fechaInicio').attr('value', options.fechaInicio).appendTo('form');
-    $('<input />').attr('type', 'hidden').attr('name', 'fechaFin').attr('value', options.fechaFin).appendTo('form');
-    $('<input />').attr('type', 'hidden').attr('name', 'onlyAplicados').attr('value', options.OnlyAplicados).appendTo('form');
+    if (options != undefined) {
+        $('<input />').attr('type', 'hidden').attr('name', 'pageNumber').attr('value', options.pageNumber).appendTo('form');
+    }
     $("form").submit();
 }
 
@@ -71,6 +102,8 @@ function bindGrid(options) {
         columns: columns,
         successFunction: edoCuentaLoaded,
         pageChangeFunction: pageChanged,
+        selectedData: "PagoId",
+        selectedURL: "PagoServicios/Details",
         pageSize: pageSize,
         pageNumber: pageNumber,
         searchString: searchString,

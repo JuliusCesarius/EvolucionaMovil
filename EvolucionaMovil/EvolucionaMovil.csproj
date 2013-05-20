@@ -204,6 +204,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bancos.css" />
+    <Content Include="Content\themes\base\images\ticketOK.jpg" />
+    <Content Include="Content\Ticket.css" />
     <Content Include="Content\extracss.css" />
     <Content Include="Content\Imagen\logodefault.jpg" />
     <Content Include="Content\jquery.selectbox-0.2.css" />
@@ -288,7 +290,8 @@
     <Content Include="Error.html" />
     <Content Include="Global.asax" />
     <Compile Include="Models\DepositoVM.cs" />
-    <Content Include="Scripts\Abono.js" />
+    <Content Include="Scripts\PagoServicios-Details.js" />
+    <Content Include="Scripts\Depositos-Details.js" />
     <Content Include="Scripts\additional-methods.js" />
     <Content Include="Scripts\additional-methods.min.js" />
     <Content Include="Scripts\Depositos.js" />
@@ -577,7 +580,7 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>57739</DevelopmentServerPort>
+          <DevelopmentServerPort>57357</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>
           </IISUrl>

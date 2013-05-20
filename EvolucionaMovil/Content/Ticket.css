@@ -1,0 +1,24 @@
+﻿#Ticket{line-height:1.6em;border:1px solid #ccc;width:350px;padding:2em 1em .5em 1em;text-align:center;font-size:1.2em;margin-bottom:3em}
+#Ticket h1{font-size:1.8em}
+#Ticket h2{font-size:.9em}
+#Ticket #Leyenda{background:rgb(240, 240, 240)!important;border-top:1px solid #ccc;padding:.5em;margin:1em -1em;font-size:.8em;line-height:1.3em}
+#Ticket #logo{height:64px;width:182px;display:inline-block;margin:0;float:none}
+#Ticket fieldset{border-top:1px solid #ccc;line-height:1.4em;padding:1em;padding-bottom:0;text-align:left;clear:both}
+#Ticket .display-label{display:inline-block;width:38%;vertical-align: text-top}
+#Ticket .display-field{display:inline-block;margin:0;width:60%;vertical-align: text-top}
+#Ticket #Fecha, #Ticket #Folio{display:inline-block;width:49%;min-height:26px;}
+#Ticket #Folio{font-weight:bold;text-align:right}
+#Ticket .Estatus{height:40px;width:65px}
+#Ticket .Usuario{height:40px;width:65px}
+#Ticket .Comentarios{display:inline-table;width:290px}
+.ticketimage{background:#fff url("../Content/themes/base/images/ticketOK.jpg") no-repeat 50% 0%;min-height:390px;width:50%}
+.actions{text-align:right;margin-right:86px}
+#Ticket #footer1{border-top:1px solid #000;font-size:.6em;font-weight:bold;line-height:1.3em;margin-top:1em;padding:1em;text-align:center}
+#lblExpand{font-size:.7em;position:static}
+
+@media print{
+    body, .page, #main {border:none;margin:0; padding:0; font-family:Arial, Helvetica,"Lucida Grande", serif; }
+    header, footer, nav, .actions, #print, #printOptions, .formLeft{display: none !important;}
+    .formRight,.formLeft{float:none!important;width:100%!important}
+    #Ticket{margin:0!important;border:none!important; padding:1em;}
+}

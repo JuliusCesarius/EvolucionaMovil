@@ -37,6 +37,34 @@ $(document).on("ready", function () {
     $("#FechaVencimiento").datepicker({ "dateFormat": "dd/mm/yy" });
     $("#FechaVencimiento").val();
     $("#ServicioId").change(function () { getDetalleServicio(); });
+    $("#ServicioId").trigger("change");
+    $("#ImporteString").on("keyup", function () {
+        $("#Importe").val($("#ImporteString").val().replace(",", ""));
+    });
+    setValidation("Importe", 4);
+    $("#PayCenterName").autocomplete({
+        source: "/PayCenters/FindPayCenter",
+        select: function (event, ui) {
+            var label = ui.item.label;
+            var v = ui.item.value;
+            $('#hddPayCenterId').val(v);
+            $.getJSON("/PayCenters/GetSaldosPagoServicio?PayCenterId=" + v, function (data) {
+                $("#saldoActual").html(data.SaldoDisponible);
+                $("#eventoActual").html(data.EventosDisponibles);
+                $(".saldos").show();
+            });
+            this.value = label;
+            return false;
+        },
+        focus: function (event, ui) {
+            event.preventDefault();
+            $(this).val(ui.item.label);
+        },
+        open: function () {
+            $(this).autocomplete('widget').css('z-index', 100);
+            return false;
+        }
+    });
 });
 
 function getDetalleServicio() {
@@ -45,7 +73,7 @@ function getDetalleServicio() {
         $.getJSON("/PagoServicios/getDetalleServicio?servicioId=" + servicioId, function (data) {
             var divCampos = $("#camposAdicionales");
             divCampos.html("");
-            $(data).each(function () {
+            $(data).each(function (i, item) {
                 var divEditor = ("#div" + this.DetalleServicioId);
                 var nombre = this.Campo.replace(/ /g, '_').replace(/\./g, '_');
                 divCampos.append("<div class='editor-label'><label for='" + nombre + "'>" + this.Campo + "</label></div><div id='div" + this.DetalleServicioId + "'  class='editor-field'></div>");
@@ -64,10 +92,10 @@ function setValidation(nombre, tipo) {
         case 0: //Cadena
             break;
         case 1: //Entero
-            $(nombre).attr("data-val-number","El campo solo acepta números");
+            $(nombre).attr("data-val-number", "El campo solo acepta números");
             break;
         case 2: case 4: //Flotante, Dinero
-            //$(nombre).attr('data-val-regex-pattern', '^[0-9/\.]*$').attr('data-val-regex', 'Solo decimales');
+            $(nombre).attr('data-val-regex-pattern', '^[0-9/\.]*$').attr('data-val-regex', 'Solo decimales');
             break;
         case 3: //Fecha
             $(nombre).datepicker({ "dateFormat": "dd/mm/yy" });

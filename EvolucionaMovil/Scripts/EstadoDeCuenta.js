@@ -47,7 +47,7 @@
     });
 
     $("#PayCenterName").autocomplete({
-        source: "Depositos/FindPayCenter",
+        source: "PayCenters/FindPayCenter",
         select: function (event, ui) {
             var label = ui.item.label;
             var v = ui.item.value;
@@ -88,7 +88,9 @@ function CompararDosFechas(fechainicio, fechafin) {
 }
 
 function rebindGrid(options) {
-    $('<input />').attr('type', 'hidden').attr('name', 'pageNumber').attr('value', options.pageNumber).appendTo('form');
+    if (options != undefined) {
+        $('<input />').attr('type', 'hidden').attr('name', 'pageNumber').attr('value', options.pageNumber).appendTo('form');
+    }
     $("form").submit();
 }
 

@@ -41,8 +41,8 @@ namespace EvolucionaMovil.Controllers
             //    }
             //}
             //serviciosRepository.Save();
-            return View();
-            //return RedirectToAction("Logon","Account");
+            //return View();
+            return RedirectToAction("Logon","Account");
         }
 
         public ActionResult About()

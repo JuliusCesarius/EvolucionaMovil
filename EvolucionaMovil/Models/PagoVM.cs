@@ -4,9 +4,11 @@ using System.ComponentModel.DataAnnotations;
 using EvolucionaMovil.Repositories;
 using System.Linq;
 using EvolucionaMovil.Models.Enums;
+using EvolucionaMovil.Models.Interfaces;
+using DataAnnotationsExtensions;
 namespace EvolucionaMovil.Models
 {
-    public class PagoVM
+    public class PagoVM : IEvolucionaMovil
     {
 
         [Required(ErrorMessage = "El nombre es requerido")]
@@ -14,17 +16,20 @@ namespace EvolucionaMovil.Models
         public DateTime FechaCreacion { get; set; }
         [Required(ErrorMessage = "La fecha de vencimiento es requerida")]
         public DateTime? FechaVencimiento { get; set; }
+        public string FechaCreacionString { get { return FechaCreacion.ToString("dd/MMMM/yyy") + " " + FechaCreacion.ToShortTimeString(); } }
+        public String FechaVencimientoString { get { return ((DateTime)FechaVencimiento).ToString("dd/MMMM/yyy"); } }
+        [Min(10)]
         [Required(ErrorMessage = "El importe es requerido")]
         public decimal? Importe { get; set; }
+        public string ImporteString { get { return Importe.HasValue ? ((decimal)Importe).ToString("C") : null; } }
 
         public int PagoId { get; set; }
-        public int PayCenterId { get; set; }
-
+        [Min(1)]
         public int ServicioId { get; set; }
         public string ServicioNombre { get; set; }
 
         public int Status { get; set; }
-        public string Estatus { get; set; }
+        public string StatusString { get { return ((enumEstatusMovimiento)this.Status).ToString(); } }
 
         private IEnumerable<EnumWrapper> _Servicios { get; set; }
         public IEnumerable<EnumWrapper> Servicios
@@ -57,7 +62,9 @@ namespace EvolucionaMovil.Models
             ClienteNombre = null;
             DetallePagos = new List<DetallePago>();
             HistorialEstatusVM = new List<HistorialEstatusVM>();
-            Estatus = ((enumEstatusMovimiento)Status).ToString();
         }
+
+        public int PayCenterId { get; set; }
+        public string PayCenterName { get; set; }
     }
 }
