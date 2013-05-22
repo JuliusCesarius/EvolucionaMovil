@@ -1,0 +1,57 @@
+﻿@model EvolucionaMovil.Models.ErrorLog
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script type="text/javascript">
+    $(document).on("ready", function () {
+        $(".accordion").accordion({
+            collapsible: true, active:false, heightStyle:"content"
+        });
+    });
+</script>
+<fieldset class="fwith800 inline">
+    <legend>Detalle de Excepción</legend>
+       
+    <div class="display-label">UserName</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.UserName)
+    </div>
+
+    <div class="display-label">IP</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.IP)
+    </div>
+
+    <div class="display-label">FechaCreacion</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.FechaCreacion)
+    </div>
+
+    <div class="display-label">URL</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.URL)
+    </div>
+    
+    <div class="display-label">Message</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Message)
+    </div>
+
+    <div class="accordion">
+        <h3>Data</h3>
+        <div class="content">
+            @Html.DisplayFor(model => model.Data)
+        </div>
+    </div>
+    
+    <div class="accordion">
+        <h3>Stacktrace</h3>
+        <div class="content">
+            @Html.DisplayFor(model => model.Stacktrace)
+        </div>
+    </div>
+    <br />
+    @Html.ActionLink("Regresar", "Index", null, new { @class = "freshbutton-blue small" })
+</fieldset>

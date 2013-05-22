@@ -85,6 +85,7 @@ function bindGrid(options) {
     var searchString = options.searchString;
     var fechaInicio = options.fechaInicio;
     var fechaFin = options.fechaFin;
+    var onlyAplicados = options.onlyAplicados;
     $("#grdDepositos").simpleGrid({
         data: $.parseJSON($("#hddData").val()),
         columns: columns,

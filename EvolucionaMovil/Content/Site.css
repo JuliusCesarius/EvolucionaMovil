@@ -859,11 +859,12 @@ right:-11px;
 table {
     border: solid 1px #e8eef4;
     border-collapse: collapse;
+    line-height:1.4em
 }
 
 table td {
     padding: 5px;
-    border: solid 1px #e8eef4;
+    border-bottom: solid 1px #e8eef4;
 }
 
 table th {
@@ -1106,6 +1107,12 @@ legend{font-size:2em;font-weight:400}
 .fwith300 .display-label{width:200px}
 .fwith300 .display-field{width:345px}
 .inline .display-label, .inline .editor-label, .inline .display-field, .inline .editor-field {display: inline-block;font-size:1.2em}
+
+.fwith800{width:900px}
+.fwith800 .display-label{width:200px}
+.fwith800 .display-field{width:645px}
+
+.accordion .content{word-wrap:break-word}
 
 /*ListGrid*/
 .listHeader{padding:4px;background:#ccc;}

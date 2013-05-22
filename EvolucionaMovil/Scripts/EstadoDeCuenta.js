@@ -105,8 +105,7 @@ function bindGrid(options) {
          { name: 'Saldo', cssClass: "saldo" }
          ];
     if (options == undefined) {
-        var target = event.currentTarget != undefined ? event.currentTarget : event.srcElement;
-        options = { pageSize: $("#pageSize").val(), pageNumber: target, onlyAplicados: $("#aplicadosOnly").prop("checked") };
+        options = { pageSize: 20, pageNumber: 0 };
     }
     var pageSize = options.pageSize;
     var pageNumber = options.pageNumber;

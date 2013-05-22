@@ -49,7 +49,8 @@
 //$("#Rechazar").css("display", "inline");
 
 function proveedorChanged(event) {
-    if ($(event.currentTarget)[0].selectedOptions.length) {
+    var target = (event.currentTarget) ? event.currentTarget : event.srcElement;
+    if ($(target)[0].selectedOptions.length) {
         var selected = $($(event.currentTarget)[0].selectedOptions[0]).data();
         createBancosDropdown(selected.Bancos);
     } else {

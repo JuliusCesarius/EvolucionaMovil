@@ -1,0 +1,35 @@
+﻿@model IEnumerable<EvolucionaMovil.Models.ErrorLog>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Seguimiento de excepciones</h2><h4>[Excepciones : @Model.Count().ToString() totales | @Model.GroupBy(x=>x.Message).Select(x=>x.Key).Count().ToString() únicas]</h4>
+<br />
+
+<table>
+    <tr>
+        <th>
+            Usuario
+        </th>
+        <th>
+            Error
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+    <td><span class="fwb fsl">@Html.DisplayFor(modelItem => item.UserName) </span></td>
+        <td>
+            <span class="fsl">@Html.DisplayFor(modelItem => item.Message)</span><br />
+            <span style="color:#ccc">@Html.DisplayFor(modelItem => item.FechaCreacion) </span> - <span style="color:#ccc">@Html.DisplayFor(modelItem => item.URL)</span>
+        </td>
+        <td>
+            @Html.ActionLink("Details", "Details", new { id=item.ErrorLogId })
+        </td>
+    </tr>
+}
+
+</table>
