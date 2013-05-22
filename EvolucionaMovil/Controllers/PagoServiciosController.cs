@@ -15,6 +15,7 @@ using cabinet.patterns.enums;
 using EvolucionaMovil.Attributes;
 using System.Globalization;
 using EvolucionaMovil.Models.BR;
+using EvolucionaMovil.Models.Helpers;
 
 namespace EvolucionaMovil.Controllers
 {
@@ -114,6 +115,9 @@ namespace EvolucionaMovil.Controllers
                         if (Succeed)
                         {
                             AddValidationMessage(enumMessageType.Succeed, "El reporte de depósito ha sido " + nuevoEstatus.ToString() + " correctamente");
+                            var paycenter = pRepository.LoadById(pago.PayCenter.PayCenterId);
+                            if (paycenter != null)
+                                EmailHelper.Enviar(getMensaje(nuevoEstatus.ToString()), "El reporte de depósito ha sido " + nuevoEstatus.ToString(), paycenter.Email);
                         }
                         else
                         {
@@ -205,10 +209,9 @@ namespace EvolucionaMovil.Controllers
                     try
                     {
 
-                        //Verifica si tiene configurada la comisión que mostrará al cliente, se toma el valor para mostrar en el ticket
-                        ParametrosRepository parametrosRepository = new ParametrosRepository();
-                        var parametrosPayCenter = parametrosRepository.GetParametrosPayCenter(PayCenterId);
-                        var parametrosGlobales = parametrosRepository.GetParametrosGlobales();
+                        //Verifica si tiene configurada la comisión que mostrará al cliente, se toma el valor para mostrar en el ticket                       
+                        var parametrosPayCenter = parRepository.GetParametrosPayCenter(PayCenterId);
+                        var parametrosGlobales = parRepository.GetParametrosGlobales();
 
                         Ticket ticket = new Ticket();
                         ticket.ClienteEmail = "";
@@ -223,8 +226,8 @@ namespace EvolucionaMovil.Controllers
                         ticket.PayCenterId = pago.PayCenterId;
                         ticket.TipoServicio = pago.Servicio;
                         ticket.Referencia = Referencia;
-                        ticket.PayCenterName = PayCenterName;
-                        ticket.FechaVencimiento = pago.FechaVencimiento;
+                        //ticket.PayCenterName = PayCenterName;
+                        //ticket.FechaVencimiento = pago.FechaVencimiento;
 
                         tRepository.Add(ticket);
                         Succeed = tRepository.Save();
@@ -396,22 +399,6 @@ namespace EvolucionaMovil.Controllers
         }
 
         [NonAction]
-        private PayCenter GetPayCenter(int Id = 0)
-        {
-            //Buscar el payCenter
-            if (Id == 0)
-            {
-                if (HttpContext.User.IsInRole(enumRoles.PayCenter.ToString()))
-                {
-                    Id = pRepository.GetPayCenterByUserName(HttpContext.User.Identity.Name);
-                }
-            }
-            PayCenter payCenter = pRepository.LoadById(Id);
-
-            return payCenter;
-        }
-
-        [NonAction]
         private PagoVM FillPagoVM(Int32 id)
         {
             PagoVM pagoVM = new PagoVM();
@@ -438,6 +425,13 @@ namespace EvolucionaMovil.Controllers
                 AddValidationMessage(enumMessageType.BRException, "Ocurrio un error al recuperar la información del pago: " + e.Message);
             }
             return pagoVM;
+        }
+
+        [NonAction]
+        private string getMensaje(string status)
+        {
+            string cadena="<div>El pago ha sido " + status  + "</div>";
+            return cadena;
         }
 
         [HttpPost]
