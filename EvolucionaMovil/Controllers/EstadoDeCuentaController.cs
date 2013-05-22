@@ -252,7 +252,7 @@ namespace EvolucionaMovil.Controllers
             var lastComment = TempEstadoDeCuentaRepository.GetUltimoCambioEstatus((enumMotivo)Movimiento.Motivo, Movimiento.Id);
             if (lastComment != null)
             {
-                return lastComment.Comentarios;
+                return (lastComment.Comentarios== null ? string.Empty : lastComment.Comentarios);
             }
             else
             {

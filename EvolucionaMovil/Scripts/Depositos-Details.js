@@ -1,7 +1,10 @@
 ﻿
 $(document).ready(function () {
-    //OcultaComentario();
-   // $("Cancelar").click(MuestraComentario);
+    $("#FichaDeposito").css("display", "none");
+    $("#VerImagen").on("click", function () {
+        OcultaMuestraImagen();
+    }
+    );
     //$("#NoCancelar").click(OcultaComentario());
 });
 
@@ -34,6 +37,23 @@ function MuestraComentario(action) {
             $("#action")[0].value = action;
             $("#actionName")[0].textContent = action;
         }
+    }
+}
+
+function OcultaMuestraImagen() {
+
+    displaying = $("#FichaDeposito").css("display");
+    if (displaying == "block") {
+
+        $("#FichaDeposito").fadeOut('slow', function () {
+            $("#FichaDeposito").css("display", "none");
+        });
+
+    } else {
+        $("#FichaDeposito").fadeIn('slow', function () {
+            $("#FichaDeposito").css("display", "block");
+        });
+
     }
 }
 
