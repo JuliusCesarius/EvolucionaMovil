@@ -117,7 +117,7 @@ namespace EvolucionaMovil.Controllers
                             AddValidationMessage(enumMessageType.Succeed, "El reporte de depósito ha sido " + nuevoEstatus.ToString() + " correctamente");
                             var paycenter = pRepository.LoadById(pago.PayCenter.PayCenterId);
                             if (paycenter != null)
-                                EmailHelper.Enviar(getMensaje(nuevoEstatus.ToString()), "El reporte de depósito ha sido " + nuevoEstatus.ToString(), paycenter.Email);
+                                EmailHelper.Enviar(getMensaje(nuevoEstatus.ToString(), pago), "El depósito " + pago.Ticket.Folio + "ha sido " + nuevoEstatus.ToString(), paycenter.Email);
                         }
                         else
                         {
@@ -166,13 +166,34 @@ namespace EvolucionaMovil.Controllers
                 AddValidationMessage(enumMessageType.DataValidation, "El importe no puede ser menor a $0.00.");
                 return View(model);
             }
+            var parametrosPayCenter = parRepository.GetParametrosPayCenter(PayCenterId);
+            var parametrosGlobales = parRepository.GetParametrosGlobales();
+            EstadoCuentaBR br = new EstadoCuentaBR(repository.context);  
+
+            //Checando si tiene saldos y eventos disponibles para hacer la transaccion                     
+            var saldo = br.GetSaldosPagoServicio(PayCenterId); Boolean restarEvento = false;
+            var eventos = saldo.EventosDisponibles;
+
+            if (eventos <= 0) //Se cobra comision
+                model.Importe = model.Importe + parametrosGlobales.ComisionPayCenter;
+            else
+                restarEvento = true;
+
+            ViewData["EventosFinal"] = restarEvento ? eventos - 1 : eventos;
+            ViewData["SaldoFinal"] = saldo.SaldoDisponible - model.Importe;
+
+            if ((saldo.SaldoDisponible - model.Importe) < 0)
+            {
+                AddValidationMessage(enumMessageType.UnhandledException, "El paycenter no tiene saldo para realizar esta acción");
+                return View(model);
+            }            
+
             if (ModelState.IsValid)
             {
                 try
                 {
                     #region Crear Movimiento Inicial
-                    Pago pago = new Pago();
-                    EstadoCuentaBR br = new EstadoCuentaBR(repository.context);
+                    Pago pago = new Pago();                    
                     PaycenterBR payCenterBR = new PaycenterBR();
                     var cuentaId = payCenterBR.GetOrCreateCuentaPayCenter(PayCenterId, enumTipoCuenta.Pago_de_Servicios, PROVEEDOR_EVOLUCIONAMOVIL);
                     Movimiento mov = br.CrearMovimiento(PayCenterId, enumTipoMovimiento.Cargo, 0, cuentaId, (Decimal)model.Importe, enumMotivo.Pago, PayCenterName);
@@ -189,7 +210,7 @@ namespace EvolucionaMovil.Controllers
                     var iDetalles = serviciosRepository.LoadDetallesServicioByServicioID(pago.ServicioId);
                     foreach (DetalleServicio d in iDetalles)
                     {
-                        var valor = Request.Form[d.Campo.Replace(' ','_')];
+                        var valor = Request.Form[d.Campo.Replace(' ', '_')];
                         if (d.EsReferencia)
                             Referencia = valor;
 
@@ -210,9 +231,6 @@ namespace EvolucionaMovil.Controllers
                     {
 
                         //Verifica si tiene configurada la comisión que mostrará al cliente, se toma el valor para mostrar en el ticket                       
-                        var parametrosPayCenter = parRepository.GetParametrosPayCenter(PayCenterId);
-                        var parametrosGlobales = parRepository.GetParametrosGlobales();
-
                         Ticket ticket = new Ticket();
                         ticket.ClienteEmail = "";
                         ticket.ClienteNombre = pago.ClienteNombre;
@@ -336,9 +354,9 @@ namespace EvolucionaMovil.Controllers
 
 
             EstadoCuentaBR br = new EstadoCuentaBR();
-            ViewData["Eventos"] = pqrepository.GetEventosByPayCenter(PayCenterId);
             var saldo = br.GetSaldosPagoServicio(PayCenterId);
             ViewData["SaldoActual"] = saldo.SaldoActual;
+            ViewData["Eventos"] = saldo.EventosDisponibles;
 
             if (Parameters != null)
             {
@@ -428,9 +446,55 @@ namespace EvolucionaMovil.Controllers
         }
 
         [NonAction]
-        private string getMensaje(string status)
+        private string getMensaje(string status, Pago p)
         {
-            string cadena="<div>El pago ha sido " + status  + "</div>";
+
+            string cadena = @"  <h2>Detalle de pago</h2>                                    
+                                <img src='" + p.PayCenter.Logotipo + "' />" +
+                                @"<div class='display-label'>
+                                    PayCenter</div>
+                                <div class='display-field'>" +
+                                  p.PayCenter.Nombre +
+                                @"</div>
+                                <div class='display-label'>
+                                    Servicio</div>
+                                <div class='display-field fwb fsl'>"
+                                   + p.Servicio +
+                                @"</div>";
+            foreach (DetallePago d in p.DetallePagos)
+            {
+                cadena += @"<div class='display-label'>" + d.Campo + "</div><div class='display-field'>" + d.Valor + "</div>";
+            }
+            cadena += @"         <div class='display-label'>
+                                    Fecha Vencimiento</div>
+                                <div class='display-field'>" +
+                                    p.FechaVencimiento.ToShortDateString() +
+                                @"</div>
+                                <div class='display-label'>
+                                    Nombre Cliente</div>
+                                <div class='display-field'>" +
+                                   p.ClienteNombre +
+                                @"</div>
+                                <div class='display-label'>
+                                    Importe</div>
+                                <div class='display-field fwb fsxl'>" +
+                                    p.Importe.ToString("C", ci) +
+                                @"</div>
+                                <div class='display-label'>
+                                    Estatus</div>
+                                <div class='display-field fwb fsxl '>
+                                    <span class='Procesando'>" + ((enumEstatusMovimiento)p.Status).ToString() + "</span>" +
+                                @"</div>
+                                <div class='display-label'>
+                                    <div class='listHeader'>
+                                        <br />
+                                        Hitórico de Estatus</div>";
+            foreach (Movimientos_Estatus m in p.Movimiento.Movimientos_Estatus)
+            {
+                cadena += @"<div class='listRow'>
+                                        <span class='listCell Estatus fwb'><span class='Procesando '>" + ((enumEstatusMovimiento)m.Status).ToString() + " </span>" +
+                                        @"</span><span class='listCell Comentarios'></span><span class='listCell Usuario'>" + m.Comentarios + "</span> <span class='listCell Fecha'>" + m.FechaCreacion.ToShortDateString() + "</span></div> </div>";
+            }
             return cadena;
         }
 
