@@ -143,6 +143,13 @@ namespace EvolucionaMovil.Controllers
         {
             PagoVM pagoVM = new PagoVM();
             pagoVM.PayCenterId = PayCenterId;
+            if (PayCenterId > 0)
+            {
+                EstadoCuentaBR br = new EstadoCuentaBR();
+                ViewData["Eventos"] = pqrepository.GetEventosByPayCenter(PayCenterId);
+                var saldo = br.GetSaldosPagoServicio(PayCenterId);
+                ViewData["SaldoActual"] = saldo.SaldoActual;
+            }
             return View(pagoVM);
         }
 
@@ -152,11 +159,16 @@ namespace EvolucionaMovil.Controllers
         {
             if (PayCenterId == 0)
             {
-                model.PayCenterId = 7;
                 model.PayCenterName = string.Empty;
                 AddValidationMessage(enumMessageType.DataValidation, "Por favor, seleccione primero un PayCenter.");
                 return View(model);
             }
+
+            EstadoCuentaBR br = new EstadoCuentaBR(repository.context);
+            ViewData["Eventos"] = pqrepository.GetEventosByPayCenter(PayCenterId);
+            var saldo = br.GetSaldosPagoServicio(PayCenterId);
+            ViewData["SaldoActual"] = saldo.SaldoActual;
+
             if (model.Importe <= 0)
             {
                 AddValidationMessage(enumMessageType.DataValidation, "El importe no puede ser menor a $0.00.");
@@ -168,10 +180,16 @@ namespace EvolucionaMovil.Controllers
                 {
                     #region Crear Movimiento Inicial
                     Pago pago = new Pago();
-                    EstadoCuentaBR br = new EstadoCuentaBR(repository.context);
                     PaycenterBR payCenterBR = new PaycenterBR();
                     var cuentaId = payCenterBR.GetOrCreateCuentaPayCenter(PayCenterId, enumTipoCuenta.Pago_de_Servicios, PROVEEDOR_EVOLUCIONAMOVIL);
-                    Movimiento mov = br.CrearMovimiento(PayCenterId, enumTipoMovimiento.Cargo, 0, cuentaId, (Decimal)model.Importe, enumMotivo.Pago, PayCenterName);
+                    List<Movimiento> movimientos = br.CrearMovimientosPagoServicios(PayCenterId, (Decimal)model.Importe, PayCenterName);
+                    Succeed = br.Succeed;
+                    ValidationMessages = br.ValidationMessages;
+                    if (!Succeed)
+                    {
+                        return View(model);
+                    }
+                    //Movimiento mov = br.CrearMovimiento(PayCenterId, enumTipoMovimiento.Cargo, 0, cuentaId, (Decimal)model.Importe, enumMotivo.Pago, PayCenterName);
                     #endregion
 
                     #region Registro de Pago
@@ -180,12 +198,12 @@ namespace EvolucionaMovil.Controllers
                     Mapper.Map(model, pago);
                     pago.Servicio = model.Servicios.Where(x => x.Value == model.ServicioId).FirstOrDefault().Text;
                     pago.PayCenterId = PayCenterId;
-                    pago.Movimiento = mov;
+                    pago.Movimiento = movimientos.Where(x=>x.Motivo == (short)enumMotivo.Pago).First();
 
                     var iDetalles = serviciosRepository.LoadDetallesServicioByServicioID(pago.ServicioId);
                     foreach (DetalleServicio d in iDetalles)
                     {
-                        var valor = Request.Form[d.Campo.Replace(' ','_')];
+                        var valor = Request.Form[d.Campo.Replace(' ','_').Replace('.','_')];
                         if (d.EsReferencia)
                             Referencia = valor;
 

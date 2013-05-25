@@ -29,14 +29,29 @@ namespace EvolucionaMovil.Repositories
 
         public int GetEventosDisponibles(int PayCenterId)
         {
-            //TODO: Implementar lógica cuando se agregue el campo que determine si un pago se realizó con un Evento, y saber si está aplicado o no, y así descontarlo de los disponibles
             var eventos = context.CompraEventos.Where(x => x.PayCenterId == PayCenterId && x.Consumidos < x.Eventos);
-            int numEventos =0;
+            //Obtiene los pagos que usaron eventos, tanto aplicados como en proceso, para después restarselo a los eventos comprados
+            var eventosUsados = context.Pagos.Where(x => x.PayCenterId == PayCenterId && x.UsoEvento && (x.Status == (short)enumEstatusMovimiento.Procesando || x.Status == (short)enumEstatusMovimiento.Aplicado));
+            int numEventos =eventos.Count() - eventosUsados.Count();
            if( eventos.Count()>0){
                numEventos = eventos.Sum(x=>x.Eventos);
            }
             return numEventos;
         }
+
+        public int GetEventosActuales(int PayCenterId)
+        {
+            var eventos = context.CompraEventos.Where(x => x.PayCenterId == PayCenterId && x.Consumidos < x.Eventos);
+            //Obtiene los pagos que usaron eventos y realmente se aplicaron, para después restarselo a los eventos comprados
+            var eventosUsados = context.Pagos.Where(x => x.PayCenterId == PayCenterId && x.UsoEvento && x.Status == (short)enumEstatusMovimiento.Aplicado);
+            int numEventos = eventos.Count() - eventosUsados.Count();
+            if (eventos.Count() > 0)
+            {
+                numEventos = eventos.Sum(x => x.Eventos);
+            }
+            return numEventos;
+        }
+
         /// <summary>
         /// Obtiene el registro del último registro generado por cambio de estatus
         /// </summary>

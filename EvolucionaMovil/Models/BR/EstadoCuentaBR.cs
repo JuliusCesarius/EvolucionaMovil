@@ -7,6 +7,7 @@ using EvolucionaMovil.Models.Enums;
 using System.Data.Objects;
 using cabinet.patterns.interfaces;
 using cabinet.patterns.clases;
+using cabinet.patterns.enums;
 
 namespace EvolucionaMovil.Models.BR
 {
@@ -16,7 +17,7 @@ namespace EvolucionaMovil.Models.BR
     /// </summary>
     internal class EstadoCuentaBR : cabinet.patterns.clases.BusinessRulesBase<Movimiento>
     {
-        
+        private const int PROVEEDOR_EVOLUCIONAMOVIL = 1;        
         private EvolucionaMovilBDEntities _context;
         private EstadoDeCuentaRepository _estadoDeCuentaRepository;
         private EstadoDeCuentaRepository estadoDeCuentaRepository
@@ -61,23 +62,147 @@ namespace EvolucionaMovil.Models.BR
         {
             Succeed = true;
             var movimientos = estadoDeCuentaRepository.GetMovimientos(enumTipoCuenta.Pago_de_Servicios.GetHashCode(), PayCenterId);
-            var abonosAplicados = movimientos.Where(x => x.IsAbono && x.Status == enumEstatusMovimiento.Aplicado.GetHashCode()).Sum(x => x.Monto);
-            var cargosAplicados = movimientos.Where(x => !x.IsAbono && x.Status == enumEstatusMovimiento.Aplicado.GetHashCode()).Sum(x => x.Monto);
+            var abonosAplicados = movimientos.Where(x => x.IsAbono && x.Status == (short)enumEstatusMovimiento.Aplicado).Sum(x => x.Monto);
+            var cargosAplicados = movimientos.Where(x => !x.IsAbono && x.Status == (short)enumEstatusMovimiento.Aplicado).Sum(x => x.Monto);
             SaldosPagoServicio saldosPagoServicio = new SaldosPagoServicio
             {
                 SaldoActual = abonosAplicados - cargosAplicados,
-                SaldoPorAbonar = movimientos.Where(x => x.IsAbono && x.Status == enumEstatusMovimiento.Procesando.GetHashCode()).Sum(x => x.Monto),
-                SaldoPorCobrar = movimientos.Where(x => !x.IsAbono && x.Status == enumEstatusMovimiento.Procesando.GetHashCode()).Sum(x => x.Monto),
+                SaldoPorAbonar = movimientos.Where(x => x.IsAbono && x.Status == (short)enumEstatusMovimiento.Procesando).Sum(x => x.Monto),
+                SaldoPorCobrar = movimientos.Where(x => !x.IsAbono && x.Status == (short)enumEstatusMovimiento.Procesando).Sum(x => x.Monto),
             };
             saldosPagoServicio.SaldoPendiente = saldosPagoServicio.SaldoPorAbonar - saldosPagoServicio.SaldoPorCobrar;
             saldosPagoServicio.SaldoDisponible = saldosPagoServicio.SaldoActual - saldosPagoServicio.SaldoPorCobrar;
             saldosPagoServicio.EventosDisponibles = estadoDeCuentaRepository.GetEventosDisponibles(PayCenterId);
+            saldosPagoServicio.EventosActuales = estadoDeCuentaRepository.GetEventosActuales(PayCenterId);
             return saldosPagoServicio;
         }
 
         #endregion
 
         #region Movimientos
+
+        internal List<Movimiento> CrearMovimientosPagoServicios(int PayCenterId, decimal Monto, string PayCenterName)
+        {
+            Succeed = true;
+            //Evaluar si va a usar Evento
+            var movimientos = new List<Movimiento>();
+            var saldos = GetSaldosPagoServicio(PayCenterId);
+            //Obtener comisión a cobrar
+            Decimal? comision = 0;
+            //Valido primero parámetros del paycenter
+            ParametrosRepository parametrosRepository = new ParametrosRepository();
+            var parametrosPayCenter = parametrosRepository.GetParametrosPayCenter(PayCenterId);
+            if (saldos.EventosDisponibles <= 0)
+            {
+                var parametrosGlobales = parametrosRepository.GetParametrosGlobales();
+                comision = parametrosPayCenter != null && parametrosPayCenter.ComisionPayCenter != null ? parametrosPayCenter.ComisionPayCenter : null;
+                if (comision == null)
+                {
+                    comision = parametrosGlobales != null && parametrosGlobales.ComisionPayCenter != null ? parametrosPayCenter.ComisionPayCenter : null;
+                }
+                if (comision == null)
+                {
+                    AddValidationMessage(enumMessageType.BRException, "Está intentando reportar un pago de servicio pero no tiene configurada una comisión de cobro. Favor de reportarlo con un asesor.");
+                    Succeed = false;
+                    return movimientos;
+                }
+            }
+            //Checar saldo
+            Decimal montoTotal = Monto + (Decimal)comision;
+            if (saldos.SaldoDisponible < montoTotal)
+            {
+                //Si no tiene saldo, checar financiamiento configurado
+                var maximoAFinanciar = parametrosPayCenter != null && parametrosPayCenter.MaximoAFinanciar != null ? parametrosPayCenter.MaximoAFinanciar : 0;
+                decimal saldoFinal = saldos.SaldoDisponible - montoTotal;
+                if (maximoAFinanciar >= saldoFinal)
+                {
+                    AddValidationMessage(enumMessageType.BRException, "No cuenta con saldo suficiente para reportar este pago y tampoco es posible otorgar un financiamiento.");
+                    Succeed = false;
+                    return movimientos;
+                }
+            }
+
+            //Obtengo la cuenta de Pago de servicio del PayCenter
+            var cuentaId = new PaycenterBR().GetOrCreateCuentaPayCenter(PayCenterId, enumTipoCuenta.Pago_de_Servicios, PROVEEDOR_EVOLUCIONAMOVIL);
+            //Generar movimientos correspondientes:
+            //Verifico si se pasó el context en el constructor, si no, lo obtengo del repositorio e inicializo la variable que hace que guarde o nó al final del método
+            bool autoSave = _context == null;
+            if (_context == null)
+            {
+                _context = estadoDeCuentaRepository.context;
+            }
+            //Movimiento del pago
+            var movimientoPago = CrearMovimiento(PayCenterId, enumTipoMovimiento.Cargo, 0, cuentaId, Monto, enumMotivo.Pago, PayCenterName);
+            movimientos.Add(movimientoPago);
+
+            //Inicializo repositorio de movimientos de la empresa
+            MovimientosEmpresaRepository movimientosEmpresaRepository = new MovimientosEmpresaRepository(_context);
+
+            //Movimiento de cargo (en caso de que aplique)
+            Movimiento movimientoComision = null;
+            if (comision > 0)
+            {
+                movimientoComision = CrearMovimiento(PayCenterId, enumTipoMovimiento.Cargo, 0, cuentaId, Monto, enumMotivo.Comision, PayCenterName);
+                movimientos.Add(movimientoComision);
+                //Movimiento de comision a favor de la empresa
+
+                var movimientoEmpresaPago = new MovimientoEmpresa
+                {
+                    Clave = DateTime.Now.ToString("yyyyMMdd") + "0" + ((Int16)enumMotivo.Financiamiento).ToString() + new Random().Next(0, 99999).ToString(),
+                    IsAbono = true,
+                    Monto = (short)comision,
+                    Motivo = (short)enumMotivo.Comision,
+                    Movimiento = movimientoComision,
+                    SaldoActual = 0, //todo:Calcular el saldo actual
+                    Status = (short)enumEstatusMovimiento.Procesando,
+                    UserName = PayCenterName,
+                    FechaCreacion = DateTime.UtcNow
+                };
+                movimientosEmpresaRepository.Add(movimientoEmpresaPago);
+            }
+
+            //Movimiento de financiamiento de la empresa
+            var financiamientoPago = Monto - saldos.SaldoDisponible;
+            var financiamientoComision = montoTotal - saldos.SaldoDisponible + financiamientoPago;
+            if (financiamientoPago > 0)
+            {
+                var movimientoEmpresaPago = new MovimientoEmpresa
+                {
+                    Clave = DateTime.Now.ToString("yyyyMMdd") + "0" + ((Int16)enumMotivo.Financiamiento).ToString() + new Random().Next(0, 99999).ToString(),
+                    IsAbono = false,
+                    Monto = financiamientoPago,
+                    Motivo = (short)enumMotivo.Financiamiento,
+                    Movimiento = movimientoPago,
+                    SaldoActual = 0, //todo:Calcular el saldo actual
+                    Status = (short)enumEstatusMovimiento.Procesando,
+                    UserName = PayCenterName,
+                    FechaCreacion = DateTime.UtcNow
+                };
+                movimientosEmpresaRepository.Add(movimientoEmpresaPago);
+            }
+            if (financiamientoComision > 0)
+            {
+                var movimientoEmpresaComision = new MovimientoEmpresa
+                {
+                    Clave = DateTime.Now.ToString("yyyyMMdd") + "0" + ((Int16)enumMotivo.Financiamiento).ToString() + new Random().Next(0, 99999).ToString(),
+                    IsAbono = false,
+                    Monto = financiamientoComision,
+                    Motivo = (short)enumMotivo.Financiamiento,
+                    Movimiento = movimientoComision,
+                    SaldoActual = 0, //todo:Calcular el saldo actual
+                    Status = (short)enumEstatusMovimiento.Procesando,
+                    UserName = PayCenterName
+                };
+                movimientosEmpresaRepository.Add(movimientoEmpresaComision);
+            }
+            if (_context == null)
+            {
+                Succeed = estadoDeCuentaRepository.Save();
+            }
+
+            //Devolver Lista de movimientos
+            return movimientos;
+        }
 
         /// <summary>
         /// Genera el movimiento y genera estatus y clave según condificiones de los BR
@@ -123,7 +248,7 @@ namespace EvolucionaMovil.Models.BR
             movimiento.UserName = PayCenterName;
             movimiento.Id = Id;
 
-            //BR01.04.b: La creción de un registro de movimiento, deberá venir acompañada de un registro de historial de estatus
+            //BR01.04.b: La creación de un registro de movimiento, deberá venir acompañada de un registro de historial de estatus
             var currentUser = HttpContext.Current.User != null ? HttpContext.Current.User.Identity.Name : string.Empty;
             Int16 nuevoEstatusNumber = movimiento.Status;
             var movimientos_Estatus = new Movimientos_Estatus { PayCenterId = PayCenterId, CuentaId = CuentaId, UserName = currentUser, Status = nuevoEstatusNumber, FechaCreacion = DateTime.Now };
@@ -151,14 +276,14 @@ namespace EvolucionaMovil.Models.BR
             if (Id <= 0)
             {
                 Succeed = false;
-                AddValidationMessage(cabinet.patterns.enums.enumMessageType.BRException, "El Id de referencia del movimiento debe ser mayor a 0.");
+                AddValidationMessage(enumMessageType.BRException, "El Id de referencia del movimiento debe ser mayor a 0.");
                 return null;
             }
             Movimiento movimiento = estadoDeCuentaRepository.LoadById(MovimientoId);
             if (movimiento == null)
             {
                 Succeed = false;
-                AddValidationMessage(cabinet.patterns.enums.enumMessageType.BRException, "No se pudo encontrar el movimiento con  MovimientoId = " + MovimientoId.ToString());
+                AddValidationMessage(enumMessageType.BRException, "No se pudo encontrar el movimiento con  MovimientoId = " + MovimientoId.ToString());
                 return null;
             }
             movimiento.Id = Id;
@@ -184,7 +309,7 @@ namespace EvolucionaMovil.Models.BR
             if (movimiento == null)
             {
                 Succeed = false;
-                AddValidationMessage(cabinet.patterns.enums.enumMessageType.BRException, "No existe el movimiento especificado");
+                AddValidationMessage(enumMessageType.BRException, "No existe el movimiento especificado");
                 return null;
             }
 
@@ -192,7 +317,7 @@ namespace EvolucionaMovil.Models.BR
             if (NuevoEstatus.GetHashCode() == movimiento.Status)
             {
                 Succeed = false;
-                AddValidationMessage(cabinet.patterns.enums.enumMessageType.BRException, "Ya se encuentra en estatus " + NuevoEstatus.ToString());
+                AddValidationMessage(enumMessageType.BRException, "Ya se encuentra en estatus " + NuevoEstatus.ToString());
                 return null;
             }
 
@@ -202,7 +327,7 @@ namespace EvolucionaMovil.Models.BR
                 if (movimiento.Status != Enums.enumEstatusMovimiento.Procesando.GetHashCode() || NuevoEstatus != Enums.enumEstatusMovimiento.Aplicado)
                 {
                     Succeed = false;
-                    AddValidationMessage(cabinet.patterns.enums.enumMessageType.BRException, "Es necesario proporcionar comentarios del cambio de Estatus");
+                    AddValidationMessage(enumMessageType.BRException, "Es necesario proporcionar comentarios del cambio de Estatus");
                     return null;
                 }
             }
@@ -211,7 +336,7 @@ namespace EvolucionaMovil.Models.BR
             if (movimiento.Status == enumEstatusMovimiento.Cancelado.GetHashCode())
             {
                 Succeed = false;
-                AddValidationMessage(cabinet.patterns.enums.enumMessageType.BRException, "No es posible cambiar de estatus un movimiento Cancelado.");
+                AddValidationMessage(enumMessageType.BRException, "No es posible cambiar de estatus un movimiento Cancelado.");
                 return null;
             }
 
@@ -220,14 +345,14 @@ namespace EvolucionaMovil.Models.BR
                 case enumEstatusMovimiento.Procesando:
                     //BR01.04.g: En un movimiento no es posible regresar al estatus Processando
                     Succeed = false;
-                    AddValidationMessage(cabinet.patterns.enums.enumMessageType.BRException, "En un movimiento no es posible regresar al estatus Processando");
+                    AddValidationMessage(enumMessageType.BRException, "En un movimiento no es posible regresar al estatus Processando");
                     return null;
                 case enumEstatusMovimiento.Aplicado:
                     //BR01.04.i: Un movimiento puede ser Aplicado únicamente si el usuario es de tipo Staff o Administrator.
                     if (!HttpContext.Current.User.IsInRole(enumRoles.Staff.ToString()) && !HttpContext.Current.User.IsInRole(enumRoles.Administrator.ToString()))
                     {
                         Succeed = false;
-                        AddValidationMessage(cabinet.patterns.enums.enumMessageType.BRException, "El usuario no tiene permisos de realizar esta acción.");
+                        AddValidationMessage(enumMessageType.BRException, "El usuario no tiene permisos de realizar esta acción.");
                         return null;
                     }
                     break;
@@ -236,7 +361,7 @@ namespace EvolucionaMovil.Models.BR
                     if (!HttpContext.Current.User.IsInRole(enumRoles.Staff.ToString()) && !HttpContext.Current.User.IsInRole(enumRoles.Administrator.ToString()))
                     {
                         Succeed = false;
-                        AddValidationMessage(cabinet.patterns.enums.enumMessageType.BRException, "El usuario no tiene permisos de realizar esta acción.");
+                        AddValidationMessage(enumMessageType.BRException, "El usuario no tiene permisos de realizar esta acción.");
                         return null;
                     }
                     break;
@@ -245,7 +370,7 @@ namespace EvolucionaMovil.Models.BR
                     if (!HttpContext.Current.User.IsInRole(enumRoles.PayCenter.ToString()))
                     {
                         Succeed = false;
-                        AddValidationMessage(cabinet.patterns.enums.enumMessageType.BRException, "El usuario no tiene permisos de realizar esta acción.");
+                        AddValidationMessage(enumMessageType.BRException, "El usuario no tiene permisos de realizar esta acción.");
                         return null;
                     }
 
@@ -253,7 +378,7 @@ namespace EvolucionaMovil.Models.BR
                     if (movimiento.Status != enumEstatusMovimiento.Procesando.GetHashCode())
                     {
                         Succeed = false;
-                        AddValidationMessage(cabinet.patterns.enums.enumMessageType.BRException, "No es posible Cancelar el movimiento si no se encuentra en estatus procesando.");
+                        AddValidationMessage(enumMessageType.BRException, "No es posible Cancelar el movimiento si no se encuentra en estatus procesando.");
                         return null;
                     }
                     else
@@ -263,7 +388,7 @@ namespace EvolucionaMovil.Models.BR
                         if (parametrosGlobales == null)
                         {
                             Succeed = false;
-                            AddValidationMessage(cabinet.patterns.enums.enumMessageType.Notification, "No existen parámetros globales configurados");
+                            AddValidationMessage(enumMessageType.Notification, "No existen parámetros globales configurados");
                             return null;
                         }
                         var dif = DateTime.Now - movimiento.FechaCreacion;
@@ -271,7 +396,7 @@ namespace EvolucionaMovil.Models.BR
                         if (dif.TotalMinutes > parametrosGlobales.MinutosProrrogaCancelacion)
                         {
                             Succeed = false;
-                            AddValidationMessage(cabinet.patterns.enums.enumMessageType.BRException, "No es posible Cancelar el movimiento debido a que ha excedido el tiempo máximo permitido (" + parametrosGlobales.MinutosProrrogaCancelacion.ToString() + " minutos).");
+                            AddValidationMessage(enumMessageType.BRException, "No es posible Cancelar el movimiento debido a que ha excedido el tiempo máximo permitido (" + parametrosGlobales.MinutosProrrogaCancelacion.ToString() + " minutos).");
                             return null;
                         }
                     }
@@ -391,6 +516,10 @@ namespace EvolucionaMovil.Models.BR
             /// Número de eventos de pago de servicio disponibles
             /// </summary>
             public decimal EventosDisponibles { get; set; }
+            /// <summary>
+            /// Número de eventos de pago de servicio Aplicados
+            /// </summary>
+            public decimal EventosActuales { get; set; }
         }
 
     }
