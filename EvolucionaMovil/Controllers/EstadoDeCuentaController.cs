@@ -138,23 +138,24 @@ namespace EvolucionaMovil.Controllers
                         else
                         {
                             //todo: Si no es abono que hacer?
+                            AddValidationMessage(enumMessageType.BRException, "No hay lógica para modificar este movimiento");
                         }
                     }
                     else
                     {
-                        AddValidationMessage(enumMessageType.BRException, "No se encontro el Abono.");
+                        AddValidationMessage(enumMessageType.BRException, "No se encontró el Abono.");
                     }
 
                 }
                 else
                 {
-                    AddValidationMessage(enumMessageType.BRException, "No se encontro el movimiento.");
+                    AddValidationMessage(enumMessageType.BRException, "No se encontró el movimiento.");
                 }
 
             }
             else
             {
-                AddValidationMessage(enumMessageType.BRException , "El movimiento no es valido.");
+                AddValidationMessage(enumMessageType.BRException , "El movimiento no es válido.");
             }
 
             model = FillEstadoDeCuentaVM(id);
