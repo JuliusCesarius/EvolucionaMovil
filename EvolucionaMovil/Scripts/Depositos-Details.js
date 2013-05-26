@@ -47,11 +47,13 @@ function OcultaMuestraImagen() {
 
         $("#FichaDeposito").fadeOut('slow', function () {
             $("#FichaDeposito").css("display", "none");
+            $("#VerImagen")[0].value = "Ver ficha de depósito"
         });
 
     } else {
         $("#FichaDeposito").fadeIn('slow', function () {
             $("#FichaDeposito").css("display", "block");
+            $("#VerImagen")[0].value = "Ocultar ficha de depósito"
         });
 
     }
