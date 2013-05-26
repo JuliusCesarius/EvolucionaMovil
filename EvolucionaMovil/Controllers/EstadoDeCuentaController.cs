@@ -224,7 +224,7 @@ namespace EvolucionaMovil.Controllers
                 var saldos = estadoCuentaBR.GetSaldosPagoServicio(PayCenterId);
                 //todo:Checar que tipo de saldo debo de mostrar
                 ViewData["Eventos"] = saldos.EventosDisponibles;
-                ViewData["SaldoActual"] = saldos.SaldoActual;
+                ViewData["SaldoActual"] = saldos.SaldoActual.ToString("C");
             }
             if (Parameters != null)
             {
