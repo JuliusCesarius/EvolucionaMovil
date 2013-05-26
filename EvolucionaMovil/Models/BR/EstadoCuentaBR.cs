@@ -77,6 +77,21 @@ namespace EvolucionaMovil.Models.BR
             return saldosPagoServicio;
         }
 
+        /// <summary>
+        /// Obtiene los Saldo Actual de los movimientos Aplicados de un PayCenter para pago de servicios
+        /// </summary>
+        /// <param name="PayCenterId">Id del PayCenter</param>
+        /// <returns>Objeto SaldosPagoServicio con los saldos según los movimientos registrados del PayCenter</returns>
+        internal decimal GetSaldoActual(int PayCenterId)
+        {
+            Succeed = true;
+            var movimientos = estadoDeCuentaRepository.GetMovimientos(enumTipoCuenta.Pago_de_Servicios.GetHashCode(), PayCenterId);
+            var abonosAplicados = movimientos.Where(x => x.IsAbono && x.Status == (short)enumEstatusMovimiento.Aplicado).Sum(x => x.Monto);
+            var cargosAplicados = movimientos.Where(x => !x.IsAbono && x.Status == (short)enumEstatusMovimiento.Aplicado).Sum(x => x.Monto);
+
+            return abonosAplicados - cargosAplicados;
+        }
+
         #endregion
 
         #region Movimientos
@@ -87,6 +102,7 @@ namespace EvolucionaMovil.Models.BR
             //Evaluar si va a usar Evento
             var movimientos = new List<Movimiento>();
             var saldos = GetSaldosPagoServicio(PayCenterId);
+            var saldoActual = saldos.SaldoActual;
             //Obtener comisión a cobrar
             Decimal? comision = 0;
             //Valido primero parámetros del paycenter
@@ -153,7 +169,7 @@ namespace EvolucionaMovil.Models.BR
                     Monto = (short)comision,
                     Motivo = (short)enumMotivo.Comision,
                     Movimiento = movimientoComision,
-                    SaldoActual = 0, //todo:Calcular el saldo actual
+                    SaldoActual = saldoActual,
                     Status = (short)enumEstatusMovimiento.Procesando,
                     UserName = PayCenterName,
                     FechaCreacion = DateTime.UtcNow
@@ -163,7 +179,7 @@ namespace EvolucionaMovil.Models.BR
 
             //Movimiento de financiamiento de la empresa
             var financiamientoPago = Monto - saldos.SaldoDisponible;
-            var financiamientoComision = montoTotal - saldos.SaldoDisponible + financiamientoPago;
+            var financiamientoComision = comision > 0 ? montoTotal - saldos.SaldoDisponible + financiamientoPago : 0;
             if (financiamientoPago > 0)
             {
                 var movimientoEmpresaPago = new MovimientoEmpresa
@@ -173,7 +189,7 @@ namespace EvolucionaMovil.Models.BR
                     Monto = financiamientoPago,
                     Motivo = (short)enumMotivo.Financiamiento,
                     Movimiento = movimientoPago,
-                    SaldoActual = 0, //todo:Calcular el saldo actual
+                    SaldoActual = saldoActual,
                     Status = (short)enumEstatusMovimiento.Procesando,
                     UserName = PayCenterName,
                     FechaCreacion = DateTime.UtcNow
@@ -189,7 +205,7 @@ namespace EvolucionaMovil.Models.BR
                     Monto = financiamientoComision,
                     Motivo = (short)enumMotivo.Financiamiento,
                     Movimiento = movimientoComision,
-                    SaldoActual = 0, //todo:Calcular el saldo actual
+                    SaldoActual = saldoActual,
                     Status = (short)enumEstatusMovimiento.Procesando,
                     UserName = PayCenterName
                 };
@@ -240,6 +256,7 @@ namespace EvolucionaMovil.Models.BR
             movimiento.Clave = DateTime.Now.ToString("yyyyMMdd") + "0" + ((Int16)Motivo).ToString() + new Random().Next(0, 99999).ToString();
             movimiento.CuentaId = CuentaId;
             movimiento.FechaCreacion = DateTime.Now;
+            movimiento.FechaActualizacion = DateTime.Now;
             movimiento.IsAbono = TipoMovimiento == enumTipoMovimiento.Abono;
             movimiento.Monto = Monto;
             movimiento.Motivo = (Int16)Motivo;
@@ -254,6 +271,11 @@ namespace EvolucionaMovil.Models.BR
             var movimientos_Estatus = new Movimientos_Estatus { PayCenterId = PayCenterId, CuentaId = CuentaId, UserName = currentUser, Status = nuevoEstatusNumber, FechaCreacion = DateTime.Now };
             movimiento.Movimientos_Estatus.Add(movimientos_Estatus);
             movimiento.UserName = currentUser;
+            movimiento.SaldoActual = GetSaldoActual(PayCenterId);
+            if (Estatus.HasValue && Estatus == enumEstatusMovimiento.Aplicado)
+            {
+                movimiento.SaldoActual += Monto;
+            }
 
             estadoDeCuentaRepository.Add(movimiento);
             if (_context == null)
@@ -339,7 +361,8 @@ namespace EvolucionaMovil.Models.BR
                 AddValidationMessage(enumMessageType.BRException, "No es posible cambiar de estatus un movimiento Cancelado.");
                 return null;
             }
-
+            //Identifica si debe sumar o restar del saldo
+            var factorSaldo = movimiento.IsAbono ? 1 : -1;
             switch (NuevoEstatus)
             {
                 case enumEstatusMovimiento.Procesando:
@@ -355,6 +378,8 @@ namespace EvolucionaMovil.Models.BR
                         AddValidationMessage(enumMessageType.BRException, "El usuario no tiene permisos de realizar esta acción.");
                         return null;
                     }
+                    //Actualiza el saldo. Lo multiplico por el valor de IsAbono, porque si NO es abono, es un cargo, y se tiene que restar del saldo, y bisaversa 
+                    movimiento.SaldoActual = (movimiento.Monto * factorSaldo) + GetSaldoActual(movimiento.PayCenterId);
                     break;
                 case enumEstatusMovimiento.Rechazado:
                     //BR01.04.j: Un movimiento puede ser Rechazado únicamente si el usuario es de tipo Staff o Administrator.
@@ -363,6 +388,11 @@ namespace EvolucionaMovil.Models.BR
                         Succeed = false;
                         AddValidationMessage(enumMessageType.BRException, "El usuario no tiene permisos de realizar esta acción.");
                         return null;
+                    }
+                    if (movimiento.Status == enumEstatusMovimiento.Aplicado.GetHashCode())
+                    {
+                        //Actualiza el saldo. Lo multiplico por el valor de IsAbono, porque si NO es abono, es un cargo, y se tiene que restar del saldo, y bisaversa 
+                        movimiento.SaldoActual = GetSaldoActual(movimiento.PayCenterId) - (movimiento.Monto * factorSaldo);
                     }
                     break;
                 case enumEstatusMovimiento.Cancelado:
@@ -373,7 +403,6 @@ namespace EvolucionaMovil.Models.BR
                         AddValidationMessage(enumMessageType.BRException, "El usuario no tiene permisos de realizar esta acción.");
                         return null;
                     }
-
                     //BR01.04.f: Es posible Cancelar una Solicitud de Pago únicamente si se encuentra en estatus Procesando y no ha transcurrido el tiempo en minutos del parámetro global del sistema.
                     if (movimiento.Status != enumEstatusMovimiento.Procesando.GetHashCode())
                     {
@@ -400,14 +429,19 @@ namespace EvolucionaMovil.Models.BR
                             return null;
                         }
                     }
+                    if (movimiento.Status == enumEstatusMovimiento.Aplicado.GetHashCode())
+                    {
+                        //Actualiza el saldo. Lo multiplico por el valor de IsAbono, porque si NO es abono, es un cargo, y se tiene que restar del saldo, y bisaversa 
+                        movimiento.SaldoActual = GetSaldoActual(movimiento.PayCenterId) - (movimiento.Monto * factorSaldo);
+                    }
                     break;
             }
-
 
             //BR01.04.a: Crear nuevo registro histórico de cambio de estatus
             var currentUser = HttpContext.Current.User != null ? HttpContext.Current.User.Identity.Name : string.Empty;
             Int16 nuevoEstatusNumber = (Int16)NuevoEstatus.GetHashCode();
             movimiento.Status = nuevoEstatusNumber;
+            movimiento.FechaActualizacion = DateTime.Now;
             var movimientos_Estatus = new Movimientos_Estatus
             {
                 PayCenterId = movimiento.PayCenterId,
@@ -418,26 +452,7 @@ namespace EvolucionaMovil.Models.BR
                 Comentarios = Comentarios
             };
             movimiento.Movimientos_Estatus.Add(movimientos_Estatus);
-            if (!movimiento.SaldoActual.HasValue)
-            {
-                movimiento.SaldoActual = 0;
-            }
-            var saldoActual = estadoDeCuentaRepository.GetSaldoActual(movimiento.CuentaId);
-            if (movimiento.Status == enumEstatusMovimiento.Aplicado.GetHashCode() && NuevoEstatus != enumEstatusMovimiento.Aplicado)
-            {
-                //Si actualmente está afectando el saldo, y va a cambiar de estatus, se resta
-                movimiento.SaldoActual -= saldoActual;
-            }
-            else if (movimiento.Status != enumEstatusMovimiento.Aplicado.GetHashCode() && NuevoEstatus == enumEstatusMovimiento.Aplicado)
-            {
-                //Si actualmente NO está afectando el saldo, y va a cambiar de estatus Aplicado, se suma al saldo actual
-                movimiento.SaldoActual += saldoActual;
-            }
-            else
-            {
-                //Si no afecta y el nuevo estatus tampoco, no hace nada
-            }
-
+         
             if (_context == null)
             {
                 estadoDeCuentaRepository.Save();

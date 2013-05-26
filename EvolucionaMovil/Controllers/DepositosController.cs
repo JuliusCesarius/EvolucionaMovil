@@ -159,40 +159,37 @@ namespace EvolucionaMovil.Controllers
         [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.PayCenter, enumRoles.Staff })]
         public ActionResult Report(ReporteDepositoVM model)
         {
+            Succeed = true;
+            if (PayCenterId <= 0)
+            {
+                //Preguntar de esta validación
+                AddValidationMessage(enumMessageType.BRException, "No ha especificado un paycenter válido. Favor de especificarlo.");
+                Succeed = false;
+            }
             PayCentersRepository payCentersRepository = new PayCentersRepository();
-            bool exito = true;
 
             if (!(validations.IsValidReferenciaDeposito(model.Referencia, model.BancoId)))
             {
-                //Preguntar de esta validacion
+                //Preguntar de esta validación
                 AddValidationMessage(enumMessageType.BRException,"La referencia especificada ya existe en el sistema. Favor de verificarla.");
-                exito = false;
+                Succeed = false;
             }
 
             if (Convert.ToDateTime(model.FechaPago).CompareTo(DateTime.Now) == 1)
             {
                 AddValidationMessage(enumMessageType.BRException, "La fecha de depósito debe ser menor o igual a la fecha actual.");
-                exito = false;
+                Succeed = false;
             }
 
-            if (exito)
+            if (Succeed)
             {
-                PayCenter payCenter;
-                if (HttpContext.User.IsInRole(enumRoles.PayCenter.ToString()))
-                {
-                    payCenter = payCentersRepository.LoadByIdName(PayCenterName);
-                }
-                else
-                {
-                    payCenter = payCentersRepository.LoadById(model.PayCenterId);
-                }
 
                 AbonoVM abonoVM = new AbonoVM();
                 Mapper.Map(model, abonoVM);
                 abonoVM.MontoString = ((decimal)model.Monto).ToString("C");
                 abonoVM.Status = (Int16)enumEstatusMovimiento.Procesando;
-                abonoVM.PayCenterId = payCenter.PayCenterId;
-                abonoVM.PayCenter = payCenter.Nombre;
+                abonoVM.PayCenterId = PayCenterId;
+                abonoVM.PayCenter = PayCenterName;
                 abonoVM.FechaCreacion = DateTime.Now;
                 abonoVM.FechaPago = (DateTime)model.FechaPago;
                 abonoVM.ProveedorId = model.ProveedorId;

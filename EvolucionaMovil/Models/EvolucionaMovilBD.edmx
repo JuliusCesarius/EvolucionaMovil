@@ -254,6 +254,7 @@
           <Property Name="FechaCreacion" Type="datetime" Nullable="false" />
           <Property Name="Baja" Type="bit" Nullable="false" />
           <Property Name="UserName" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="FechaActualizacion" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="Movimientos_Estatus">
           <Key>
@@ -288,6 +289,7 @@
           <Property Name="Baja" Type="bit" Nullable="false" />
           <Property Name="PayCenterId" Type="int" />
           <Property Name="CuentaId" Type="int" />
+          <Property Name="FechaActualizacion" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="Pagos">
           <Key>
@@ -1117,6 +1119,7 @@
           <NavigationProperty Name="CuentasPayCenter" Relationship="EvolucionaMovilBDModel.FK_Movimientos_Cuentas" FromRole="Movimiento" ToRole="CuentasPayCenter" />
           <NavigationProperty Name="Pagos" Relationship="EvolucionaMovilBDModel.FK_Pagos_Movimientos" FromRole="Movimiento" ToRole="Pago" />
           <NavigationProperty Name="MovimientosEmpresas" Relationship="EvolucionaMovilBDModel.FK_MovimientosEmpresa_Movimientos" FromRole="Movimiento" ToRole="MovimientosEmpresa" />
+          <Property Type="DateTime" Name="FechaActualizacion" Nullable="false" />
         </EntityType>
         <EntityType Name="Movimientos_Estatus">
           <Key>
@@ -1422,6 +1425,7 @@
           <Property Type="Int32" Name="PayCenterId" />
           <Property Type="Int32" Name="CuentaId" />
           <NavigationProperty Name="Movimiento" Relationship="EvolucionaMovilBDModel.FK_MovimientosEmpresa_Movimientos" FromRole="MovimientosEmpresa" ToRole="Movimiento" />
+          <Property Type="DateTime" Name="FechaActualizacion" Nullable="false" />
         </EntityType>
         <Association Name="FK_MovimientosEmpresa_Movimientos">
           <End Type="EvolucionaMovilBDModel.Movimiento" Role="Movimiento" Multiplicity="0..1" />
@@ -1609,6 +1613,7 @@
           <EntitySetMapping Name="Movimientos">
             <EntityTypeMapping TypeName="EvolucionaMovilBDModel.Movimiento">
               <MappingFragment StoreEntitySet="Movimientos">
+                <ScalarProperty Name="FechaActualizacion" ColumnName="FechaActualizacion" />
                 <ScalarProperty Name="UserName" ColumnName="UserName" />
                 <ScalarProperty Name="Baja" ColumnName="Baja" />
                 <ScalarProperty Name="FechaCreacion" ColumnName="FechaCreacion" />
@@ -1759,6 +1764,7 @@
           <EntitySetMapping Name="MovimientoEmpresas">
             <EntityTypeMapping TypeName="EvolucionaMovilBDModel.MovimientoEmpresa">
               <MappingFragment StoreEntitySet="MovimientosEmpresa">
+                <ScalarProperty Name="FechaActualizacion" ColumnName="FechaActualizacion" />
                 <ScalarProperty Name="CuentaId" ColumnName="CuentaId" />
                 <ScalarProperty Name="PayCenterId" ColumnName="PayCenterId" />
                 <ScalarProperty Name="Baja" ColumnName="Baja" />

@@ -3013,7 +3013,8 @@ namespace EvolucionaMovil.Models
         /// <param name="fechaCreacion">Initial value of the FechaCreacion property.</param>
         /// <param name="baja">Initial value of the Baja property.</param>
         /// <param name="userName">Initial value of the UserName property.</param>
-        public static Movimiento CreateMovimiento(global::System.Int32 payCenterId, global::System.Int32 cuentaId, global::System.Int32 movimientoId, global::System.Decimal monto, global::System.Int16 motivo, global::System.Int32 id, global::System.Boolean isAbono, global::System.Int32 cuentaOrigenId, global::System.Int16 status, global::System.String clave, global::System.DateTime fechaCreacion, global::System.Boolean baja, global::System.String userName)
+        /// <param name="fechaActualizacion">Initial value of the FechaActualizacion property.</param>
+        public static Movimiento CreateMovimiento(global::System.Int32 payCenterId, global::System.Int32 cuentaId, global::System.Int32 movimientoId, global::System.Decimal monto, global::System.Int16 motivo, global::System.Int32 id, global::System.Boolean isAbono, global::System.Int32 cuentaOrigenId, global::System.Int16 status, global::System.String clave, global::System.DateTime fechaCreacion, global::System.Boolean baja, global::System.String userName, global::System.DateTime fechaActualizacion)
         {
             Movimiento movimiento = new Movimiento();
             movimiento.PayCenterId = payCenterId;
@@ -3029,6 +3030,7 @@ namespace EvolucionaMovil.Models
             movimiento.FechaCreacion = fechaCreacion;
             movimiento.Baja = baja;
             movimiento.UserName = userName;
+            movimiento.FechaActualizacion = fechaActualizacion;
             return movimiento;
         }
 
@@ -3380,6 +3382,30 @@ namespace EvolucionaMovil.Models
         private global::System.String _UserName;
         partial void OnUserNameChanging(global::System.String value);
         partial void OnUserNameChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.DateTime FechaActualizacion
+        {
+            get
+            {
+                return _FechaActualizacion;
+            }
+            set
+            {
+                OnFechaActualizacionChanging(value);
+                ReportPropertyChanging("FechaActualizacion");
+                _FechaActualizacion = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("FechaActualizacion");
+                OnFechaActualizacionChanged();
+            }
+        }
+        private global::System.DateTime _FechaActualizacion;
+        partial void OnFechaActualizacionChanging(global::System.DateTime value);
+        partial void OnFechaActualizacionChanged();
 
         #endregion
 
@@ -3517,7 +3543,8 @@ namespace EvolucionaMovil.Models
         /// <param name="saldoActual">Initial value of the SaldoActual property.</param>
         /// <param name="fechaCreacion">Initial value of the FechaCreacion property.</param>
         /// <param name="baja">Initial value of the Baja property.</param>
-        public static MovimientoEmpresa CreateMovimientoEmpresa(global::System.Int32 movimientoEmpresaId, global::System.String clave, global::System.Decimal monto, global::System.Int16 motivo, global::System.String userName, global::System.Boolean isAbono, global::System.Int16 status, global::System.Decimal saldoActual, global::System.DateTime fechaCreacion, global::System.Boolean baja)
+        /// <param name="fechaActualizacion">Initial value of the FechaActualizacion property.</param>
+        public static MovimientoEmpresa CreateMovimientoEmpresa(global::System.Int32 movimientoEmpresaId, global::System.String clave, global::System.Decimal monto, global::System.Int16 motivo, global::System.String userName, global::System.Boolean isAbono, global::System.Int16 status, global::System.Decimal saldoActual, global::System.DateTime fechaCreacion, global::System.Boolean baja, global::System.DateTime fechaActualizacion)
         {
             MovimientoEmpresa movimientoEmpresa = new MovimientoEmpresa();
             movimientoEmpresa.MovimientoEmpresaId = movimientoEmpresaId;
@@ -3530,6 +3557,7 @@ namespace EvolucionaMovil.Models
             movimientoEmpresa.SaldoActual = saldoActual;
             movimientoEmpresa.FechaCreacion = fechaCreacion;
             movimientoEmpresa.Baja = baja;
+            movimientoEmpresa.FechaActualizacion = fechaActualizacion;
             return movimientoEmpresa;
         }
 
@@ -3851,6 +3879,30 @@ namespace EvolucionaMovil.Models
         private Nullable<global::System.Int32> _CuentaId;
         partial void OnCuentaIdChanging(Nullable<global::System.Int32> value);
         partial void OnCuentaIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.DateTime FechaActualizacion
+        {
+            get
+            {
+                return _FechaActualizacion;
+            }
+            set
+            {
+                OnFechaActualizacionChanging(value);
+                ReportPropertyChanging("FechaActualizacion");
+                _FechaActualizacion = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("FechaActualizacion");
+                OnFechaActualizacionChanged();
+            }
+        }
+        private global::System.DateTime _FechaActualizacion;
+        partial void OnFechaActualizacionChanging(global::System.DateTime value);
+        partial void OnFechaActualizacionChanged();
 
         #endregion
 
