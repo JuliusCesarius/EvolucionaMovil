@@ -24,7 +24,7 @@ namespace EvolucionaMovil.Repositories
             return context.Movimientos.Join(context.CuentasPayCenters, m => m.CuentaId, c => c.CuentaId, (m, c) => new { m, c })
                 .Where(mc => (mc.c.TipoCuenta == TipoCuentaId || TipoCuentaId == -1) && (mc.m.PayCenterId == PayCenterId || PayCenterId == -1))
                 .Select(mc=>mc.m)
-                .OrderByDescending(m => m.FechaCreacion);
+                .OrderByDescending(m => m.FechaActualizacion);
         }
 
         public int GetEventosDisponibles(int PayCenterId)
@@ -86,7 +86,7 @@ namespace EvolucionaMovil.Repositories
         public IEnumerable<Movimiento> GetMovimientosByPayCenterId(int PayCenterId)
         {
             //ToDo: Checar si hay que validar algún estatus
-            return context.Movimientos.Where(m => m.PayCenterId == PayCenterId && m.Baja == false).OrderByDescending(m => m.FechaCreacion);
+            return context.Movimientos.Where(m => m.PayCenterId == PayCenterId && m.Baja == false).OrderByDescending(m => m.FechaActualizacion);
         }
     }
 }

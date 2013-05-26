@@ -141,15 +141,17 @@ function Save(event) {
 function createProvedoresDropdown(TipoCuenta) {
     $("#ProveedorId").html("");
     var proveedores = $.parseJSON($("#hddProveedores").val());
-    $.each(proveedores, function (i, item) {
-        if (item.TipoCuenta == TipoCuenta) {
-            $("#ProveedorId").append($('<option/>', {
-                value: item.ProveedorId,
-                text: item.Nombre
-            }).data(item));
-        }
-        //if (i == 0) { cdefault = item.CuentaBancariaId; }
-    });
+    if (proveedores != null) {
+        $.each(proveedores, function (i, item) {
+            if (item.TipoCuenta == TipoCuenta) {
+                $("#ProveedorId").append($('<option/>', {
+                    value: item.ProveedorId,
+                    text: item.Nombre
+                }).data(item));
+            }
+            //if (i == 0) { cdefault = item.CuentaBancariaId; }
+        });
+    }
     $("#ProveedorId").trigger("change");
 }
 function BancoIdChanged() {

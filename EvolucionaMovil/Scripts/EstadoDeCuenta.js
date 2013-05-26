@@ -5,8 +5,10 @@
     }
     $("#fechaInicio").datepicker({ "dateFormat": "dd/mm/yy" });
     $("#fechaFin").datepicker({ "dateFormat": "dd/mm/yy" });
-    if ($(".saldos span").html().indexOf("-") != -1) {
-        $($(".saldos span")[0]).addClass("cargo");
+    if ($(".saldos span").length > 0) {
+        if ($(".saldos span").html().indexOf("-") != -1) {
+            $($(".saldos span")[0]).addClass("cargo");
+        }
     }
     $("#aplicadosOnly").on("click", function () {
         if ($("#aplicadosOnly").prop("checked")) {
@@ -23,7 +25,7 @@
         }
     });
     $("#Actualizar").on("click", function (event) {
-  
+
         if (CompararDosFechas($("#fechaInicio").val(), $("#fechaFin").val())) {
             alert("La Fecha de inicio no puede ser mayo a la fecha final de búsqueda.")
         }

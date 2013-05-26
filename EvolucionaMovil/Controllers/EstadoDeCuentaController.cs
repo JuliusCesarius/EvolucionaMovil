@@ -211,25 +211,21 @@ namespace EvolucionaMovil.Controllers
                     Concepto = getConceptoString(x),
                     Abono = x.IsAbono ? x.Monto.ToString("C3", ci) : string.Empty,
                     Cargo = !x.IsAbono ? x.Monto.ToString("C3", ci) : string.Empty,
-                    Saldo = ((enumEstatusMovimiento)x.Status) == enumEstatusMovimiento.Aplicado ? getSaldoAcumulado(x.IsAbono, x.Monto).ToString("C3", ci) : "-",
+                    Saldo = ((enumEstatusMovimiento)x.Status) == enumEstatusMovimiento.Procesando || !x.SaldoActual.HasValue ? "-" : ((decimal)x.SaldoActual).ToString("C3", ci),
                     FechaCreacion = x.FechaCreacion.ToShortDateString(),
                     Status  = x.Status
 
                 });
 
-            //Thread.CurrentThread.CurrentCulture; ;es-MX
-            //  ci.NumberFormat.CurrencySymbol = "$";
-            //TODO:Leer Eventos del paycenter
-            ViewData["Eventos"] = 56;
-            if (Parameters == null || !Parameters.onlyAplicados)
-            {
-                ViewData["SaldoActual"] = (movimientos.Where(x => x.IsAbono).Sum(x => x.Monto) - movimientos.Where(x => !x.IsAbono).Sum(x => x.Monto)).ToString("C3", ci);
-            }
-            else
-            {
-                ViewData["SaldoActual"] = (movimientos.Where(x => x.IsAbono && x.Status == enumEstatusMovimiento.Aplicado.GetHashCode()).Sum(x => x.Monto) - movimientos.Where(x => !x.IsAbono && x.Status == enumEstatusMovimiento.Aplicado.GetHashCode()).Sum(x => x.Monto)).ToString("C3", ci);
-            }
 
+            if (PayCenterId > 0)
+            {
+                EstadoCuentaBR estadoCuentaBR = new EstadoCuentaBR();
+                var saldos = estadoCuentaBR.GetSaldosPagoServicio(PayCenterId);
+                //todo:Checar que tipo de saldo debo de mostrar
+                ViewData["Eventos"] = saldos.EventosDisponibles;
+                ViewData["SaldoActual"] = saldos.SaldoActual.ToString("C");
+            }
             if (Parameters != null)
             {
                 simpleGridResult.CurrentPage = Parameters.pageNumber;
