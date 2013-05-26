@@ -987,23 +987,22 @@ legend{font-size:2em;font-weight:400}
 .servicio{width:270px !important;}
 .Aplicado, .Procesando, .Rechazado, .Cancelado
 {
-    font-weight:bold;
     border: 1px solid;
     text-align:center;
-    padding:.2em 1em;
-    -webkit-border-radius:6px;
-    -moz-border-radius:6px;
-    -ms-border-radius:6px;
-    -o-border-radius:6px;
-    border-radius:6px;
+    padding:0 .6em;
+    -webkit-border-radius:3px;
+    -moz-border-radius:3px;
+    -ms-border-radius:3px;
+    -o-border-radius:3px;
+    border-radius:3px;
     color:#fff;
     display:inline-block;
 }
-.status .Aplicado, .status .Procesando, .status .Cancelado, .status .Rechazado{width:65px!important;margin-top: -3px;position: absolute;}
-.status .Aplicado, .Aplicado{background-color: #63CB63;}
-.status .Procesando, .Procesando{background-color: #70B3FC;}
-.status .Rechazado, .Rechazado{background-color: #CE0005;}
-.status .Cancelado, .Cancelado{background-color:#FF6700}
+.status .Aplicado, .status .Procesando, .status .Cancelado, .status .Rechazado{width:65px!important;margin-top: 0;position: absolute;}
+.status .Aplicado, .Aplicado{background-color: rgb(29, 182, 29);border-color:rgb(29, 182, 29)}
+.status .Procesando, .Procesando{background-color: rgb(190, 196, 199);border-color:rgb(190, 196, 199)}
+.status .Rechazado, .Rechazado{background-color: #CE0005;border-color:#CE0005}
+.status .Cancelado, .Cancelado{background-color:#FF6700;border-color:#FF6700}
 .listHeader .cargo,.listHeader .abono{color:#fff}
 .qtip{cursor: pointer;padding-right:1em;background: url("../Content/themes/base/images/qtip.png") no-repeat 100% 50%;}
 .tipocuenta{width:110px !important;}
