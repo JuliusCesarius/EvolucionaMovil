@@ -15,6 +15,7 @@ using cabinet.patterns.enums;
 using EvolucionaMovil.Attributes;
 using System.Globalization;
 using EvolucionaMovil.Models.BR;
+using EvolucionaMovil.Models.Helpers;
 
 namespace EvolucionaMovil.Controllers
 {
@@ -114,6 +115,9 @@ namespace EvolucionaMovil.Controllers
                         if (Succeed)
                         {
                             AddValidationMessage(enumMessageType.Succeed, "El reporte de depósito ha sido " + nuevoEstatus.ToString() + " correctamente");
+                            var paycenter = pRepository.LoadById(pago.PayCenter.PayCenterId);
+                            if (paycenter != null)
+                                EmailHelper.Enviar(getMensaje(nuevoEstatus.ToString(), pago), "El depósito " + pago.Ticket.Folio + "ha sido " + nuevoEstatus.ToString(), paycenter.Email);
                         }
                         else
                         {
@@ -414,22 +418,6 @@ namespace EvolucionaMovil.Controllers
         }
 
         [NonAction]
-        private PayCenter GetPayCenter(int Id = 0)
-        {
-            //Buscar el payCenter
-            if (Id == 0)
-            {
-                if (HttpContext.User.IsInRole(enumRoles.PayCenter.ToString()))
-                {
-                    Id = pRepository.GetPayCenterByUserName(HttpContext.User.Identity.Name);
-                }
-            }
-            PayCenter payCenter = pRepository.LoadById(Id);
-
-            return payCenter;
-        }
-
-        [NonAction]
         private PagoVM FillPagoVM(Int32 id)
         {
             PagoVM pagoVM = new PagoVM();
@@ -456,6 +444,59 @@ namespace EvolucionaMovil.Controllers
                 AddValidationMessage(enumMessageType.BRException, "Ocurrio un error al recuperar la información del pago: " + e.Message);
             }
             return pagoVM;
+        }
+
+        [NonAction]
+        private string getMensaje(string status, Pago p)
+        {
+
+            string cadena = @"  <h2>Detalle de pago</h2>                                    
+                                <img src='" + p.PayCenter.Logotipo + "' />" +
+                                @"<div class='display-label'>
+                                    PayCenter</div>
+                                <div class='display-field'>" +
+                                  p.PayCenter.Nombre +
+                                @"</div>
+                                <div class='display-label'>
+                                    Servicio</div>
+                                <div class='display-field fwb fsl'>"
+                                   + p.Servicio +
+                                @"</div>";
+            foreach (DetallePago d in p.DetallePagos)
+            {
+                cadena += @"<div class='display-label'>" + d.Campo + "</div><div class='display-field'>" + d.Valor + "</div>";
+            }
+            cadena += @"         <div class='display-label'>
+                                    Fecha Vencimiento</div>
+                                <div class='display-field'>" +
+                                    p.FechaVencimiento.ToShortDateString() +
+                                @"</div>
+                                <div class='display-label'>
+                                    Nombre Cliente</div>
+                                <div class='display-field'>" +
+                                   p.ClienteNombre +
+                                @"</div>
+                                <div class='display-label'>
+                                    Importe</div>
+                                <div class='display-field fwb fsxl'>" +
+                                    p.Importe.ToString("C", ci) +
+                                @"</div>
+                                <div class='display-label'>
+                                    Estatus</div>
+                                <div class='display-field fwb fsxl '>
+                                    <span class='Procesando'>" + ((enumEstatusMovimiento)p.Status).ToString() + "</span>" +
+                                @"</div>
+                                <div class='display-label'>
+                                    <div class='listHeader'>
+                                        <br />
+                                        Hitórico de Estatus</div>";
+            foreach (Movimientos_Estatus m in p.Movimiento.Movimientos_Estatus)
+            {
+                cadena += @"<div class='listRow'>
+                                        <span class='listCell Estatus fwb'><span class='Procesando '>" + ((enumEstatusMovimiento)m.Status).ToString() + " </span>" +
+                                        @"</span><span class='listCell Comentarios'></span><span class='listCell Usuario'>" + m.Comentarios + "</span> <span class='listCell Fecha'>" + m.FechaCreacion.ToShortDateString() + "</span></div> </div>";
+            }
+            return cadena;
         }
 
         [HttpPost]

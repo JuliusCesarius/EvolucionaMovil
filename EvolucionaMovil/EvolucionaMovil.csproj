@@ -156,6 +156,7 @@
     <Compile Include="Models\Enums\enumTipoMovimiento.cs" />
     <Compile Include="Models\EnumWrapper.cs" />
     <Compile Include="Models\Extensions\StringExtension.cs" />
+    <Compile Include="Models\Helpers\EmailHelper.cs" />
     <Compile Include="Models\Helpers\MvcHtmlHelpers.cs" />
     <Compile Include="Models\HistorialEstatusVM.cs" />
     <Compile Include="Models\Interfaces\IEvolucionaMovil.cs" />
