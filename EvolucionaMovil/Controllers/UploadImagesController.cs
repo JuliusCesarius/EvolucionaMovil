@@ -58,6 +58,17 @@ namespace EvolucionaMovil.Controllers
                 };
             }
 
+
+            var directoryTemp = Server.MapPath("~/UploadImages/");
+            if (!Directory.Exists(directoryTemp))
+            {
+                Directory.CreateDirectory(directoryTemp);
+            }
+            directoryTemp = Server.MapPath("~/UploadImages/Thumbnails/");
+            if (!Directory.Exists(directoryTemp))
+            {
+                Directory.CreateDirectory(directoryTemp);
+            }
             try
             {
                 //Guardar imagen en el servidor

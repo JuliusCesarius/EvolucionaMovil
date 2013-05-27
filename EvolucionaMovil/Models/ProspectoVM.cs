@@ -21,5 +21,6 @@ namespace EvolucionaMovil.Models
         [Display(Name = "Teléfono")]
         [RegularExpression("^[0-9]{10}", ErrorMessage = "El teléfono debe contener la lada sin guiones ni paréntesis. P.e. 9999999999")]
         public string Telefono { get; set; }
+        public Guid GUID { get; set; }
     }
 }

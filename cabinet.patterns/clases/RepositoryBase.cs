@@ -66,6 +66,11 @@ namespace cabinet.patterns.clases
                         {
                             Obj.GetType().GetProperty("FechaCreacion").SetValue(Obj, DateTime.Now, null);
                         }
+                        //Verifico si tiene campo GUID para agregar el default
+                        if (Obj.GetType().GetProperties().Any(x => x.Name == "GUID"))
+                        {
+                            Obj.GetType().GetProperty("GUID").SetValue(Obj, Guid.NewGuid(), null);
+                        }
                         //*****************INSERT******************//
                         entitySet.AddObject(Obj);
                     }
@@ -150,6 +155,19 @@ namespace cabinet.patterns.clases
             else
             {
                 throw new Exception("La entidad no cuenta con un Identity");
+            }
+        }
+
+        public T LoadByGUID(Guid GUID)
+        {
+            var entitySet = context.CreateObjectSet<T>();
+            if (typeof(T).GetProperties().Any(x => x.Name == "ID"))
+            {
+                return entitySet.AsQueryable().Where("ID.Equals(@0)",  GUID ).FirstOrDefault();
+            }
+            else
+            {
+                throw new Exception("La entidad no posee un campo GUID");
             }
         }
 

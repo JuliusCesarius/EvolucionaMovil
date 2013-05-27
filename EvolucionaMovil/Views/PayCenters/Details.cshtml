@@ -10,9 +10,8 @@
     <legend></legend>
     <div class="formLeft">
         <div class="infoPaycenter">
-            <h2>
-                Información General</h2>
-            @Html.ActionLink("[Editar]", "Edit", new { id = Model.PayCenterId })
+            <h2>Información General</h2>
+            @Html.ActionLink("[Editar]", "Edit", new { id = Model.PayCenterId })           
         </div>
         <div class="DetailsField">
             <div class="DetailsFieldLabel">
@@ -97,10 +96,17 @@
             @Html.ActionLink("[Ver Edo. de Cuenta]", "Index", "EstadoDeCuenta")
         </div>
         <div class="DetailsField">
-            <div class="DetailsFieldLabel">
+            <div class="DetailsFieldLabel qtip" title="El Saldo Actual es la suma de los Abonos Aplicados menos la suma de los Cargos Aplicados.">
                 Saldo Actual</div>
             <div class="DetailsFieldValue">
                 @Html.DisplayFor(model => model.SaldoActual)
+            </div>
+        </div>
+        <div class="DetailsField">
+            <div class="DetailsFieldLabel qtip" title="El Saldo Disponible es el Saldo Actual menos la suma de los Cargos con estatus Procesando.">
+                Saldo Disponible</div>
+            <div class="DetailsFieldValue">
+                @Html.DisplayFor(model => model.SaldoDisponible)
             </div>
         </div>
         <div class="DetailsField">
@@ -119,18 +125,21 @@
         </div>
     </div>
 </fieldset>
-<div id="Estatus">
-    <input type="button" id="EjecutarAccion" class="freshbutton-blue fr" value="@(Model.Activo ? "Desactivar" : "Activar")" />
-    <h3>
-        El PayCenter se encuentra @(Model.Activo ? "Activo." : "Inactivo.")
-    </h3>
-    <input type=hidden id="PayCenterId" value="@(Model.PayCenterId)" />
-    <input type=hidden id="Accion" value="@(Model.Activo ? "Desactivar" : "Activar")" />
-    <div id="Confirmacion" title="@(Model.Activo ? "Desactivar PayCenter" : "Activar PayCenter")">
-        <p>¿Está seguro de querer @(Model.Activo ? "desactivar" : "activar") al PayCenter?</p>
+@if (User.IsInRole("Administrator") || User.IsInRole("Staff"))
+{
+    <div id="Estatus">
+        <input type="button" id="EjecutarAccion" class="freshbutton-blue fr" value="@(Model.Activo ? "Desactivar" : "Activar")" />
+        <h3>
+            El PayCenter se encuentra @(Model.Activo ? "Activo." : "Inactivo.")
+        </h3>
+        <input type=hidden id="PayCenterId" value="@(Model.PayCenterId)" />
+        <input type=hidden id="Accion" value="@(Model.Activo ? "Desactivar" : "Activar")" />
+        <div id="Confirmacion" title="@(Model.Activo ? "Desactivar PayCenter" : "Activar PayCenter")">
+            <p>¿Está seguro de querer @(Model.Activo ? "desactivar" : "activar") al PayCenter?</p>
+        </div>
     </div>
-</div>
-<p id="ResConfirmacion">@ViewBag.ResActivacion</p>
-<p>
-    @Html.ActionLink("Regresar a la lista", "Index")
-</p>
+    <p id="ResConfirmacion">@ViewBag.ResActivacion</p>
+    <p>
+        @Html.ActionLink("Regresar a la lista", "Index", null, new { @class = "freshbutton-blue small" })
+    </p>
+}

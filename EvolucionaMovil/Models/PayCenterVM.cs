@@ -42,7 +42,7 @@ namespace EvolucionaMovil.Models
         [RegularExpression("^[0-9]{10}", ErrorMessage = "El teléfono debe contener la lada sin guiones ni paréntesis. P.e. 9999999999")]
         public string Telefono { get; set; }
         //public Usuario Usuario { get; set; }
-        public int UsuarioId { get; set; }
+        //public int UsuarioId { get; set; }
         //[Required(ErrorMessage = "Campo requerido.")]
         //[Display(Name = "Empresa o Negocio")]
         //public string Empresa { get; set; }
@@ -62,6 +62,7 @@ namespace EvolucionaMovil.Models
         [Display(Name = "Maximo a financiar")]
         public string MaximoAFinanciar { get; set; }
         public string SaldoActual { get; set; }
+        public string SaldoDisponible { get; set; }
         public string Eventos { get; set; }
         public string PagosRealizados { get; set; }
     }

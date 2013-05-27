@@ -1,15 +1,25 @@
 ﻿@model IEnumerable<EvolucionaMovil.Models.PayCenterVM>
 @section Javascript{
+    @if (User.IsInRole("Administrator")){
+    <script type="text/javascript">
+        var Actions = { links: '<a href="/PayCenters/Edit/{PayCenterId}">Editar<a/> | <a href="/PayCenters/Details/{PayCenterId}">Detalles<a/> | <a class="linkActiva" id="Accion{PayCenterId}">{Activo}<a/> | <a class="linkElimina" onclick="MostrarConfirmacion({PayCenterId},\'Eliminar\')">Eliminar<a/>', colwidth: '200px' }
+    </script>
+    }
+    else
+    {
+    <script type="text/javascript">
+        var Actions = { links: '<a href="/PayCenters/Edit/{PayCenterId}">Editar<a/> | <a href="/PayCenters/Details/{PayCenterId}">Detalles<a/> | <a class="linkActiva" id="Accion{PayCenterId}">{Activo}<a/>', colwidth: '150px' }
+    </script>
+    }
     <script src="@Url.Content("~/Scripts/PayCenters.js")" type="text/javascript"></script>
 }
-
 
 @{
     ViewBag.Title = "PayCenters";
 }
 
 <p class="fr newPaycenter">
-    @Html.ActionLink("Nuevo registro", "Registrar")
+    @Html.ActionLink("Nuevo Paycenter", "Registrar", null, new { @class = "freshbutton-blue small" })
 </p>
 <h1>PayCenters</h1>
 <div id="filtros">
@@ -33,6 +43,7 @@
 </div>
 <div id="grdPaycenters" />
 <div id="Confirmacion" title="PayCenter"><p id="MensajeConfirmacion"></p></div>
+<div id="Mensaje"><p id="MensajeAccion"></p></div>
 @*<table>
     <tr>
         <th >

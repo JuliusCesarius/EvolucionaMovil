@@ -1,5 +1,6 @@
 ﻿$(document).on("ready", function () {
     $("a.ImagenPayCenter").colorbox({ imgError: "No se pudo cargar la imagen.", xhrError: "No se pudo cargar la imagen.", maxWidth: "95%", maxHeight: "95%" });
+    $(".qtip").qtip({ content: $("this").attr("desc") });
 
     var divEstatus = $("#Estatus");
     if (divEstatus != null) {

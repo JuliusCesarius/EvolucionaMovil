@@ -114,24 +114,33 @@
                 @Html.EditorFor(model => model.PayCenterPadre)
                 @Html.ValidationMessageFor(model => model.PayCenterPadre)
             </div>
-            <div class="editor-label">
-                @Html.LabelFor(model => model.MaximoAFinanciar)
-            </div>
-            <div class="editor-field">
-                @Html.TextBoxFor(model => model.MaximoAFinanciar, new { @class = "money" })
-                @Html.ValidationMessageFor(model => model.MaximoAFinanciar)
-            </div>
-            <div class="editor-field">
-                @Html.CheckBoxFor(model => model.Activo)
-                <label for="Activo" class="checkActivo checkbox">Activo</label>
-                @Html.ValidationMessageFor(model => model.Activo)
-            </div>
+            @if (User.IsInRole("Administrator") || User.IsInRole("Staff"))
+            { 
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.MaximoAFinanciar)
+                </div>
+                <div class="editor-field">
+                    @Html.TextBoxFor(model => model.MaximoAFinanciar, new { @class = "money" })
+                    @Html.ValidationMessageFor(model => model.MaximoAFinanciar)
+                </div>
+                <div class="editor-field">
+                    @Html.CheckBoxFor(model => model.Activo)
+                    <label for="Activo" class="checkActivo checkbox">Activo</label>
+                    @Html.ValidationMessageFor(model => model.Activo)
+                </div>  
+            }
+            else
+            { 
+                @Html.HiddenFor(model => model.MaximoAFinanciar)
+                @Html.HiddenFor(model => model.Activo)
+            }
+           
+            <p class="footerPaycenterEdit">
+                <input type="submit" class="freshbutton-blue" value="Actualizar" />
+            </p>
         </div>
         <div class="formRight">
         </div>
-        <p>
-            <input type="submit" class="freshbutton-blue" value="Actualizar" />
-        </p>
         @if (ViewBag.GuardadoExito != null)
         {
             <p class="message">@ViewBag.GuardadoExito</p> 
@@ -140,8 +149,11 @@
         {
             <p class="error">@ViewBag.MensajeError</p> 
         }
-        <div>
-            @Html.ActionLink("Regresar a la lista", "Index")
-        </div>
+        @if (User.IsInRole("Administrator") || User.IsInRole("Staff"))
+        { 
+            <div>
+                @Html.ActionLink("Regresar a la lista", "Index", null, new { @class = "freshbutton-blue small" })
+            </div>            
+        }
     </fieldset>
 }

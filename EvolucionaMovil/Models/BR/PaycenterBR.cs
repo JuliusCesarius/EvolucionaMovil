@@ -16,7 +16,7 @@ namespace EvolucionaMovil.Models.BR
             bool Existe = repository.ExisteUsuario(value);
             if (Existe)
             {
-                return new ValidationResult("El usuario ya existe en la base de datos.");
+                return new ValidationResult("El nombre de usuario ya se encuentra en uso. Por favor, seleccione otro.");
             }
             return ValidationResult.Success;
         }

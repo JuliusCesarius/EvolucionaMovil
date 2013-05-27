@@ -330,6 +330,9 @@
     <Content Include="Scripts\simpleGrid.js" />
     <Content Include="Scripts\UploadImage.js" />
     <Content Include="Scripts\SubirImagenPaycenter.js" />
+    <Content Include="Views\Prospectos\Index.cshtml">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -406,13 +409,7 @@
     <Content Include="Views\PayCenters\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\PayCenters\Create.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\PayCenters\Edit.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\PayCenters\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Servicios\Index.cshtml" />
@@ -563,10 +560,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Prospectos\Confirmacion.cshtml" />
-    <Content Include="Views\Prospectos\Delete.cshtml" />
-    <Content Include="Views\Prospectos\Details.cshtml" />
-    <Content Include="Views\Prospectos\Edit.cshtml" />
-    <Content Include="Views\Prospectos\Index.cshtml" />
     <Content Include="Views\Prospectos\Preafiliacion.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

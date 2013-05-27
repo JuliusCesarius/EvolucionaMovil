@@ -1,4 +1,5 @@
-﻿@model EvolucionaMovil.Models.PayCenterVM
+﻿@using EvolucionaMovil.Models.Enums;
+@model EvolucionaMovil.Models.PayCenterVM
 @{
     ViewBag.Title = "Registro";
 }
@@ -104,6 +105,11 @@
             @Html.EditorFor(model => model.CP)
             @Html.ValidationMessageFor(model => model.CP)
         </div>
+
+        @if (HttpContext.Current.User != null)
+        {
+            if (HttpContext.Current.User.IsInRole(enumRoles.Staff.ToString()) || HttpContext.Current.User.IsInRole(enumRoles.Administrator.ToString()))
+            {
         <div class="editor-label">
             @Html.LabelFor(model => model.FechaIngreso)
         </div>
@@ -111,6 +117,8 @@
             @Html.EditorFor(model => model.FechaIngreso)
             @Html.ValidationMessageFor(model => model.FechaIngreso)
         </div>
+            }
+        }
         <div class="editor-label">
             @Html.LabelFor(model => model.PayCenterPadre)
         </div>
@@ -151,8 +159,8 @@
 }
 </div>
 <div class="formRight formRightPaycenter">
-    @using (Html.BeginForm("UploadImage", "UploadImages", FormMethod.Post, 
-    new { enctype = "multipart/form-data", id="ImgFormIFE", name="ImgFormIFE", target="UploadTarget" }))
+    @using (Html.BeginForm("UploadImage", "UploadImages", FormMethod.Post,
+    new { enctype = "multipart/form-data", id = "ImgFormIFE", name = "ImgFormIFE", target = "UploadTarget" }))
     {
         <input id="SelectImageIFE" type="file" name="imageFile" data-max-size="4194304" class="inputImgPaycenter" />
         <div class="editor-label">
@@ -173,8 +181,8 @@
         <img src="@Model.ThumbnailIFE" alt="IFE" />
     }  
     </div>
-    @using (Html.BeginForm("UploadImage", "UploadImages", FormMethod.Post, 
-    new { enctype = "multipart/form-data", id="ImgFormComp", name="ImgFormComp", target="UploadTarget" }))
+    @using (Html.BeginForm("UploadImage", "UploadImages", FormMethod.Post,
+    new { enctype = "multipart/form-data", id = "ImgFormComp", name = "ImgFormComp", target = "UploadTarget" }))
     {
         <input id="SelectImageComp" type="file" name="imageFile" data-max-size="4194304" class="inputImgPaycenter" />
         <div class="editor-label">
@@ -187,13 +195,13 @@
     }
     <div id="ImageComp"  class="imgPaycenter">
      @if (string.IsNullOrEmpty(Model.Comprobante))
-    {
+     {
        <p>Comprobante de Domicilio</p> 
-    }
-    else
-    { 
+     }
+     else
+     { 
         <img src="@Model.ThumbnailComprobante" alt="IFE" />
-    } 
+     } 
     </div>
     <iframe id="UploadTarget" name="UploadTarget" style="position: absolute; left: -999em; top: -999em;"></iframe>
 </div>
@@ -210,6 +218,7 @@
             <p class="error">@ViewBag.MensajeError</p> 
         }
 </div>
-@*<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>*@ 
+@if (HttpContext.Current.User.IsInRole(enumRoles.Staff.ToString()) || HttpContext.Current.User.IsInRole(enumRoles.Administrator.ToString()))
+{
+    @Html.ActionLink("Regresar", "Index", null, new { @class = "freshbutton-blue small" })
+}

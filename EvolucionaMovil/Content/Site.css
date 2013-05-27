@@ -1070,7 +1070,6 @@ legend{font-size:2em;font-weight:400}
 #preafiliacioninfo h3, h4{font-size: 1.3em;}
 
 /*Paycenters*/
-.newPaycenter{padding-top:1.2em;}
 .checkActivo{color:Black; font-size:1.4em !important;}
 #confirmacion,#notfound{font-size: 1.3em;}
 #nombre{width:140px}
@@ -1085,14 +1084,14 @@ legend{font-size:2em;font-weight:400}
 .fieldsPaycenter div{height:22px; margin:3px 0 3px 0; position:relative;}
 .fieldsPaycenter a{font-size:12px;}*/
 .DetailsField{font-size:15px; margin:3px 0 3px 0; overflow:hidden;}
-.DetailsFieldLabel{color:#999; float:left; width:42%;}
+.DetailsFieldLabel{color:#999; float:left;}
 .DetailsFieldValue{float:right; width:57%;}
 .DetailsFieldValue a{font-size:12px;}
 .formRightPaycenter{vertical-align:top; padding-top:3em;}
 .inputImgPaycenter{width:250px; display:none;}
 .nameImgPayCenter{width:235px !important;}
 .imgPaycenter{border:1px solid #999; height:200px; width:360px; margin: 8px 0 8px 0; text-align:center; }
-.imgPaycenter p{font-size:15px; color:#999;}
+.imgPaycenter p{font-size:15px; color:#999; top:75px; position:relative;}
 .pbCero{padding-bottom:0px;}
 .footerPaycenter{text-align:right; margin:0 1.4em 0 1.4em; width:86%;}
 .footerPaycenter .message, .footerPaycenter .error {text-align:left;}
@@ -1101,6 +1100,7 @@ legend{font-size:2em;font-weight:400}
 .PaycenterActivo h3{color:Black; margin:0.2em 0 0 0.5em;}
 .PaycenterInactivo{background:#FFAAAA;padding:0.3em;margin:0.6em 0 0.6em 0; overflow:hidden;}
 .PaycenterInactivo h3{color:Black; margin:0.2em 0 0 0.5em;}
+.footerPaycenterEdit{text-align:right; width:363px;}
 
 .fwith300{width:550px}
 .fwith300 .display-label{width:200px}

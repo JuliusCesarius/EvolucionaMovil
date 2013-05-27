@@ -37,8 +37,12 @@ function UploadImage(typeImage) {
 
     if (fileInput.get(0).files != null) {
         if (fileInput.get(0).files.length) {
-            var fileSize = fileInput.get(0).files[0].size;
-            if (fileSize > maxSize) {
+            var oFile = fileInput.get(0).files[0];
+            var rFilter = /^(image\/jpeg)$/i;
+            if (!rFilter.test(oFile.type)) {
+                imgDiv.html("<p>El archivo seleccionado no es un archivo de imagen válido.</p>");
+            }
+            else if (oFile.size > maxSize) {
                 imgDiv.html("<p>El tamaño del archivo seleccionado es mayor al máximo permitido (4MB).</p>");
             }
             else {

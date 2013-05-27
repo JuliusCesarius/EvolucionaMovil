@@ -27,6 +27,13 @@
         resizable: false,
         autoOpen: false
     });
+
+    $("#Mensaje").dialog({
+        modal: true,
+        resizable: false,
+        autoOpen: false,
+        buttons: { "Aceptar": function () { $("#Mensaje").dialog("close"); } }
+    });
 });
 
 function FiltroEstatus() {
@@ -66,7 +73,7 @@ function bindGrid(options) {
          { name: 'Email' },
          { name: 'FechaIngreso', displayName: 'Ingreso', formatFunction: FormatoFecha },
 //         { name: 'FechaCreacion', displayName: 'Creación', formatFunction: FormatoFecha },
-         { displayName: '', width: '200px', customTemplate: '<a href="/PayCenters/Edit/{PayCenterId}">Editar<a/> | <a href="/PayCenters/Details/{PayCenterId}">Detalles<a/> | <a class="linkActiva" id="Accion{PayCenterId}">{Activo}<a/> | <a class="linkElimina" onclick="MostrarConfirmacion({PayCenterId},\'Eliminar\')">Eliminar<a/>' },
+         {displayName: '', width: Actions.colwidth, customTemplate: Actions.links },
          ];
     if (options == undefined) {
         options = { pageSize: 20, pageNumber: 0 };
@@ -144,16 +151,24 @@ function EjecutarAccion(id, accion) {
         data: sendData,
         success: function (result) {
             if (result != null) {
-                alert(result);
+                MostrarResultado(accion + " PayCenter", result);
             }
             else {
-                alert("No se ha podido determinar si se ejecutó la acción.");
+                MostrarResultado(accion + " PayCenter", "No se ha podido determinar si se ejecutó la acción.");
             }
             FiltrarRegistros();
         },
         error: function () {
-            alert("Se ha producido un error al ejecutar la acción.");
+            MostrarResultado(accion + " PayCenter", "Se ha producido un error al ejecutar la acción.")
         }
     });
+}
+
+function MostrarResultado(Titulo, Mensaje) {
+    $("#Mensaje").dialog({
+        title: Titulo
+    });
+    $("#MensajeAccion").html(Mensaje);
     $("#Confirmacion").dialog("close");
+    $("#Mensaje").dialog("open");
 }

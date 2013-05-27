@@ -13,5 +13,9 @@ namespace EvolucionaMovil.Repositories
         {
             return context.Prospectos.Any(p => p.Email == Email);
         }
+        public int GetProspectoIdByGUID(Guid GUID)
+        {
+            return context.Prospectos.Where(p => p.ID.Equals(GUID)).Select(p=>p.ProspectoId).FirstOrDefault();
+        }
     }
 }

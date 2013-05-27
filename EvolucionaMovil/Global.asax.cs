@@ -26,10 +26,16 @@ namespace EvolucionaMovil
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
             routes.IgnoreRoute("favicon.ico");
             routes.MapRoute(
+                "Guid",
+                "{controller}/{action}/{guid}",
+                new { controller = "Home", action = "Index" }
+            );
+            routes.MapRoute(
                 "Default", // Route name
                 "{controller}/{action}/{id}", // URL with parameters
                 new { controller = "Home", action = "Index", id = UrlParameter.Optional } // Parameter defaults
             );
+
         }
 
         protected void Application_Error()

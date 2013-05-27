@@ -14,6 +14,7 @@ using EvolucionaMovil.Models.Classes;
 using EvolucionaMovil.Attributes;
 using EvolucionaMovil.Models.Enums;
 using EvolucionaMovil.Models.BR;
+using cabinet.patterns.enums;
 
 namespace EvolucionaMovil.Controllers
 {
@@ -23,6 +24,7 @@ namespace EvolucionaMovil.Controllers
 
         //
         // GET: /PayCenters/
+        [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.Staff, enumRoles.Administrator })]
         public ViewResult Index()
         {
             //var paycenters = repository.ListAll();
@@ -31,12 +33,13 @@ namespace EvolucionaMovil.Controllers
         }
 
         [HttpPost]
+        [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.Staff, enumRoles.Administrator })]
         public string GetPayCenters(ServiceParameterVM parameters)
         {
             var estadoCuentaResult = getPaycenters(parameters);
             return Newtonsoft.Json.JsonConvert.SerializeObject(estadoCuentaResult);
         }
-        
+
         [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.Staff })]
         public string GetSaldosPagoServicio(int PayCenterId)
         {
@@ -68,16 +71,21 @@ namespace EvolucionaMovil.Controllers
             return Newtonsoft.Json.JsonConvert.SerializeObject(paycenterVM);
         }
 
-        [CustomAuthorize(AuthorizedRoles= new []{enumRoles.PayCenter})]
-        public ViewResult Profile()
+        [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.PayCenter })]
+        public ActionResult Profile()
         {
             var payCenter = repository.LoadByIdName(HttpContext.User.Identity.Name);
+            if (payCenter == null)
+            {
+                return RedirectToAction("Authorization", "Error");
+            }
             var payCenterVM = FillPayCenterVM(payCenter.PayCenterId);
             return View("Details", payCenterVM);
         }
 
         //
         // GET: /PayCenters/Details/5
+        [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.Staff, enumRoles.Administrator })]
         public ViewResult Details(int id)
         {
             var PayCenterVM = FillPayCenterVM(id);
@@ -94,20 +102,48 @@ namespace EvolucionaMovil.Controllers
         //}
 
         // GET: /PayCenters/Create ProspectoId
-        public ActionResult Registrar(Int32? id)
+        public ActionResult Registrar(Guid? GUID)
         {
-            PayCenterVM paycenterVM = new PayCenterVM();
-            paycenterVM.ProspectoId = 0;
-            if (id != null && id > 0)
+            //Validar si no tiene usuario logueado, obligatoriamente debe pasar un Id
+            if ((!HttpContext.User.Identity.IsAuthenticated) && (GUID == null))
             {
-                //Verificar que no este dado de alta previamente
-                PayCenter paycenter = repository.LoadByProspectoId((int)id);
+                return RedirectToAction("Authorization", "Error");
+            }
+            else if (HttpContext.User.Identity.IsAuthenticated && HttpContext.User.IsInRole(enumRoles.PayCenter.ToString())) //Si esta logueado un paycenter, no puede modificar sus datos porque ya está activo
+            {
+                return RedirectToAction("Authorization", "Error");
+            }
+            PayCenter paycenter = null;
+            PayCenterVM paycenterVM = new PayCenterVM();
+
+            ProspectosRepository repositoryProspecto = new ProspectosRepository();
+            int ProspectoId = GUID.HasValue ? repositoryProspecto.GetProspectoIdByGUID((Guid)GUID) : 0;
+
+            if (ProspectoId > 0)
+            {
+
+                paycenter = repository.LoadByProspectoId(ProspectoId);
+                if (paycenter != null)
+                {
+                    if (paycenter.Activo)
+                    {
+                        AddValidationMessage(enumMessageType.BRException, "El PayCenter ya se encuentra aprobado y activo, no es posible ser modificado por el Prospecto. Por favor, ingresa al sistema con tu usuario y contraseña.");
+                    }
+                    else
+                    {
+                        AddValidationMessage(enumMessageType.Notification, "Es necesario terminar de capturar la información correspondiente a su alta como PayCenter. Por favor, termine de capturar la información que se le solicita.");
+                    }
+                }
+            }
+
+            paycenterVM.ProspectoId = 0;
+            if (GUID != null)
+            {
 
                 //en Modificación de Paycenter NO Activo dice que si no se encuentra paycenter debe redireccionar a un view NotFound, pero si es la primera vez que el prospecto se da de alta no aplica, entonces se hizo para cuando el prospecto no exista
                 if (paycenter == null)
                 {
-                    ProspectosRepository repositoryProspecto = new ProspectosRepository();
-                    Prospecto prospecto = repositoryProspecto.LoadById((int)id);
+                    Prospecto prospecto = repositoryProspecto.LoadById(ProspectoId);
                     if (prospecto != null)
                     {
                         paycenterVM.Celular = prospecto.Celular;
@@ -116,6 +152,7 @@ namespace EvolucionaMovil.Controllers
                         //paycenterVM.UserName = prospecto.Nombre;
                         paycenterVM.Telefono = prospecto.Telefono;
                         paycenterVM.ProspectoId = prospecto.ProspectoId;
+                        paycenterVM.Representante = prospecto.Nombre;
                     }
                     else
                     {
@@ -125,36 +162,9 @@ namespace EvolucionaMovil.Controllers
                 else
                 {
                     Mapper.Map(paycenter, paycenterVM);
-                    //<author>Julio Avila</author>
-                    //<comments>Se cambió el nombre de la propiedad PayCenters2 a PayCenterPadre</comments>
-                    //<before>
-                    //paycenterVM.PayCenterPadre = paycenter.PayCenters2.UserName;
-                    //</before>
-                    //<after>
-                    paycenterVM.PayCenterPadre = paycenter.PayCenterPadre.UserName;
-                    //</after>
-                    ////Buscar usuario para determinar si está activo
-                    //AspNetMembershipProviderWrapper membership = new AspNetMembershipProviderWrapper();
-                    //MembershipUser usuario = membership.Get(paycenterVM.Nombre);
-                    //if (usuario != null)
-                    //{
-                    //    paycenterVM.Activo = usuario.IsApproved;
-                    //    paycenterVM.UserName = usuario.UserName;
-
-                    //    if (paycenterVM.Activo)
-                    //    {
-                    //        ViewBag.Mensajes = "El PayCenter ya se encuentra aprobado y activo, no es posible ser modificado por el Prospecto. Por favor, ingresa al sistema con tu usuario y contraseña.";
-                    //    }
-                    //}
-                    //else
-                    //{
-                    //    paycenterVM.Activo = false;
-                    //    paycenterVM.UserName = string.Empty;
-                    //}
-
-                    if (paycenterVM.Activo)
+                    if (paycenter.PayCenterPadre != null)
                     {
-                        ViewBag.Mensajes = "El PayCenter ya se encuentra aprobado y activo, no es posible ser modificado por el Prospecto. Por favor, ingresa al sistema con tu usuario y contraseña.";
+                        paycenterVM.PayCenterPadre = paycenter.PayCenterPadre.UserName;
                     }
                 }
             }
@@ -167,8 +177,7 @@ namespace EvolucionaMovil.Controllers
         [HttpPost]
         public ActionResult Registrar(PayCenterVM paycenterVM)
         {
-            //Esto es para que no me marque requerido al valida cuanto es actualización
-            //ToDo: verificar si hay alguna manera de hacer obligatorio al crear y al actualizar no
+            //Esto es para que no me marque requerido al validar cuando es actualización
             if (paycenterVM.PayCenterId > 0)
             {
                 ModelState.Remove("Password");
@@ -197,16 +206,16 @@ namespace EvolucionaMovil.Controllers
                 paycenterVM.ThumbnailComprobante = paycenterVM.Comprobante.Replace("UploadImages", "UploadImages/Thumbnails");
                 //</after>           
 
-                //ToDo:Determinar como se van a manejar estos valores
-                paycenterVM.UsuarioId = 1;
-                if (paycenterVM.ProspectoId == 0)
-                {
-                    paycenterVM.ProspectoId = 1;
-                }
-                if (paycenterVM.PayCenterPadreId == 0)
-                {
-                    paycenterVM.PayCenterPadreId = 1;
-                }
+                //<author>Moisés Cauich</author>
+                //<comments>Se corrigieron las relaciones en el Entity Model</comments>
+                //<before>
+                //paycenterVM.UsuarioId = 1;
+                //if (paycenterVM.ProspectoId == 0)
+                //{
+                //    paycenterVM.ProspectoId = 1;
+                //}
+                //</before>
+                //<after />
 
                 //llenar los campos faltantes si estan nulos
                 ValidaCapturaParcial(ref paycenterVM);
@@ -257,19 +266,19 @@ namespace EvolucionaMovil.Controllers
                             {
                                 paycenterVM.Activo = true;
                                 Exito = false;
-                                ViewBag.Mensajes = "El PayCenter ya se encuentra aprobado y activo, no es posible ser modificado por el Prospecto. Por favor, ingresa al sistema con tu usuario y contraseña.";
+                                AddValidationMessage(enumMessageType.UnhandledException, "El PayCenter ya se encuentra aprobado y activo, no es posible ser modificado por el Prospecto. Por favor, ingresa al sistema con tu usuario y contraseña.");
                             }
                         }
                         else
                         {
                             Exito = false;
-                            ViewBag.MensajeError = "No se encontró el usuario del PayCenter.";
+                            AddValidationMessage(enumMessageType.UnhandledException, "No se encontró el usuario del PayCenter.");
                         }
                     }
                     catch (Exception ex)
                     {
                         Exito = false;
-                        ViewBag.MensajeError = "Se ha producido un error al actualizar el usuario del PayCenter. " + ex.Message;
+                        AddValidationMessage(enumMessageType.UnhandledException, "Se ha producido un error al actualizar el usuario del PayCenter. " + ex.Message);
                     }
                 }
                 else if (!(string.IsNullOrWhiteSpace(paycenterVM.UserName) || string.IsNullOrWhiteSpace(paycenterVM.Password)))
@@ -283,18 +292,18 @@ namespace EvolucionaMovil.Controllers
                     catch (Exception ex)
                     {
                         Exito = false;
-                        ViewBag.MensajeError = "Se ha producido un error al crear el usuario del PayCenter. " + ex.Message;
+                        AddValidationMessage(enumMessageType.UnhandledException, "Se ha producido un error al crear el usuario del PayCenter. " + ex.Message);
                     }
                 }
 
                 if (Exito)
                 {
                     PayCenter paycenter;
+                    bool modificando = paycenterVM.PayCenterId > 0;
                     if (paycenterVM.PayCenterId > 0)
                     {
                         paycenter = repository.LoadById(paycenterVM.PayCenterId);
                         //Esto es porque el prospecto no debe modificar el dato
-                        //ToDo: verificar si se puede excluir de otra manera
 
                         //<author>Julio Avila</author>
                         //<comments>Se cambió el campo a la tabla parámetros</comments>
@@ -310,27 +319,69 @@ namespace EvolucionaMovil.Controllers
                     {
                         paycenter = new PayCenter();
                         Mapper.Map(paycenterVM, paycenter);
+                        if (paycenterVM.PayCenterPadreId == 0)
+                        {
+                            paycenter.PayCenterPadreId = null;
+                            paycenter.PayCenterPadre = null;
+                        }
                         repository.Add(paycenter);
                     }
-                    repository.Save();
-
-                    //return RedirectToAction("Index");
-                    paycenterVM.Activo = true; //Esto es sólo para que se deshabiliten los campos
-                    ViewBag.Mensajes = "El PayCenter se ha guardado con éxito. Si deseas modificar o terminar de completar tu información deberás acceder mediante el enlace que recibiste en tu correo o contactar al equipo de Evoluciona Móvil. En breve tu registro como PayCenter quedará activado.";
+                    Succeed = repository.Save();
+                    if (!Succeed)
+                    {
+                        var mensaje = modificando ? "crear" : "actualizar";
+                        AddValidationMessage(enumMessageType.UnhandledException, "No fue posible " + mensaje + " el paycenter. Favor de intentar más tarde o comunicarse con servicio a cliente.");
+                        if (!modificando)
+                        {
+                            try
+                            {
+                                //Elimino el usuario en caso de haber fallado la creación del PayCenter
+                                var user = Membership.GetUser(paycenter.UserName);
+                                if (user != null)
+                                {
+                                    membership.Delete(user);
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                AddValidationMessage(enumMessageType.Notification, "El usuario creado no pudo ser eliminado");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        paycenterVM.Activo = true; //Esto es sólo para que se deshabiliten los campos
+                        AddValidationMessage(enumMessageType.Succeed, "El PayCenter se ha guardado con éxito. Si deseas modificar o terminar de completar tu información deberás acceder mediante el enlace que recibiste en tu correo o contactar al equipo de Evoluciona Móvil. En breve tu registro como PayCenter quedará activado.");
+                    }
                 }
-
             }
-
+            else
+            {
+                foreach (string key in ModelState.Keys)
+                {
+                    if (ModelState[key].Errors.Count > 0)
+                    {
+                        AddValidationMessage(enumMessageType.DataValidation, ModelState[key].Errors.FirstOrDefault().ErrorMessage);
+                    }
+                }
+            }
             return View(paycenterVM);
         }
 
         // GET: /PayCenters/Edit/5
+        [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.PayCenter, enumRoles.Staff, enumRoles.Administrator })]
         public ActionResult Edit(int id)
         {
             PayCenter paycenter = repository.LoadById(id);
 
             if (paycenter != null)
             {
+                //Si el usuario logueado es un paycenter solo puede modificar sus datos
+                if (HttpContext.User.IsInRole(enumRoles.PayCenter.ToString()) && paycenter.UserName != HttpContext.User.Identity.Name)
+                {
+                    return RedirectToAction("Authorization", "Error");
+                }
+
                 PayCenterVM paycenterVM = new PayCenterVM();
                 Mapper.Map(paycenter, paycenterVM);
                 //<author>Julio Avila</author>
@@ -375,10 +426,10 @@ namespace EvolucionaMovil.Controllers
         //
         // POST: /PayCenters/Edit/5
         [HttpPost]
+        [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.PayCenter, enumRoles.Staff, enumRoles.Administrator })]
         public ActionResult Edit(PayCenterVM paycenterVM)
         {
-            //Esto es para que no me marque requerido al valida cuanto es actualización
-            //ToDo: verificar si hay alguna manera de hacer obligatorio al crear y al actualizar no
+            //Esto es para que no me marque requerido al validar cuando es actualización
             ModelState.Remove("Password");
             ModelState.Remove("RepeatPassword");
             ModelState.Remove("UserName");
@@ -393,15 +444,25 @@ namespace EvolucionaMovil.Controllers
                 //</before>
                 //<after>
 
-                //ToDo:Determinar como se van a manejar estos valores
-                paycenterVM.UsuarioId = 1;
-                if (paycenterVM.ProspectoId == 0)
+                //<author>Moisés Cauich</author>
+                //<comments>Se corrigieron las relaciones en el Entity Model</comments>
+                //<before>
+                //paycenterVM.UsuarioId = 1;
+                //if (paycenterVM.ProspectoId == 0)
+                //{
+                //    paycenterVM.ProspectoId = 1;
+                //}
+                //</before>
+                //<after />
+
+                //Esto es para cuando se edita los datos de un paycenter que no tiene imagenes, no marque error
+                if (paycenterVM.IFE == null)
                 {
-                    paycenterVM.ProspectoId = 1;
+                    paycenterVM.IFE = string.Empty;
                 }
-                if (paycenterVM.PayCenterPadreId == 0)
+                if (paycenterVM.Comprobante == null)
                 {
-                    paycenterVM.PayCenterPadreId = 1;
+                    paycenterVM.Comprobante = string.Empty;
                 }
 
                 //llenar los campos faltantes si estan nulos
@@ -434,33 +495,52 @@ namespace EvolucionaMovil.Controllers
                             else
                             {
                                 Exito = false;
-                                ViewBag.MensajeError = "No se encontró el usuario del PayCenter.";
+                                AddValidationMessage(enumMessageType.UnhandledException ,"No se encontró el usuario del PayCenter.");
                             }
                         }
                         catch (Exception ex)
                         {
                             Exito = false;
-                            ViewBag.MensajeError = "Se ha producido un error al actualizar el usuario del PayCenter. " + ex.Message;
+                            AddValidationMessage(enumMessageType.UnhandledException ,"Se ha producido un error al actualizar el usuario del PayCenter. " + ex.Message);
                         }
                     }
                     else if (paycenterVM.Activo)
                     {
                         Exito = false;
-                        ViewBag.MensajeError = "No se ha creado el usuario del PayCenter, no se puede activar. desmarque la casilla de activo y guarde.";
+                        AddValidationMessage(enumMessageType.UnhandledException ,"No se ha creado el usuario del PayCenter, no se puede activar. desmarque la casilla de activo y guarde.");
                     }
 
                     if (Exito)
                     {
                         PayCenter paycenter = repository.LoadById(paycenterVM.PayCenterId);
                         Mapper.Map(paycenterVM, paycenter);
+                        if (paycenterVM.PayCenterPadreId <= 0)
+                        {
+                            paycenter.PayCenterPadre = null;
+                        }
+
+                        //Agregar valor del parámetro máximo a financiar
+                        if (paycenter.Parametros != null)
+                        {
+                            paycenter.Parametros.MaximoAFinanciar = Convert.ToDecimal(paycenterVM.MaximoAFinanciar);
+                        }
+                        else
+                        {
+                            ParametrosPayCenter parametros = new ParametrosPayCenter() { 
+                                PayCenterId = paycenterVM.PayCenterId, 
+                                MaximoAFinanciar = Convert.ToDecimal(paycenterVM.MaximoAFinanciar),
+                            };
+                            repository.context.ParametrosPayCenters.AddObject(parametros);
+                        }
+
                         repository.Save();
 
-                        ViewBag.GuardadoExito = "El PayCenter se ha actualizado con éxito.";
+                        AddValidationMessage(enumMessageType.Succeed ,"El PayCenter se ha actualizado con éxito.");
                     }
                 }
                 else
                 {
-                    ViewBag.MensajeError = "Es necesario capturar todos los datos para activar al PayCenter. capture los datos faltantes o desmarque la casilla de activo y guarde.";
+                    AddValidationMessage(enumMessageType.UnhandledException ,"Es necesario capturar todos los datos para activar al PayCenter. capture los datos faltantes o desmarque la casilla de activo y guarde.");
                 }
                 //PayCenter paycenter = repository.LoadById(paycenterVM.PayCenterId);
                 //Mapper.Map(paycenterVM, paycenter);
@@ -493,6 +573,7 @@ namespace EvolucionaMovil.Controllers
         //
         // POST: /PayCenters/Delete/5
         [HttpPost, ActionName("Delete")]
+        [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.Administrator })]
         public string DeleteConfirmed(int id)
         {
             PayCenter paycenter = repository.LoadById(id);
@@ -502,6 +583,7 @@ namespace EvolucionaMovil.Controllers
         }
 
         [HttpPost]
+        [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.Staff, enumRoles.Administrator })]
         public string Activate(int id, string accion)
         {
             PayCenter paycenter = repository.LoadById(id);
@@ -630,8 +712,7 @@ namespace EvolucionaMovil.Controllers
             }
 
             SimpleGridResult<PayCenterVM> simpleGridResult = new SimpleGridResult<PayCenterVM>();
-            var PaycentersVM = paycenters.ToListOfDestination<PayCenterVM>();
-
+            IEnumerable<PayCenter> paycentersPaged = null;
             if (Parameters != null)
             {
                 simpleGridResult.CurrentPage = Parameters.pageNumber;
@@ -640,11 +721,11 @@ namespace EvolucionaMovil.Controllers
                 {
                     var pageNumber = Parameters.pageNumber >= 0 ? Parameters.pageNumber : 0;
                     simpleGridResult.CurrentPage = pageNumber;
-                    simpleGridResult.TotalRows = PaycentersVM.Count();
-                    PaycentersVM = PaycentersVM.Skip(pageNumber * Parameters.pageSize).Take(Parameters.pageSize);
+                    simpleGridResult.TotalRows = paycenters.Count();
+                    paycentersPaged = paycenters.Skip(pageNumber * Parameters.pageSize).Take(Parameters.pageSize);
                 }
             }
-            simpleGridResult.Result = PaycentersVM;
+            simpleGridResult.Result = paycentersPaged.ToListOfDestination<PayCenterVM>().OrderByDescending(x => x.FechaCreacion);
 
             return simpleGridResult;
         }
@@ -659,16 +740,29 @@ namespace EvolucionaMovil.Controllers
             }
             PayCenterVM paycenterVM = new PayCenterVM();
             Mapper.Map(paycenter, paycenterVM);
-            //Cargar los movimientos para calcular el saldo
-            EstadoDeCuentaRepository edoCuentaRepository = new EstadoDeCuentaRepository();
-            var edoCuenta = edoCuentaRepository.GetMovimientosByPayCenterId(paycenterVM.PayCenterId);
-            paycenterVM.SaldoActual = (edoCuenta.Where(x => x.IsAbono).Sum(x => x.Monto) - edoCuenta.Where(x => !x.IsAbono).Sum(x => x.Monto)).ToString("C");
-            //Cargar los eventos
-            PaquetesRepository paquetesRepository = new PaquetesRepository();
-            paycenterVM.Eventos = paquetesRepository.GetEventosByPayCenter(paycenterVM.PayCenterId).ToString();
-            //Asignar pagos realizados
-            //ToDo: Checar si hay que validar algún estatus
-            paycenterVM.PagosRealizados = paycenter.Pagos.Count.ToString();
+
+            //<author>Moisés Cauich</author>
+            //<comments>Obtener los datos de EstadoCuentaBR</comments>
+            //<before>
+            ////Cargar los movimientos para calcular el saldo
+            //EstadoDeCuentaRepository edoCuentaRepository = new EstadoDeCuentaRepository();
+            //var edoCuenta = edoCuentaRepository.GetMovimientosByPayCenterId(paycenterVM.PayCenterId);
+            //paycenterVM.SaldoActual = (edoCuenta.Where(x => x.IsAbono).Sum(x => x.Monto) - edoCuenta.Where(x => !x.IsAbono).Sum(x => x.Monto)).ToString("C");
+            ////Cargar los eventos
+            //PaquetesRepository paquetesRepository = new PaquetesRepository();
+            //paycenterVM.Eventos = paquetesRepository.GetEventosByPayCenter(paycenterVM.PayCenterId).ToString();
+            ////Asignar pagos realizados
+            //paycenterVM.PagosRealizados = paycenter.Pagos.Count.ToString();
+            //</before>
+            //<after>
+            EstadoCuentaBR estadoCuenta = new EstadoCuentaBR();
+            var saldos = estadoCuenta.GetSaldosPagoServicio(Id);
+            paycenterVM.SaldoActual = saldos.SaldoActual.ToString("C");
+            paycenterVM.SaldoDisponible = saldos.SaldoDisponible.ToString("C");
+            paycenterVM.Eventos = saldos.EventosDisponibles.ToString();
+            paycenterVM.PagosRealizados = paycenter.Pagos.Count(p => p.Status == enumEstatusMovimiento.Aplicado.GetHashCode()).ToString();
+            //</after>
+
             return paycenterVM;
         }
 
