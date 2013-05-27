@@ -16,6 +16,7 @@ using EvolucionaMovil.Attributes;
 using System.Globalization;
 using EvolucionaMovil.Models.BR;
 using EvolucionaMovil.Models.Helpers;
+using System.Text;
 
 namespace EvolucionaMovil.Controllers
 {
@@ -117,7 +118,10 @@ namespace EvolucionaMovil.Controllers
                             AddValidationMessage(enumMessageType.Succeed, "El reporte de depósito ha sido " + nuevoEstatus.ToString() + " correctamente");
                             var paycenter = pRepository.LoadById(pago.PayCenter.PayCenterId);
                             if (paycenter != null)
-                                EmailHelper.Enviar(getMensaje(nuevoEstatus.ToString(), pago), "El depósito " + pago.Ticket.Folio + "ha sido " + nuevoEstatus.ToString(), paycenter.Email);
+                                Succeed = EmailHelper.Enviar(getMensaje(nuevoEstatus.ToString(), pago), "El Pago de Servicio " + pago.Ticket.Folio + " ha sido " + nuevoEstatus.ToString(), paycenter.Email);
+                            //No obtuve lo errores por que es una clase estática y va a almacenar los de todas las sesiones
+                            //ValidationMessages.AddRange(EmailHelper
+                            AddValidationMessage(enumMessageType.Notification, "No pueo enviarse el email de aviso. Comuníquelo al administrador");
                         }
                         else
                         {
@@ -450,53 +454,29 @@ namespace EvolucionaMovil.Controllers
         private string getMensaje(string status, Pago p)
         {
 
-            string cadena = @"  <h2>Detalle de pago</h2>                                    
-                                <img src='" + p.PayCenter.Logotipo + "' />" +
-                                @"<div class='display-label'>
-                                    PayCenter</div>
-                                <div class='display-field'>" +
-                                  p.PayCenter.Nombre +
-                                @"</div>
-                                <div class='display-label'>
-                                    Servicio</div>
-                                <div class='display-field fwb fsl'>"
-                                   + p.Servicio +
-                                @"</div>";
+            StringBuilder cadena = new StringBuilder();
+            cadena.AppendLine("<h2>Detalle de pago</h2><img src='" + RelativeURLHelper.ToFullUrl(p.PayCenter.Logotipo) + "' />");
+            cadena.AppendLine("<table>");
+            cadena.AppendLine("<tr><td><h3>PayCenter</h3></td><td><strong>" + p.PayCenter.Nombre + "<strong></td></tr></tr>");
+            cadena.AppendLine("<tr><td>Servicio</td><div class='display-field fwb fsl'><h3>" + p.Servicio + "</h3></td></tr></tr>");
+
             foreach (DetallePago d in p.DetallePagos)
             {
-                cadena += @"<div class='display-label'>" + d.Campo + "</div><div class='display-field'>" + d.Valor + "</div>";
+                cadena.AppendLine("<tr><td>" + d.Campo + "</td><td>" + d.Valor + "</td></tr></tr>");
             }
-            cadena += @"         <div class='display-label'>
-                                    Fecha Vencimiento</div>
-                                <div class='display-field'>" +
-                                    p.FechaVencimiento.ToShortDateString() +
-                                @"</div>
-                                <div class='display-label'>
-                                    Nombre Cliente</div>
-                                <div class='display-field'>" +
-                                   p.ClienteNombre +
-                                @"</div>
-                                <div class='display-label'>
-                                    Importe</div>
-                                <div class='display-field fwb fsxl'>" +
-                                    p.Importe.ToString("C", ci) +
-                                @"</div>
-                                <div class='display-label'>
-                                    Estatus</div>
-                                <div class='display-field fwb fsxl '>
-                                    <span class='Procesando'>" + ((enumEstatusMovimiento)p.Status).ToString() + "</span>" +
-                                @"</div>
-                                <div class='display-label'>
-                                    <div class='listHeader'>
-                                        <br />
-                                        Hitórico de Estatus</div>";
-            foreach (Movimientos_Estatus m in p.Movimiento.Movimientos_Estatus)
+            cadena.AppendLine("<tr><td>Fecha Vencimiento</td><td>" + p.FechaVencimiento.ToShortDateString() + "</td></tr></tr>");
+            cadena.AppendLine("<tr><td>Nombre Cliente</td><td><h3>" + p.ClienteNombre + "</h3></td></tr>");
+            cadena.AppendLine("<tr><td>Importe</td><div class='display-field fwb fsxl'><h3>" + p.Importe.ToString("C", ci) + "</h3></td></tr>");
+            cadena.AppendLine("<tr><td>Estatus</td><div class='display-field fwb fsxl '><span class='Procesando'><h2>" + ((enumEstatusMovimiento)p.Status).ToString() + "</h2></span></td></tr>");
+            cadena.AppendLine("<table>");
+            cadena.AppendLine("<br />");
+            var lastEstatus = p.Movimiento.Movimientos_Estatus.Last();
+            if (lastEstatus != null && !string.IsNullOrEmpty(lastEstatus.Comentarios))
             {
-                cadena += @"<div class='listRow'>
-                                        <span class='listCell Estatus fwb'><span class='Procesando '>" + ((enumEstatusMovimiento)m.Status).ToString() + " </span>" +
-                                        @"</span><span class='listCell Comentarios'></span><span class='listCell Usuario'>" + m.Comentarios + "</span> <span class='listCell Fecha'>" + m.FechaCreacion.ToShortDateString() + "</span></div> </div>";
+                cadena.AppendLine("Comentarios: <h4>" + lastEstatus.Comentarios + "</h4>");
             }
-            return cadena;
+            cadena.AppendLine("<a alt='DetallePago' href='" + RelativeURLHelper.ToFullUrl("PagoServicios/Details/" + p.PagoId.ToString()) + "'>Ver detalle de este pago</a>");
+            return cadena.ToString();
         }
 
         [HttpPost]
