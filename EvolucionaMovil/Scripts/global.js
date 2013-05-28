@@ -26,6 +26,23 @@ $(document).on("ready", function () {
         $(this).parent().hide("blind", {}, 300);
     });
 
+    $("#ValidationMessage").removeClass("current").css("display", "none");
+
+    //abre pagina para descargar Chrome
+    $("#btnNavegador").on("click", function (event) {
+        event.preventDefault();
+        $(this).parent().hide("blind", {}, 300);
+        window.open("https://www.google.com/intl/es/chrome/browser/?hl=es", 'window', ''); 
+    });
+
+   // $("#ValidationNavegador").show("blind", {}, 1000);
+    DetectarNavegador();
+
+    //Accordion
+    $(".accordion").accordion({
+        collapsible: true, active: false, heightStyle: "content"
+    });
+
 });
 
 function fixCheckbox() {
@@ -34,4 +51,19 @@ function fixCheckbox() {
 function fixLabels() {
     clearInterval(t);
     $("label").inFieldLabels('refresh');
+}
+
+//validamos el navegador
+function DetectarNavegador() {
+
+   
+    var is_chrome= navigator.userAgent.toLowerCase().indexOf('chrome/') > -1;
+    if (is_chrome) {
+        $("#ValidationMessage").removeClass("current").css("display", "none");
+    }
+    else {
+        $("#ValidationMessage").removeClass("current").css("display", "inline");
+        //alert('Su navegador NO es Google Chrome');
+    }
+
 }
