@@ -177,6 +177,7 @@ namespace EvolucionaMovil.Controllers
         [HttpPost]
         public ActionResult Registrar(PayCenterVM paycenterVM)
         {
+            Succeed = true;
             //Esto es para que no me marque requerido al validar cuando es actualización
             if (paycenterVM.PayCenterId > 0)
             {
@@ -187,13 +188,6 @@ namespace EvolucionaMovil.Controllers
 
             if (ModelState.IsValid)
             {
-                //<author>Moisés Cauich</author>
-                //<comments>Ya se traen los valores correspondientes del view, solo cuando sean null se pone cadena vacía.</comments>
-                //<before>
-                //paycenterVM.Comprobante = string.Empty;
-                //paycenterVM.IFE = string.Empty;
-                //</before>
-                //<after>
                 if (paycenterVM.IFE == null)
                 {
                     paycenterVM.IFE = string.Empty;
@@ -204,19 +198,7 @@ namespace EvolucionaMovil.Controllers
                 }
                 paycenterVM.ThumbnailIFE = paycenterVM.IFE.Replace("UploadImages", "UploadImages/Thumbnails");
                 paycenterVM.ThumbnailComprobante = paycenterVM.Comprobante.Replace("UploadImages", "UploadImages/Thumbnails");
-                //</after>           
-
-                //<author>Moisés Cauich</author>
-                //<comments>Se corrigieron las relaciones en el Entity Model</comments>
-                //<before>
-                //paycenterVM.UsuarioId = 1;
-                //if (paycenterVM.ProspectoId == 0)
-                //{
-                //    paycenterVM.ProspectoId = 1;
-                //}
-                //</before>
-                //<after />
-
+                
                 //llenar los campos faltantes si estan nulos
                 ValidaCapturaParcial(ref paycenterVM);
 
@@ -245,8 +227,7 @@ namespace EvolucionaMovil.Controllers
                 //}
                 #endregion
 
-                //Validar si existe el usuario si el paycenter está siendo editado y actualizarlo
-                bool Exito = true;
+                //Validar si existe el usuario si el paycenter está siendo editado y actualizarlo                
                 AspNetMembershipProviderWrapper membership = new AspNetMembershipProviderWrapper();
                 if (paycenterVM.PayCenterId > 0 && !string.IsNullOrWhiteSpace(paycenterVM.UserName)) //&& !string.IsNullOrWhiteSpace(paycenterVM.Password))
                 {
@@ -265,19 +246,19 @@ namespace EvolucionaMovil.Controllers
                             else
                             {
                                 paycenterVM.Activo = true;
-                                Exito = false;
+                                Succeed = false;
                                 AddValidationMessage(enumMessageType.UnhandledException, "El PayCenter ya se encuentra aprobado y activo, no es posible ser modificado por el Prospecto. Por favor, ingresa al sistema con tu usuario y contraseña.");
                             }
                         }
                         else
                         {
-                            Exito = false;
+                            Succeed = false;
                             AddValidationMessage(enumMessageType.UnhandledException, "No se encontró el usuario del PayCenter.");
                         }
                     }
                     catch (Exception ex)
                     {
-                        Exito = false;
+                        Succeed = false;
                         AddValidationMessage(enumMessageType.UnhandledException, "Se ha producido un error al actualizar el usuario del PayCenter. " + ex.Message);
                     }
                 }
@@ -291,28 +272,19 @@ namespace EvolucionaMovil.Controllers
                     }
                     catch (Exception ex)
                     {
-                        Exito = false;
+                        Succeed = false;
                         AddValidationMessage(enumMessageType.UnhandledException, "Se ha producido un error al crear el usuario del PayCenter. " + ex.Message);
                     }
                 }
 
-                if (Exito)
+                if (Succeed)
                 {
                     PayCenter paycenter;
                     bool modificando = paycenterVM.PayCenterId > 0;
                     if (paycenterVM.PayCenterId > 0)
                     {
                         paycenter = repository.LoadById(paycenterVM.PayCenterId);
-                        //Esto es porque el prospecto no debe modificar el dato
-
-                        //<author>Julio Avila</author>
-                        //<comments>Se cambió el campo a la tabla parámetros</comments>
-                        //<before>
-                        //paycenterVM.MaximoAFinanciar = paycenter.MaximoAFinanciar.ToString();
-                        //</before>
-                        //<after>
                         paycenterVM.MaximoAFinanciar = paycenter.Parametros != null && paycenter.Parametros.MaximoAFinanciar != null ? paycenter.Parametros.MaximoAFinanciar.ToString() : string.Empty;
-                        //</after>
                         Mapper.Map(paycenterVM, paycenter);
                     }
                     else
@@ -344,6 +316,7 @@ namespace EvolucionaMovil.Controllers
                             }
                             catch (Exception ex)
                             {
+                                Succeed = false;
                                 AddValidationMessage(enumMessageType.Notification, "El usuario creado no pudo ser eliminado");
                             }
                         }
@@ -458,16 +431,16 @@ namespace EvolucionaMovil.Controllers
                 //llenar los campos faltantes si estan nulos
                 ValidaCapturaParcial(ref paycenterVM);
 
-                bool Exito = true;
+                Succeed = true;
 
                 //Validar los datos necesarios para activar el usuario
                 if (paycenterVM.Activo)
                 {
-                    Exito = ValidaActivacion(ref paycenterVM);
+                    Succeed = ValidaActivacion(ref paycenterVM);
                 }
 
                 //Validar si existe el usuario si el paycenter está siendo editado y actualizarlo
-                if (Exito)
+                if (Succeed)
                 {
                     AspNetMembershipProviderWrapper membership = new AspNetMembershipProviderWrapper();
                     if (!string.IsNullOrWhiteSpace(paycenterVM.UserName))
@@ -484,23 +457,23 @@ namespace EvolucionaMovil.Controllers
                             }
                             else
                             {
-                                Exito = false;
+                                Succeed = false;
                                 AddValidationMessage(enumMessageType.UnhandledException ,"No se encontró el usuario del PayCenter.");
                             }
                         }
                         catch (Exception ex)
                         {
-                            Exito = false;
+                            Succeed = false;
                             AddValidationMessage(enumMessageType.UnhandledException ,"Se ha producido un error al actualizar el usuario del PayCenter. " + ex.Message);
                         }
                     }
                     else if (paycenterVM.Activo)
                     {
-                        Exito = false;
+                        Succeed = false;
                         AddValidationMessage(enumMessageType.UnhandledException ,"No se ha creado el usuario del PayCenter, no se puede activar. desmarque la casilla de activo y guarde.");
                     }
 
-                    if (Exito)
+                    if (Succeed)
                     {
                         PayCenter paycenter = repository.LoadById(paycenterVM.PayCenterId);
                         Mapper.Map(paycenterVM, paycenter);

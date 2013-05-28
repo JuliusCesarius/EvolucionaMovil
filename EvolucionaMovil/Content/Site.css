@@ -81,7 +81,7 @@ header h1, #header h1 {
     padding: 30px 30px 15px 30px;
     background-color: #fff;
 }
-#ValidationMessage
+#ValidationMessage, #BrowserMessage
 {
     display:none;
     border: 1px solid rgb(204, 204, 204);
@@ -93,7 +93,13 @@ header h1, #header h1 {
     left: 0;
     z-index:1001;
 }
-.DataValidation, .BRException, #ValidationMessage .DataValidation, #ValidationMessage .BRException
+#BrowserMessage
+{
+    display:none;
+    border-color: rgb(252, 236, 185)!important;    
+    background: rgb(242, 250, 255) url('themes/base/images/i-ico.png') no-repeat 10px 50%!important;
+}
+.DataValidation, .BRException, .UnhandledException, #ValidationMessage .DataValidation, #ValidationMessage .BRException, #ValidationMessage .UnhandledException
 {
     border-color: rgb(252, 236, 185)!important;
     background: rgb(255, 255, 192) url('themes/base/images/e-ico.png') no-repeat 10px 50%!important ;
@@ -108,7 +114,7 @@ header h1, #header h1 {
     background: rgb(213, 253, 213) url('themes/base/images/ok-ico.png') no-repeat 10px 50%!important;
     border-color: rgb(152, 231, 192)!important;
 }
-#ValidationMessage ul, .message ul{
+#BrowserMessage ul, #ValidationMessage ul, .message ul{
 margin: 11px 135px 11px 60px;
 font-size: 1.5em;
 color: rgb(66, 72, 90);

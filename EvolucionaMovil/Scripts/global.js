@@ -26,7 +26,7 @@ $(document).on("ready", function () {
         $(this).parent().hide("blind", {}, 300);
     });
 
-    $("#ValidationMessage").removeClass("current").css("display", "none");
+    //$("#ValidationMessage").removeClass("current").css("display", "none");
 
     //abre pagina para descargar Chrome
     $("#btnNavegador").on("click", function (event) {
@@ -36,7 +36,7 @@ $(document).on("ready", function () {
     });
 
    // $("#ValidationNavegador").show("blind", {}, 1000);
-    DetectarNavegador();
+   DetectarNavegador();
 
     //Accordion
     $(".accordion").accordion({
@@ -59,10 +59,10 @@ function DetectarNavegador() {
    
     var is_chrome= navigator.userAgent.toLowerCase().indexOf('chrome/') > -1;
     if (is_chrome) {
-        $("#ValidationMessage").removeClass("current").css("display", "none");
+        $("#BrowserMessage").hide("blind", {}, 300);
     }
     else {
-        $("#ValidationMessage").removeClass("current").css("display", "inline");
+        $("#BrowserMessage").show("blind", {}, 1000);
         //alert('Su navegador NO es Google Chrome');
     }
 
