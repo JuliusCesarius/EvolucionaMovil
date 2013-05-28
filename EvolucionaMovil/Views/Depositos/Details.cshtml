@@ -122,20 +122,22 @@
   </div>
  
  }
-    <div id="HistorialStatus">
-    <div  class="listHeader">Hitórico de Estatus</div>
-    @if (Model.HistorialEstatusVM != null)
-    {
-        foreach (var item in Model.HistorialEstatusVM)
-        { 
-           <div class="listRow">
-              <span class="listCell Estatus fwb"> <span class="@item.Estatus ">@item.Estatus </span></span>  
-              <span class="listCell Comentarios"> @item.Comentarios </span>    
-              <span class="listCell Usuario"> @item.UserName</span>     
-              <span class="listCell Fecha"> @item.Fecha</span>
-            </div> 
-        }
-    }
+    <div id="HistorialStatus" class ="accordion">
+         <h3 id="HistEstatus"  class="listHeader">- Hitórico de Estatus</h3>
+         <div> 
+            @if (Model.HistorialEstatusVM != null)
+            {
+                foreach (var item in Model.HistorialEstatusVM)
+                { 
+                   <div id="ListaEstatus" class="listRow">
+                      <span class="listCell Estatus fwb"> <span class="@item.Estatus ">@item.Estatus </span></span>  
+                      <span class="listCell Comentarios"> @item.Comentarios </span>    
+                      <span class="listCell Usuario"> @item.UserName</span>     
+                      <span class="listCell Fecha"> @item.Fecha</span>
+                    </div> 
+                }
+            }
+         </div>
     </div>
    
     @Html.ActionLink("Regresar", "Index", null, new { @class = "freshbutton-blue small" })
