@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using cabinet.patterns.interfaces;
 using EvolucionaMovil.Models.Interfaces;
 using EvolucionaMovil.Repositories;
+using cabinet.patterns.enums;
 
 namespace EvolucionaMovil.Models.Classes
 {
@@ -36,6 +37,7 @@ namespace EvolucionaMovil.Models.Classes
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
+
             if (HttpContext.User.IsInRole(enumRoles.PayCenter.ToString()))
             {
                 _payCenterId = PayCentersRepository.GetPayCenterByUserName(HttpContext.User.Identity.Name);
@@ -56,6 +58,13 @@ namespace EvolucionaMovil.Models.Classes
 
         protected override void OnActionExecuted(ActionExecutedContext filterContext)
         {
+            foreach (string key in ModelState.Keys)
+            {
+                if (ModelState[key].Errors.Count > 0)
+                {
+                    AddValidationMessage(enumMessageType.DataValidation, ModelState[key].Errors.FirstOrDefault().ErrorMessage);
+                }
+            }
             if (ValidationMessages.Count > 0)
             {
                 ViewBag.MessageType = ValidationMessages.First().MessageType.ToString();

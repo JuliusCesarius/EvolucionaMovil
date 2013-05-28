@@ -102,10 +102,10 @@ namespace EvolucionaMovil.Controllers
         //}
 
         // GET: /PayCenters/Create ProspectoId
-        public ActionResult Registrar(Guid? GUID)
+        public ActionResult Registrar(Guid id)
         {
             //Validar si no tiene usuario logueado, obligatoriamente debe pasar un Id
-            if ((!HttpContext.User.Identity.IsAuthenticated) && (GUID == null))
+            if ((!HttpContext.User.Identity.IsAuthenticated) && (id == null))
             {
                 return RedirectToAction("Authorization", "Error");
             }
@@ -117,7 +117,7 @@ namespace EvolucionaMovil.Controllers
             PayCenterVM paycenterVM = new PayCenterVM();
 
             ProspectosRepository repositoryProspecto = new ProspectosRepository();
-            int ProspectoId = GUID.HasValue ? repositoryProspecto.GetProspectoIdByGUID((Guid)GUID) : 0;
+            int ProspectoId = id != null ? repositoryProspecto.GetProspectoIdByGUID((Guid)id) : 0;
 
             if (ProspectoId > 0)
             {
@@ -137,7 +137,7 @@ namespace EvolucionaMovil.Controllers
             }
 
             paycenterVM.ProspectoId = 0;
-            if (GUID != null)
+            if (id != null)
             {
 
                 //en Modificación de Paycenter NO Activo dice que si no se encuentra paycenter debe redireccionar a un view NotFound, pero si es la primera vez que el prospecto se da de alta no aplica, entonces se hizo para cuando el prospecto no exista
@@ -352,16 +352,6 @@ namespace EvolucionaMovil.Controllers
                     {
                         paycenterVM.Activo = true; //Esto es sólo para que se deshabiliten los campos
                         AddValidationMessage(enumMessageType.Succeed, "El PayCenter se ha guardado con éxito. Si deseas modificar o terminar de completar tu información deberás acceder mediante el enlace que recibiste en tu correo o contactar al equipo de Evoluciona Móvil. En breve tu registro como PayCenter quedará activado.");
-                    }
-                }
-            }
-            else
-            {
-                foreach (string key in ModelState.Keys)
-                {
-                    if (ModelState[key].Errors.Count > 0)
-                    {
-                        AddValidationMessage(enumMessageType.DataValidation, ModelState[key].Errors.FirstOrDefault().ErrorMessage);
                     }
                 }
             }

@@ -19,7 +19,6 @@ namespace EvolucionaMovil.Controllers
 {
     public class ProspectosController : CustomControllerBase
     {
-        //private List<string> Mensajes = new List<string>();
         private ProspectosRepository repository = new ProspectosRepository();
 
         //
@@ -30,35 +29,17 @@ namespace EvolucionaMovil.Controllers
             return View(repository.ListAll().ToListOfDestination<ProspectoVM>());
         }
 
-        ////
-        //// GET: /Prospectos/Details/5
-        //public ViewResult Details(int id)
-        //{
-        //    Prospecto prospecto = repository.LoadById(id);
-        //    ProspectoVM prospectoVM = new ProspectoVM();
-        //    Mapper.Map(prospecto, prospectoVM);
-        //    return View(prospectoVM);
-        //}
-
-        //
-        // GET: /Prospectos/Preafiliacion
         public ActionResult Preafiliacion()
         {
             return View();
         }
 
-        //
-        // POST: /Prospectos/Preafiliacion
         [HttpPost]
+        [Captcha]
         public ActionResult Preafiliacion(ProspectoVM prospectoVM)
         {
-            //bool exito = EmailUnico(prospectoVM.Email);
-            //if (!exito)
-            //{
-            //    Mensajes.Add("El Email proporcionado ya existe.");
-            //}
             bool exito = false;
-            if (ModelState.IsValid) //&& exito)
+            if (ModelState.IsValid)
             {
                 Prospecto prospecto = new Prospecto();
                 Mapper.Map(prospectoVM, prospecto);
@@ -78,60 +59,14 @@ namespace EvolucionaMovil.Controllers
             }
         }
 
-        public ViewResult Confirmacion(Guid GUID)
+        public ViewResult Confirmacion(Guid id)
         {
-            Guid guid = Guid.Parse(GUID.ToString());
+            Guid guid = Guid.Parse(id.ToString());
             Prospecto prospecto = repository.LoadByGUID(guid);
-            var bodyMessage = GetMessageBody(prospecto.Email, Url.Action("Registrar", "PayCenters", new { GUID = prospecto.ID }, "http"));
+            var bodyMessage = GetMessageBody(prospecto.Email, Url.Action("Registrar", "PayCenters", new { id = prospecto.ID }, "http"));
             Succeed = EmailHelper.Enviar(bodyMessage, "Evoluciona Móvil - Confirmación de Preafiliación", prospecto.Email);
             return View();
         }
-
-        ////
-        //// GET: /Prospectos/Edit/5
-        //public ActionResult Edit(int id)
-        //{
-        //    Prospecto prospecto = repository.LoadById(id);
-        //    ProspectoVM prospectoVM = new ProspectoVM();
-        //    Mapper.Map(prospecto, prospectoVM);
-        //    return View(prospectoVM);
-        //}
-
-        ////
-        //// POST: /Prospectos/Edit/5
-        //[HttpPost]
-        //public ActionResult Edit(ProspectoVM prospectoVM)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        Prospecto prospecto = repository.LoadById(prospectoVM.ProspectoId);
-        //        Mapper.Map(prospectoVM, prospecto);
-        //        repository.Save();
-        //        return RedirectToAction("Index");
-        //    }
-        //    return View(prospectoVM);
-        //}
-
-        ////
-        //// GET: /Prospectos/Delete/5
-        //public ActionResult Delete(int id)
-        //{
-        //    Prospecto prospecto = repository.LoadById(id);
-        //    ProspectoVM prospectoVM = new ProspectoVM();
-        //    Mapper.Map(prospecto, prospectoVM);
-        //    return View(prospectoVM);
-        //}
-
-        ////
-        //// POST: /Prospectos/Delete/5
-        //[HttpPost, ActionName("Delete")]
-        //public ActionResult DeleteConfirmed(int id)
-        //{
-        //    Prospecto prospecto = repository.LoadById(id);
-        //    repository.Delete(prospecto);
-        //    repository.Save();
-        //    return RedirectToAction("Index");
-        //}
 
         protected override void Dispose(bool disposing)
         {

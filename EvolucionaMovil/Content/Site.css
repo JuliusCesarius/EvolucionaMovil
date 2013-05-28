@@ -1130,3 +1130,6 @@ legend{font-size:2em;font-weight:400}
 #HistorialStatus .Estatus span{width:62px;margin-top:7px}
 #HistorialStatus .Usuario{height:40px;width:65px}
 #HistorialStatus .Comentarios{display:inline-table;width:260px}
+
+.captcha_input{width:61%!important}
+.captcha_img{vertical-align:middle!important}

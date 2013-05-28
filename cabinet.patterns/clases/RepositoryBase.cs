@@ -67,9 +67,9 @@ namespace cabinet.patterns.clases
                             Obj.GetType().GetProperty("FechaCreacion").SetValue(Obj, DateTime.Now, null);
                         }
                         //Verifico si tiene campo GUID para agregar el default
-                        if (Obj.GetType().GetProperties().Any(x => x.Name == "GUID"))
+                        if (Obj.GetType().GetProperties().Any(x => x.Name == "ID"))
                         {
-                            Obj.GetType().GetProperty("GUID").SetValue(Obj, Guid.NewGuid(), null);
+                            Obj.GetType().GetProperty("ID").SetValue(Obj, Guid.NewGuid(), null);
                         }
                         //*****************INSERT******************//
                         entitySet.AddObject(Obj);
