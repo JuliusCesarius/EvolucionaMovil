@@ -1124,12 +1124,14 @@ legend{font-size:2em;font-weight:400}
 .listHeader, .listRow{margin-bottom:5px;}
 .listCell, .listColumn{width:100px;text-overflow: ellipsis;}
 
-#HistorialStatus{margin-top:15px}
-#HistorialStatus .Fecha{height:40px;width:120px}
-#HistorialStatus .Estatus{height:40px;width:95px}
-#HistorialStatus .Estatus span{width:62px;margin-top:7px}
+#HistorialStatus{margin:15px 0}
+#HistorialStatus .listRow{padding:.5em 0;border:none;}
+#HistorialStatus .ui-accordion-content{padding:.3em!important}
+#HistorialStatus .Fecha{color:#ccc;height:40px;text-align:center;width:115px!important}
+#HistorialStatus .Estatus{height:40px;text-align:center;width:100px}
+#HistorialStatus .Estatus span{width:73px;margin-top:7px}
 #HistorialStatus .Usuario{height:40px;width:65px}
-#HistorialStatus .Comentarios{display:inline-table;width:260px}
+#HistorialStatus .Comentarios{display:inline-table;width:255px}
 
 .captcha_input{width:61%!important}
 .captcha_img{vertical-align:middle!important}
