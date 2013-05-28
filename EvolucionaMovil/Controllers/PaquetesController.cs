@@ -9,55 +9,93 @@ using AutoMapper;
 using EvolucionaMovil.Models;
 using EvolucionaMovil.Models.Enums;
 using EvolucionaMovil.Repositories;
+using EvolucionaMovil.Models.Classes;
+using EvolucionaMovil.Attributes;
+using cabinet.patterns.enums;
+using EvolucionaMovil.Models.BR;
 
 namespace EvolucionaMovil.Controllers
 {
-    public class PaquetesController : Controller
+    public class PaquetesController : CustomControllerBase
     {
         //Modificación prueba Karla
         private PaquetesRepository repository = new PaquetesRepository();
-
+        private const int PROVEEDOR_EVOLUCIONAMOVIL = 1;
         //
         // GET: /PaqueteVMs/
-
+        [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.Staff})]
         public ViewResult Index()
         {
             return View(repository.ListAll().ToListOfDestination<PaqueteVM>());
         }
 
+        [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.PayCenter })]
         public ViewResult Buy()
         {
-            //TODO:Obtener paycenterId de cache or something like that
-            ViewData["Eventos"] = repository.GetEventosByPayCenter(1);
-            var repositoryEstadoDeCuenta = new Repositories.EstadoDeCuentaRepository();
-            var edocuenta = repositoryEstadoDeCuenta.ListAll();
-            ViewData["SaldoActual"] = (edocuenta.Where(x => x.IsAbono).Sum(x => x.Monto) - edocuenta.Where(x => !x.IsAbono).Sum(x => x.Monto)).ToString("C");
+            EstadoCuentaBR estadoCuenta = new EstadoCuentaBR();
+            var saldos = estadoCuenta.GetSaldosPagoServicio(PayCenterId);
+            ViewData["Eventos"] = saldos.EventosDisponibles;
+            ViewData["SaldoActual"] = saldos.SaldoDisponible.ToString("C");
 
-            return View(repository.ListAll().Select(x => new PaqueteVM { Creditos = x.Creditos, PaqueteId = x.PaqueteId, PrecioString = x.Precio.ToString("C"), Precio = x.Precio, PrecioPorEvento = (x.Precio / x.Creditos).ToString("C") }));
+            return View(repository.ListAll().Select(x => new PaqueteVM { Creditos = x.Creditos, PaqueteId = x.PaqueteId, Precio = x.Precio }));
         }
 
         [HttpPost]
+        [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.PayCenter })]
         public ViewResult Buy(IEnumerable<PaqueteVM> model)
         {
+            Succeed = false;
             var selected = model.Where(x => x.Selected);
-            //TODO:Pasar el payCenterId
-            var payCenter = new PayCentersRepository(repository.context).LoadById(1);
-            var cuenta = payCenter.Cuentas.Where(x => x.TipoCuenta == enumTipoCuenta.Pago_de_Servicios.GetHashCode()).FirstOrDefault();
-            int cuentaId;
-            if (cuenta != null)
+            EstadoCuentaBR estadoCuentaBR = new EstadoCuentaBR(repository.context);
+            var saldos = estadoCuentaBR.GetSaldosPagoServicio(PayCenterId);
+            ViewData["Eventos"] = saldos.EventosDisponibles;
+            ViewData["SaldoActual"] = saldos.SaldoDisponible.ToString("C");
+            if (selected.Count() == 0)
             {
-                cuentaId = cuenta.CuentaId;
+                AddValidationMessage(enumMessageType.BRException, "No ha seleccionado ningún paquete");
+                return View(model);
             }
-            else
-            {
-                throw new Exception("El Pay Center no está configurado para generar Pago de servicios");
-            }
-            //TODO:Validar que tenga el saldo suficiente. Quiero agregar un campo al PayCenter para determinar su saldo sin tener que recalcularlo
+
+            decimal totalCompra = 0;
             foreach (var paquete in selected)
             {
+                var precioPaquete = repository.GetPrecioByPaqueteId(paquete.PaqueteId);
+                totalCompra += precioPaquete;
+            }
+            if (saldos.SaldoDisponible < totalCompra)
+            {
+                AddValidationMessage(enumMessageType.BRException, "No cuenta con saldo suficiente para comprar más paquetes");
+                return View(model);
+            }
+            ViewData["TotalCompra"] = totalCompra.ToString("C");
+            ViewData["EventosFinales"] = saldos.EventosDisponibles + selected.Sum(x=>x.Creditos);
+            ViewData["SaldoActualFinal"] = (saldos.SaldoDisponible - selected.Sum(x => x.Precio)).ToString("C");
+            return View("Confirm", selected);
+        }
+
+        [HttpPost]
+        [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.PayCenter })]
+        public ViewResult Confirm(IEnumerable<PaqueteVM> model)
+        {
+            Succeed = false;
+            //TODO:Validar que tenga el saldo suficiente. Quiero agregar un campo al PayCenter para determinar su saldo sin tener que recalcularlo
+            PaycenterBR payCenterBR = new PaycenterBR();
+            var cuentaId = payCenterBR.GetOrCreateCuentaPayCenter(PayCenterId, enumTipoCuenta.Pago_de_Servicios, PROVEEDOR_EVOLUCIONAMOVIL);
+
+            EstadoCuentaBR estadoCuentaBR = new EstadoCuentaBR(repository.context);
+            decimal totalCompra = 0;
+            foreach (var paquete in model)
+            {
+                //TODO:Esta validación debería estar en un BR aparte
                 var p = repository.LoadById(paquete.PaqueteId);
+                if (p == null)
+                {
+                    AddValidationMessage(enumMessageType.BRException, "No se ha encontrado el paquete de " + paquete.Creditos.ToString() + "créditos");
+                    break;
+                }
                 if (p.FechaVencimiento >= DateTime.Now)
                 {
+                    totalCompra += p.Creditos;
                     CompraEvento compraEvento = new CompraEvento
                     {
                         Consumidos = 0,
@@ -65,38 +103,34 @@ namespace EvolucionaMovil.Controllers
                         FechaCreacion = DateTime.Now,
                         Monto = p.Precio,
                         PaqueteId = p.PaqueteId,
-                        //TODO:pasar el paycenterid
-                        PayCenterId = payCenter.PayCenterId
+                        PayCenterId = PayCenterId
                     };
                     repository.Add(compraEvento);
-
-                    cuenta.Movimientos.Add(new Movimiento
-                    {
-                        //TODO:Establecer formato de la clave
-                        Clave = "99999",
-                        CuentaId = cuentaId,
-                        CuentaOrigenId = 0,
-                        FechaCreacion = DateTime.Now,
-                        Monto = p.Precio,
-                        Motivo = (short)enumMotivo.Compra.GetHashCode(),
-                        PayCenterId = payCenter.PayCenterId,
-                        Id = paquete.PaqueteId,
-                        IsAbono=false,
-                        Status = (short)enumEstatusMovimiento.Aplicado.GetHashCode()
-                    });
+                    estadoCuentaBR.CrearMovimiento(PayCenterId, enumTipoMovimiento.Cargo, 0, cuentaId, p.Precio, enumMotivo.Compra, PayCenterName, enumEstatusMovimiento.Aplicado);
                 }
             }
-            var exito = repository.Save();
-            if (!exito)
+            var saldos = estadoCuentaBR.GetSaldosPagoServicio(PayCenterId);
+            if (saldos.SaldoDisponible < totalCompra)
             {
-                //TODO:Ver como manejar excepciones en el guardado
-                throw new Exception("No fue posible guardar");
+                AddValidationMessage(enumMessageType.BRException, "No cuenta con saldo suficiente para comprar más paquetes");
+                return View(model);
             }
-            return View();
+            Succeed = repository.Save();
+            ViewBag.Succeed = Succeed;
+            if (Succeed)
+            {
+                AddValidationMessage(enumMessageType.Succeed, "Se ha realizado la compra de " + totalCompra + " créditos exitosamente.");
+            }
+            else
+            {
+                //TODO: Leer de los mensajes que vengan del save
+                //ValidationMessages = repository.ValidationMessages
+                AddValidationMessage(enumMessageType.UnhandledException, "No fue posible realizar la compra. Intente más tarde");
+            }
+            return View(model);
         }
-        //
-        // GET: /PaqueteVMs/Details/5
 
+        [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.Staff })]
         public ViewResult Details(int id)
         {
             PaqueteVM paqueteVM = new PaqueteVM();
@@ -107,7 +141,7 @@ namespace EvolucionaMovil.Controllers
 
         //
         // GET: /PaqueteVMs/Create
-
+        [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.Administrator })]
         public ActionResult Create()
         {
             return View();
@@ -117,6 +151,7 @@ namespace EvolucionaMovil.Controllers
         // POST: /PaqueteVMs/Create
 
         [HttpPost]
+        [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.Administrator })]
         public ActionResult Create(PaqueteVM paqueteVM)
         {
             Paquete paquete = new Paquete();
@@ -133,7 +168,7 @@ namespace EvolucionaMovil.Controllers
 
         //
         // GET: /PaqueteVMs/Edit/5
-
+        [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.Administrator })]
         public ActionResult Edit(int id)
         {
             PaqueteVM paqueteVM = new PaqueteVM();
@@ -146,6 +181,7 @@ namespace EvolucionaMovil.Controllers
         // POST: /PaqueteVMs/Edit/5
 
         [HttpPost]
+        [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.Administrator })]
         public ActionResult Edit(PaqueteVM paqueteVM)
         {
             Paquete paquete = repository.LoadById(paqueteVM.PaqueteId);
@@ -161,7 +197,7 @@ namespace EvolucionaMovil.Controllers
 
         //
         // GET: /PaqueteVMs/Delete/5
-
+        [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.Administrator })]
         public ActionResult Delete(int id)
         {
             PaqueteVM paqueteVM = new PaqueteVM();
@@ -174,6 +210,7 @@ namespace EvolucionaMovil.Controllers
         // POST: /PaqueteVMs/Delete/5
 
         [HttpPost, ActionName("Delete")]
+        [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.Administrator })]
         public ActionResult DeleteConfirmed(int id)
         {
             PaqueteVM paqueteVM = new PaqueteVM();

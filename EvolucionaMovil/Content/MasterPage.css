@@ -310,6 +310,7 @@ input[type="submit"].btn::-moz-focus-inner {
 .mvl{margin-top:20px;margin-bottom:20px}
 
 /* fonts */
+.fsss{font-size:.6em!important}
 .fss{font-size:.8em!important}
 .fsm{font-size:.9em!important}
 .fsl{font-size:1.2em!important}

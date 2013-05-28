@@ -38,7 +38,7 @@ namespace EvolucionaMovil.Models.Classes
         {
             if (HttpContext.User.IsInRole(enumRoles.PayCenter.ToString()))
             {
-                _payCenterId = _payCentersRepository.GetPayCenterByUserName(HttpContext.User.Identity.Name);
+                _payCenterId = PayCentersRepository.GetPayCenterByUserName(HttpContext.User.Identity.Name);
             }
             else
             {

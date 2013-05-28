@@ -288,8 +288,8 @@ namespace EvolucionaMovil.Controllers
             PayCentersRepository PayCentersRepository = new PayCentersRepository();
             PayCenter PayCenter = PayCentersRepository.LoadById(movimiento.PayCenterId);
 
-            int cuentaId = movimiento.Cuenta.CuentaId;
-            string cuenta = ((enumTipoCuenta)movimiento.Cuenta.TipoCuenta).ToString();
+            int cuentaId = movimiento.CuentasPayCenter.CuentaId;
+            string cuenta = ((enumTipoCuenta)movimiento.CuentasPayCenter.TipoCuenta).ToString();
             string motivo = ((enumMotivo)movimiento.Motivo).ToString();
 
             BancosRepository BancoRepository = new BancosRepository();

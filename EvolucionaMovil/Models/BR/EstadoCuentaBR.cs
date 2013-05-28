@@ -61,14 +61,17 @@ namespace EvolucionaMovil.Models.BR
         {
             Succeed = true;
             var movimientos = estadoDeCuentaRepository.GetMovimientos(enumTipoCuenta.Pago_de_Servicios.GetHashCode(), PayCenterId);
+            var abonosAplicados = movimientos.Where(x => x.IsAbono && x.Status == enumEstatusMovimiento.Aplicado.GetHashCode()).Sum(x => x.Monto);
+            var cargosAplicados = movimientos.Where(x => !x.IsAbono && x.Status == enumEstatusMovimiento.Aplicado.GetHashCode()).Sum(x => x.Monto);
             SaldosPagoServicio saldosPagoServicio = new SaldosPagoServicio
             {
-                SaldoActual = (movimientos.Where(x => x.IsAbono && x.Status == enumEstatusMovimiento.Aplicado.GetHashCode()).Sum(x => x.Monto) - movimientos.Where(x => !x.IsAbono && x.Status == enumEstatusMovimiento.Aplicado.GetHashCode()).Sum(x => x.Monto)),
+                SaldoActual = abonosAplicados - cargosAplicados,
                 SaldoPorAbonar = movimientos.Where(x => x.IsAbono && x.Status == enumEstatusMovimiento.Procesando.GetHashCode()).Sum(x => x.Monto),
                 SaldoPorCobrar = movimientos.Where(x => !x.IsAbono && x.Status == enumEstatusMovimiento.Procesando.GetHashCode()).Sum(x => x.Monto),
             };
             saldosPagoServicio.SaldoPendiente = saldosPagoServicio.SaldoPorAbonar - saldosPagoServicio.SaldoPorCobrar;
             saldosPagoServicio.SaldoDisponible = saldosPagoServicio.SaldoActual - saldosPagoServicio.SaldoPorCobrar;
+            saldosPagoServicio.EventosDisponibles = estadoDeCuentaRepository.GetEventosDisponibles(PayCenterId);
             return saldosPagoServicio;
         }
 
@@ -90,6 +93,23 @@ namespace EvolucionaMovil.Models.BR
         /// <returns></returns>
         internal Movimiento CrearMovimiento(int PayCenterId, enumTipoMovimiento TipoMovimiento, int Id, int CuentaId, decimal Monto, enumMotivo Motivo, string PayCenterName)
         {
+            return CrearMovimiento(PayCenterId, TipoMovimiento, Id, CuentaId, Monto, Motivo, PayCenterName, null);
+        }
+
+        /// <summary>
+        /// Genera el movimiento y genera estatus y clave según condificiones de los BR
+        /// </summary>
+        /// <param name="PayCenterId"></param>
+        /// <param name="TipoMovimiento"></param>
+        /// <param name="Id">Identificador de la entidad que está generando el Movimiento (Deposito, Compra, ATraspaso, etc</param>
+        /// <param name="CuentaId"></param>
+        /// <param name="Monto"></param>
+        /// <param name="Motivo"></param>
+        /// <param name="PayCenterName"></param>
+        /// <param name="Estatus">Si el estatus viene null, se guarda con estatus Procesando</param>
+        /// <returns></returns>
+        internal Movimiento CrearMovimiento(int PayCenterId, enumTipoMovimiento TipoMovimiento, int Id, int CuentaId, decimal Monto, enumMotivo Motivo, string PayCenterName, enumEstatusMovimiento? Estatus)
+        {
             Movimiento movimiento = new Movimiento();
 
             movimiento.Clave = DateTime.Now.ToString("yyyyMMdd") + "0" + ((Int16)Motivo).ToString() + new Random().Next(0, 99999).ToString();
@@ -99,7 +119,7 @@ namespace EvolucionaMovil.Models.BR
             movimiento.Monto = Monto;
             movimiento.Motivo = (Int16)Motivo;
             movimiento.PayCenterId = PayCenterId;
-            movimiento.Status = (Int16)enumEstatusMovimiento.Procesando;
+            movimiento.Status = Estatus==null?(Int16)enumEstatusMovimiento.Procesando: (Int16)Estatus;
             movimiento.UserName = PayCenterName;
             movimiento.Id = Id;
 
@@ -108,6 +128,7 @@ namespace EvolucionaMovil.Models.BR
             Int16 nuevoEstatusNumber = movimiento.Status;
             var movimientos_Estatus = new Movimientos_Estatus { PayCenterId = PayCenterId, CuentaId = CuentaId, UserName = currentUser, Status = nuevoEstatusNumber, FechaCreacion = DateTime.Now };
             movimiento.Movimientos_Estatus.Add(movimientos_Estatus);
+            movimiento.UserName = currentUser;
 
             estadoDeCuentaRepository.Add(movimiento);
             if (_context == null)
@@ -131,8 +152,15 @@ namespace EvolucionaMovil.Models.BR
             {
                 Succeed = false;
                 AddValidationMessage(cabinet.patterns.enums.enumMessageType.BRException, "El Id de referencia del movimiento debe ser mayor a 0.");
+                return null;
             }
             Movimiento movimiento = estadoDeCuentaRepository.LoadById(MovimientoId);
+            if (movimiento == null)
+            {
+                Succeed = false;
+                AddValidationMessage(cabinet.patterns.enums.enumMessageType.BRException, "No se pudo encontrar el movimiento con  MovimientoId = " + MovimientoId.ToString());
+                return null;
+            }
             movimiento.Id = Id;
 
             if (_context == null)
@@ -157,13 +185,14 @@ namespace EvolucionaMovil.Models.BR
             {
                 Succeed = false;
                 AddValidationMessage(cabinet.patterns.enums.enumMessageType.BRException, "No existe el movimiento especificado");
+                return null;
             }
 
             //Valida reglas de negocio del cambio de estatus BR01.04
             if (NuevoEstatus.GetHashCode() == movimiento.Status)
             {
                 Succeed = false;
-                AddValidationMessage(cabinet.patterns.enums.enumMessageType.BRException, "Ya se encuentra en estatus "+NuevoEstatus.ToString());
+                AddValidationMessage(cabinet.patterns.enums.enumMessageType.BRException, "Ya se encuentra en estatus " + NuevoEstatus.ToString());
                 return null;
             }
 
@@ -231,6 +260,12 @@ namespace EvolucionaMovil.Models.BR
                     {
                         ParametrosRepository parametrosRepository = new ParametrosRepository();
                         var parametrosGlobales = parametrosRepository.GetParametrosGlobales();
+                        if (parametrosGlobales == null)
+                        {
+                            Succeed = false;
+                            AddValidationMessage(cabinet.patterns.enums.enumMessageType.Notification, "No existen parámetros globales configurados");
+                            return null;
+                        }
                         var dif = DateTime.Now - movimiento.FechaCreacion;
                         //Excede los minutos de prórroga?
                         if (dif.TotalMinutes > parametrosGlobales.MinutosProrrogaCancelacion)
@@ -248,16 +283,20 @@ namespace EvolucionaMovil.Models.BR
             var currentUser = HttpContext.Current.User != null ? HttpContext.Current.User.Identity.Name : string.Empty;
             Int16 nuevoEstatusNumber = (Int16)NuevoEstatus.GetHashCode();
             movimiento.Status = nuevoEstatusNumber;
-            var movimientos_Estatus = new Movimientos_Estatus { 
-                PayCenterId = movimiento.PayCenterId, 
-                CuentaId = movimiento.CuentaId, 
-                UserName = currentUser, 
+            var movimientos_Estatus = new Movimientos_Estatus
+            {
+                PayCenterId = movimiento.PayCenterId,
+                CuentaId = movimiento.CuentaId,
+                UserName = currentUser,
                 Status = nuevoEstatusNumber,
                 FechaCreacion = DateTime.Now,
                 Comentarios = Comentarios
             };
             movimiento.Movimientos_Estatus.Add(movimientos_Estatus);
-
+            if (!movimiento.SaldoActual.HasValue)
+            {
+                movimiento.SaldoActual = 0;
+            }
             var saldoActual = estadoDeCuentaRepository.GetSaldoActual(movimiento.CuentaId);
             if (movimiento.Status == enumEstatusMovimiento.Aplicado.GetHashCode() && NuevoEstatus != enumEstatusMovimiento.Aplicado)
             {
@@ -280,7 +319,6 @@ namespace EvolucionaMovil.Models.BR
             }
             return movimiento;
         }
-
 
         internal Movimiento RealizarTraspaso(int CuentaOrigenId, int CuentaDestinoId, decimal Monto)
         {
@@ -349,6 +387,10 @@ namespace EvolucionaMovil.Models.BR
             /// El Saldo Disponible es el resultante de la resta del Saldo Actual menos el Saldo Por Cobrar.
             /// </summary>
             public decimal SaldoDisponible { get; set; }
+            /// <summary>
+            /// Número de eventos de pago de servicio disponibles
+            /// </summary>
+            public decimal EventosDisponibles { get; set; }
         }
 
     }

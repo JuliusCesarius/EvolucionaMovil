@@ -3,7 +3,7 @@
 #menu-top li ul
 {
     display: none;
-    margin: 2px 0 0 0;
+    margin: 0;
     position: absolute;
     width: 130px;
     height: auto;

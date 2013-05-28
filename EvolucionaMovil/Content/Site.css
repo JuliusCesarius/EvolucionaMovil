@@ -275,7 +275,7 @@ input[type="password"]
     border: 1px solid #ccc;
     padding: 5px;
     padding-left: 7px;
-    padding-right: 7px;
+    padding-right: 36px;
     font-size: 1.2em;
     color: #444;
     width:359px;
@@ -328,7 +328,10 @@ label
     zoom: *100;
     cursor:text;
 }
-
+label.radio
+{
+    position:static;cursor:pointer;
+}
 .small label
 {
     top: 3px;
@@ -921,6 +924,8 @@ div#title {
 -----------------------------------------------------------*/
 .field-validation-error {
     color: #ff0000;
+    display:block;
+    clear:both;
 }
 
 .field-validation-valid {
@@ -974,15 +979,30 @@ legend{font-size:2em;font-weight:400}
 .cargo{color:Red;width:80px !important; text-align:right}
 .abono{color:#000;width:80px !important; text-align:right}
 .saldo{width:80px !important; text-align:right}
-.status{width:80px !important;}
+.status{width:93px !important;}
 .folio{width:100px !important;}
 .monto{text-align:right;width:80px !important;}
 .fechavencimiento{width:80px !important;}
-.servicio{width:380px !important;}
-.status .Aplicado, .Aplicado{color:#000;font-weight:bold}
-.status .Procesando, .Procesando{color:#808080}
-.status .Rechazado, .Rechazado{color:#FF1D25}
-.status .Cancelado, .Cancelado{color:#FF6700}
+.servicio{width:270px !important;}
+.Aplicado, .Procesando, .Rechazado, .Cancelado
+{
+    font-weight:bold;
+    border: 1px solid;
+    text-align:center;
+    padding:.2em 1em;
+    -webkit-border-radius:6px;
+    -moz-border-radius:6px;
+    -ms-border-radius:6px;
+    -o-border-radius:6px;
+    border-radius:6px;
+    color:#fff;
+    display:inline-block;
+}
+.status .Aplicado, .status .Procesando, .status .Cancelado, .status .Rechazado{width:65px!important;margin-top: -3px;position: absolute;}
+.status .Aplicado, .Aplicado{background-color: #63CB63;}
+.status .Procesando, .Procesando{background-color: #70B3FC;}
+.status .Rechazado, .Rechazado{background-color: #CE0005;}
+.status .Cancelado, .Cancelado{background-color:#FF6700}
 .listHeader .cargo,.listHeader .abono{color:#fff}
 .qtip{cursor: pointer;padding-right:1em;background: url("../Content/themes/base/images/qtip.png") no-repeat 100% 50%;}
 .tipocuenta{width:110px !important;}
@@ -1007,6 +1027,23 @@ legend{font-size:2em;font-weight:400}
 .cuentadeposito label{display:inline-block;position:static;width:150px;}
 .cuentadeposito input[type="text"]{width:120px}
 
+/*Pago de Servicios*/
+.pagservsal
+{
+    text-align: right;
+    margin-right: 69px;
+    margin-bottom: 3px;
+    background-color: #F3F3F3;
+    height:2em!important;
+    padding:.3em!important;
+    padding-right:.6em!important;
+    -webkit-border-radius:4px;
+    -moz-border-radius:4px;
+    -ms-border-radius:4px;
+    -o-border-radius:4px;
+}
+.pagservimg{background:#fff url("../Content/themes/base/images/repdep.jpg") no-repeat 50% 0%;min-height:390px;width:50%}
+
 /**Depositos**/
 .filtropaycenter{width:250px!important;}
 
@@ -1020,6 +1057,8 @@ legend{font-size:2em;font-weight:400}
 #filtros #search{background: url("../Content/themes/base/images/search.png") no-repeat 50% 50%;border:none;cursor:pointer;margin-left:-20px;padding:.3em ;position:absolute;width:16px;z-index:999}
 #filtros #search:hover{padding:.4em}
 #filtros #lblAplicadosOnly, #filtros #aplicadosOnly{cursor:pointer}
+#details{padding:.5em;margin-bottom:.5em;background:rgb(242, 250, 255);width:349px}
+#details label{position:static;}
 
 /**Prospecto**/
 .titulo h1, .titulo a{display:inline;} 
@@ -1034,6 +1073,7 @@ legend{font-size:2em;font-weight:400}
 .newPaycenter{padding-top:1.2em;}
 .checkActivo{color:Black; font-size:1.4em !important;}
 #confirmacion,#notfound{font-size: 1.3em;}
+#nombre{width:140px}
 .btnReturn{text-align:right; width:310px; margin:4px;}
 .infoPaycenter{margin:14px 0 7px 0}
 .infoPaycenter h2, .infoPaycenter a{display:inline;}
@@ -1080,6 +1120,7 @@ legend{font-size:2em;font-weight:400}
 
 #HistorialStatus{margin-top:15px}
 #HistorialStatus .Fecha{height:40px;width:120px}
-#HistorialStatus .Estatus{height:40px;width:65px}
+#HistorialStatus .Estatus{height:40px;width:95px}
+#HistorialStatus .Estatus span{width:62px;margin-top:7px}
 #HistorialStatus .Usuario{height:40px;width:65px}
-#HistorialStatus .Comentarios{display:inline-table;width:290px}
+#HistorialStatus .Comentarios{display:inline-table;width:260px}

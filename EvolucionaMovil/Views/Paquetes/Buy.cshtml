@@ -28,13 +28,17 @@
             n++;
             i++;
             <div class="sgRow">
-                <span class="paq-name">Paquete @n</span>
+                <span class="paq-name">Paquete @n</span>                
                 <span class="paq-eventos">Eventos <span class="fcb">@item.Creditos</span></span>
-                <span class="paq-precio">Precio <span class="fcb">@item.PrecioString</span></span>
                 <span class="paq-precioevento">Precio por Evento <span class="fcb">@item.PrecioPorEvento</span></span>
+                <span class="paq-precio">Precio <span class="fcb">@item.PrecioString</span></span>
+                <input type="checkbox" precio="@item.Precio"/>
+                <input type="hidden" class="hddSelected" name="[@i].Selected" />                
                 <input type="hidden" name="[@i].PaqueteId" value="@item.PaqueteId" />
-                <input type="checkbox" value="@item.Precio" />
-                <input type="hidden" class="hddSelected" name="[@i].Selected" />
+                <input type="hidden" name="[@i].NumeroPaquete" value="@n" />
+                <input type="hidden" name="[@i].Creditos" value="@item.Creditos" />
+                <input type="hidden" name="[@i].PrecioPorEvento" value="@item.PrecioPorEvento" />
+                <input type="hidden" name="[@i].Precio" value="@item.Precio" />
             </div>
         }
         </div>

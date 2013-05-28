@@ -8,16 +8,19 @@
 <!--[if (gt IE 9)|!(IE)]><!-->
 <html class="no-js jqueryui-com jquery-ui" dir="ltr" lang="en-US">
 <!--<![endif]-->
-<head>
-    <meta charset="utf-8" />
+<head>    
     <title>@ViewBag.Title</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=9" />
     <link href="@Url.Content("~/Content/reset.css")" rel="stylesheet" type="text/css" />
     <link href="@Url.Content("~/Content/MasterPage.css")" rel="stylesheet" type="text/css" />
     <link href="@Url.Content("~/Content/Site.css")" rel="stylesheet" type="text/css" />
     <link href="@Url.Content("~/Content/simpleGrid.css")" rel="stylesheet" type="text/css" />
-    <link href="@Url.Content("~/Content/bancos.css")" rel="stylesheet" type="text/css" />
     <link href="@Url.Content("~/Content/menu_fall_back.css")" rel="stylesheet" type="text/css" />
     <link href="@Url.Content("~/Content/themes/base/redmond/jquery-ui-1.9.2.custom.css")" rel="stylesheet" type="text/css" />
+        
+    @RenderSection("Styles", false)
+
     <script src="@Url.Content("~/Scripts/jquery-1.8.3.min.js")" type="text/javascript"></script>
     <script src="@Url.Content("~/Scripts/jquery-ui-1.9.2.custom.min.js")" type="text/javascript"></script>
     <script src="@Url.Content("~/Scripts/prefixfree.min.js")" type="text/javascript"></script>
@@ -52,7 +55,7 @@
             </div>
             <div id="logo">
             </div>
-            <div id="title">
+            <div id="title" >
                 
             </div>
             <nav>
@@ -60,20 +63,20 @@
                     <ul id="menu-top" class="menu">
                         @if (HttpContext.Current.User.IsInRole(enumRoles.PayCenter.ToString()) || HttpContext.Current.User.IsInRole(enumRoles.Staff.ToString()) || HttpContext.Current.User.IsInRole(enumRoles.Administrator.ToString()))
                         {
-                                <li>@Html.ActionLink("Depósitos", "/Index", "Depositos")
-                                    <ul class="child">                                
-                                        <li>@Html.ActionLink("Historial", "Index", "Depositos")</li>
+                                <li>@Html.ActionLink("Depósitos", "Index", "Depositos")
+                                    <ul class="child">
                                         <li>@Html.ActionLink("Reportar", "Report", "Depositos")</li>
+                                        <li>@Html.ActionLink("Historial", "Index", "Depositos")</li>
                                     </ul>
                                 </li>
                                 <li>@Html.ActionLink("Pago Servicios", "Index", "PagoServicios")
                                     <ul class="child">
-                                        <li>@Html.ActionLink("Historial", "Index", "PagoServicios")</li>
                                         <li>@Html.ActionLink("Reportar", "Create", "PagoServicios")</li>
+                                        <li>@Html.ActionLink("Historial", "Index", "PagoServicios")</li>
                                     </ul>
                                 </li>
                                 <li>@Html.ActionLink("Edos. Cuenta", "Index", "EstadoDeCuenta")</li>
-                            if (HttpContext.Current.User.IsInRole(enumRoles.Staff.ToString()))
+                            if (HttpContext.Current.User.IsInRole(enumRoles.PayCenter.ToString()))
                             {
                                 <li>@Html.ActionLink("Paquetes", "Buy", "Paquetes")</li>
                             }
@@ -115,13 +118,23 @@
             }
             </ul><a href="#" id="btn-message-aceptar" class = "freshbutton-blue small">Aceptar</a> </div>
         }
+        else
+        {
+         //todo: Julio checa esta parte creo que deberia tener su propio estilo para el div y el boton
+             <div id="ValidationMessage" class="Notification">
+                <ul id="#contentNavegador">
+                     <li id="Navegador">Por favor utilice Google Chrome</li>
+                </ul>
+                <a href="" id="btnNavegador" class = "freshbutton-blue small">Descargar Google Chrome</a>
+                <a href="#" id="btn-message-aceptar" class = "freshbutton-blue small">Aceptar</a>
+              </div>
+        }
     </div>
         <footer>
         <div class="innerfooter">
             <p>
                 <a class="title">Evoluciones Movil ®</a> 
-                <br />Amecameca No. 25 Colonia Altavilla, Ecatepec de Morelos,
-                Edo. de México. <br /><span class="tel">Tel. </span><span class="tel">(55) 57 46 5274</span>
+                <br />México D.F. a @DateTime.Today.ToLongDateString()  @DateTime.Now.ToLongTimeString() <br /><span class="tel">Tel. </span><span class="tel">(55) 57 46 5274</span>
             </p>
             <p class="tar">
                 <a>POLÍTICAS DE CONFIDENCIALIDAD</a><br />

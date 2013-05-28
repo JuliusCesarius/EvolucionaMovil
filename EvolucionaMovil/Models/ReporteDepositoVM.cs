@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.ComponentModel.DataAnnotations;
 using EvolucionaMovil.Attributes;
+using EvolucionaMovil.Models.Enums;
 
 namespace EvolucionaMovil.Models
 {
@@ -14,31 +15,22 @@ namespace EvolucionaMovil.Models
         [Required]
         public int CuentaBancariaId { get; set; }
         public string CuentaBancaria { get; set; }
-        [Required]
-        public int CuentaId { get; set; }
         public string Cuenta { get; set; }
         [Required]
         public string Referencia { get; set; }
         public string RutaFichaDeposito { get; set; }
         [Required]
-        //[Mask("99999.99")]
         public decimal? Monto { get; set; }
         public string MontoString { get; set; }
         [Required]
         public DateTime? FechaPago { get; set; }
-        public ICollection<CuentaDepositoVM> CuentasDeposito { get; set; }
-        public string TipoCuenta { get; set; }
+        public enumTipoCuenta TipoCuenta { get; set; }
         [Required]
         public string PayCenterName { get; set; }
         [Required]
         public int PayCenterId { get; set; }
+        [Required]
+        public int ProveedorId { get; set; }
     }
 
-    public class CuentaDepositoVM
-    {
-        public string Nombre { get; set; }
-        public int CuentaId { get; set; }
-        public decimal Monto { get; set; }
-       
-    }
 }

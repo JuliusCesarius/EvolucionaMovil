@@ -149,6 +149,7 @@
     <Compile Include="Models\Classes\CustomControllerBase.cs" />
     <Compile Include="Models\Classes\ErrorHandler.cs" />
     <Compile Include="Models\CompraEventoVM.cs" />
+    <Compile Include="Models\Enums\enumTipoDato.cs" />
     <Compile Include="Models\Enums\enumRoles.cs" />
     <Compile Include="Models\Enums\enumTipoCuenta.cs" />
     <Compile Include="Models\Enums\enumTipoMovimiento.cs" />
@@ -157,6 +158,7 @@
     <Compile Include="Models\Helpers\MvcHtmlHelpers.cs" />
     <Compile Include="Models\HistorialEstatusVM.cs" />
     <Compile Include="Models\Interfaces\IEvolucionaMovil.cs" />
+    <Compile Include="Models\ProveedorVM.cs" />
     <Compile Include="Models\PagoServicioVM.cs" />
     <Compile Include="Models\ReporteDepositoVM.cs" />
     <Compile Include="Models\SimpleGridResult.cs" />
@@ -188,6 +190,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\BancosRepository.cs" />
     <Compile Include="Repositories\AbonosRepository.cs" />
+    <Compile Include="Repositories\ProveedoresRepository.cs" />
     <Compile Include="Repositories\ErrorsRepository.cs" />
     <Compile Include="Repositories\EstadoDeCuentaRepository.cs" />
     <Compile Include="Repositories\MovimientosRepository.cs" />
@@ -201,7 +204,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bancos.css" />
+    <Content Include="Content\themes\base\images\ticketOK.jpg" />
+    <Content Include="Content\Ticket.css" />
     <Content Include="Content\extracss.css" />
+    <Content Include="Content\Imagen\logodefault.jpg" />
     <Content Include="Content\jquery.selectbox-0.2.css" />
     <Content Include="Content\MasterPage.css" />
     <Content Include="Content\menu_fall_back.css" />
@@ -229,6 +235,7 @@
     <Content Include="Content\themes\base\images\logoComex.png" />
     <Content Include="Content\themes\base\images\logo_evoluciona.jpg" />
     <Content Include="Content\themes\base\images\ok-ico.png" />
+    <Content Include="Content\themes\base\images\oops.jpg" />
     <Content Include="Content\themes\base\images\qtip.png" />
     <Content Include="Content\themes\base\images\repdep.jpg" />
     <Content Include="Content\themes\base\images\search.png" />
@@ -283,13 +290,14 @@
     <Content Include="Error.html" />
     <Content Include="Global.asax" />
     <Compile Include="Models\DepositoVM.cs" />
-    <Content Include="Scripts\Abono.js" />
+    <Content Include="Scripts\PagoServicios-Details.js" />
+    <Content Include="Scripts\Depositos-Details.js" />
     <Content Include="Scripts\additional-methods.js" />
     <Content Include="Scripts\additional-methods.min.js" />
     <Content Include="Scripts\Depositos.js" />
     <Content Include="Scripts\DetallePayCenter.js" />
     <Content Include="Scripts\jquery.colorbox-min.js" />
-    <Content Include="Scripts\EstadoDeCuentaDetails.js" />
+    <Content Include="Scripts\EstadoDeCuenta-Details.js" />
     <Content Include="Scripts\jquery.formatCurrency.js" />
     <Content Include="Scripts\PagoServicios-Create.js" />
     <Content Include="Scripts\Paquetes-comprar.js" />
@@ -314,7 +322,7 @@
     <Content Include="Scripts\Preafiliacion.js" />
     <Content Include="Scripts\prefixfree.min.js" />
     <Content Include="Scripts\RegistroPaycenter.js" />
-    <Content Include="Scripts\ReportarDeposito.js" />
+    <Content Include="Scripts\Depositos-Report.js" />
     <Content Include="Scripts\simpleGrid.js" />
     <Content Include="Scripts\UploadImage.js" />
     <Content Include="Scripts\SubirImagenPaycenter.js" />
@@ -350,6 +358,7 @@
     <Content Include="Views\Users\UsersRoles.cshtml" />
     <Content Include="Views\Error\NotFound.cshtml" />
     <Content Include="Views\Error\GenericError.cshtml" />
+    <Content Include="Views\Paquetes\Confirm.cshtml" />
     <None Include="_bin_deployableAssemblies\System.Web.Mvc.dll" />
     <None Include="_bin_deployableAssemblies\WebMatrix.WebData.xml" />
     <None Include="_bin_deployableAssemblies\WebMatrix.WebData.dll" />
@@ -571,7 +580,7 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>57739</DevelopmentServerPort>
+          <DevelopmentServerPort>57357</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>
           </IISUrl>

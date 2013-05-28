@@ -35,13 +35,10 @@
             @Html.DisplayFor(modelItem => item.Creditos)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Precio)
+            @Html.DisplayFor(modelItem => item.PrecioString)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.FechaVencimiento)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.FechaCreacion)
+            @Html.DisplayFor(modelItem => item.PrecioPorEvento)
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.PaqueteId }) |

@@ -18,7 +18,7 @@ namespace cabinet.processPolicies.MVC.Models.Helpers
                     .ForMember(vm => vm.ThumbnailComprobante, opt => opt.MapFrom(m => m.Comprobante.Replace("UploadImages", "UploadImages/Thumbnails")));
             Mapper.CreateMap<PayCenterVM, PayCenter>()
                     .ForMember(m => m.Abonos, opt => opt.Ignore())
-                    .ForMember(m => m.Cuentas, opt => opt.Ignore())
+                    .ForMember(m => m.CuentasPayCenters, opt => opt.Ignore())
                     .ForMember(m => m.FechaCreacion, opt => opt.Ignore())
                     .ForMember(m => m.PayCenterPadre, opt => opt.Ignore());
             //.ForMember(m => m.Version, opt => opt.MapFrom(vm => string.IsNullOrEmpty(vm.Version)?"1":vm.Version))
@@ -29,7 +29,7 @@ namespace cabinet.processPolicies.MVC.Models.Helpers
             Mapper.CreateMap<Banco, BancoVM>();
             Mapper.CreateMap<CompraEvento, CompraEventoVM>();
             Mapper.CreateMap<CuentaBancaria, CuentaBancariaVM>();
-            Mapper.CreateMap<Cuenta, CuentaVM>();
+            Mapper.CreateMap<CuentaPayCenter, CuentaVM>();
             Mapper.CreateMap<DetallePago, DetallePagoVM>();
             Mapper.CreateMap<DetalleServicio, DetalleServicioVM>();
             Mapper.CreateMap<Movimiento, EstadoCuentaVM>();
@@ -38,6 +38,7 @@ namespace cabinet.processPolicies.MVC.Models.Helpers
             Mapper.CreateMap<PayCenter, PayCenterVM>();
             Mapper.CreateMap<Politica, PoliticaVM>();
             Mapper.CreateMap<Prospecto, ProspectoVM>();
+            Mapper.CreateMap<Proveedor, ProveedorVM>();
             Mapper.CreateMap<Servicio, ServicioVM>();
             Mapper.CreateMap<Ticket, TicketVM>();
 
@@ -47,7 +48,7 @@ namespace cabinet.processPolicies.MVC.Models.Helpers
                 .ForMember(m => m.CuentasBancarias, opt => opt.Ignore());
             Mapper.CreateMap<CompraEventoVM, CompraEvento>();
             Mapper.CreateMap<CuentaBancariaVM, CuentaBancaria>();
-            Mapper.CreateMap<CuentaVM, Cuenta>();
+            Mapper.CreateMap<CuentaVM, CuentaPayCenter>();
             Mapper.CreateMap<DetallePagoVM, DetallePago>();
             Mapper.CreateMap<DetalleServicioVM, DetalleServicio>();
             Mapper.CreateMap<EstadoCuentaVM, Movimiento>();
@@ -56,6 +57,7 @@ namespace cabinet.processPolicies.MVC.Models.Helpers
             Mapper.CreateMap<PayCenterVM, PayCenter>();
             Mapper.CreateMap<PoliticaVM, Politica>();
             Mapper.CreateMap<ProspectoVM, Prospecto>();
+            Mapper.CreateMap<ProveedorVM, Proveedor>();
             Mapper.CreateMap<ServicioVM, Servicio>()
                     .ForMember(m => m.DetalleServicios, opt => opt.Ignore());
             Mapper.CreateMap<TicketVM, Ticket>();

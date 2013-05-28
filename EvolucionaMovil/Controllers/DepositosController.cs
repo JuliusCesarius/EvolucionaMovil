@@ -37,14 +37,6 @@ namespace EvolucionaMovil.Controllers
 
         private EstadoCuentaBR validations = new EstadoCuentaBR();
 
-        [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.Staff })]
-        public string FindPayCenter(string term)
-        {
-            PayCentersRepository payCentersRepository = new PayCentersRepository();
-            var payCenters = payCentersRepository.GetPayCenterBySearchString(term).Select(x => new { label = x.UserName + " - " + x.Nombre, value = x.PayCenterId });
-            return Newtonsoft.Json.JsonConvert.SerializeObject(payCenters);
-        }
-
         //
         // GET: /Depositos/
         [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.PayCenter, enumRoles.Staff })]
@@ -100,7 +92,7 @@ namespace EvolucionaMovil.Controllers
 
             if (id > 0)
             {
-                var movimiento = abono.Cuenta.Movimientos.Where(x => x.Motivo == enumMotivo.Deposito.GetHashCode() && x.Id == abono.AbonoId).FirstOrDefault();
+                var movimiento = abono.CuentaPayCenter.Movimientos.Where(x => x.Motivo == enumMotivo.Deposito.GetHashCode() && x.Id == abono.AbonoId).FirstOrDefault();
 
                 //validar que exista el moviento y sino mandar mensaje de error
                 if (movimiento != null)
@@ -159,15 +151,8 @@ namespace EvolucionaMovil.Controllers
         public ActionResult Report()
         {
             ReporteDepositoVM model = new ReporteDepositoVM();
-            model.CuentasDeposito = CuentaDepositoPayCenter(PayCenterName);
             LlenarBancos_Cuentas();
             return View(model);
-        }
-
-        [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.Staff })]
-        public string GetCuentaDepositoPayCenter(int id)
-        {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(CuentaDepositoPayCenter(id));
         }
 
         [HttpPost]
@@ -201,6 +186,7 @@ namespace EvolucionaMovil.Controllers
                 {
                     payCenter = payCentersRepository.LoadById(model.PayCenterId);
                 }
+
                 AbonoVM abonoVM = new AbonoVM();
                 Mapper.Map(model, abonoVM);
                 abonoVM.MontoString = ((decimal)model.Monto).ToString("C");
@@ -209,11 +195,12 @@ namespace EvolucionaMovil.Controllers
                 abonoVM.PayCenter = payCenter.Nombre;
                 abonoVM.FechaCreacion = DateTime.Now;
                 abonoVM.FechaPago = (DateTime)model.FechaPago;
+                abonoVM.ProveedorId = model.ProveedorId;
                 return View("Confirm", abonoVM);
             }
             else
             {
-                model.CuentasDeposito = CuentaDepositoPayCenter(PayCenterName);
+                //model.CuentasDeposito = GetProveedoresByTipoCuenta(PayCenterName);
                 LlenarBancos_Cuentas();
                 return View(model);
             }
@@ -239,16 +226,13 @@ namespace EvolucionaMovil.Controllers
                 exito = false;
             }
 
-            if (model.RutaFichaDeposito == null || model.RutaFichaDeposito.TrimEnd() == string.Empty )
-            {
-                AddValidationMessage(enumMessageType.BRException, "Por favor seleccione la imagen de la ficha de depósito");
-                exito = false;
-            }
 
             if (exito)
             {
                 if (ModelState.IsValid)
                 {
+                    PaycenterBR payCenterBR = new PaycenterBR();
+                    model.CuentaId=payCenterBR.GetOrCreateCuentaPayCenter(PayCenterId, model.TipoCuenta,model.ProveedorId);
                     Abono abono = new Abono
                     {
                         BancoId = model.BancoId,
@@ -291,6 +275,7 @@ namespace EvolucionaMovil.Controllers
         }
 
         #region Funciones
+
         /// <summary>
         /// LLena el AbonoVM
         /// </summary>
@@ -305,7 +290,7 @@ namespace EvolucionaMovil.Controllers
 
             //fill estatus movimientos          
             int movimientoId = 0;
-            var movimiento = abono.Cuenta.Movimientos.Where(x => x.CuentaId == abono.CuentaId && x.Motivo == enumMotivo.Deposito.GetHashCode() && x.PayCenterId == abono.PayCenterId && x.Id == abono.AbonoId).FirstOrDefault();
+            var movimiento = abono.CuentaPayCenter.Movimientos.Where(x => x.CuentaId == abono.CuentaId && x.Motivo == enumMotivo.Deposito.GetHashCode() && x.PayCenterId == abono.PayCenterId && x.Id == abono.AbonoId).FirstOrDefault();
             if (movimiento != null)
             {
                 movimientoId = movimiento.MovimientoId;
@@ -326,9 +311,8 @@ namespace EvolucionaMovil.Controllers
                 MontoString = abono.Monto.ToString("C"),
                 PayCenter = abono.PayCenter.UserName,
                 Referencia = abono.Referencia,
-                TipoCuenta = ((enumTipoCuenta)abono.Cuenta.TipoCuenta).ToString(),
-                HistorialEstatusVM = movimiento != null ? movimiento.Movimientos_Estatus.OrderByDescending(x => x.FechaCreacion).Select(x => new HistorialEstatusVM { Fecha = x.FechaCreacion.ToString(), Estatus = ((enumEstatusMovimiento)x.Status).ToString(), Comentarios = x.Comentarios, UserName = x.UserName }).ToList() : null,
-                RutaFichaDeposito = abono.RutaFichaDeposito 
+                //TipoCuenta = (enumTipoCuenta)abono.CuentaPayCenter.TipoCuenta,
+                HistorialEstatusVM = movimiento != null ? movimiento.Movimientos_Estatus.OrderByDescending(x => x.FechaCreacion).Select(x => new HistorialEstatusVM { Fecha = x.FechaCreacion.ToString(), Estatus = ((enumEstatusMovimiento)x.Status).ToString(), Comentarios = x.Comentarios, UserName = x.UserName }).ToList() : null
             };
             return abonoVM;
         }
@@ -347,24 +331,26 @@ namespace EvolucionaMovil.Controllers
 
             return rolUser;
         }
-        private List<CuentaDepositoVM> CuentaDepositoPayCenter(string nameUser)
-        {
-            PayCentersRepository payCentersRepository = new PayCentersRepository();
-            int payCenterId = payCentersRepository.GetPayCenterByUserName(nameUser);
-            return CuentaDepositoPayCenter(payCenterId);
-        }
-        private List<CuentaDepositoVM> CuentaDepositoPayCenter(int PayCenterId)
-        {
-            PayCentersRepository payCentersRepository = new PayCentersRepository();
-            return payCentersRepository.LoadTipoCuentas(PayCenterId).Select(x => new CuentaDepositoVM { CuentaId = x.CuentaId, Monto = 0, Nombre = ((enumTipoCuenta)x.TipoCuenta).ToString().Replace('_', ' ') }).ToList();
-        }
 
         private void LlenarBancos_Cuentas()
         {
+            //TODO: Julius: ver de que forma se hace esto mejor porque quedó muy complicado y le pega al rendimiento
             BancosRepository bancosRepository = new BancosRepository();
             var bancos = bancosRepository.ListAll().Where(x => x.CuentasBancarias.Count > 0);
-            ViewBag.Bancos = bancos;
-            ViewBag.Cuentas = bancos.SelectMany(x => x.CuentasBancarias).Select(x => new { BancoId = x.BancoId, CuentaBancariaId = x.CuentaId, NumeroCuenta = x.NumeroCuenta, Titular = x.Titular });
+            ProveedoresRepository proveedoresRepository = new ProveedoresRepository();
+            var proveedores = proveedoresRepository.ListAll().OrderBy(x=>x.Nombre);
+            var proveedoresVM = proveedores.ToListOfDestination<ProveedorVM>();
+            foreach (var proveedorVM in proveedoresVM)
+            {
+                var cuentasBancarias = proveedores.Where(x => x.ProveedorId == proveedorVM.ProveedorId).FirstOrDefault().CuentasBancarias;
+                var cuentasGrupedByBanco = cuentasBancarias.GroupBy(x => x.Banco);
+                proveedorVM.Bancos = cuentasGrupedByBanco.Select(x => x.Key).ToListOfDestination<BancoVM>();
+                foreach (var bancoVM in proveedorVM.Bancos)
+                {
+                    bancoVM.CuentasBancarias = cuentasBancarias.Where(x => x.BancoId == bancoVM.BancoId).ToListOfDestination<CuentaBancariaVM>();
+                }
+            }
+            ViewBag.Proveedores = proveedoresVM;
         }
         private string getBancoById(int BancoId, ref IEnumerable<Banco> Bancos)
         {
@@ -406,7 +392,7 @@ namespace EvolucionaMovil.Controllers
             var lastComment = EstadoDeCuentaRepository.GetUltimoCambioEstatus(enumMotivo.Deposito, AbonoId);
             if (lastComment != null)
             {
-                return lastComment.Comentarios== null ? string.Empty : lastComment.Comentarios;
+                return lastComment.Comentarios;
             }
             else
             {
@@ -448,7 +434,7 @@ namespace EvolucionaMovil.Controllers
                     PayCenter = x.PayCenter.UserName,
                     Referencia = x.Referencia,
                     Status = x.Status,
-                    TipoCuenta = ((enumTipoCuenta)x.Cuenta.TipoCuenta).ToString()
+                    TipoCuenta = ((enumTipoCuenta)x.CuentaPayCenter.TipoCuenta).ToString()
                 });
 
             //Filtrar por searchString: Lo puse después del primer filtro porque se complicaba obtener los strings de las tablas referenciadas como bancos, cuenta bancaria, etc.

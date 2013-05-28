@@ -1,80 +1,144 @@
 ﻿@model EvolucionaMovil.Models.PagoVM
-
+@using EvolucionaMovil.Models.Enums;
 @{
     ViewBag.Title = "Detalle de pago";
 }
-
-<h2>Details</h2>
-
+<script src="@Url.Content("~/Scripts/PagoServicios-Details.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
-
-@using (Html.BeginForm()) {
-    @Html.ValidationSummary(true)
-    <fieldset>
-        <legend>PagoVM</legend>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.ClienteNombre)
+    <fieldset class="fwith300 inline">
+        <h2>Detalle de pago</h2>
+        
+        <div class="display-label">
+            PayCenter</div>
+        <div class="display-field">
+            @Html.DisplayFor(model => model.PayCenterName)
         </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.ClienteNombre)
-            @Html.ValidationMessageFor(model => model.ClienteNombre)
+        <div class="display-label">
+            Servicio</div>
+        <div class="display-field fwb fsl">
+            @Html.DisplayFor(model => Model.ServicioNombre)
         </div>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.Estatus)
+        @if (Model.DetallePagos != null)
+        {
+            foreach (var item in Model.DetallePagos)
+            { 
+            <div class="display-label">
+                @item.Campo</div>
+            <div class="display-field">@item.Valor</div> 
+            }
+        }
+        <div class="display-label">
+            Fecha Vencimiento</div>
+        <div class="display-field">
+            @Html.DisplayFor(model => model.FechaVencimientoString)
         </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.Estatus)
-            @Html.ValidationMessageFor(model => model.Estatus)
+        @if (!string.IsNullOrEmpty(Model.ClienteNombre))
+        {
+            <div class="display-label">
+                Nombre Cliente</div>
+            <div class="display-field">
+                @Html.DisplayFor(model => model.ClienteNombre)
+            </div>
+        }
+        @if (@ViewBag.MostrarComision == true)
+        {
+            <div class="display-label">
+                Comision</div>
+            <div class="display-field">
+                @Html.DisplayFor(model => model)
+            </div>
+        }
+        <div class="display-label">
+            Importe</div>
+        <div class="display-field fwb fsxl">
+            @Html.DisplayFor(model => model.ImporteString)
         </div>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.FechaCreacion)
+        <div class="display-label">
+            Estatus</div>
+        <div class="display-field fwb fsxl ">
+            <span class="@Model.StatusString">@Html.DisplayFor(model => model.StatusString)</span>
         </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.FechaCreacion)
-            @Html.ValidationMessageFor(model => model.FechaCreacion)
+        <div class="display-label">
+            Ticket</div>
+        <div class="display-field">
+            @Html.ActionLink("[Ver Ticket]", "Ticket", new { id = Model.PagoId })
         </div>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.FechaVencimiento)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.FechaVencimiento)
-            @Html.ValidationMessageFor(model => model.FechaVencimiento)
-        </div>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.Importe)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.Importe)
-            @Html.ValidationMessageFor(model => model.Importe)
-        </div>
-
-        <div class="editor-label">
-            @Html.HiddenFor(model => model.PagoId)
-        </div>
-
-        <div class="editor-label">
-            @Html.HiddenFor(model => model.PayCenterId)
-        </div>
-
-        <div class="editor-label">
-            @Html.HiddenFor(model => model.ServicioId)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.ServicioNombre)
-        </div>
-
-        <p>
-            <input type="submit" value="Save" />
-        </p>
-    </fieldset>
-}
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
+ 
+ @using (Html.BeginForm())
+ {
+     <input type="hidden" name ="PagoId" value="@Model.PagoId"/>
+     
+    <div>
+    @if (@Model.Status != enumEstatusMovimiento.Cancelado.GetHashCode())
+    {
+        if (ViewBag.Role == enumRoles.PayCenter.GetHashCode())
+        {
+            <input type="button" id="Cancelar"  onclick="MuestraComentario()" name="action"  class="freshbutton-blue" value="Cancelar" />
+             <div id="ComentarioPayCenter" style="display: none;">
+                  <span class="">Cancelar</span>
+                  <div  class="display-label">@Html.LabelFor(model => model.CambioEstatusVM.Comentario)</div>
+                  <div class="display-field">
+                    @Html.EditorFor(model => model.CambioEstatusVM.Comentario)
+                   </div>
+                  <div>
+                         <input type="submit" class="freshbutton-blue" value="Aceptar" />
+                         <input type="hidden" name="CambioEstatusVM.Estatus"  class="freshbutton-blue" value="Cancelar" />
+                         <input type="button" onclick="OcultaComentario()" id="NoCancelar" name=""  class="freshbutton-blue" value="No Cancelar" />
+                  </div>         
+            </div>
+        }
+        else if (ViewBag.Role == enumRoles.Staff.GetHashCode() || ViewBag.Role == enumRoles.Administrator.GetHashCode())
+        {
+            //string  action = "";
+          <div>
+            @if (@Model.Status != enumEstatusMovimiento.Aplicado.GetHashCode()){
+                if (@Model.Status == enumEstatusMovimiento.Rechazado .GetHashCode()){
+                <input type="button" id = "Aplicar" onclick="MuestraComentario('Aplicar')" name="CambioEstatusVM.Estatus" class="freshbutton-blue" value="Aplicar" /> 
+                }else{
+                     <input type="submit" id = "Aplicar" name="CambioEstatusVM.Estatus" class="freshbutton-blue" value="Aplicar" />
+                }
+            }
+            @if (@Model.Status != enumEstatusMovimiento.Rechazado.GetHashCode())
+            {
+                <input type="button" id = "Rechazar" onclick="MuestraComentario('Rechazar')" class="freshbutton-blue" value="Rechazar" /> 
+            }
+          </div>
+        
+          <div id="ComentarioStaff"  style="display: none;"> 
+            
+              <label id="actionName" class="display-field fsl fwb"></label>
+               <div class="display-label">@Html.LabelFor(model => model.CambioEstatusVM.Comentario)</div>
+               <div class="display-field">
+                    @Html.EditorFor(model => model.CambioEstatusVM.Comentario)
+               </div>
+               <div>
+                         <input type="submit" class="freshbutton-blue" value="Aceptar" />
+                         <input id ="action" type="hidden" name="CambioEstatusVM.Estatus"  class="freshbutton-blue" value="Rechazar" />
+                         <input type="button" name="" onclick="OcultaComentario()" class="freshbutton-blue" value="Cancelar" />
+               </div>
+                 
+           </div>  
+        }
+    }
+  </div>
+ 
+ }
+    <div id="HistorialStatus">
+    <div  class="listHeader">Hitórico de Estatus</div>
+    @if (Model.HistorialEstatusVM != null)
+    {
+        foreach (var item in Model.HistorialEstatusVM)
+        { 
+           <div class="listRow">
+              <span class="listCell Estatus fwb"> <span class="@item.Estatus ">@item.Estatus </span>  </span>
+              <span class="listCell Comentarios"> @item.Comentarios </span>    
+              <span class="listCell Usuario"> @item.UserName</span>     
+              <span class="listCell Fecha"> @item.Fecha</span>
+            </div> 
+        }
+    }
+    </div>
+   
+    @Html.ActionLink("Regresar", "Index", null, new { @class = "freshbutton-blue small" }) 
+</fieldset>

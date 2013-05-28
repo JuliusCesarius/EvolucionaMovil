@@ -5,9 +5,12 @@ using System.Web;
 
 namespace EvolucionaMovil.Models.Enums
 {
-    public enum enumTipoCuenta
+    public enum enumTipoDato
     {
-        Pago_de_Servicios,
-        Recargas_Electronicas
+        Cadena,
+        Entero,
+        Flotante,
+        Fecha,
+        Dinero
     }
 }
