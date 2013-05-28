@@ -10,7 +10,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Web.Mvc;
 
-namespace Uco.Controllers
+namespace EvolucionaMovil.Controllers
 {
     /// <summary>
     /// This class is fully self-contained. All Captcha related code including

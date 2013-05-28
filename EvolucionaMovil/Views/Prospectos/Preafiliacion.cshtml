@@ -67,8 +67,10 @@
             @Html.EditorFor(model => model.Comentario)
             @Html.ValidationMessageFor(model => model.Comentario)
         </div>
-            @Html.Partial("_Captcha", new Uco.Models.Captcha())
-    @Html.Partial("_InvisibleCaptcha", new Uco.Models.InvisibleCaptcha())
+        @{if (!HttpContext.Current.IsDebuggingEnabled){
+            Html.RenderPartial("_Captcha", new EvolucionaMovil.Models.Captcha(), null);
+            Html.RenderPartial("_InvisibleCaptcha", new EvolucionaMovil.Models.InvisibleCaptcha(), null);
+        }}
         <input type="checkbox" id="acceptTerms" />
         <label for="acceptTerms" class="checkbox">Acepto las <a>condiciones de Evoluciona Móvil ®</a></label>
         <p id="checkMessage" class="error leyenda"></p>

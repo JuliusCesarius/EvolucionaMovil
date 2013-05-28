@@ -188,7 +188,7 @@ footer, #footer
 }
 /* TAB MENU   
 ----------------------------------------------------------*/
-#menucontainer {
+#menEvolucionaMovilntainer {
     margin-top: 51px;
 }
 ul#menu
@@ -1090,7 +1090,7 @@ legend{font-size:2em;font-weight:400}
 .formRightPaycenter{vertical-align:top; padding-top:3em;}
 .inputImgPaycenter{width:250px; display:none;}
 .nameImgPayCenter{width:235px !important;}
-.imgPaycenter{border:1px solid #999; height:200px; width:360px; margin: 8px 0 8px 0; text-align:center; }
+.imgPaycenter{border:1px solid #999; height:200px; width:360px; margin: 8px 0 8px 0; text-align:center; overflow:hidden}
 .imgPaycenter p{font-size:15px; color:#999; top:75px; position:relative;}
 .pbCero{padding-bottom:0px;}
 .footerPaycenter{text-align:right; margin:0 1.4em 0 1.4em; width:86%;}

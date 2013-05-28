@@ -69,12 +69,12 @@ namespace EvolucionaMovil.Controllers
             {
                 Directory.CreateDirectory(directoryTemp);
             }
-            try
-            {
+            //try
+            //{
                 //Guardar imagen en el servidor
-                string fileName = String.Format("{0}.jpg", Guid.NewGuid().ToString());
-                string imagePath = Path.Combine(Server.MapPath(Url.Content("~/UploadImages")), fileName);
-                string thumbnailPath = Path.Combine(Server.MapPath(Url.Content("~/UploadImages/Thumbnails")), fileName);
+            string fileName = String.Format("{0}.jpg", new Random().Next(0, 99999).ToString().ToString());
+                string imagePath = Path.Combine(Server.MapPath("~/UploadImages"), fileName);
+                string thumbnailPath = Path.Combine(Server.MapPath("~/UploadImages/Thumbnails"), fileName);
 
                 //Si el tamaño es mayor al tamaño máximo en que se debe guardar entonces se usa el método para comprimir y guardar
                 if (imageFile.ContentLength > 2097152)
@@ -100,21 +100,21 @@ namespace EvolucionaMovil.Controllers
                         OriginalFileName = imageFile.FileName
                     }
                 };
-            }
-            catch
-            {
-                return new WrappedJsonResult
-                {
-                    Data = new
-                    {
-                        IsValid = false,
-                        Message = "Se ha producido un error al subir el archivo.",
-                        ImagePath = string.Empty,
-                        ThumbnailPath = string.Empty,
-                        OriginalFileName = string.Empty
-                    }
-                };
-            }
+            //}
+            //catch
+            //{
+            //    return new WrappedJsonResult
+            //    {
+            //        Data = new
+            //        {
+            //            IsValid = false,
+            //            Message = "Se ha producido un error al subir el archivo.",
+            //            ImagePath = string.Empty,
+            //            ThumbnailPath = string.Empty,
+            //            OriginalFileName = string.Empty
+            //        }
+            //    };
+            //}
         }
 
         private void SaveCompressImage(long maxsize, Stream ms, string savepath)
