@@ -95,9 +95,10 @@ header h1, #header h1 {
 }
 #BrowserMessage
 {
-    display:none;
-    border-color: rgb(252, 236, 185)!important;    
-    background: rgb(242, 250, 255) url('themes/base/images/i-ico.png') no-repeat 10px 50%!important;
+    display: none;
+    border-color: rgb(252, 236, 185) !important;
+    background: rgb(253, 238, 155) url('themes/base/images/i-ico.png') no-repeat 10px 50% !important;
+    border-bottom: 1px solid rgb(223, 188, 83)!important
 }
 .DataValidation, .BRException, .UnhandledException, #ValidationMessage .DataValidation, #ValidationMessage .BRException, #ValidationMessage .UnhandledException
 {
@@ -121,7 +122,7 @@ color: rgb(66, 72, 90);
 }
 .message ul{margin-right: 20px!important;}
 
-#ValidationMessage #btn-message-aceptar
+#ValidationMessage #btn-message-aceptar, #BrowserMessage #btn-message-aceptar
 {
     position:absolute;
     right:20px;
@@ -130,6 +131,8 @@ color: rgb(66, 72, 90);
    margin-top: -16px; /* Half the height */
    margin-left: -16px; /* Half the width */
 }
+#BrowserMessage #btn-message-aceptar{height: 23px;margin-top:-13px;}
+#BrowserMessage ul{font-size:1em!important}
 .errorMessage
 {position: absolute;
 left: 362px;
@@ -1142,7 +1145,7 @@ legend{font-size:2em;font-weight:400}
 .captcha_input{width:61%!important}
 .captcha_img{vertical-align:middle!important}
 
-#servicios, #homemenu {width: 832px;margin: 0 auto;}
+#servicios, #homemenu {width: 835px;margin: 0 auto;}
 #homemenu h2{display:inline-block!important}
 #servicios ul li {display: inline-block;margin: .5em;width: 122px;height: 110px;border: solid 1px #ccc;vertical-align: top;background: #eee;overflow:hidden;}
 #servicios ul li, #repDep, #edoCuenta{-webkit-border-radius:5px;-moz-border-radius:5px;-ms-border-radius:5px;-o-border-radius:5px;border-radius:5px;}
@@ -1154,5 +1157,19 @@ box-shadow:0 0 0 #000, 0 5px 5px #eee;}
 #repDep{background:url(../Content/themes/base/images/images/reportar.png) no-repeat;}
 #edoCuenta{background:url(../Content/themes/base/images/images/EdoCuenta.png) no-repeat;}
 
-
-
+#politicas{width:800px;margin:0 auto;line-height:1.5em;text-align:justify}
+#politicas p{margin:1.5em 0}
+#politicas h2{}
+#politicas h3{color:#888}
+#politicas ul{list-style-type: disc;}
+#politicas ul li{display:list-item}
+#politicas ol{list-style-type:decimal}
+#politicas ol li{display:list-item}
+#politicas ol, #politicas ul
+{
+    margin: 0 0 10px 25px;
+    -webkit-margin-before: 1em;
+-webkit-margin-after: 1em;
+-webkit-margin-start: 0px;
+-webkit-margin-end: 0px;
+-webkit-padding-start: 40px;}

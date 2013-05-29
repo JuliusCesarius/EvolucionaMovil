@@ -1,7 +1,7 @@
 ﻿var t;
 $(document).on("ready", function () {
     $("label").inFieldLabels();
-    $("input").on("click", function () { this.select(); });
+    $(":text").on("click", function () { this.select(); });
     $(".tooltip").qtip({ content: $(this).attr("alt") });
     t = window.setInterval(fixLabels, 200);
     //Fix de los checkbox que no pasan el valor al form

@@ -122,13 +122,11 @@
         }
         else
         {
-         //todo: Julio checa esta parte creo que deberia tener su propio estilo para el div y el boton
              <div id="BrowserMessage">
                 <ul id="#contentNavegador">
-                     <li id="Navegador">Por favor utilice Google Chrome</li>
+                     <li id="Navegador">Este sitio, como muchos otros, se ve mejor en navegadores modernos. Le sugerimos usar Google Chrome, es el más rápido y seguro <a href="#" id="btnNavegador" >Descargar Google Chrome</a></li>
                 </ul>
-                <a href="" id="btnNavegador" >Descargar Google Chrome</a>
-                <a href="#" id="btn-message-aceptar" class = "freshbutton-blue small">Aceptar</a>
+                <input type="button" id="btn-message-aceptar" value="Cancelar"></input>
               </div>
         }
     </div>
@@ -139,7 +137,7 @@
                 <br />México D.F. a @DateTime.Today.ToLongDateString()  @DateTime.Now.ToLongTimeString() <br /><span class="tel">Tel. </span><span class="tel">(55) 57 46 5274</span>
             </p>
             <p class="tar">
-                <a>POLÍTICAS DE CONFIDENCIALIDAD</a><br />
+                <a href="@Url.Content("~/home/politicas_de_confidencialidad")">POLÍTICAS DE CONFIDENCIALIDAD</a><br />
                 <a>POLÍTICAS DE USO</a><br />
                     <span class="disclaimer">Todos los logotipos aquí mostrados son propiedad intelectual de sus creadores
                     y/o propietarios. </span><span class="disclaimer">El uso de los mismos en nuestro portal está autorizado
