@@ -1141,3 +1141,18 @@ legend{font-size:2em;font-weight:400}
 
 .captcha_input{width:61%!important}
 .captcha_img{vertical-align:middle!important}
+
+#servicios, #homemenu {width: 832px;margin: 0 auto;}
+#homemenu h2{display:inline-block!important}
+#servicios ul li {display: inline-block;margin: .5em;width: 122px;height: 110px;border: solid 1px #ccc;vertical-align: top;background: #eee;overflow:hidden;}
+#servicios ul li, #repDep, #edoCuenta{-webkit-border-radius:5px;-moz-border-radius:5px;-ms-border-radius:5px;-o-border-radius:5px;border-radius:5px;}
+#servicios ul li:hover, #repDep:hover, #edoCuenta:hover{border-color:#35bff4;cursor:pointer;-moz-box-shadow:0 0 0 #000, 0 5px 5px #eee;
+-webkit-box-shadow:0 0 0 #000, 0 5px 5px #eee;
+box-shadow:0 0 0 #000, 0 5px 5px #eee;}
+#repDep, #edoCuenta{display: inline-block;width: 400px;border: solid 1px #ccc;margin: .5em;height: 147px}
+#repDep h2, #edoCuenta h2{display: inline-block;width: 200px;position: relative;top: 48px;left: 199px;line-height: 1em;}
+#repDep{background:url(../Content/themes/base/images/images/reportar.png) no-repeat;}
+#edoCuenta{background:url(../Content/themes/base/images/images/EdoCuenta.png) no-repeat;}
+
+
+

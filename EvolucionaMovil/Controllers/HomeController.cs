@@ -7,11 +7,14 @@ using EvolucionaMovil.Repositories;
 using EvolucionaMovil.Models;
 using EvolucionaMovil.Models.Enums;
 using EvolucionaMovil.Models.Extensions;
+using EvolucionaMovil.Models.Classes;
+using EvolucionaMovil.Attributes;
 
 namespace EvolucionaMovil.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : CustomControllerBase
     {
+        [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.Administrator, enumRoles.Staff,enumRoles.PayCenter })]
         public ActionResult Index()
         {
             //string[] lines = System.IO.File.ReadAllLines(@"C:\servicioscampos.txt");
@@ -41,8 +44,8 @@ namespace EvolucionaMovil.Controllers
             //    }
             //}
             //serviciosRepository.Save();
-            //return View();
-            return RedirectToAction("Logon","Account");
+            return View();
+            //return RedirectToAction("Logon","Account");
         }
 
         public ActionResult About()

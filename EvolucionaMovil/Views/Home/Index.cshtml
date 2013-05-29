@@ -1,14 +1,33 @@
 ﻿@{
-    Layout = null;
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-<!DOCTYPE html>
-
-<html>
-<head>
-    <title>Evoluciona Móvil</title>
-</head>
-<body style="text-align:center;background:#ccc">
-    <img style="margin-left:auto" src="../../Content/themes/base/images/evolucionamovil_commingsoon.jpg" alt="Coming Soon" />
-</body>
-</html>
+<div id="homemenu">
+<h1>¿Qué deseas hacer?</h1>    
+    <h2>Reportar un Pago de Servicio</h2> @Html.ActionLink("[ REPORTAR OTROS ]", "Create", "PagoServicios")
+    <div id="servicios">
+    <ul>
+    <li><a href="/PagoServicios/Create/1"><img alt="Telmex" class="tooltip" src="../../Content/themes/base/images/images/telmex.jpg" /></a></li>
+    <li><a href="/PagoServicios/Create/50"><img alt="Liverpool" class="tooltip" src="../../Content/themes/base/images/images/liverpool.jpg" /></a></li>
+    <li><a href="/PagoServicios/Create/2"><img alt="CFE" class="tooltip" src="../../Content/themes/base/images/images/cfe.jpg" /></a></li>
+    <li><a href="/PagoServicios/Create/3"><img alt="Axtel" class="tooltip" src="../../Content/themes/base/images/images/axtel.jpg" /></a></li>
+    <li><a href="/PagoServicios/Create/4"><img alt="Cablevicion" class="tooltip" src="../../Content/themes/base/images/images/cablevision.jpg" /></a></li>
+    <li><a href="/PagoServicios/Create/6"><img alt="Megacable" class="tooltip" src="../../Content/themes/base/images/images/megacable.jpg" /></a></li>
+    <li><a href="/PagoServicios/Create/7"><img alt="Cablemas" class="tooltip" src="../../Content/themes/base/images/images/cablemas.jpg" /></a></li>
+    <li><a href="/PagoServicios/Create/8"><img alt="VeTV" class="tooltip" src="../../Content/themes/base/images/images/vetv.jpg" /></a></li>
+    <li><a href="/PagoServicios/Create/9"><img alt="SKY" class="tooltip" src="../../Content/themes/base/images/images/sky.jpg" /></a></li>
+    <li><a href="/PagoServicios/Create/10"><img alt="Factura Telcel" class="tooltip" src="../../Content/themes/base/images/images/telcel.jpg" /></a></li>
+    <li><a href="/PagoServicios/Create/17"><img alt="Tarjeta de Crédito Banamex" class="tooltip" src="../../Content/themes/base/images/images/banamex.jpg" /></a></li>
+    <li><a href="/PagoServicios/Create/15"><img alt="Gas Natural" class="tooltip" src="../../Content/themes/base/images/images/gasnatural.jpg" /></a></li>
+    </ul>
+    </div>
+    <a href="@Url.Content("~/Depositos/Report")">
+    <div id="repDep">
+    <h2>Reportar un Depósito</h2></div></a>
+    
+    <a href="@Url.Content("~/EstadoDeCuenta")">
+    <div id="edoCuenta">
+    <h2>Consultar mi Estado de Cuenta</h2>
+    </div>
+    </a>
+</div>

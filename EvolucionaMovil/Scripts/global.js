@@ -2,6 +2,7 @@
 $(document).on("ready", function () {
     $("label").inFieldLabels();
     $("input").on("click", function () { this.select(); });
+    $(".tooltip").qtip({ content: $(this).attr("alt") });
     t = window.setInterval(fixLabels, 200);
     //Fix de los checkbox que no pasan el valor al form
     $("[type='checkbox']").on("change", fixCheckbox);
@@ -32,11 +33,11 @@ $(document).on("ready", function () {
     $("#btnNavegador").on("click", function (event) {
         event.preventDefault();
         $(this).parent().hide("blind", {}, 300);
-        window.open("https://www.google.com/intl/es/chrome/browser/?hl=es", 'window', ''); 
+        window.open("https://www.google.com/intl/es/chrome/browser/?hl=es", 'window', '');
     });
 
-   // $("#ValidationNavegador").show("blind", {}, 1000);
-   DetectarNavegador();
+    // $("#ValidationNavegador").show("blind", {}, 1000);
+    DetectarNavegador();
 
     //Accordion
     $(".accordion").accordion({

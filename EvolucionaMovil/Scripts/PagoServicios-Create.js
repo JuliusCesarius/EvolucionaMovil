@@ -42,6 +42,7 @@ $(document).on("ready", function () {
         $("#Importe").val($("#ImporteString").val().replace(",", ""));
     });
     setValidation("Importe", 4);
+    getURLParameter();
     $("#PayCenterName").autocomplete({
         source: "/PayCenters/FindPayCenter",
         select: function (event, ui) {
@@ -86,6 +87,15 @@ function getDetalleServicio() {
         });
     }
 }
+
+function getURLParameter() {
+    var id = decodeURI((RegExp('.*?(\\d+)').exec(location.pathname) || [, null])[1]);
+    if (id > 0) {
+        $("#ServicioId").val(id);
+        $("#ServicioId").trigger("change")
+    }
+}
+
 function setValidation(nombre, tipo) {
     nombre = "#" + nombre;
     switch (tipo) { //Activar todo cuando resuelva lo del placeholder
