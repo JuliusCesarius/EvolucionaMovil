@@ -151,6 +151,15 @@ namespace EvolucionaMovil.Controllers
         public ActionResult Report()
         {
             ReporteDepositoVM model = new ReporteDepositoVM();
+            model.PayCenterId = PayCenterId;
+            if (PayCenterId > 0)
+            {
+                EstadoCuentaBR estadoCuenta = new EstadoCuentaBR();
+                var saldos = estadoCuenta.GetSaldosPagoServicio(PayCenterId);
+                ViewBag.SaldoActual = saldos.SaldoActual.ToString("C");
+                ViewBag.SaldoDisponible = saldos.SaldoDisponible.ToString("C");
+                ViewBag.Eventos = saldos.EventosDisponibles.ToString();
+            }
             LlenarBancos_Cuentas();
             return View(model);
         }
@@ -183,13 +192,13 @@ namespace EvolucionaMovil.Controllers
 
             if (Succeed)
             {
-
+                model.PayCenterName = PayCenterName;
                 AbonoVM abonoVM = new AbonoVM();
                 Mapper.Map(model, abonoVM);
                 abonoVM.MontoString = ((decimal)model.Monto).ToString("C");
                 abonoVM.Status = (Int16)enumEstatusMovimiento.Procesando;
                 abonoVM.PayCenterId = PayCenterId;
-                abonoVM.PayCenter = PayCenterName;
+                abonoVM.PayCenterName = PayCenterName;
                 abonoVM.FechaCreacion = DateTime.Now;
                 abonoVM.FechaPago = (DateTime)model.FechaPago;
                 abonoVM.ProveedorId = model.ProveedorId;
@@ -306,7 +315,7 @@ namespace EvolucionaMovil.Controllers
                 FechaCreacion = abono.FechaCreacion,
                 FechaPago = abono.FechaPago,
                 MontoString = abono.Monto.ToString("C"),
-                PayCenter = abono.PayCenter.UserName,
+                PayCenterName = abono.PayCenter.UserName,
                 Referencia = abono.Referencia,
                 //TipoCuenta = (enumTipoCuenta)abono.CuentaPayCenter.TipoCuenta,
                 HistorialEstatusVM = movimiento != null ? movimiento.Movimientos_Estatus.OrderByDescending(x => x.FechaCreacion).Select(x => new HistorialEstatusVM { Fecha = x.FechaCreacion.ToString(), Estatus = ((enumEstatusMovimiento)x.Status).ToString(), Comentarios = x.Comentarios, UserName = x.UserName }).ToList() : null

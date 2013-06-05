@@ -19,7 +19,7 @@ namespace EvolucionaMovil.Models
         public DateTime? FechaPago { get; set; }
         public decimal? Monto { get; set; }
         public string MontoString { get; set; }
-        public string PayCenter { get; set; }
+        public string PayCenterName { get; set; }
         public int PayCenterId { get; set; }
         public int ProveedorId { get; set; }
         public string Referencia { get; set; }

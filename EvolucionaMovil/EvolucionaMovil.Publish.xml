@@ -36,8 +36,8 @@
     <file relUrl="Views/PagoServicios/Index.cshtml" publishTime="05/21/2013 21:14:52" />
     <file relUrl="Scripts/jquery-1.8.3.min.js" publishTime="02/18/2013 23:19:40" />
     <file relUrl="bin/System.Web.Razor.xml" publishTime="04/18/2013 19:58:27" />
-    <file relUrl="bin/cabinet.patterns.dll" publishTime="05/28/2013 09:42:37" />
-    <file relUrl="Scripts/Preafiliacion.js" publishTime="02/23/2013 00:04:06" />
+    <file relUrl="bin/cabinet.patterns.dll" publishTime="05/29/2013 11:14:05" />
+    <file relUrl="Scripts/Preafiliacion.js" publishTime="05/29/2013 23:26:08" />
     <file relUrl="Content/themes/base/jquery.ui.all.css" publishTime="02/18/2013 23:19:40" />
     <file relUrl="bin/System.Web.WebPages.Administration.dll" publishTime="04/18/2013 19:58:27" />
     <file relUrl="Scripts/Depositos-Details.js" publishTime="05/26/2013 17:26:45" />
@@ -61,7 +61,7 @@
     <file relUrl="Areas/MvcMembership/Views/Users/Details.cshtml" publishTime="05/02/2013 20:54:34" />
     <file relUrl="Content/PagedList.css" publishTime="02/18/2013 23:19:39" />
     <file relUrl="Areas/MvcMembership/Views/Users/UsersRoles.cshtml" publishTime="05/02/2013 20:54:34" />
-    <file relUrl="bin/EvolucionaMovil.dll" publishTime="05/29/2013 10:22:59" />
+    <file relUrl="bin/EvolucionaMovil.dll" publishTime="05/29/2013 23:39:13" />
     <file relUrl="Views/Depositos/Index.cshtml" publishTime="05/21/2013 21:14:52" />
     <file relUrl="Content/themes/base/images/ui-bg_glass_55_fbf9ee_1x400.png" publishTime="02/18/2013 23:19:40" />
     <file relUrl="Scripts/jquery.infieldlabel.js" publishTime="02/18/2013 23:19:40" />
@@ -102,7 +102,7 @@
     <file relUrl="Areas/MvcMembership/Views/Users/Password.cshtml" publishTime="05/02/2013 20:54:34" />
     <file relUrl="Views/Error/GenericError.cshtml" publishTime="05/21/2013 21:13:08" />
     <file relUrl="Content/themes/base/images/bg-footer.gif" publishTime="02/18/2013 23:19:40" />
-    <file relUrl="Web.config" publishTime="05/28/2013 09:46:11" />
+    <file relUrl="Web.config" publishTime="05/29/2013 11:37:41" />
     <file relUrl="Scripts/jquery.colorbox-min.js" publishTime="05/21/2013 21:13:08" />
     <file relUrl="Scripts/MicrosoftMvcValidation.debug.js" publishTime="02/18/2013 23:19:40" />
     <file relUrl="Content/themes/base/images/bg-footer.png" publishTime="02/18/2013 23:19:40" />
@@ -133,7 +133,7 @@
     <file relUrl="Views/Exceptions/Details.cshtml" publishTime="05/21/2013 21:14:52" />
     <file relUrl="Views/Usuarios/Delete.cshtml" publishTime="02/18/2013 23:19:40" />
     <file relUrl="Views/_ViewStart.cshtml" publishTime="02/18/2013 23:19:40" />
-    <file relUrl="Views/Prospectos/Preafiliacion.cshtml" publishTime="05/28/2013 10:22:13" />
+    <file relUrl="Views/Prospectos/Preafiliacion.cshtml" publishTime="05/29/2013 23:31:45" />
     <file relUrl="bin/PagedList.dll" publishTime="02/18/2013 23:19:43" />
     <file relUrl="Content/themes/base/jquery.ui.autocomplete.css" publishTime="02/18/2013 23:19:40" />
     <file relUrl="Content/themes/base/redmond/jquery-ui-1.9.2.custom.min.css" publishTime="02/18/2013 23:19:40" />
@@ -143,6 +143,7 @@
     <file relUrl="Content/MvcMembership.css" publishTime="02/18/2013 23:19:39" />
     <file relUrl="Views/Users/Role.cshtml" publishTime="05/09/2013 12:12:58" />
     <file relUrl="Content/themes/base/images/evolucionamovil_logo.png" publishTime="02/18/2013 23:19:40" />
+    <file relUrl="Views/Home/Politicas_de_Uso.cshtml" publishTime="05/29/2013 23:55:38" />
     <file relUrl="bin/MvcMembership.dll" publishTime="02/18/2013 23:19:42" />
     <file relUrl="Content/themes/base/images/logoComex.png" publishTime="02/18/2013 23:19:40" />
     <file relUrl="Content/themes/base/images/ui-bg_glass_75_e6e6e6_1x400.png" publishTime="02/18/2013 23:19:40" />
@@ -159,7 +160,7 @@
     <file relUrl="Content/Imagen/logodefault.jpg" publishTime="05/21/2013 21:14:51" />
     <file relUrl="Content/themes/base/jquery.ui.button.css" publishTime="02/18/2013 23:19:40" />
     <file relUrl="Views/Depositos/Confirm.cshtml" publishTime="05/21/2013 21:14:52" />
-    <file relUrl="Views/Depositos/Report.cshtml" publishTime="05/21/2013 21:14:52" />
+    <file relUrl="Views/Depositos/Report.cshtml" publishTime="05/29/2013 23:31:49" />
     <file relUrl="Views/Exceptions/Index.cshtml" publishTime="05/21/2013 21:14:52" />
     <file relUrl="Content/themes/base/images/select-icons.gif" publishTime="02/18/2013 23:19:40" />
     <file relUrl="Content/themes/base/images/evolucionamovil_commingsoon.jpg" publishTime="02/18/2013 23:19:40" />
@@ -172,7 +173,7 @@
     <file relUrl="bin/System.Web.WebPages.Razor.xml" publishTime="04/18/2013 19:58:27" />
     <file relUrl="bin/WebMatrix.WebData.xml" publishTime="04/18/2013 19:58:28" />
     <file relUrl="Views/PayCenters/Index.cshtml" publishTime="05/26/2013 23:40:35" />
-    <file relUrl="Views/Shared/_Layout.cshtml" publishTime="05/29/2013 11:01:20" />
+    <file relUrl="Views/Shared/_Layout.cshtml" publishTime="05/29/2013 23:57:36" />
     <file relUrl="Views/Servicios/Index.cshtml" publishTime="02/18/2013 23:19:40" />
     <file relUrl="Content/themes/base/jquery.ui.selectable.css" publishTime="02/18/2013 23:19:40" />
     <file relUrl="Areas/MvcMembership/Views/Users/CreateUser.cshtml" publishTime="05/02/2013 20:54:34" />
@@ -185,6 +186,7 @@
     <file relUrl="Content/themes/base/jquery.ui.accordion.css" publishTime="02/18/2013 23:19:40" />
     <file relUrl="Scripts/Paquetes-comprar.js" publishTime="05/21/2013 21:14:52" />
     <file relUrl="Views/Servicios/Delete.cshtml" publishTime="02/18/2013 23:19:40" />
+    <file relUrl="Views/Home/Aviso_de_Privacidad.cshtml" publishTime="05/29/2013 23:24:37" />
     <file relUrl="Content/themes/base/images/images/telmex.jpg" publishTime="05/28/2013 23:58:39" />
     <file relUrl="Content/themes/base/images/ui-bg_flat_0_aaaaaa_40x100.png" publishTime="02/18/2013 23:19:40" />
     <file relUrl="Content/themes/base/images/images/vetv.jpg" publishTime="05/28/2013 23:58:41" />
@@ -252,7 +254,7 @@
     <file relUrl="Content/themes/base/images/bg-nav-main.gif" publishTime="02/18/2013 23:19:40" />
     <file relUrl="Content/themes/base/images/loading.gif" publishTime="05/21/2013 21:13:08" />
     <file relUrl="Content/themes/base/images/select-icon.gif" publishTime="02/18/2013 23:19:40" />
-    <file relUrl="Content/Site.css" publishTime="05/29/2013 10:57:14" />
+    <file relUrl="Content/Site.css" publishTime="05/29/2013 23:56:47" />
     <file relUrl="bin/WebMatrix.Data.xml" publishTime="04/18/2013 19:58:28" />
     <file relUrl="Scripts/jquery.validate-vsdoc.js" publishTime="02/18/2013 23:19:40" />
     <file relUrl="Content/themes/base/images/images/Edocuenta.jpg" publishTime="05/28/2013 23:14:24" />

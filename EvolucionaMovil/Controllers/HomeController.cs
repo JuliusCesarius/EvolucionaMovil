@@ -53,7 +53,11 @@ namespace EvolucionaMovil.Controllers
 
             return View();
         }
-        public ActionResult Politicas_de_confidencialidad()
+        public ActionResult Aviso_de_Privacidad()
+        {
+            return View();
+        }
+        public ActionResult Politicas_de_Uso()
         {
             return View();
         }

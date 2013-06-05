@@ -22,7 +22,7 @@ namespace EvolucionaMovil.Models
         public string Motivo { get; set; }
 
         public string Cuenta { get; set; }
-        public string PayCenter { get; set; }
+        public string PayCenterName { get; set; }
         public string MontoString { get; set; }
         public string StatusString { get { return ((enumEstatusMovimiento)this.Status).ToString(); } }
         public Boolean isAbono { get; set; }

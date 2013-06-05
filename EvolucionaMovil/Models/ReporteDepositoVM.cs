@@ -25,7 +25,6 @@ namespace EvolucionaMovil.Models
         [Required]
         public DateTime? FechaPago { get; set; }
         public enumTipoCuenta TipoCuenta { get; set; }
-        [Required]
         public string PayCenterName { get; set; }
         [Required]
         public int PayCenterId { get; set; }

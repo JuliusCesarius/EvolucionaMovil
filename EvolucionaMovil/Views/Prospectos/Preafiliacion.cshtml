@@ -72,7 +72,7 @@
             Html.RenderPartial("_InvisibleCaptcha", new EvolucionaMovil.Models.InvisibleCaptcha(), null);
         }}
         <input type="checkbox" id="acceptTerms" />
-        <label for="acceptTerms" class="checkbox">Acepto las <a>condiciones de Evoluciona Móvil ®</a></label>
+        <label for="acceptTerms" class="checkbox">Acepto las <a href="@Url.Content("~/home/Politicas_de_Uso")">Políticas de uso Evoluciona Móvil ®</a></label>
         <p id="checkMessage" class="error leyenda"></p>
         @*@if (ViewBag.Mensajes != null && ViewBag.Mensajes.Count > 0)
         {
@@ -104,12 +104,12 @@
     <h3>
         Para poder acceder a nuestro sistema, debes ser afiliado. Todos los datos son obligatorios, 
         dado que nuestra área de afiliados es exclusiva de ellos. 
-        Si deseas algún otro tipo de información dirígete a nuestro <a>formulario de contacto</a> o envíanos un mensaje 
+        Si deseas algún otro tipo de información dirígete a nuestro <a href="@Url.Content("~/home/Contacto")">formulario de contacto</a> o envíanos un mensaje 
         a <a>servicioalcliente@evolucionamovil.com</a>.
     </h3>
     <br />
     <h4>
-        Antes de enviar tu solicitud de afilación, recomendamos ampliamente leer nuestras <a>Políticas de Confidencialidad</a>.
+        Antes de enviar tu solicitud de afilación, recomendamos ampliamente leer nuestro <a href="@Url.Content("~/home/Aviso_de_Privacidad")">Aviso de privacidad</a>.
     </h4>
     <br />
     <p class="alrgt">

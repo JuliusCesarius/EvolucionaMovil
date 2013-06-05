@@ -8,7 +8,7 @@
 
 function ValidateCheck(event) {
     if (!$("#acceptTerms").prop("checked")) {
-        $("#checkMessage").html("Es necesario que leas y aceptes las “Políticas de confidencialidad y privacidad de la información”.");
+        $("#checkMessage").html("Es necesario que lea y acepte el “Aviso de Privacidad”.");
         event.preventDefault();
     }
     else { 

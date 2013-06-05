@@ -1025,7 +1025,8 @@ legend{font-size:2em;font-weight:400}
 .resumen{height:30px;margin-top:0}
 .resumen h1,.resumen h2,.resumen h3,.resumen a{display:inline-block}
 .resumen.saldos{padding-top:0.7em}
-.resumen.saldos h3{padding-left:1em}
+.resumen.saldos h3{padding-left:.0em}
+.resumen.saldos #saldoActual{font-weight:bold}
 .resumen.saldos span{color:#222}
 .resumen.saldos span.cargo{color:Red}
 .resumen.h2{font-size:1.6em}
@@ -1159,11 +1160,14 @@ box-shadow:0 0 0 #000, 0 5px 5px #eee;}
 
 #politicas{width:800px;margin:0 auto;line-height:1.5em;text-align:justify}
 #politicas p{margin:1.5em 0}
-#politicas h2{}
+#politicas h1, #politicas h2{margin-bottom:1em;line-height:1.5em}
 #politicas h3{color:#888}
 #politicas ul{list-style-type: disc;}
 #politicas ul li{display:list-item}
 #politicas ol{list-style-type:decimal}
+#politicas ol ol{list-style-type:lower-latin}
+#politicas ol.abc{list-style-type:lower-alpha}
+#politicas ol.abc ol{list-style-type:decimal}
 #politicas ol li{display:list-item}
 #politicas ol, #politicas ul
 {

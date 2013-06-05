@@ -391,7 +391,8 @@
     <Content Include="Views\Shared\_Captcha.cshtml" />
     <Content Include="Views\Shared\_InvisibleCaptcha.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\Home\Politicas_de_confidencialidad.cshtml" />
+    <Content Include="Views\Home\Aviso_de_Privacidad.cshtml" />
+    <Content Include="Views\Home\Politicas_de_Uso.cshtml" />
     <None Include="_bin_deployableAssemblies\System.Web.Mvc.dll" />
     <None Include="_bin_deployableAssemblies\WebMatrix.WebData.xml" />
     <None Include="_bin_deployableAssemblies\WebMatrix.WebData.dll" />

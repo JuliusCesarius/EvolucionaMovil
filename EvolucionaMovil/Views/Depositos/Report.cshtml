@@ -23,13 +23,22 @@
     @Html.ValidationSummary(true)
     <fieldset>
         <legend>Reportar Depósito</legend>  
-
+        @{var hiddenString = "style=display:none";}
+        <div class="pagservsal resumen saldos" @(Model.PayCenterId > 0 ? string.Empty : hiddenString)>
+            <h3>
+                Saldo Actual <span id="saldoActual">@ViewData["SaldoActual"]</span></h3>
+            <h3>
+                Eventos <span id="eventoActual">@ViewData["Eventos"]</span></h3>
+            <a href="/Paquetes/Buy">[comprar]</a>
+            <div class="clear"></div>
+        </div>
         
             @if (HttpContext.Current.User.IsInRole(enumRoles.Staff.ToString()) || HttpContext.Current.User.IsInRole(enumRoles.Administrator.ToString()))
             {
                 <div class="editor-label"><label for="PayCenterName">PayCenters</label></div>        
                  <div class="editor-field">
                     @Html.EditorFor(model => model.PayCenterName)
+                    @Html.HiddenFor(model => model.PayCenterName)
                     <input type="hidden" id="hddPayCenterId" name="PayCenterId" value="@Model.PayCenterId" />
                     @Html.ValidationMessageFor(model => model.PayCenterName)
                  </div>
@@ -96,7 +105,7 @@
         
         <p class="nota">Aquí van algunas advertencias y avisos correspondientes al reporte de los depósitos que debe estar conciente el usuario al mommento de estar reportando el servicio.</p>
         <input type="checkbox" id="acceptTerms"/>
-        <label for="acceptTerms" class="checkbox">Acepto las <a>condiciones de Evoluciona Móvil ®</a></label>
+        <label for="acceptTerms" class="checkbox">Acepto las <a href="@Url.Content("~/home/Politicas_de_Uso")">Políticas de uso de Evoluciona Móvil ®</a></label>
         @if (ViewBag.Mensajes != null && ViewBag.Mensajes.Count > 0)
         {
             <div class="message"><ul>

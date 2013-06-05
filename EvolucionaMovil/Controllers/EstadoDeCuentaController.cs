@@ -301,7 +301,7 @@ namespace EvolucionaMovil.Controllers
                 FechaCreacion = movimiento.FechaCreacion.ToString(),
                 Status = movimiento.Status,
                 Cuenta = cuenta,
-                PayCenter = PayCenter.Nombre,
+                PayCenterName = PayCenter.Nombre,
                 Motivo = ((enumMotivo)movimiento.Motivo).ToString(),
                 Saldo = (movimiento.SaldoActual != null ? ((decimal)movimiento.SaldoActual).ToString("C3") : "0"),
                 isAbono = movimiento.IsAbono,

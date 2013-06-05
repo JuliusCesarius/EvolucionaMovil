@@ -12,7 +12,7 @@
     <h2>Información del Depósito</h2>
     <div class="display-label">PayCenter</div>
     <div class="display-field">
-        @Html.DisplayFor(model => model.PayCenter)
+        @Html.DisplayFor(model => model.PayCenterName)
         @Html.HiddenFor(model => model.PayCenterId)
     </div>
 
@@ -57,7 +57,7 @@
     </div>
         
      <input type="hidden" name ="AbonoId" value="@Model.AbonoId"/>
-     <input type="hidden" name ="PayCenter" value="@Model.PayCenter"/>
+     <input type="hidden" name ="PayCenterName" value="@Model.PayCenterName"/>
      <input type="hidden" name ="TipoCuenta" value="@Model.TipoCuenta"/>
      <input type="hidden" name ="Banco" value="@Model.Banco"/>
      <input type="hidden" name ="CuentaBancaria" value="@Model.CuentaBancaria"/>
