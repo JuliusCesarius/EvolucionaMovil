@@ -71,6 +71,17 @@ namespace EvolucionaMovil.Controllers
         [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.PayCenter, enumRoles.Staff })]
         public ViewResult Details(int id)
         {
+             bool isValid = true;
+             if (User.IsInRole(enumRoles.PayCenter.ToString()))
+             {
+                 isValid = repository.IsAuthorized(PayCenterId, id);
+             }
+             if (!isValid)
+             {
+                 AddValidationMessage(enumMessageType.BRException, "No tiene autorización para este depósito");
+                 return View(new AbonoVM());
+             }
+
             AbonoVM abonoVM = FillAbonoVM(id);
             //Leer el usuario que viene en la sesión
             int RoleUser = GetRolUser(HttpContext.User.Identity.Name);

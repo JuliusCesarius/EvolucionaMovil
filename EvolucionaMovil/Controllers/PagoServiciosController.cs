@@ -65,7 +65,20 @@ namespace EvolucionaMovil.Controllers
         [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.Staff, enumRoles.PayCenter })]
         public ViewResult Details(int id)
         {
-            PagoVM pagoVM = FillPagoVM(id);
+            PagoVM pagoVM;
+             bool isValid = true;
+             if (User.IsInRole(enumRoles.PayCenter.ToString()))
+             {
+                 isValid = repository.IsAuthorized(PayCenterId, id);
+             }
+             if (!isValid)
+             {
+                 AddValidationMessage(enumMessageType.BRException, "No tiene autorización para este pago.");
+                 pagoVM = new PagoVM();
+                 pagoVM.FechaVencimiento = Convert.ToDateTime ("01/01/1999");
+                 return View(pagoVM);
+             }
+             pagoVM = FillPagoVM(id);
             int RoleUser = GetRolUser(HttpContext.User.Identity.Name);
             ViewBag.Role = RoleUser;
 
