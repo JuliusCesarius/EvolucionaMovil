@@ -124,5 +124,19 @@ namespace EvolucionaMovil.Repositories
                 return 0;
             }
         }
+
+        public string  GetPayCenterEmail(string UserName)
+        {
+            var payCenter = context.PayCenters.Where(p => p.UserName == UserName && p.Baja == false).FirstOrDefault();
+            if (payCenter != null)
+            {
+                return payCenter.Email;
+            }
+            else
+            {
+                return string.Empty;
+            }
+        }
+
     }
 }
