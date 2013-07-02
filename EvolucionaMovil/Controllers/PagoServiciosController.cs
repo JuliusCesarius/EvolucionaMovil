@@ -499,9 +499,9 @@ namespace EvolucionaMovil.Controllers
         private string getMensajeConfirmacion(Pago p)
         {
             // emailTemplate= emailTemplate.Replace("@logoUrl", RelativeURLHelper.ToFullUrl(p.PayCenter.Logotipo));
-            string Logo = "<img src=\"" + string.Format("{0}://{1}", Request.Url.Scheme, Request.Url.Authority) + p.PayCenter.Logotipo + "\" alt=\"\"  />";
+
+            string Logo = "<img src=\"" + string.Format("{0}://{1}", Request.Url.Scheme, Request.Url.Authority) + p.PayCenter.Logotipo + "\" />";
             string emailTemplate = System.IO.File.ReadAllText(Server.MapPath("~/Content/Templates/TicketTemplate.htm"));
-            
             emailTemplate = emailTemplate.Replace("@logoUrl", Logo);
             emailTemplate = emailTemplate.Replace("@Fecha", p.FechaCreacion.ToString());
             emailTemplate = emailTemplate.Replace("@Folio", p.Ticket.Folio);
