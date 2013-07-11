@@ -65,7 +65,20 @@ namespace EvolucionaMovil.Controllers
         [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.Staff, enumRoles.PayCenter })]
         public ViewResult Details(int id)
         {
-            PagoVM pagoVM = FillPagoVM(id);
+            PagoVM pagoVM;
+             bool isValid = true;
+             if (User.IsInRole(enumRoles.PayCenter.ToString()))
+             {
+                 isValid = repository.IsAuthorized(PayCenterId, id);
+             }
+             if (!isValid)
+             {
+                 AddValidationMessage(enumMessageType.BRException, "No tiene autorización para este pago.");
+                 pagoVM = new PagoVM();
+                 pagoVM.FechaVencimiento = Convert.ToDateTime ("01/01/1999");
+                 return View(pagoVM);
+             }
+             pagoVM = FillPagoVM(id);
             int RoleUser = GetRolUser(HttpContext.User.Identity.Name);
             ViewBag.Role = RoleUser;
 
@@ -118,7 +131,7 @@ namespace EvolucionaMovil.Controllers
                             AddValidationMessage(enumMessageType.Succeed, "El reporte de depósito ha sido " + nuevoEstatus.ToString() + " correctamente");
                             var paycenter = pRepository.LoadById(pago.PayCenter.PayCenterId);
                             if (paycenter != null)
-                                Succeed = EmailHelper.Enviar(getMensaje(nuevoEstatus.ToString(), pago), "El Pago de Servicio " + pago.Ticket.Folio + " ha sido " + nuevoEstatus.ToString(), paycenter.Email);
+                                Succeed = EmailHelper.Enviar(getMensajeCambioEstatus(nuevoEstatus.ToString(), pago), "El Pago de Servicio " + pago.Ticket.Folio + " ha sido " + nuevoEstatus.ToString(), paycenter.Email);
                             //No obtuve lo errores por que es una clase estática y va a almacenar los de todas las sesiones
                             //ValidationMessages.AddRange(EmailHelper
                             AddValidationMessage(enumMessageType.Notification, "No pueo enviarse el email de aviso. Comuníquelo al administrador");
@@ -225,9 +238,7 @@ namespace EvolucionaMovil.Controllers
                     }
 
                     repository.Add(pago);
-                    repository.Save();
-
-                    br.ActualizaReferenciaIdMovimiento(pago.MovimientoId, pago.PagoId);
+                    repository.Save();                   br.ActualizaReferenciaIdMovimiento(pago.MovimientoId, pago.PagoId);
                     repository.Save();
 
                     model.PagoId = pago.PagoId;
@@ -264,6 +275,10 @@ namespace EvolucionaMovil.Controllers
                         {
                             AddValidationMessage(enumMessageType.UnhandledException, "Su pago ha sido Registrado con éxito. Sin embargo, no se pudo generar el ticket, favor de comunicarse con un ejecutivo. ");
                         }
+                        //TODO: Enviar email de confirmación
+                        PayCentersRepository PayCentersRepository = new PayCentersRepository();
+                        EmailHelper.Enviar(getMensajeConfirmacion(pago), "El Pago de Servicio se ha sido registrado. ",PayCentersRepository.GetPayCenterEmail(PayCenterName));
+
                         return RedirectToAction("Ticket/" + ticket.PagoId.ToString());
                     }
                     catch (Exception ex)
@@ -461,7 +476,7 @@ namespace EvolucionaMovil.Controllers
         }
 
         [NonAction]
-        private string getMensaje(string status, Pago p)
+        private string getMensajeCambioEstatus(string status, Pago p)
         {
 
             StringBuilder cadena = new StringBuilder();
@@ -486,7 +501,36 @@ namespace EvolucionaMovil.Controllers
                 cadena.AppendLine("Comentarios: <h4>" + lastEstatus.Comentarios + "</h4>");
             }
             cadena.AppendLine("<a alt='DetallePago' href='" + RelativeURLHelper.ToFullUrl("PagoServicios/Details/" + p.PagoId.ToString()) + "'>Ver detalle de este pago</a>");
+
             return cadena.ToString();
+        }
+
+        [NonAction]
+        private string getMensajeConfirmacion(Pago p)
+        {
+            // emailTemplate= emailTemplate.Replace("@logoUrl", RelativeURLHelper.ToFullUrl(p.PayCenter.Logotipo));
+
+            string Logo = "<img src=\"" + string.Format("{0}://{1}", Request.Url.Scheme, Request.Url.Authority) + p.PayCenter.Logotipo + "\" />";
+            string emailTemplate = System.IO.File.ReadAllText(Server.MapPath("~/Content/Templates/TicketTemplate.htm"));
+            emailTemplate = emailTemplate.Replace("@logoUrl", Logo);
+            emailTemplate = emailTemplate.Replace("@Fecha", p.FechaCreacion.ToString());
+            emailTemplate = emailTemplate.Replace("@Folio", p.Ticket.Folio);
+            emailTemplate = emailTemplate.Replace("@Vendedor", p.Ticket.PayCenterName);
+            emailTemplate = emailTemplate.Replace("@Servicio", p.Servicio);
+            emailTemplate = emailTemplate.Replace("@Cliente", p.ClienteNombre);
+            emailTemplate = emailTemplate.Replace("@Leyenda", p.Ticket.Leyenda);
+            emailTemplate = emailTemplate.Replace("@Footer", "ESTE COMPROBANTE NO ES VÁLIDO PARA EFECTOS FISCALES EN TERMINOS DE OFICIO DE NO 325-SAT-VII-B-2650 DE FECHA 1 DE DICIEMBRE DE 1997");
+            emailTemplate = emailTemplate.Replace("@Importe", p.Importe.ToString());
+
+            StringBuilder detallePago = new StringBuilder();
+            foreach (DetallePago d in p.DetallePagos)
+            {
+                detallePago.AppendLine("<tr><td style=\"font-size: .7em;width: 38%;vertical-align: text-top;margin: 0;position: relative;color: #aaa;text-align: left;\">"
+                + d.Campo + "</td><td style=\"margin:0;width:38%;font-size: .8em!important;text-align: left;\">" + d.Valor + "</td></tr></tr>");
+            }
+            emailTemplate = emailTemplate.Replace("@DynamicFields", detallePago.ToString());
+
+            return emailTemplate;
         }
 
         [HttpPost]

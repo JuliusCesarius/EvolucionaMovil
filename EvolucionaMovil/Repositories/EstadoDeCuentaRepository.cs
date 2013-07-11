@@ -27,6 +27,11 @@ namespace EvolucionaMovil.Repositories
                 .OrderByDescending(m => m.FechaActualizacion);
         }
 
+        public bool IsAuthorized(int PayCenterId, int MovimientoId)
+        {
+            return context.Movimientos.Any(x => x.PayCenterId == PayCenterId && x.MovimientoId == MovimientoId);
+        }
+
         public int GetEventosDisponibles(int PayCenterId)
         {
             var eventos = context.CompraEventos.Where(x => x.PayCenterId == PayCenterId);

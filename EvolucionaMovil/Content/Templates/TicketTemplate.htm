@@ -1,0 +1,67 @@
+﻿    
+    
+    <table style="width: 350px; line-height: 1.6em; border: 1px solid #ccc; width: 350px;
+        padding: 2em .5em .5em .5em; text-align: center; font-size: 1.2em; margin-bottom: 3em;"
+        border="0" cellpadding="1" cellspacing="3">
+        <tr>
+            <td align="center" colspan="2">
+                @logoUrl
+            </td>
+        </tr>
+        <tr> 
+            <td align="center" colspan="2" style ="font-size: .9em;color: #000;text-align: center ;padding-bottom: 0;margin-bottom: 0;font-weight: bold!important;">
+               <p >
+               Su reporte de pago de servicio ha sido registrado. En breve sera procesado
+               </p>
+            </td>
+        </tr>
+        <tr style="border-bottom-color:Blue;" >
+            <td style="font-size: .8em;display: inline;width: 55%;min-height: 26px;text-align: left;color: #aaa;">@Fecha</td>
+            <td style="font-size: .8em;width: 48%;min-height: 26px; font-weight: bold;text-align: right;" >Folio @Folio</td>
+        </tr>
+         <tr>
+            <td style="border-top:1px solid #ccc;" colspan="2"></td>
+        </tr>
+    
+        <tr>
+            <td style="font-size: .8em;width: 38%;vertical-align: text-top;margin: 0;position: relative;color: #aaa;text-align: left;" >Vendedor</td>
+            <td style="width:38%;margin: 0;vertical-align: text-top;text-align: left;">@Vendedor</td>  
+                 
+        </tr>
+         <tr>
+            <td style="font-size: .8em;width: 38%;vertical-align: text-top;margin: 0;position: relative;color: #aaa;text-align: left;">Servicio</td>
+            <td style="margin:0;width:38%;font-weight: bold!important;font-size: 1.2em!important;text-align: left;">@Servicio</td>
+        </tr>
+  
+        @DynamicFields
+
+        <tr >
+            <td style="font-size: .8em;width: 38%;vertical-align: text-top;margin: 0;position: relative;color: #aaa;text-align: left;">
+                Cliente
+            </td>
+            <td style="margin:0;width:38%;font-size: .8em!important;text-align: left;">
+                @Cliente
+            </td>
+        </tr>
+            <tr>
+            <td style="font-size: .8em;width: 38%;vertical-align: text-top;margin: 0;position: relative;color: #aaa;text-align: left;">
+                Importe
+         </td>
+            <td style="margin:0;width:38%;font-weight: bold!important;text-align: left;font-size: 1.2em!important;">
+                $ @Importe
+            </td>
+        </tr>
+        <tr>
+            <td align="center" colspan="2" style="background: rgb(240, 240, 240)!important;border-top: 1px solid #ccc;padding: .5em;margin: 1em -1em;font-size: .7em;line-height: 1.3em;">
+               @Leyenda
+            </td>
+        </tr>
+        <tr >
+            <td align="center" colspan="2"   style="border-top: 1px solid #000;font-size: .6em;font-weight: bold;line-height: 1.3em;margin-top: 1em; padding: 1em;text-align: center;">
+                @Footer
+            </td>
+             
+
+        </tr>
+
+    </table>

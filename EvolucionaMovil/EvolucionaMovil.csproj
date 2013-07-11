@@ -211,6 +211,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bancos.css" />
+    <Content Include="Content\Templates\TicketTemplate.htm" />
     <Content Include="Content\themes\base\images\images\axtel.jpg" />
     <Content Include="Content\themes\base\images\images\banamex.jpg" />
     <Content Include="Content\themes\base\images\images\cablemas.jpg" />

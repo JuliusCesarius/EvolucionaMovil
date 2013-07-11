@@ -76,6 +76,17 @@ namespace EvolucionaMovil.Controllers
         {
             //Cuenta cuenta = repository.LoadById(id);
            
+            //Validar que pueda consultar el movimiento
+            bool isValid = true;
+            if (User.IsInRole(enumRoles.PayCenter.ToString()))
+            {
+                isValid = repository.IsAuthorized(PayCenterId, id);
+            }
+            if (!isValid)
+            {
+                AddValidationMessage(enumMessageType.BRException, "No tiene autorización para este movimiento");
+                return View(new EstadoCuentaVM());
+            }
             return View(FillEstadoDeCuentaVM(id));
         }
 

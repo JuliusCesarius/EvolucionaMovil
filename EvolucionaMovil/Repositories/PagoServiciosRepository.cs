@@ -13,6 +13,11 @@ namespace EvolucionaMovil.Repositories
         {
             return context.Pagos.Where(x => x.PayCenterId == PayCenterId);
         }
+
+        public bool IsAuthorized(int PayCenterId, int PagoId)
+        {
+            return context.Pagos.Any(x => x.PayCenterId == PayCenterId && x.PagoId == PagoId);
+        }
     }
 
 }
