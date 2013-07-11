@@ -1026,7 +1026,8 @@ legend{font-size:2em;font-weight:400}
 .resumen h1,.resumen h2,.resumen h3,.resumen a{display:inline-block}
 .resumen.saldos{padding-top:0.7em}
 .resumen.saldos h3{padding-left:.0em}
-.resumen.saldos #saldoActual{font-weight:bold}
+.resumen.saldos #saldoActual, .resumen.saldos #saldoDisponible{font-weight:bold}
+.resumen.saldos #eventoDisponible{font-weight:bold}
 .resumen.saldos span{color:#222}
 .resumen.saldos span.cargo{color:Red}
 .resumen.h2{font-size:1.6em}

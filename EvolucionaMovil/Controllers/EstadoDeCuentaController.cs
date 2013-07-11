@@ -225,6 +225,7 @@ namespace EvolucionaMovil.Controllers
                 //todo:Checar que tipo de saldo debo de mostrar
                 ViewData["Eventos"] = saldos.EventosDisponibles;
                 ViewData["SaldoActual"] = saldos.SaldoActual.ToString("C");
+                ViewData["SaldoDisponible"] = saldos.SaldoDisponible.ToString("C");
             }
             if (Parameters != null)
             {

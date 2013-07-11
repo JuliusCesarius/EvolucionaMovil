@@ -153,10 +153,12 @@ namespace EvolucionaMovil.Controllers
             pagoVM.PayCenterId = PayCenterId;
             if (PayCenterId > 0)
             {
-                EstadoCuentaBR br = new EstadoCuentaBR();
-                ViewData["Eventos"] = pqrepository.GetEventosByPayCenter(PayCenterId);
+                EstadoCuentaBR br = new EstadoCuentaBR();                
                 var saldo = br.GetSaldosPagoServicio(PayCenterId);
-                ViewData["SaldoActual"] = saldo.SaldoActual;
+                ViewData["Eventos"] = saldo.EventosDisponibles;
+                ViewData["SaldoActual"] = saldo.SaldoActual.ToString("C");
+                ViewData["SaldoDisponible"] = saldo.SaldoDisponible.ToString("C");
+
             }
             return View(pagoVM);
         }
@@ -173,9 +175,10 @@ namespace EvolucionaMovil.Controllers
             }
 
             EstadoCuentaBR br = new EstadoCuentaBR(repository.context);
-            ViewData["Eventos"] = pqrepository.GetEventosByPayCenter(PayCenterId);
             var saldo = br.GetSaldosPagoServicio(PayCenterId);
-            ViewData["SaldoActual"] = saldo.SaldoActual;
+            ViewData["SaldoActual"] = saldo.SaldoActual.ToString("C");
+            ViewData["SaldoDisponible"] = saldo.SaldoDisponible.ToString("C");
+            ViewData["Eventos"] = saldo.EventosDisponibles;
 
             if (model.Importe <= 0)
             {
@@ -190,7 +193,9 @@ namespace EvolucionaMovil.Controllers
                     Pago pago = new Pago();
                     PaycenterBR payCenterBR = new PaycenterBR();
                     var cuentaId = payCenterBR.GetOrCreateCuentaPayCenter(PayCenterId, enumTipoCuenta.Pago_de_Servicios, PROVEEDOR_EVOLUCIONAMOVIL);
-                    List<Movimiento> movimientos = br.CrearMovimientosPagoServicios(PayCenterId, (Decimal)model.Importe, PayCenterName);
+                    //Devuelve si usa evento en el pago
+                    bool usaEvento = false;
+                    List<Movimiento> movimientos = br.CrearMovimientosPagoServicios(PayCenterId, (Decimal)model.Importe, PayCenterName, out usaEvento);
                     Succeed = br.Succeed;
                     ValidationMessages = br.ValidationMessages;
                     if (!Succeed)
@@ -207,6 +212,7 @@ namespace EvolucionaMovil.Controllers
                     pago.Servicio = model.Servicios.Where(x => x.Value == model.ServicioId).FirstOrDefault().Text;
                     pago.PayCenterId = PayCenterId;
                     pago.Movimiento = movimientos.Where(x=>x.Motivo == (short)enumMotivo.Pago).First();
+                    pago.UsoEvento = usaEvento;
 
                     var iDetalles = serviciosRepository.LoadDetallesServicioByServicioID(pago.ServicioId);
                     foreach (DetalleServicio d in iDetalles)
@@ -357,11 +363,15 @@ namespace EvolucionaMovil.Controllers
             if (Parameters != null && !string.IsNullOrEmpty(Parameters.searchString))
                 pagosServicioVM = pagosServicioVM.Where(x => x.NombreCliente.ToLower().Contains(Parameters.searchString.ToLower()) || x.Servicio.ToLower().Contains(Parameters.searchString.ToLower()));
 
-
-            EstadoCuentaBR br = new EstadoCuentaBR();
-            ViewData["Eventos"] = pqrepository.GetEventosByPayCenter(PayCenterId);
-            var saldo = br.GetSaldosPagoServicio(PayCenterId);
-            ViewData["SaldoActual"] = saldo.SaldoActual;
+            if (PayCenterId > 0)
+            {
+                EstadoCuentaBR estadoCuentaBR = new EstadoCuentaBR();
+                var saldos = estadoCuentaBR.GetSaldosPagoServicio(PayCenterId);
+                //todo:Checar que tipo de saldo debo de mostrar
+                ViewData["Eventos"] = saldos.EventosDisponibles;
+                ViewData["SaldoActual"] = saldos.SaldoActual.ToString("C");
+                ViewData["SaldoDisponible"] = saldos.SaldoDisponible.ToString("C");
+            }
 
             if (Parameters != null)
             {
