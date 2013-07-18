@@ -15,5 +15,12 @@ namespace EvolucionaMovil.Repositories
         {
             return context.Proveedors.Where(x => x.TipoCuenta == (short)TipoCuenta.GetHashCode());
         }
+
+        public IEnumerable<Proveedor> GetProveedorBySearchString(string searchString)
+        {
+            var Proveedores = context.Proveedors.Where(p => (p.Nombre.Contains(searchString)) && p.Baja == false);
+            return Proveedores;
+        }
+
     }
 }

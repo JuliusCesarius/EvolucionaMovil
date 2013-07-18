@@ -1804,7 +1804,7 @@
     </Options>
     <!-- Diagram content (shape and connector positions) -->
     <Diagrams>
-      <Diagram Name="EvolucionaMovilBD" ZoomLevel="67">
+      <Diagram Name="EvolucionaMovilBD" ZoomLevel="89">
         <EntityTypeShape EntityType="EvolucionaMovilBDModel.Banco" Width="1.5" PointX="9.125" PointY="3.125" Height="1.9802864583333388" />
         <EntityTypeShape EntityType="EvolucionaMovilBDModel.CompraEvento" Width="1.5" PointX="9.5" PointY="10.25" Height="2.749492187499996" />
         <EntityTypeShape EntityType="EvolucionaMovilBDModel.CuentaBancaria" Width="1.5" PointX="7.25" PointY="1.5" Height="3.9033007812499996" />
@@ -1834,24 +1834,24 @@
           <ConnectorPoint PointX="8.875" PointY="7.749746093749998" />
         </AssociationConnector>
         <EntityTypeShape EntityType="EvolucionaMovilBDModel.ErrorLog" Width="1.5" PointX="9.375" PointY="13.25" Height="2.9417936197916656" />
-        <EntityTypeShape EntityType="EvolucionaMovilBDModel.CuentaPayCenter" Width="1.5" PointX="4.875" PointY="7.125" Height="2.7494921875000031" />
-        <EntityTypeShape EntityType="EvolucionaMovilBDModel.Proveedor" Width="1.5" PointX="11.125" PointY="0.5" Height="2.5571907552083388" />
+        <EntityTypeShape EntityType="EvolucionaMovilBDModel.CuentaPayCenter" Width="1.75" PointX="4.875" PointY="7.125" Height="2.7494921875000031" />
+        <EntityTypeShape EntityType="EvolucionaMovilBDModel.Proveedor" Width="2.125" PointX="11.125" PointY="0.625" Height="2.5571907552083388" />
         <AssociationConnector Association="EvolucionaMovilBDModel.FK_Abonos_Cuentas" >
-          <ConnectorPoint PointX="5.8125" PointY="7.125" />
-          <ConnectorPoint PointX="5.8125" PointY="6.27830078125" />
+          <ConnectorPoint PointX="5.9375" PointY="7.125" />
+          <ConnectorPoint PointX="5.9375" PointY="6.27830078125" />
         </AssociationConnector>
         <AssociationConnector Association="EvolucionaMovilBDModel.FK_CuentasPayCenter_Proveedores" >
-          <ConnectorPoint PointX="11.125" PointY="0.96875" />
-          <ConnectorPoint PointX="5.03125" PointY="0.96875" />
+          <ConnectorPoint PointX="11.125" PointY="1.03125" />
+          <ConnectorPoint PointX="5.03125" PointY="1.03125" />
           <ConnectorPoint PointX="5.03125" PointY="7.125" />
         </AssociationConnector>
         <AssociationConnector Association="EvolucionaMovilBDModel.FK_Movimientos_Cuentas" >
-          <ConnectorPoint PointX="6.375" PointY="8.49974609375" />
-          <ConnectorPoint PointX="7.125" PointY="8.49974609375" />
+          <ConnectorPoint PointX="6.625" PointY="8.4997460937500016" />
+          <ConnectorPoint PointX="7.125" PointY="8.4997460937500016" />
         </AssociationConnector>
         <AssociationConnector Association="EvolucionaMovilBDModel.Proveedores_CuentasBancarias" >
-          <ConnectorPoint PointX="8.75" PointY="2.2785953776041694" />
-          <ConnectorPoint PointX="11.125" PointY="2.2785953776041694" />
+          <ConnectorPoint PointX="8.75" PointY="2.28125" />
+          <ConnectorPoint PointX="11.125" PointY="2.28125" />
         </AssociationConnector>
         <EntityTypeShape EntityType="EvolucionaMovilBDModel.DetalleServicio" Width="1.5" PointX="11.125" PointY="6.375" Height="2.749492187499996" />
         <AssociationConnector Association="EvolucionaMovilBDModel.FK_DetalleServicios_Servicios" >
@@ -1866,9 +1866,9 @@
           <ConnectorPoint PointX="5.625" PointY="11.586293945312498" />
         </AssociationConnector>
         <AssociationConnector Association="EvolucionaMovilBDModel.FK_Pagos_Movimientos" >
-          <ConnectorPoint PointX="7.125" PointY="10.117249348958332" />
-          <ConnectorPoint PointX="4.625" PointY="10.117249348958332" />
-          <ConnectorPoint PointX="4.625" PointY="10.5" />
+          <ConnectorPoint PointX="7.125" PointY="10.117249348958335" />
+          <ConnectorPoint PointX="4.5624975" PointY="10.117249348958335" />
+          <ConnectorPoint PointX="4.5624975" PointY="10.5" />
         </AssociationConnector>
         <AssociationConnector Association="EvolucionaMovilBDModel.FK_Tickets_Pagos" >
           <ConnectorPoint PointX="3.625" PointY="12.610301106770834" />
@@ -1889,8 +1889,8 @@
           <ConnectorPoint PointX="5.25" PointY="4.326650390625" />
         </AssociationConnector>
         <AssociationConnector Association="EvolucionaMovilBDModel.FK_Cuentas_PayCenters" >
-          <ConnectorPoint PointX="4.375" PointY="7.8554589843750033" />
-          <ConnectorPoint PointX="4.875" PointY="7.8554589843750033" />
+          <ConnectorPoint PointX="4.375" PointY="7.8554589843750042" />
+          <ConnectorPoint PointX="4.875" PointY="7.8554589843750042" />
         </AssociationConnector>
         <AssociationConnector Association="EvolucionaMovilBDModel.FK_Pagos_PayCenters" >
           <ConnectorPoint PointX="4" PointY="8.5859179687500067" />

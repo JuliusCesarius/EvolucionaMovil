@@ -38,6 +38,7 @@
         }
     });
 
+   
     $("#PayCenterName").autocomplete({
         source: "PayCenters/FindPayCenter",
         select: function (event, ui) {
@@ -56,6 +57,39 @@
             return false;
         }
     });
+
+    $("#ProveedorName").on("keyup", function (event) {
+        var code = event.which;
+        if (code == 13) {
+            event.preventDefault();
+            rebindGrid();
+        } else {
+            if ($(this).val() == "") {
+                event.preventDefault();
+                $('#hddProveedorId').val("");
+            }
+        }
+    });
+
+    $("#ProveedorName").autocomplete({
+        source: "Proveedores/FindProveedores",
+        select: function (event, ui) {
+            var label = ui.item.label;
+            var v = ui.item.value;
+            $('#hddProveedorId').val(v);
+            this.value = label;
+            return false;
+        },
+        focus: function (event, ui) {
+            event.preventDefault();
+            $(this).val(ui.item.label);
+        },
+        open: function () {
+            $(this).autocomplete('widget').css('z-index', 100);
+            return false;
+        }
+    });
+
 
 });
 
