@@ -1,72 +1,75 @@
 ﻿@model IEnumerable<EvolucionaMovil.Models.CuentaBancariaVM>
-
+@section Javascript{
+    <script src="@Url.Content("~/Scripts/CuentasBancarias.js")" type="text/javascript"></script>
+}
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Cuentas de depósito";
 }
 
-<h1>Index</h1>
-
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table>
-    <tr>
-        <th>
-            NumeroCuenta
-        </th>
-        <th>
-            Nombre
-        </th>
-        <th>
-            Titular
-        </th>
-        <th>
-            ClabeInterbancaria
-        </th>
-        <th>
-            NumeroDeTarjeta
-        </th>
-        <th>
-            RFC
-        </th>
-        <th>
-            FechaCreacion
-        </th>
-        <th>
-            Baja
-        </th>
-        <th></th>
-    </tr>
-
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.NumeroCuenta)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Nombre)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Titular)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ClabeInterbancaria)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.NumeroDeTarjeta)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.RFC)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.FechaCreacion)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-            @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-            @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-        </td>
-    </tr>
-}
-
-</table>
+<div class="formLeft cuencont">
+<h2>Cuentas de depósito</h2>
+    <div class="editor-label"><label for="BancoId">Bancos</label></div>        
+            <div class="editor-field">                
+                <select id="BancoId" name="BancoId">
+                    @foreach (EvolucionaMovil.Models.BancoVM banco in ViewBag.Bancos)
+                    {
+                        <option id="@banco.BancoId">@banco.Nombre</option>
+                    }
+                </select>
+                <input type="hidden" id="hddBancos" value="@Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.Bancos)"/>
+            </div> 
+            <div id="cuentas">
+               @{bool showCuenta = true;}
+               @foreach (var item in Model)
+               {
+                <div class="cuenta closed @item.BancoId">
+                   <a class="open"></a>
+                   <input type="hidden" class="hddProvs" name="Proveedores" value="@Newtonsoft.Json.JsonConvert.SerializeObject(item.Proveedores)" />
+                    @if (!string.IsNullOrEmpty(item.NumeroCuenta))
+                    {
+                        showCuenta = false;
+                        <h3><span class="field">No. Cuenta: </span><span class="value fwb">@item.NumeroCuenta</span></h3>
+                    }
+                    else if (!string.IsNullOrEmpty(item.ClabeInterbancaria))
+                    {
+                        <h3><span class="field">Clabe Int.: </span><span class="value fwb">@item.ClabeInterbancaria</span></h3>
+                    }
+                    else if (!string.IsNullOrEmpty(item.NumeroDeTarjeta))
+                    {
+                        <h3><span class="field">No. Tarjeta: </span><span class="value fwb">@item.NumeroDeTarjeta</span></h3>
+                    }
+                    
+                    <div class="detail">
+                        <div><h4 class="fwb"><span class="Titular">Titular:</span><p>@item.Titular</p></h4></div>
+                        @if (showCuenta)
+                        {
+                            <div><span>No. Cuenta:</span><p>@item.Nombre</p></div>
+                        }
+                        <div><span>Nombre:</span><p>@item.Nombre</p></div>
+                        <div><span>Clabe Int.:</span><p>@item.ClabeInterbancaria</p></div>
+                        <div><span>Num. Tarjeta:</span><p>@item.NumeroDeTarjeta</p></div>
+                        <div><span>Detalles:</span><p>@item.Detalles</p></div>
+                        <div><span>Req. Ficha::</span><p>@item.Comprobante</p></div>
+                    </div>
+                </div>
+               }
+            </div>
+</div>
+<div class="formRight provcont">
+<h2>Proveedores</h2>
+<div class="tiposervicio">
+<a tiposerv="0">Pago de Servicios</a>
+<a tiposerv="1">Recargas Electrónicas</a>
+</div>
+    <div id="proveedores">
+               @foreach (EvolucionaMovil.Models.ProveedorVM item in ViewBag.Proveedores)
+               {
+                <div class="proveedor @item.ProveedorId">
+                        <h3><input type="checkbox" value="@item.ProveedorId" tipo="@item.TipoCuenta"/> @item.Nombre</h3>
+                </div>
+               }
+               <div class="tar">
+                    <input type="button" class="freshbutton-blue small" value="Guardar cambios" />
+            </div>
+      </div>
+</div>

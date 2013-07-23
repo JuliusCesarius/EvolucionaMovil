@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 namespace EvolucionaMovil.Models
 {
     public class CuentaBancariaVM
@@ -30,5 +31,6 @@ namespace EvolucionaMovil.Models
         public string NumeroDeTarjeta { get; set; }
         public string RFC { get; set; }
         public string Titular { get; set; }
+        public IEnumerable<int> Proveedores { get; set; } 
     }
 }
