@@ -59,6 +59,7 @@ namespace EvolucionaMovil.Controllers
         [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.PayCenter, enumRoles.Staff })]
         public ViewResult Index(ServiceParameterVM parameters)
         {
+            ModelState.Clear();
             ViewBag.PageSize = parameters.pageSize;
             ViewBag.PageNumber = parameters.pageNumber;
             ViewBag.SearchString = parameters.searchString;
@@ -184,8 +185,13 @@ namespace EvolucionaMovil.Controllers
         private string getConceptoString(Movimiento Movimiento)
         {
             //todo:Devolver formateado el concepto según el motivo
-            var usuarioOriginal = Movimiento.UserName != null?Movimiento.UserName:"Desconocido";
-            return usuarioOriginal + " - " + ((enumMotivo)Movimiento.Motivo).ToString();
+            var usuarioOriginal = Movimiento.UserName != null ? Movimiento.UserName : "Desconocido";
+            string comentario = usuarioOriginal + " - " + ((enumMotivo)Movimiento.Motivo).ToString();
+            if (Movimiento.CuentasPayCenter != null && Movimiento.CuentasPayCenter.Proveedore != null)
+            {
+                comentario += " - " + Movimiento.CuentasPayCenter.Proveedore.Nombre;
+            }
+            return comentario;
         }
 
         private SimpleGridResult<EstadoCuentaVM> getEstadoDeCuenta(ServiceParameterVM Parameters = null)
@@ -193,11 +199,13 @@ namespace EvolucionaMovil.Controllers
             IEnumerable<Movimiento> movimientos;
             if (PayCenterId == 0)
             {
-                movimientos = repository.GetMovimientos();
+                movimientos = repository.GetMovimientos(enumTipoCuenta.Pago_de_Servicios.GetHashCode());
             }
             else
             {
-                movimientos = repository.GetMovimientosByPayCenterId(PayCenterId);
+                //Julius:Comenté esta línea porque no filtraba solo los de Pago de servicios
+                //movimientos = repository.GetMovimientosByPayCenterId(PayCenterId);
+                movimientos = repository.GetMovimientos(enumTipoCuenta.Pago_de_Servicios.GetHashCode(), PayCenterId);
             }
 
             SimpleGridResult<EstadoCuentaVM> simpleGridResult = new SimpleGridResult<EstadoCuentaVM>();

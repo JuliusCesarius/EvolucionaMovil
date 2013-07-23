@@ -91,11 +91,11 @@
             //string  action = "";
           <div>
             @if (@Model.Status != enumEstatusMovimiento.Aplicado.GetHashCode()){
-                if (@Model.Status == enumEstatusMovimiento.Rechazado .GetHashCode()){
-                <input type="button" id = "Aplicar" onclick="MuestraComentario('Aplicar')" name="CambioEstatusVM.Estatus" class="freshbutton-blue" value="Aplicar" /> 
-                }else{
-                     <input type="submit" id = "Aplicar" name="CambioEstatusVM.Estatus" class="freshbutton-blue" value="Aplicar" />
-                }
+                    if (@Model.Status == enumEstatusMovimiento.Rechazado .GetHashCode()){
+                    <input type="button" id = "Aplicar" onclick="MuestraComentario('Aplicar')" name="CambioEstatusVM.Estatus" class="freshbutton-blue" value="Aplicar" /> 
+                    }else{
+                         <input type="submit" id = "Aplicar" name="CambioEstatusVM.Estatus" class="freshbutton-blue" value="Aplicar" />
+                    }
             }
             @if (@Model.Status != enumEstatusMovimiento.Rechazado.GetHashCode())
             {
@@ -123,7 +123,7 @@
  
  }
     <div id="HistorialStatus" class ="accordion">
-         <h3 id="HistEstatus"  class="listHeader">Hitórico de Estatus</h3>
+         <h3 id="HistEstatus"  class="listHeader">Histórico de Estatus</h3>
          <div> 
             @if (Model.HistorialEstatusVM != null)
             {
