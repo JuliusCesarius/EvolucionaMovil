@@ -468,7 +468,8 @@ namespace EvolucionaMovil.Controllers
                     PayCenter = x.PayCenter.UserName,
                     Referencia = x.Referencia,
                     Status = x.Status,
-                    TipoCuenta = ((enumTipoCuenta)x.CuentaPayCenter.TipoCuenta).ToString()
+                    TipoCuenta = ((enumTipoCuenta)x.CuentaPayCenter.TipoCuenta).ToString(),
+                    ProveedorName = "Jo"
                 });
 
             //Filtrar por searchString: Lo puse después del primer filtro porque se complicaba obtener los strings de las tablas referenciadas como bancos, cuenta bancaria, etc.

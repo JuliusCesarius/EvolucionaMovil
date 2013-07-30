@@ -19,5 +19,6 @@ namespace EvolucionaMovil.Models
         public int PayCenterId { get; set; }
         public string Referencia { get; set; }
         public string Comentarios { get; set; }
+        public string ProveedorName { get; set; }
     }
 }
