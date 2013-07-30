@@ -1,21 +1,11 @@
 ﻿@model EvolucionaMovil.Models.CuentaBancariaVM
 
-@{
-    ViewBag.Title = "Edit";
-}
 
-<h1>Edit</h1>
-
-<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
-<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
-
-@using (Html.BeginForm()) {
+@using (Ajax.BeginForm("_Edit", "CuentasBancarias", null))
+{
     @Html.ValidationSummary(true)
     <fieldset>
-        <legend>CuentaBancaria</legend>
-
         @Html.HiddenFor(model => model.BancoId)
-
         @Html.HiddenFor(model => model.CuentaId)
 
         <div class="editor-label">
@@ -57,20 +47,24 @@
             @Html.EditorFor(model => model.NumeroDeTarjeta)
             @Html.ValidationMessageFor(model => model.NumeroDeTarjeta)
         </div>
-
         <div class="editor-label">
-            @Html.LabelFor(model => model.RFC)
+            @Html.LabelFor(model => model.Detalles)
         </div>
         <div class="editor-field">
-            @Html.EditorFor(model => model.RFC)
-            @Html.ValidationMessageFor(model => model.RFC)
+            @Html.EditorFor(model => model.Detalles)
+            @Html.ValidationMessageFor(model => model.Detalles)
         </div>
+        
+        <div class="editor-label labelForCheck">
+            @Html.LabelFor(model => model.Comprobante)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Comprobante)
+            @Html.ValidationMessageFor(model => model.Comprobante)
+        </div>
+
         <p>
             <input type="submit" class="freshbutton-blue" value="Save" />
         </p>
     </fieldset>
 }
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>

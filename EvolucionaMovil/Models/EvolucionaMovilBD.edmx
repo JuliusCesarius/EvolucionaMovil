@@ -172,10 +172,10 @@
           </Key>
           <Property Name="BancoId" Type="int" Nullable="false" />
           <Property Name="CuentaId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="NumeroCuenta" Type="varchar" Nullable="false" MaxLength="100" />
+          <Property Name="NumeroCuenta" Type="varchar" MaxLength="100" />
           <Property Name="Nombre" Type="varchar" MaxLength="50" />
           <Property Name="Titular" Type="varchar" Nullable="false" MaxLength="100" />
-          <Property Name="ClabeInterbancaria" Type="varchar" Nullable="false" MaxLength="30" />
+          <Property Name="ClabeInterbancaria" Type="varchar" MaxLength="30" />
           <Property Name="NumeroDeTarjeta" Type="varchar" MaxLength="30" />
           <Property Name="RFC" Type="varchar" MaxLength="17" />
           <Property Name="FechaCreacion" Type="datetime" Nullable="false" />
@@ -868,11 +868,10 @@
           </Key>
           <Property Type="Int32" Name="BancoId" Nullable="false" />
           <Property Type="Int32" Name="CuentaId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Type="String" Name="NumeroCuenta" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Type="String" Name="Nombre" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="NumeroCuenta" MaxLength="20" FixedLength="false" Unicode="false" Nullable="true" />
+          <Property Type="String" Name="Nombre" MaxLength="50" FixedLength="false" Unicode="false" Nullable="true" />
           <Property Type="String" Name="Titular" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Type="String" Name="ClabeInterbancaria" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
-          <Property Type="String" Name="NumeroDeTarjeta" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="NumeroDeTarjeta" MaxLength="30" FixedLength="false" Unicode="false" Nullable="true" />
           <Property Type="String" Name="RFC" MaxLength="17" FixedLength="false" Unicode="false" />
           <Property Type="DateTime" Name="FechaCreacion" Nullable="false" />
           <Property Type="Boolean" Name="Baja" Nullable="false" />
@@ -881,6 +880,7 @@
           <Property Type="String" Name="Detalles" MaxLength="300" FixedLength="false" Unicode="false" />
           <Property Type="Boolean" Name="Comprobante" Nullable="false" />
           <NavigationProperty Name="Proveedores" Relationship="EvolucionaMovilBDModel.Proveedores_CuentasBancarias" FromRole="CuentaBancaria" ToRole="Proveedore" />
+          <Property Type="String" Name="ClabeInterbancaria" Nullable="true" />
         </EntityType>
         <EntityType Name="DetallePago">
           <Key>
@@ -1478,13 +1478,13 @@
           <EntitySetMapping Name="CuentaBancarias">
             <EntityTypeMapping TypeName="EvolucionaMovilBDModel.CuentaBancaria">
               <MappingFragment StoreEntitySet="CuentasBancarias">
+                <ScalarProperty Name="ClabeInterbancaria" ColumnName="ClabeInterbancaria" />
                 <ScalarProperty Name="Comprobante" ColumnName="Comprobante" />
                 <ScalarProperty Name="Detalles" ColumnName="Detalles" />
                 <ScalarProperty Name="Baja" ColumnName="Baja" />
                 <ScalarProperty Name="FechaCreacion" ColumnName="FechaCreacion" />
                 <ScalarProperty Name="RFC" ColumnName="RFC" />
                 <ScalarProperty Name="NumeroDeTarjeta" ColumnName="NumeroDeTarjeta" />
-                <ScalarProperty Name="ClabeInterbancaria" ColumnName="ClabeInterbancaria" />
                 <ScalarProperty Name="Titular" ColumnName="Titular" />
                 <ScalarProperty Name="Nombre" ColumnName="Nombre" />
                 <ScalarProperty Name="NumeroCuenta" ColumnName="NumeroCuenta" />
@@ -1804,7 +1804,7 @@
     </Options>
     <!-- Diagram content (shape and connector positions) -->
     <Diagrams>
-      <Diagram Name="EvolucionaMovilBD" ZoomLevel="67">
+      <Diagram Name="EvolucionaMovilBD" ZoomLevel="100">
         <EntityTypeShape EntityType="EvolucionaMovilBDModel.Banco" Width="1.5" PointX="9.125" PointY="3.125" Height="1.9802864583333388" />
         <EntityTypeShape EntityType="EvolucionaMovilBDModel.CompraEvento" Width="1.5" PointX="9.5" PointY="10.25" Height="2.749492187499996" />
         <EntityTypeShape EntityType="EvolucionaMovilBDModel.CuentaBancaria" Width="1.5" PointX="7.25" PointY="1.5" Height="3.9033007812499996" />
@@ -1824,8 +1824,8 @@
         </AssociationConnector>
         <EntityTypeShape EntityType="EvolucionaMovilBDModel.Abono" Width="1.5" PointX="5.25" PointY="2.375" Height="3.9033007812499996" />
         <AssociationConnector Association="EvolucionaMovilBDModel.FK_Abonos_CuentasBancarias" >
-          <ConnectorPoint PointX="7.25" PointY="3.889150390625" />
-          <ConnectorPoint PointX="6.75" PointY="3.889150390625" />
+          <ConnectorPoint PointX="7.25" PointY="3.8891503906249993" />
+          <ConnectorPoint PointX="6.75" PointY="3.8891503906249993" />
         </AssociationConnector>
         <EntityTypeShape EntityType="EvolucionaMovilBDModel.Movimiento" Width="1.5" PointX="7.125" PointY="5.625" Height="4.2879036458333335" />
         <EntityTypeShape EntityType="EvolucionaMovilBDModel.Movimientos_Estatus" Width="1.5" PointX="8.875" PointY="6.375" Height="2.749492187499996" />
@@ -1841,8 +1841,8 @@
           <ConnectorPoint PointX="5.8125" PointY="6.27830078125" />
         </AssociationConnector>
         <AssociationConnector Association="EvolucionaMovilBDModel.FK_CuentasPayCenter_Proveedores" >
-          <ConnectorPoint PointX="11.125" PointY="0.96875" />
-          <ConnectorPoint PointX="5.03125" PointY="0.96875" />
+          <ConnectorPoint PointX="11.125" PointY="0.96875000000000011" />
+          <ConnectorPoint PointX="5.03125" PointY="0.96875000000000011" />
           <ConnectorPoint PointX="5.03125" PointY="7.125" />
         </AssociationConnector>
         <AssociationConnector Association="EvolucionaMovilBDModel.FK_Movimientos_Cuentas" >

@@ -49,11 +49,13 @@
                         <div><span>Clabe Int.:</span><p>@item.ClabeInterbancaria</p></div>
                         <div><span>Num. Tarjeta:</span><p>@item.NumeroDeTarjeta</p></div>
                         <div><span>Detalles:</span><p>@item.Detalles</p></div>
-                        <div><span>Req. Ficha::</span><p>@item.Comprobante</p></div>
+                        <div><span>Req. Ficha:</span><p>@item.Comprobante</p></div>
+                        <div><span></span><p><a class="fwb btnEdit">[ Editar cuenta ]</a></p></div>
                         <input type="hidden" class="CuentaId" name="CuentaId" value="@item.CuentaId"/>
                     </div>
                 </div>
                }
+               <a id="newCuenta" href="javascript:void(0);">+ Agregar nueva cuenta</a>
             </div>
 </div>
 <div class="formRight provcont">
@@ -80,4 +82,10 @@
                     </div>
           </div>
       </form>
+</div>
+<div id="cuentaForm">
+    @Html.Partial("Create",new EvolucionaMovil.Models.CuentaBancariaVM())
+</div>
+<div id="cuentaDetail">
+    
 </div>

@@ -1,0 +1,30 @@
+﻿@model EvolucionaMovil.Models.CuentaBancariaVM
+
+<div id="cuenta_@(Model.CuentaId)" class="cuenta closed @Model.BancoId">
+    <a class="open"></a>
+    <input type="hidden" class="hddProvs" name="Proveedores" value="@Newtonsoft.Json.JsonConvert.SerializeObject(Model.Proveedores)" />
+    @if (!string.IsNullOrEmpty(Model.NumeroCuenta))
+    {
+        <h3><span class="field">No. Cuenta: </span><span class="value fwb">@Model.NumeroCuenta</span></h3>
+    }
+    else if (!string.IsNullOrEmpty(Model.ClabeInterbancaria))
+    {
+        <h3><span class="field">Clabe Int.: </span><span class="value fwb">@Model.ClabeInterbancaria</span></h3>
+    }
+    else if (!string.IsNullOrEmpty(Model.NumeroDeTarjeta))
+    {
+        <h3><span class="field">No. Tarjeta: </span><span class="value fwb">@Model.NumeroDeTarjeta</span></h3>
+    }
+                    
+    <div class="detail">
+        <div><h4 class="fwb"><span class="Titular">Titular:</span><p>@Model.Titular</p></h4></div>
+        <div><span>No. Cuenta:</span><p>@Model.NumeroCuenta</p></div>
+        <div><span>Nombre:</span><p>@Model.Nombre</p></div>
+        <div><span>Clabe Int.:</span><p>@Model.ClabeInterbancaria</p></div>
+        <div><span>Num. Tarjeta:</span><p>@Model.NumeroDeTarjeta</p></div>
+        <div><span>Detalles:</span><p>@Model.Detalles</p></div>
+        <div><span>Req. Ficha:</span><p>@Model.Comprobante</p></div>
+        <div><span></span><p><a class="btnEdit fwb">[ Editar cuenta ]</a></p></div>
+        <input type="hidden" class="CuentaId" name="CuentaId" value="@Model.CuentaId"/>
+    </div>
+</div>

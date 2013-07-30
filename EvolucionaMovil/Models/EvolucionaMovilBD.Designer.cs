@@ -1525,22 +1525,16 @@ namespace EvolucionaMovil.Models
         /// </summary>
         /// <param name="bancoId">Initial value of the BancoId property.</param>
         /// <param name="cuentaId">Initial value of the CuentaId property.</param>
-        /// <param name="numeroCuenta">Initial value of the NumeroCuenta property.</param>
-        /// <param name="nombre">Initial value of the Nombre property.</param>
         /// <param name="titular">Initial value of the Titular property.</param>
-        /// <param name="clabeInterbancaria">Initial value of the ClabeInterbancaria property.</param>
         /// <param name="fechaCreacion">Initial value of the FechaCreacion property.</param>
         /// <param name="baja">Initial value of the Baja property.</param>
         /// <param name="comprobante">Initial value of the Comprobante property.</param>
-        public static CuentaBancaria CreateCuentaBancaria(global::System.Int32 bancoId, global::System.Int32 cuentaId, global::System.String numeroCuenta, global::System.String nombre, global::System.String titular, global::System.String clabeInterbancaria, global::System.DateTime fechaCreacion, global::System.Boolean baja, global::System.Boolean comprobante)
+        public static CuentaBancaria CreateCuentaBancaria(global::System.Int32 bancoId, global::System.Int32 cuentaId, global::System.String titular, global::System.DateTime fechaCreacion, global::System.Boolean baja, global::System.Boolean comprobante)
         {
             CuentaBancaria cuentaBancaria = new CuentaBancaria();
             cuentaBancaria.BancoId = bancoId;
             cuentaBancaria.CuentaId = cuentaId;
-            cuentaBancaria.NumeroCuenta = numeroCuenta;
-            cuentaBancaria.Nombre = nombre;
             cuentaBancaria.Titular = titular;
-            cuentaBancaria.ClabeInterbancaria = clabeInterbancaria;
             cuentaBancaria.FechaCreacion = fechaCreacion;
             cuentaBancaria.Baja = baja;
             cuentaBancaria.Comprobante = comprobante;
@@ -1608,7 +1602,7 @@ namespace EvolucionaMovil.Models
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
         public global::System.String NumeroCuenta
         {
@@ -1620,7 +1614,7 @@ namespace EvolucionaMovil.Models
             {
                 OnNumeroCuentaChanging(value);
                 ReportPropertyChanging("NumeroCuenta");
-                _NumeroCuenta = StructuralObject.SetValidValue(value, false);
+                _NumeroCuenta = StructuralObject.SetValidValue(value, true);
                 ReportPropertyChanged("NumeroCuenta");
                 OnNumeroCuentaChanged();
             }
@@ -1632,7 +1626,7 @@ namespace EvolucionaMovil.Models
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
         public global::System.String Nombre
         {
@@ -1644,7 +1638,7 @@ namespace EvolucionaMovil.Models
             {
                 OnNombreChanging(value);
                 ReportPropertyChanging("Nombre");
-                _Nombre = StructuralObject.SetValidValue(value, false);
+                _Nombre = StructuralObject.SetValidValue(value, true);
                 ReportPropertyChanged("Nombre");
                 OnNombreChanged();
             }
@@ -1676,30 +1670,6 @@ namespace EvolucionaMovil.Models
         private global::System.String _Titular;
         partial void OnTitularChanging(global::System.String value);
         partial void OnTitularChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
-        [DataMemberAttribute()]
-        public global::System.String ClabeInterbancaria
-        {
-            get
-            {
-                return _ClabeInterbancaria;
-            }
-            set
-            {
-                OnClabeInterbancariaChanging(value);
-                ReportPropertyChanging("ClabeInterbancaria");
-                _ClabeInterbancaria = StructuralObject.SetValidValue(value, false);
-                ReportPropertyChanged("ClabeInterbancaria");
-                OnClabeInterbancariaChanged();
-            }
-        }
-        private global::System.String _ClabeInterbancaria;
-        partial void OnClabeInterbancariaChanging(global::System.String value);
-        partial void OnClabeInterbancariaChanged();
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -1844,6 +1814,30 @@ namespace EvolucionaMovil.Models
         private global::System.Boolean _Comprobante;
         partial void OnComprobanteChanging(global::System.Boolean value);
         partial void OnComprobanteChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String ClabeInterbancaria
+        {
+            get
+            {
+                return _ClabeInterbancaria;
+            }
+            set
+            {
+                OnClabeInterbancariaChanging(value);
+                ReportPropertyChanging("ClabeInterbancaria");
+                _ClabeInterbancaria = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("ClabeInterbancaria");
+                OnClabeInterbancariaChanged();
+            }
+        }
+        private global::System.String _ClabeInterbancaria;
+        partial void OnClabeInterbancariaChanging(global::System.String value);
+        partial void OnClabeInterbancariaChanged();
 
         #endregion
 

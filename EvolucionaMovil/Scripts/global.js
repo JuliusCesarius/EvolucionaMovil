@@ -68,3 +68,13 @@ function DetectarNavegador() {
     }
 
 }
+
+function showValidationMessage(mensaje, tipo) {
+    $("#ValidationMessage").remove();
+    $("<div id='ValidationMessage' class='" + tipo + "'><ul id='#content'><li>" + mensaje + "</li></ul><a href='#' id='btn-message-aceptar' class = 'freshbutton-blue small'>Aceptar</a></div>").insertAfter("#main");
+    $("#ValidationMessage").show("blind", {}, 1000);
+    $("#btn-message-aceptar").on("click", function (event) {
+        event.preventDefault();
+        $(this).parent().hide("blind", {}, 300);
+    });
+}

@@ -48,7 +48,9 @@ namespace cabinet.processPolicies.MVC.Models.Helpers
             Mapper.CreateMap<BancoVM, Banco>()
                 .ForMember(m => m.CuentasBancarias, opt => opt.Ignore());
             Mapper.CreateMap<CompraEventoVM, CompraEvento>();
-            Mapper.CreateMap<CuentaBancariaVM, CuentaBancaria>();
+            Mapper.CreateMap<CuentaBancariaVM, CuentaBancaria>()
+                .ForMember(m => m.Banco, opt => opt.Ignore())
+                .ForMember(m => m.Proveedores, opt => opt.Ignore());
             Mapper.CreateMap<CuentaVM, CuentaPayCenter>();
             Mapper.CreateMap<DetallePagoVM, DetallePago>();
             Mapper.CreateMap<DetalleServicioVM, DetalleServicio>();
