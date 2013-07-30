@@ -34,27 +34,37 @@ namespace EvolucionaMovil.Repositories
 
         public int GetEventosDisponibles(int PayCenterId)
         {
-            var eventos = context.CompraEventos.Where(x => x.PayCenterId == PayCenterId && x.Consumidos < x.Eventos);
-            //Obtiene los pagos que usaron eventos, tanto aplicados como en proceso, para después restarselo a los eventos comprados
-            var eventosUsados = context.Pagos.Where(x => x.PayCenterId == PayCenterId && x.UsoEvento && (x.Status == (short)enumEstatusMovimiento.Procesando || x.Status == (short)enumEstatusMovimiento.Aplicado));
-            int numEventos =eventos.Count() - eventosUsados.Count();
-           if( eventos.Count()>0){
-               numEventos = eventos.Sum(x=>x.Eventos);
-           }
-            return numEventos;
+            var eventos = context.CompraEventos.Where(x => x.PayCenterId == PayCenterId);
+            if (eventos.Count() > 0)
+            {
+                var eventosComprados = eventos.Sum(x => x.Eventos);
+                //Obtiene los pagos que usaron eventos, tanto aplicados como en proceso, para después restarselo a los eventos comprados
+                var eventosUsados = context.Pagos.Where(x => x.PayCenterId == PayCenterId && x.UsoEvento && (x.Status == (short)enumEstatusMovimiento.Procesando || x.Status == (short)enumEstatusMovimiento.Aplicado));
+                int numEventos = eventosComprados - eventosUsados.Count();
+                return numEventos;
+            }
+            else
+            {
+                return 0;
+            }
         }
 
         public int GetEventosActuales(int PayCenterId)
         {
-            var eventos = context.CompraEventos.Where(x => x.PayCenterId == PayCenterId && x.Consumidos < x.Eventos);
-            //Obtiene los pagos que usaron eventos y realmente se aplicaron, para después restarselo a los eventos comprados
-            var eventosUsados = context.Pagos.Where(x => x.PayCenterId == PayCenterId && x.UsoEvento && x.Status == (short)enumEstatusMovimiento.Aplicado);
-            int numEventos = eventos.Count() - eventosUsados.Count();
+            var eventos = context.CompraEventos.Where(x => x.PayCenterId == PayCenterId);
             if (eventos.Count() > 0)
             {
-                numEventos = eventos.Sum(x => x.Eventos);
+                var eventosComprados = eventos.Sum(x => x.Eventos);
+                //Obtiene los pagos que usaron eventos y realmente se aplicaron, para después restarselo a los eventos comprados
+                var eventosUsados = context.Pagos.Where(x => x.PayCenterId == PayCenterId && x.UsoEvento && x.Status == (short)enumEstatusMovimiento.Aplicado);
+                int numEventos = eventosComprados - eventosUsados.Count();
+                return numEventos;
             }
-            return numEventos;
+            else
+            {
+                return 0;
+            }
+           
         }
 
         /// <summary>

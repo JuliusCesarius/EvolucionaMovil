@@ -1026,7 +1026,8 @@ legend{font-size:2em;font-weight:400}
 .resumen h1,.resumen h2,.resumen h3,.resumen a{display:inline-block}
 .resumen.saldos{padding-top:0.7em}
 .resumen.saldos h3{padding-left:.0em}
-.resumen.saldos #saldoActual{font-weight:bold}
+.resumen.saldos #saldoActual, .resumen.saldos #saldoDisponible{font-weight:bold}
+.resumen.saldos #eventoDisponible{font-weight:bold}
 .resumen.saldos span{color:#222}
 .resumen.saldos span.cargo{color:Red}
 .resumen.h2{font-size:1.6em}
@@ -1182,3 +1183,28 @@ box-shadow:0 0 0 #000, 0 5px 5px #eee;}
 -webkit-margin-start: 0px;
 -webkit-margin-end: 0px;
 -webkit-padding-start: 40px;}
+
+#cuentas .cuenta{border:1px solid #ccc;border-top-left-radius: 3px;border-top-right-radius: 3px;border-bottom-right-radius: 3px;
+border-bottom-left-radius: 3px;margin-bottom:5px;background:#F2F2F2;cursor:pointer}
+#cuentas .selected{background:#0080B1;}
+#cuentas .selected h3, #cuentas .selected h3 .field {color:#fff!important}
+#cuentas h3{margin:0 0 0 10px;line-height:35px;text-overflow: ellipsis;display:inline-block;width:355px;font-size:1.3em}
+.provcont, .cuencont{padding-left:40px;width:400px}
+#proveedores{border:1px solid #ccc;border-top-left-radius: 5px;border-top-right-radius: 5px;border-bottom-right-radius: 5px;border-bottom-left-radius: 5px;}
+#proveedores .proveedor{border-bottom: 1px solid #F2F2F2;border-top: 1px solid #F9F9F9;cursor:pointer}
+#proveedores .proveedor:hover{background:#F9F9F9}
+#proveedores h3{margin:0 10px;line-height:35px;text-overflow: ellipsis;display:inline-block}
+#proveedores .selected{background:#F2F2F2}
+#proveedores .selected h3{color:#1094D6}
+#proveedores input{margin:8px;}
+#cuentas h4{line-height:20px;text-overflow: ellipsis;overflow:hidden;font-size:1em}
+#cuentas .field, #cuentas .detail span{color:#0080B1}
+#cuentas .detail span{display:inline-block;width:100px}
+#cuentas p{display:inline-block;width:270px;text-overflow: ellipsis;overflow:hidden}
+#cuentas .detail{background:#fff;padding:10px;}
+#cuentas .closed .detail{display:none}
+#cuentas .open{display:inline-block;float:right;width:13px;height:13px;background:#ccc;margin:10px}
+.formRight{vertical-align:top}
+.tiposervicio {margin-bottom:8px}
+.tiposervicio a, .tiposervicio a:link{cursor:pointer;display:inline-block;color:#808080;border-top-left-radius: 3px;border-top-right-radius: 3px;border-bottom-right-radius: 3px;border-bottom-left-radius: 3px;border:1px solid #BEC0C2;background:#fff;line-height:1.8em;text-align:center;width:196px;text-decoration:none}
+.tiposervicio .selected, .tiposervicio .selected{color:#fff;border:1px solid #BEC0C2;background:#0080B1;border:1px solid #0080B1}

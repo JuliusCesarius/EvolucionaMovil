@@ -28,7 +28,8 @@ namespace cabinet.processPolicies.MVC.Models.Helpers
             Mapper.CreateMap<Abono, AbonoVM>();
             Mapper.CreateMap<Banco, BancoVM>();
             Mapper.CreateMap<CompraEvento, CompraEventoVM>();
-            Mapper.CreateMap<CuentaBancaria, CuentaBancariaVM>();
+            Mapper.CreateMap<CuentaBancaria, CuentaBancariaVM>()
+                .ForMember(m => m.Proveedores, opt => opt.MapFrom(vm => vm.Proveedores.Select(x=>x.ProveedorId)));
             Mapper.CreateMap<CuentaPayCenter, CuentaVM>();
             Mapper.CreateMap<DetallePago, DetallePagoVM>();
             Mapper.CreateMap<DetalleServicio, DetalleServicioVM>();

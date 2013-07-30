@@ -50,8 +50,8 @@ $(document).on("ready", function () {
             var v = ui.item.value;
             $('#hddPayCenterId').val(v);
             $.getJSON("/PayCenters/GetSaldosPagoServicio?PayCenterId=" + v, function (data) {
-                $("#saldoActual").html(data.SaldoDisponible);
-                $("#eventoActual").html(data.EventosDisponibles);
+                $("#saldoDisponible").html(data.SaldoDisponible);
+                $("#eventoDisponible").html(data.EventosDisponibles);
                 $(".saldos").show();
             });
             this.value = label;

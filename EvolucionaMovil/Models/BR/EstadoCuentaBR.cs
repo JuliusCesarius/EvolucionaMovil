@@ -96,7 +96,7 @@ namespace EvolucionaMovil.Models.BR
 
         #region Movimientos
 
-        internal List<Movimiento> CrearMovimientosPagoServicios(int PayCenterId, decimal Monto, string PayCenterName)
+        internal List<Movimiento> CrearMovimientosPagoServicios(int PayCenterId, decimal Monto, string PayCenterName, out bool UsaEvento)
         {
             Succeed = true;
             //Evaluar si va a usar Evento
@@ -108,7 +108,9 @@ namespace EvolucionaMovil.Models.BR
             //Valido primero parámetros del paycenter
             ParametrosRepository parametrosRepository = new ParametrosRepository();
             var parametrosPayCenter = parametrosRepository.GetParametrosPayCenter(PayCenterId);
-            if (saldos.EventosDisponibles <= 0)
+            //Determina si va a usar evento
+            UsaEvento = saldos.EventosDisponibles > 0;
+            if (!UsaEvento)
             {
                 var parametrosGlobales = parametrosRepository.GetParametrosGlobales();
                 comision = parametrosPayCenter != null && parametrosPayCenter.ComisionPayCenter != null ? parametrosPayCenter.ComisionPayCenter : null;

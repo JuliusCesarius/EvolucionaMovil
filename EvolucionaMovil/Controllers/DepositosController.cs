@@ -330,7 +330,7 @@ namespace EvolucionaMovil.Controllers
                 MontoString = abono.Monto.ToString("C"),
                 PayCenterName = abono.PayCenter.UserName,
                 Referencia = abono.Referencia,
-                //TipoCuenta = (enumTipoCuenta)abono.CuentaPayCenter.TipoCuenta,
+                TipoCuenta = (enumTipoCuenta)abono.CuentaPayCenter.TipoCuenta,
                 HistorialEstatusVM = movimiento != null ? movimiento.Movimientos_Estatus.OrderByDescending(x => x.FechaCreacion).Select(x => new HistorialEstatusVM { Fecha = x.FechaCreacion.ToString(), Estatus = ((enumEstatusMovimiento)x.Status).ToString(), Comentarios = x.Comentarios, UserName = x.UserName }).ToList() : null
             };
             return abonoVM;
@@ -355,7 +355,7 @@ namespace EvolucionaMovil.Controllers
         {
             //TODO: Julius: ver de que forma se hace esto mejor porque quedó muy complicado y le pega al rendimiento
             BancosRepository bancosRepository = new BancosRepository();
-            var bancos = bancosRepository.ListAll().Where(x => x.CuentasBancarias.Count > 0);
+            //var bancos = bancosRepository.ListAll().Where(x => x.CuentasBancarias.Count > 0);
             ProveedoresRepository proveedoresRepository = new ProveedoresRepository();
             var proveedores = proveedoresRepository.ListAll().OrderBy(x=>x.Nombre);
             var proveedoresVM = proveedores.ToListOfDestination<ProveedorVM>();
