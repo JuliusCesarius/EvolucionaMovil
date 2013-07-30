@@ -8,16 +8,19 @@ using System.Web.Mvc;
 using EvolucionaMovil.Models;
 using EvolucionaMovil.Repositories;
 using AutoMapper;
+using EvolucionaMovil.Attributes;
+using EvolucionaMovil.Models.Classes;
+using EvolucionaMovil.Models.Enums;
 
 namespace EvolucionaMovil.Controllers
 { 
-    public class CuentasBancariasController : Controller
+    public class CuentasBancariasController : CustomControllerBase
     {
         private CuentasBancariasRepository repository = new CuentasBancariasRepository();
 
         //
         // GET: /CuentasBancarias/
-
+        [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.Administrator })]
         public ViewResult Index()
         {
             var cuentasBancarias = repository.ListAll().ToListOfDestination<CuentaBancariaVM>();
@@ -30,6 +33,7 @@ namespace EvolucionaMovil.Controllers
         //
         // GET: /CuentasBancarias/Details/5
 
+        [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.Administrator })]
         public ViewResult Details(int id)
         {
             CuentaBancariaVM cuentaBancariaVM = new CuentaBancariaVM();
@@ -41,31 +45,67 @@ namespace EvolucionaMovil.Controllers
         //
         // GET: /CuentasBancarias/Create
 
-        public ActionResult Create()
+        [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.Administrator })]
+        public PartialViewResult Create()
         {
-            return View();
-        } 
-
+            return PartialView(new CuentaBancariaVM());
+        }
+        
         //
         // POST: /CuentasBancarias/Create
 
         [HttpPost]
+        [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.Administrator })]
         public ActionResult Create(CuentaBancariaVM cuentaBancariaVM)
         {
             CuentaBancaria cuentaBancaria = new CuentaBancaria();
+            //Valido que al menos tenga uno de estos campos
+            if (cuentaBancariaVM.ClabeInterbancaria == null &&
+                cuentaBancariaVM.NumeroCuenta == null &&
+                cuentaBancariaVM.NumeroDeTarjeta == null)
+            {
+                ModelState.AddModelError("NumeroCuenta", "Debe de especificarse al menos un Número de Cuenta");
+            }
             if (ModelState.IsValid)
             {
                 Mapper.Map(cuentaBancariaVM, cuentaBancaria);
                 repository.Add(cuentaBancaria);
                 repository.Save();
-                return RedirectToAction("Index");  
+                cuentaBancariaVM.CuentaId = cuentaBancaria.CuentaId;
+                return PartialView("_Details", cuentaBancariaVM);
             }
-            return View(cuentaBancariaVM);
+            return PartialView(cuentaBancariaVM);
         }
-        
+
+        [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.Administrator })]
+        public ActionResult _Edit(int id)
+        {
+            CuentaBancariaVM cuentaBancariaVM = new CuentaBancariaVM();
+            var cuentaBancaria = repository.LoadById(id);
+            Mapper.Map(cuentaBancaria, cuentaBancariaVM);
+            return PartialView(cuentaBancariaVM);
+        }
+
+
+
+        [HttpPost]
+        [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.Administrator })]
+        public JsonResult SaveConfig(ConfigProvCuentaVM form)
+        {
+            var proveedoresConfigurados = form.Proveedores.Where(x => x.Selected).Select(x => x.ProveedorId).ToList();
+            repository.SaveConfigCuentaProveedores(form.CuentaBancariaId, proveedoresConfigurados,true);
+            ConfigProvCuentaResponseVM configProvCuentaResponseVM = new ConfigProvCuentaResponseVM
+            {
+                CuentaBancariaId = form.CuentaBancariaId,
+                Proveedores = proveedoresConfigurados
+            };
+            return this.Json(configProvCuentaResponseVM);
+        }
+                
         //
         // GET: /CuentasBancarias/Edit/5
- 
+
+        [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.Administrator })]
         public ActionResult Edit(int id)
         {
             CuentaBancariaVM cuentaBancariaVM = new CuentaBancariaVM();
@@ -78,7 +118,8 @@ namespace EvolucionaMovil.Controllers
         // POST: /CuentasBancarias/Edit/5
 
         [HttpPost]
-        public ActionResult Edit(CuentaBancariaVM cuentaBancariaVM)
+        [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.Administrator })]
+        public ActionResult _Edit(CuentaBancariaVM cuentaBancariaVM)
         {
             CuentaBancaria cuentaBancaria = repository.LoadById(cuentaBancariaVM.CuentaId);
             if (ModelState.IsValid)
@@ -86,7 +127,7 @@ namespace EvolucionaMovil.Controllers
                 Mapper.Map(cuentaBancariaVM, cuentaBancaria);
                 repository.Save();
                 cuentaBancariaVM.CuentaId = cuentaBancaria.CuentaId;
-                return RedirectToAction("Index");
+                return PartialView("_Details", cuentaBancariaVM);
             }
             return View(cuentaBancariaVM);
         }

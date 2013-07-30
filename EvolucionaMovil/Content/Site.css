@@ -1071,6 +1071,11 @@ legend{font-size:2em;font-weight:400}
 #details{padding:.5em;margin-bottom:.5em;background:rgb(242, 250, 255);width:349px}
 #details label{position:static;}
 
+#grdDepositos .banco{width:200px!important}
+#grdDepositos .monto{width:70px!important}
+#grdDepositos .referencia{width:100px!important}
+#grdDepositos .proveedor{width:90px!important}
+
 /**Prospecto**/
 .titulo h1, .titulo a{display:inline;} 
 .titulo a{margin-left:18%; cursor:pointer;}
@@ -1203,3 +1208,8 @@ border-bottom-left-radius: 3px;margin-bottom:5px;background:#F2F2F2;cursor:point
 .tiposervicio {margin-bottom:8px}
 .tiposervicio a, .tiposervicio a:link{cursor:pointer;display:inline-block;color:#808080;border-top-left-radius: 3px;border-top-right-radius: 3px;border-bottom-right-radius: 3px;border-bottom-left-radius: 3px;border:1px solid #BEC0C2;background:#fff;line-height:1.8em;text-align:center;width:196px;text-decoration:none}
 .tiposervicio .selected, .tiposervicio .selected{color:#fff;border:1px solid #BEC0C2;background:#0080B1;border:1px solid #0080B1}
+a#newCuenta{border:1px solid #ccc;border-top-left-radius: 3px;border-top-right-radius: 3px;border-bottom-right-radius: 3px;
+border-bottom-left-radius: 3px;margin-bottom:5px;background:#fff;cursor:pointer;display:block;padding:10px}
+
+#cuentaForm label, #cuentaDetail label{position:static}
+/*.labelForCheck{left: 23px;top: -9px;}*/
