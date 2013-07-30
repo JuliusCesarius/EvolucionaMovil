@@ -124,7 +124,6 @@
     <Compile Include="Attributes\CustomAuthorizeAttribute.cs" />
     <Compile Include="Attributes\MaskAttribute.cs" />
     <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Models\ConfigProvCuentaVM.cs" />
     <Compile Include="Controllers\CuentasBancariasController.cs" />
     <Compile Include="Controllers\CaptchaController.cs" />
     <Compile Include="Controllers\DepositosController.cs" />
@@ -137,7 +136,6 @@
     <Compile Include="Controllers\PaquetesController.cs" />
     <Compile Include="Controllers\PayCentersController.cs" />
     <Compile Include="Controllers\ProspectosController.cs" />
-    <Compile Include="Controllers\ProveedoresController.cs" />
     <Compile Include="Controllers\ServiciosController.cs" />
     <Compile Include="Controllers\UploadImagesController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
@@ -398,8 +396,6 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Home\Aviso_de_Privacidad.cshtml" />
     <Content Include="Views\Home\Politicas_de_Uso.cshtml" />
-    <Content Include="Views\CuentasBancarias\Create.cshtml" />
-    <Content Include="Views\CuentasBancarias\_Details.cshtml" />
     <None Include="_bin_deployableAssemblies\System.Web.Mvc.dll" />
     <None Include="_bin_deployableAssemblies\WebMatrix.WebData.xml" />
     <None Include="_bin_deployableAssemblies\WebMatrix.WebData.dll" />
@@ -476,7 +472,13 @@
     <Content Include="Views\CuentasBancarias\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\CuentasBancarias\_Edit.cshtml" />
+    <Content Include="Views\CuentasBancarias\Details.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\CuentasBancarias\Create.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\CuentasBancarias\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\CuentasBancarias\Delete.cshtml" />
