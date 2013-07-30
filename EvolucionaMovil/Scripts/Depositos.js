@@ -38,6 +38,7 @@
         }
     });
 
+   
     $("#PayCenterName").autocomplete({
         source: "PayCenters/FindPayCenter",
         select: function (event, ui) {
@@ -57,6 +58,39 @@
         }
     });
 
+    $("#ProveedorName").on("keyup", function (event) {
+        var code = event.which;
+        if (code == 13) {
+            event.preventDefault();
+            rebindGrid();
+        } else {
+            if ($(this).val() == "") {
+                event.preventDefault();
+                $('#hddProveedorId').val("");
+            }
+        }
+    });
+
+    $("#ProveedorName").autocomplete({
+        source: "Proveedores/FindProveedores",
+        select: function (event, ui) {
+            var label = ui.item.label;
+            var v = ui.item.value;
+            $('#hddProveedorId').val(v);
+            this.value = label;
+            return false;
+        },
+        focus: function (event, ui) {
+            event.preventDefault();
+            $(this).val(ui.item.label);
+        },
+        open: function () {
+            $(this).autocomplete('widget').css('z-index', 100);
+            return false;
+        }
+    });
+
+
 });
 
 function rebindGrid(options) {
@@ -71,11 +105,12 @@ function bindGrid(options) {
          { name: 'FechaCreacion', displayName: 'Fecha Captura', cssClass: 'fechacreacion' },
          { name: 'FechaPago', displayName: 'Fecha Pago', cssClass: 'fechapago' },
          { name: 'Referencia', displayName: 'Referencia', cssClass: 'referencia' },
+          { name: 'ProveedorName', displayName: 'Proveedor', cssClass: 'proveedor' },
          { name: 'PayCenter', displayName: 'PayCenter', cssClass: 'PayCenter' },
          { name: 'Banco', displayName: 'Banco/Cuenta', cssClass: 'banco', customTemplate: '<span> {Banco} / {CuentaBancaria}</span>' },
          { name: 'TipoCuenta', displayName: 'Cuenta Destino', cssClass: 'tipocuenta' },
          { name: 'StatusString', cssClass: 'status', displayName: 'Estatus', customTemplate: '<span alt="{Comentarios}" class=" {StatusString} qtip">{StatusString}</span>' },
-         { name: 'Monto', displayName: 'Monto', cssClass: 'monto' }
+         { name: 'Monto', displayName: 'Monto', cssClass: 'monto' }   
          ];
     if (options == undefined) {
         options = { pageSize: 20, pageNumber: 0 };

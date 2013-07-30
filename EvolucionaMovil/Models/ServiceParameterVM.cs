@@ -15,5 +15,7 @@ namespace EvolucionaMovil.Models
         public bool onlyAplicados { get; set; }
         public int PayCenterId { get; set; }
         public string PayCenterName { get; set; }
+        public int ProveedorId { get; set; }
+        public string ProveedorName { get; set; }
     }
 }

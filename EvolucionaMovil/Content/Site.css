@@ -1071,6 +1071,11 @@ legend{font-size:2em;font-weight:400}
 #details{padding:.5em;margin-bottom:.5em;background:rgb(242, 250, 255);width:349px}
 #details label{position:static;}
 
+#grdDepositos .banco{width:200px!important}
+#grdDepositos .monto{width:70px!important}
+#grdDepositos .referencia{width:100px!important}
+#grdDepositos .proveedor{width:90px!important}
+
 /**Prospecto**/
 .titulo h1, .titulo a{display:inline;} 
 .titulo a{margin-left:18%; cursor:pointer;}

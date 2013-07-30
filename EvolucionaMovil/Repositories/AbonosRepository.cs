@@ -23,6 +23,15 @@ namespace EvolucionaMovil.Repositories
             return context.Abonos.Where(x => x.PayCenterId == PayCenterId);
         }
 
+        public IEnumerable<Abono> GetByProveedorId(int ProveedorId)
+        {
+            return context.Abonos.Where(x => x.CuentaPayCenter.ProveedorId == ProveedorId);
+        }
+        public IEnumerable<Abono> GetByPayCenterIdProveedorId(int PayCenterId, int ProveedorId)
+        {
+            return context.Abonos.Where(x => x.CuentaPayCenter.ProveedorId == ProveedorId && x.CuentaPayCenter.ProveedorId == ProveedorId);
+        }
+
         public bool IsAuthorized(int PayCenterId, int AbonoId)
         {
             return context.Abonos.Any(x => x.PayCenterId == PayCenterId && x.AbonoId == AbonoId);

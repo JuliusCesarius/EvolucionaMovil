@@ -137,6 +137,7 @@
     <Compile Include="Controllers\PaquetesController.cs" />
     <Compile Include="Controllers\PayCentersController.cs" />
     <Compile Include="Controllers\ProspectosController.cs" />
+    <Compile Include="Controllers\ProveedoresController.cs" />
     <Compile Include="Controllers\ServiciosController.cs" />
     <Compile Include="Controllers\UploadImagesController.cs" />
     <Compile Include="Controllers\UsersController.cs" />

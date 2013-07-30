@@ -64,6 +64,8 @@ namespace EvolucionaMovil.Controllers
             ViewBag.OnlyAplicados = parameters.onlyAplicados;
             ViewBag.PayCenterId = parameters.PayCenterId;
             ViewBag.PayCenterName = parameters.PayCenterName;
+            ViewBag.ProveedorId = parameters.ProveedorId;
+            ViewBag.ProveedorName = parameters.ProveedorName;
 
             return View(getDepositos(parameters));
         }
@@ -419,15 +421,30 @@ namespace EvolucionaMovil.Controllers
         private SimpleGridResult<DepositoVM> getDepositos(ServiceParameterVM Parameters = null)
         {
             IEnumerable<Abono> depositos;
-            if (PayCenterId == 0)
+            if (PayCenterId == 0 && (Parameters.ProveedorId ==null || Parameters.ProveedorId == 0))
             {
                 depositos = repository.ListAll().OrderByDescending(m => m.FechaCreacion);
             }
             else
             {
-                depositos = repository.GetByPayCenterId(PayCenterId).OrderByDescending(m => m.FechaCreacion);
+                if (PayCenterId > 0 && (Parameters.ProveedorId != null && Parameters.ProveedorId > 0))
+                {
+                    depositos = repository.GetByPayCenterIdProveedorId(PayCenterId, Parameters.ProveedorId).OrderByDescending(m => m.FechaCreacion);
+                }
+                else
+                {
+                    if (PayCenterId > 0)
+                    {
+                        depositos = repository.GetByPayCenterId(PayCenterId).OrderByDescending(m => m.FechaCreacion);
+                    }
+                    else
+                    {
+                        depositos = repository.GetByProveedorId(Parameters.ProveedorId).OrderByDescending(m => m.FechaCreacion);
+                    }
+                }
+               
             }
-
+        
             var bancos = new BancosRepository().ListAll();
 
             SimpleGridResult<DepositoVM> simpleGridResult = new SimpleGridResult<DepositoVM>();
@@ -451,7 +468,8 @@ namespace EvolucionaMovil.Controllers
                     PayCenter = x.PayCenter.UserName,
                     Referencia = x.Referencia,
                     Status = x.Status,
-                    TipoCuenta = ((enumTipoCuenta)x.CuentaPayCenter.TipoCuenta).ToString()
+                    TipoCuenta = ((enumTipoCuenta)x.CuentaPayCenter.TipoCuenta).ToString(),
+                    ProveedorName = "Jo"
                 });
 
             //Filtrar por searchString: Lo puse después del primer filtro porque se complicaba obtener los strings de las tablas referenciadas como bancos, cuenta bancaria, etc.
