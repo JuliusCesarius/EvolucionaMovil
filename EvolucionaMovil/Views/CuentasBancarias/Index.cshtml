@@ -22,7 +22,7 @@
                @{bool showCuenta = true;}
                @foreach (var item in Model)
                {
-                <div id="cuenta_@(item.CuentaId)" class="cuenta closed @item.BancoId">
+                <div class="cuenta closed @item.BancoId">
                    <a class="open"></a>
                    <input type="hidden" class="hddProvs" name="Proveedores" value="@Newtonsoft.Json.JsonConvert.SerializeObject(item.Proveedores)" />
                     @if (!string.IsNullOrEmpty(item.NumeroCuenta))
@@ -49,13 +49,10 @@
                         <div><span>Clabe Int.:</span><p>@item.ClabeInterbancaria</p></div>
                         <div><span>Num. Tarjeta:</span><p>@item.NumeroDeTarjeta</p></div>
                         <div><span>Detalles:</span><p>@item.Detalles</p></div>
-                        <div><span>Req. Ficha:</span><p>@item.Comprobante</p></div>
-                        <div><span></span><p><a class="fwb btnEdit">[ Editar cuenta ]</a></p></div>
-                        <input type="hidden" class="CuentaId" name="CuentaId" value="@item.CuentaId"/>
+                        <div><span>Req. Ficha::</span><p>@item.Comprobante</p></div>
                     </div>
                 </div>
                }
-               <a id="newCuenta" href="javascript:void(0);">+ Agregar nueva cuenta</a>
             </div>
 </div>
 <div class="formRight provcont">
@@ -64,28 +61,15 @@
 <a tiposerv="0">Pago de Servicios</a>
 <a tiposerv="1">Recargas Electrónicas</a>
 </div>
-    <form action="saveConfig" id="configForm">
-        <input type="hidden" id="CuentaBancariaId" name="CuentaBancariaId" />
-        <div id="proveedores">
-                   @{var i =0;}
-                   @foreach (EvolucionaMovil.Models.ProveedorVM item in ViewBag.Proveedores)
-                   {
-                    <div class="proveedor @item.ProveedorId">
-                            <h3><input type="checkbox" value="@item.ProveedorId" tipo="@item.TipoCuenta"/> @item.Nombre</h3>
-                            <input type="hidden" name="Proveedores[@i].ProveedorId" value="@item.ProveedorId" />
-                            <input type="hidden" name="Proveedores[@i].Selected" class="hddSelected" />
-                    </div>
-                       i++;
-                   }
-                   <div class="tar">
-                        <input type="button" class="freshbutton-blue small" id="saveConfig" value="Guardar cambios" />
-                    </div>
-          </div>
-      </form>
-</div>
-<div id="cuentaForm">
-    @Html.Partial("Create",new EvolucionaMovil.Models.CuentaBancariaVM())
-</div>
-<div id="cuentaDetail">
-    
+    <div id="proveedores">
+               @foreach (EvolucionaMovil.Models.ProveedorVM item in ViewBag.Proveedores)
+               {
+                <div class="proveedor @item.ProveedorId">
+                        <h3><input type="checkbox" value="@item.ProveedorId" tipo="@item.TipoCuenta"/> @item.Nombre</h3>
+                </div>
+               }
+               <div class="tar">
+                    <input type="button" class="freshbutton-blue small" value="Guardar cambios" />
+            </div>
+      </div>
 </div>
