@@ -187,10 +187,10 @@ namespace EvolucionaMovil.Controllers
             //todo:Devolver formateado el concepto según el motivo
             var usuarioOriginal = Movimiento.UserName != null ? Movimiento.UserName : "Desconocido";
             string comentario = usuarioOriginal + " - " + ((enumMotivo)Movimiento.Motivo).ToString();
-            if (Movimiento.CuentasPayCenter != null && Movimiento.CuentasPayCenter.Proveedore != null)
-            {
-                comentario += " - " + Movimiento.CuentasPayCenter.Proveedore.Nombre;
-            }
+            //if (Movimiento.CuentasPayCenter != null && Movimiento.CuentasPayCenter.Proveedore != null)
+            //{
+            //    comentario += " - " + Movimiento.CuentasPayCenter.Proveedore.Nombre;
+            //}
             return comentario;
         }
 
