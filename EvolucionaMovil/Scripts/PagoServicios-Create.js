@@ -40,6 +40,50 @@ $(document).on("ready", function () {
     $("#ServicioId").trigger("change");
     $("#ImporteString").on("keyup", function () {
         $("#Importe").val($("#ImporteString").val().replace(",", ""));
+        if ($("#hddSaldoDisponible")[0].textContent != "") {
+            var SaldoDisp = parseFloat($("#hddSaldoDisponible")[0].value);
+            var Importe = parseFloat($("#Importe")[0].value);
+
+            var MontoFinanciamiento = parseFloat($("#hddMaximoFinanciar")[0].value);
+            var Comision = parseFloat($("#hddComision")[0].value);
+            var ContEventos = parseInt($("#hddEventos")[0].value);
+            var SaldoFinal = 0;
+            if (Comision > 0 && ContEventos <= 0) {
+                if (ContEventos <= 0) {
+                    SaldoFinal = SaldoDisp - (Importe + Comision);
+                }
+            }
+            else {
+                SaldoFinal = parseFloat(SaldoDisp - Importe);
+            }
+            //var SaldoFinal = parseFloat(SaldoDisp - Importe);
+
+            $("#saldoFinal")[0].value = SaldoFinal.toString();
+            $("#saldoFinal")[0].textContent = SaldoFinal.toString();
+
+            if (SaldoFinal < 0) {
+
+                $("#saldoFinal").removeClass("saldos");
+                $("#saldoFinal").addClass("cargo");
+
+                if ((MontoFinanciamiento + SaldoFinal) < 0) {
+                    $("#btnCreate").attr('disabled', '-1');
+                    //document.getElementById("btnCreate").setAttribute('disabled', true);
+                    $("#divMensaje").show();
+                    $("#Mensaje")[0].textContent = "No cuenta con saldo disponible para realizar el pago y no está autorizado para realizar un finaciamiento";
+                }
+                else {
+                    $("#divMensaje").show();
+                    $("#Mensaje")[0].textContent = "No cuenta con saldo disponible para realizar el pago pero tiene finaciamiento de $:" + MontoFinanciamiento.toString();
+                }
+            }
+            else {
+                $('#btnCreate').removeAttr('disabled');
+                $("#saldoFinal").removeClass("cargo");
+                $("#saldoFinal").addClass("saldos");
+                $("#divMensaje").css("display", "none");
+            }
+        }
     });
     setValidation("Importe", 4);
     getURLParameter();
@@ -52,6 +96,24 @@ $(document).on("ready", function () {
             $.getJSON("/PayCenters/GetSaldosPagoServicio?PayCenterId=" + v, function (data) {
                 $("#saldoDisponible").html(data.SaldoDisponible);
                 $("#eventoDisponible").html(data.EventosDisponibles);
+                $("#hddSaldoDisponible")[0].value = data.SaldoDisponible;
+                $("#hddSaldoDisponible").html(data.SaldoDisponible);
+                $("#hddEventos")[0].value = data.EventosDisponibles;
+                if ($("#ImporteString")[0].value != "") {
+                    $("#ImporteString")[0].value = 0;
+                }
+                $('#btnCreate').removeAttr('disabled');
+                $("#saldoFinal")[0].textContent = "";
+                $("#Mensaje")[0].textContent = "";
+                //Todo: Aqui se carga de nuevo el finaciamiento y los eventos del paycenter.
+                //$("#hddComision").html(data.SaldoDisponible);
+                //$("#hddMaximoFinanciar").html(data.EventosDisponibles);
+                //Eventos
+                var EventosDisp = parseInt($("#hddEventos")[0].value);
+                if (EventosDisp > 0) {
+                    $("#eventoFinal")[0].textContent = EventosDisp - 1;
+                }
+
                 $(".saldos").show();
             });
             this.value = label;

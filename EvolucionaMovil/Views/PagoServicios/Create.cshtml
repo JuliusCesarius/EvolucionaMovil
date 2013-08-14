@@ -18,11 +18,17 @@
 
         <div class="pagservsal resumen saldos" @(Model.PayCenterId > 0 ? string.Empty : hiddenString)>
             <h3>
-                Saldo Disp. <span id="saldoDisponible">@ViewData["SaldoDisponible"]</span></h3>
+                Saldo Disp. <span id="saldoDisponible">@ViewData["SaldoDisponible"]</span></h3>            
             <h3>
                 / Eventos <span id="eventoDisponible">@ViewData["Eventos"]</span></h3>
             <a href="/Paquetes/Buy">[comprar]</a>
             <div class="clear"></div>
+                        
+          <input type="hidden" id="hddSaldoDisponible"  value ="@ViewData["SaldoDisponible"]"  />
+          <input type="hidden" id="hddEventos"   value ="@ViewData["Eventos"]"/>
+           <input type="hidden" id="hddComision"   value ="@ViewData["Comision"]"/>
+           <input type="hidden" id="hddMaximoFinanciar"   value ="@ViewData["MaximoFinanciar"]"/>
+            
         </div>
         @if (HttpContext.Current.User.IsInRole(enumRoles.Staff.ToString()) || HttpContext.Current.User.IsInRole(enumRoles.Administrator.ToString()))
         {
@@ -32,8 +38,7 @@
                 <input type="hidden" id="hddPayCenterId" name="PayCenterId" value="@Model.PayCenterId" />
                 @Html.ValidationMessageFor(model => model.PayCenterName)
                 </div>
-        }
-            
+        }                  
         <div class="editor-label">
             @Html.LabelFor(model => model.ServicioId)
         </div>
@@ -65,15 +70,20 @@
             @Html.EditorFor(model => model.FechaVencimiento)
             @Html.ValidationMessageFor(model => model.FechaVencimiento)
         </div>        
-        <div class="pagservsal resumen saldos"@(Model.PayCenterId > 0 ? string.Empty : hiddenString)>
+        <div id="ResumenSaldos" class="pagservsal resumen saldos"@(Model.PayCenterId > 0 ? string.Empty : hiddenString)>
             <h3>
                 Saldo Final <span id="saldoFinal">@ViewData["SaldoFinal"]</span></h3>
             <h3>
                 Eventos <span id="eventoFinal">@ViewData["EventosFinal"]</span>
             </h3>
         </div>
+
+        <div id="divMensaje"class ="accordion" @(hiddenString)>
+            <h3 id="Mensaje"></h3>
+        </div> 
+
         <p>
-            <input type="submit" class="freshbutton-blue" value="Create" />
+            <input id="btnCreate" type="submit" class="freshbutton-blue" value="Create" />
         </p>
     </fieldset>
 }
