@@ -187,9 +187,9 @@ namespace EvolucionaMovil.Controllers
             //todo:Devolver formateado el concepto según el motivo
             var usuarioOriginal = Movimiento.UserName != null ? Movimiento.UserName : "Desconocido";
             string comentario = usuarioOriginal + " - " + ((enumMotivo)Movimiento.Motivo).ToString();
-            //if (Movimiento.CuentasPayCenter != null && Movimiento.CuentasPayCenter.Proveedore != null)
+            //if (Movimiento.CuentasPayCenter != null)
             //{
-            //    comentario += " - " + Movimiento.CuentasPayCenter.Proveedore.Nombre;
+            //    comentario += " - " + Movimiento.CuentasPayCenter.ProveedorId;
             //}
             return comentario;
         }
@@ -209,7 +209,7 @@ namespace EvolucionaMovil.Controllers
             }
 
             SimpleGridResult<EstadoCuentaVM> simpleGridResult = new SimpleGridResult<EstadoCuentaVM>();
-            var estadosDeCuentaVM = movimientos.Where(x =>
+            var estadosDeCuentaVM = movimientos .Where(x =>
                     ( Parameters == null || (                            
                                 (Parameters.fechaInicio == null || (Parameters.fechaInicio < x.FechaCreacion))
                         && (Parameters.fechaFin == null || Parameters.fechaFin > x.FechaCreacion)

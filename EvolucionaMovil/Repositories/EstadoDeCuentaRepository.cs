@@ -5,6 +5,7 @@ using System.Web;
 using cabinet.patterns.clases;
 using EvolucionaMovil.Models;
 using EvolucionaMovil.Models.Enums;
+using System.Data.Objects;
 
 namespace EvolucionaMovil.Repositories
 {
@@ -24,7 +25,7 @@ namespace EvolucionaMovil.Repositories
             return context.Movimientos.Join(context.CuentasPayCenters, m => m.CuentaId, c => c.CuentaId, (m, c) => new { m, c })
                 .Where(mc => (mc.c.TipoCuenta == TipoCuentaId || TipoCuentaId == -1) && (mc.m.PayCenterId == PayCenterId || PayCenterId == -1))
                 .Select(mc=>mc.m)
-                .OrderByDescending(m => m.FechaActualizacion);
+                .OrderByDescending(m => m.FechaActualizacion) as ObjectQuery<Movimiento>;
         }
 
         public bool IsAuthorized(int PayCenterId, int MovimientoId)
