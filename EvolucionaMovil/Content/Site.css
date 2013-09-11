@@ -1070,6 +1070,9 @@ legend{font-size:2em;font-weight:400}
 #filtros #lblAplicadosOnly, #filtros #aplicadosOnly{cursor:pointer}
 #details{padding:.5em;margin-bottom:.5em;background:rgb(242, 250, 255);width:349px}
 #details label{position:static;}
+#FichaDeposito{text-align:center}
+#FichaDeposito, #FichaDeposito figure, #ImagenFicha{max-width: 540px;margin-left:auto!important}
+figcaption{font-size:1.2em; font-weight:bold}
 
 #grdDepositos .banco{width:200px!important}
 #grdDepositos .monto{width:70px!important}

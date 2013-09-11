@@ -330,6 +330,7 @@ namespace EvolucionaMovil.Controllers
                 MontoString = abono.Monto.ToString("C"),
                 PayCenterName = abono.PayCenter.UserName,
                 Referencia = abono.Referencia,
+                RutaFichaDeposito = abono.RutaFichaDeposito,
                 TipoCuenta = (enumTipoCuenta)abono.CuentaPayCenter.TipoCuenta,
                 HistorialEstatusVM = movimiento != null ? movimiento.Movimientos_Estatus.OrderByDescending(x => x.FechaCreacion).Select(x => new HistorialEstatusVM { Fecha = x.FechaCreacion.ToString(), Estatus = ((enumEstatusMovimiento)x.Status).ToString(), Comentarios = x.Comentarios, UserName = x.UserName }).ToList() : null
             };
