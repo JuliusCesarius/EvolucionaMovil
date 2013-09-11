@@ -42,7 +42,10 @@
     <div class="display-label">Referencia</div>
     <div class="display-field">
         @Html.DisplayFor(model => model.Referencia)
+        @if (!string.IsNullOrEmpty(Model.RutaFichaDeposito))
+        {
          <input type="button" id="VerImagen" class="freshbutton-blue small" value="Ver ficha de depósito" />
+        }
     </div>
     @if (Model.AbonoId > 0)
     {
@@ -56,9 +59,13 @@
     <div class="display-field">
         @Html.DisplayFor(model => model.FechaCreacion)
     </div>
-    <div id="FichaDeposito" class="listRow" >
-         <figure><figcaption>Ficha de depósito</figcaption><img id ="ImagenFicha" alt ="Imagen de la ficha de depósito"  src ="@Model.RutaFichaDeposito" /></figure>
-    </div> 
+    
+    @if (!string.IsNullOrEmpty(Model.RutaFichaDeposito))
+    {
+        <div id="FichaDeposito" class="listRow" >
+                <figure><figcaption>Ficha de depósito</figcaption><img id ="ImagenFicha" alt ="Imagen de la ficha de depósito"  src ="@Model.RutaFichaDeposito" /></figure>
+        </div> 
+    }
  @using (Html.BeginForm())
  {
      <input type="hidden" name ="AbonoId" value="@Model.AbonoId"/>
