@@ -1,14 +1,23 @@
-﻿
+﻿$(document).ready(function () {
+    $("form").on("submit", function () {
+        if ($("#ComentarioStaff").is(":visible")) {
+            if ($("#CambioEstatusVM_Comentario")[0].value == "") {
+                alert("Debe especificar un comentario");
+                return false;
+            }
+        }
+    });
+});
 function OcultaComentario() {
     if ($("#ComentarioPayCenter").length) {
-        $("#ComentarioPayCenter").css("display", "none");
-        $("#Cancelar").css("display", "block");
+        $("#ComentarioPayCenter").hide("blind");
+        $("#Cancelar").show("blind");
 
     } else {
         if ($("#ComentarioStaff").length) {
-            $("#ComentarioStaff").css("display", "none");
-            $("#Aplicar").css("display", "inline");
-            $("#Imagen").css("display", "inline");
+            $("#ComentarioStaff").hide("blind");
+            $("#buttons").show("blind");
+            $("#Imagen").show("blind");
         }
     }
     $("#CambioEstatusVM_Comentario")[0].value = "";
@@ -16,15 +25,14 @@ function OcultaComentario() {
 }
 
 function MuestraComentario(action) {
+    $("#buttons").hide("blind");
     if ($("#ComentarioPayCenter").length) {
-        $("#ComentarioPayCenter").css("display", "block");
-        $("#Cancelar").css("display", "none");
+        $("#ComentarioPayCenter").show("blind");
+        $("#Cancelar").hide("blind");
 
     } else {
         if ($("#ComentarioStaff").length) {
-            $("#ComentarioStaff").css("display", "block");
-            $("#Aplicar").css("display", "none");
-            $("#Rechazar").css("display", "none");
+            $("#ComentarioStaff").show("blind");
             $("#action")[0].value = action;
             $("#actionName")[0].textContent = action;
         }

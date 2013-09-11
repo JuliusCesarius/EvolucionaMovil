@@ -91,18 +91,15 @@
         else if (ViewBag.Role == enumRoles.Staff.GetHashCode() || ViewBag.Role == enumRoles.Administrator.GetHashCode())
         {
             //string  action = "";
-          <div>
-            @if (@Model.Status != enumEstatusMovimiento.Aplicado.GetHashCode()){
-                if (@Model.Status == enumEstatusMovimiento.Rechazado .GetHashCode()){
-                <input type="button" id = "Aplicar" onclick="MuestraComentario('Aplicar')" name="CambioEstatusVM.Estatus" class="freshbutton-blue" value="Aplicar" /> 
-                }else{
-                     <input type="submit" id = "Aplicar" name="CambioEstatusVM.Estatus" class="freshbutton-blue" value="Aplicar" />
-                }
-            }
-            @if (@Model.Status != enumEstatusMovimiento.Rechazado.GetHashCode())
-            {
-                <input type="button" id = "Rechazar" onclick="MuestraComentario('Rechazar')" class="freshbutton-blue" value="Rechazar" /> 
-            }
+          <div id="buttons">
+                    @if (@Model.Status == enumEstatusMovimiento.Rechazado.GetHashCode() || @Model.Status == enumEstatusMovimiento.Procesando.GetHashCode())
+                    {
+                        <input type="button" id = "Aplicar" onclick="MuestraComentario('Aplicar')" name="CambioEstatusVM.Estatus" class="freshbutton-blue" value="Aplicar" /> 
+                    }
+                    @if (@Model.Status == enumEstatusMovimiento.Aplicado.GetHashCode() || @Model.Status == enumEstatusMovimiento.Procesando.GetHashCode())
+                    {
+                        <input type="button" id = "Rechazar" onclick="MuestraComentario('Rechazar')" class="freshbutton-blue" value="Rechazar" /> 
+                    }
           </div>
         
           <div id="ComentarioStaff"  style="display: none;"> 
@@ -111,6 +108,7 @@
                <div class="display-label">@Html.LabelFor(model => model.CambioEstatusVM.Comentario)</div>
                <div class="display-field">
                     @Html.EditorFor(model => model.CambioEstatusVM.Comentario)
+                    @Html.ValidationMessageFor(model => model.CambioEstatusVM.Comentario)
                </div>
                <div>
                          <input type="submit" class="freshbutton-blue" value="Aceptar" />

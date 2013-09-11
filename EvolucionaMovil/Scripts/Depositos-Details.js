@@ -1,6 +1,14 @@
 ﻿
 $(document).ready(function () {
-    $("#FichaDeposito").css("display", "none");
+    $("form").on("submit", function () {
+        if ($("#ComentarioStaff").is(":visible")) {
+            if ($("#CambioEstatusVM_Comentario")[0].value == "") {
+                alert("Debe especificar un comentario");
+                return false;
+            }
+        }
+    });
+    $("#FichaDeposito").hide("blind");
     $("#VerImagen").on("click", function () {
         OcultaMuestraImagen();
     }
@@ -10,14 +18,14 @@ $(document).ready(function () {
 
 function OcultaComentario() {
     if ($("#ComentarioPayCenter").length) {
-        $("#ComentarioPayCenter").css("display", "none");
-        $("#Cancelar").css("display", "block");
+        $("#ComentarioPayCenter").hide("blind");
+        $("#Cancelar").show("blind");
     
     } else {
         if ($("#ComentarioStaff").length) {
-            $("#ComentarioStaff").css("display", "none");
-            $("#Aplicar").css("display", "inline");
-            $("#Imagen").css("display", "inline");
+            $("#ComentarioStaff").hide("blind");
+            $("#buttons").show("blind");
+            $("#Imagen").show("blind");
         }
     }
     $("#CambioEstatusVM_Comentario")[0].value = "";
@@ -25,15 +33,14 @@ function OcultaComentario() {
 }
 
 function MuestraComentario(action) {
+    $("#buttons").hide("blind");
     if ($("#ComentarioPayCenter").length) {
-        $("#ComentarioPayCenter").css("display", "block");
-        $("#Cancelar").css("display", "none");
+        $("#ComentarioPayCenter").show("blind");
+        $("#Cancelar").hide("blind");
 
     } else {
         if ($("#ComentarioStaff").length) {
-            $("#ComentarioStaff").css("display", "block");
-            $("#Aplicar").css("display", "none");
-            $("#Rechazar").css("display", "none");
+            $("#ComentarioStaff").show("blind");
             $("#action")[0].value = action;
             $("#actionName")[0].textContent = action;
         }
@@ -46,13 +53,13 @@ function OcultaMuestraImagen() {
     if (displaying == "block") {
 
         $("#FichaDeposito").fadeOut('slow', function () {
-            $("#FichaDeposito").css("display", "none");
+            $("#FichaDeposito").hide("blind");
             $("#VerImagen")[0].value = "Ver ficha de depósito"
         });
 
     } else {
         $("#FichaDeposito").fadeIn('slow', function () {
-            $("#FichaDeposito").css("display", "block");
+            $("#FichaDeposito").show("blind");
             $("#VerImagen")[0].value = "Ocultar ficha de depósito"
         });
 
