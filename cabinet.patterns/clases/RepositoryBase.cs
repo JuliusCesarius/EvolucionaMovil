@@ -64,7 +64,7 @@ namespace cabinet.patterns.clases
                         //Verifico si tiene campo FechaCreacion para agregar el default
                         if (Obj.GetType().GetProperties().Any(x => x.Name == "FechaCreacion"))
                         {
-                            Obj.GetType().GetProperty("FechaCreacion").SetValue(Obj, DateTime.Now, null);
+                            Obj.GetType().GetProperty("FechaCreacion").SetValue(Obj, DateTime.UtcNow, null);
                         }
                         //Verifico si tiene campo GUID para agregar el default
                         if (Obj.GetType().GetProperties().Any(x => x.Name == "ID"))

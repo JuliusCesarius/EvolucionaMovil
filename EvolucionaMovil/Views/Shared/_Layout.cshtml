@@ -1,5 +1,6 @@
 ﻿@using EvolucionaMovil.Models.Enums
 @using cabinet.patterns.clases
+@using EvolucionaMovil.Models.Extensions
 <!DOCTYPE html>
 <!--[if lt IE 7 ]> <html class="no-js ie ie6 lte6 lte7 lte8 lte9 jqueryui-com jquery-ui" dir="ltr" lang="en-US"> <![endif]-->
 <!--[if IE 7 ]>		 <html class="no-js ie ie7 lte7 lte8 lte9 jqueryui-com jquery-ui" dir="ltr" lang="en-US"> <![endif]-->
@@ -135,7 +136,7 @@
         <div class="innerfooter">
             <p>
                 <a class="title">Evoluciona Móvil ®</a> 
-                <br />México D.F. a @DateTime.Today.ToLongDateString()  @DateTime.Now.ToLongTimeString() <br /><span class="tel">Tel. </span><span class="tel">01 (55) 5715 0880</span>
+                <br />México D.F. a @DateTime.Today.ToLongDateString()  @DateTime.UtcNow.GetCurrentTime().ToLongTimeString() <br /><span class="tel">Tel. </span><span class="tel">01 (55) 5715 0880</span>
             </p>
             <p class="tar">
                 <a href="@Url.Content("~/home/Aviso_de_Privacidad")">AVISO DE PRIVACIDAD</a><br />

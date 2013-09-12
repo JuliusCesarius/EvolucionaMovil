@@ -1,4 +1,6 @@
 @using PagedList.Mvc
+@using EvolucionaMovil.Models.Extensions
+
 @model EvolucionaMovil.Areas.MvcMembership.Models.Users.IndexViewModel
 @{
 	ViewBag.Title = "User Administration";
@@ -42,7 +44,7 @@
 			}else{
 				<span class="mvcMembership-isOffline">Offline for
 					@{
-						var offlineSince = (DateTime.Now - user.LastActivityDate);
+						var offlineSince = (DateTime.UtcNow.GetCurrentTime() - user.LastActivityDate);
 						if (offlineSince.TotalSeconds <= 60){
 							<text>1 minute.</text>
 						}else if(offlineSince.TotalMinutes < 60){

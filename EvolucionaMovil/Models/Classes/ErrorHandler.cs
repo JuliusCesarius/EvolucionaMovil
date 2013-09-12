@@ -6,6 +6,7 @@ using EvolucionaMovil.Repositories;
 using cabinet.patterns.enums;
 using System.IO;
 using System.Text;
+using EvolucionaMovil.Models.Extensions;
 
 namespace EvolucionaMovil.Models.Classes
 {
@@ -44,7 +45,7 @@ namespace EvolucionaMovil.Models.Classes
                 Data = Data,
                 ErrorCode = ErrorCode,
                 ErrorType = (short)enumMessageType.UnhandledException,
-                FechaCreacion = DateTime.Now,
+                FechaCreacion = DateTime.UtcNow.GetCurrentTime(),
                 IP = HttpContext.Current.Request.UserHostAddress,
                 Message = Message,
                 Stacktrace = Stacktrace,
@@ -72,7 +73,7 @@ namespace EvolucionaMovil.Models.Classes
                     using (StreamWriter writer = new StreamWriter(System.Web.HttpContext.Current.Server.MapPath("~/")+"errorLog.txt", true))
                     {
                         StringBuilder errorText = new StringBuilder();
-                        errorText.Append(DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToShortTimeString());
+                        errorText.Append(DateTime.UtcNow.GetCurrentTime().GetCurrentTime().ToShortDateString() + " " + DateTime.UtcNow.GetCurrentTime().ToShortTimeString());
                         errorText.Append(" | " + ((enumMessageType)ErrorLog.ErrorType).ToString());
                         errorText.Append(" | " + (string.IsNullOrEmpty(ErrorLog.ErrorCode) ? " " : ErrorLog.ErrorCode));
                         errorText.Append(" | " + ErrorLog.Message);

@@ -124,6 +124,7 @@
     <Compile Include="Attributes\CustomAuthorizeAttribute.cs" />
     <Compile Include="Attributes\MaskAttribute.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Models\Classes\DateTimeUtil.cs" />
     <Compile Include="Models\ConfigProvCuentaVM.cs" />
     <Compile Include="Controllers\CuentasBancariasController.cs" />
     <Compile Include="Controllers\CaptchaController.cs" />
@@ -160,6 +161,7 @@
     <Compile Include="Models\Enums\enumTipoCuenta.cs" />
     <Compile Include="Models\Enums\enumTipoMovimiento.cs" />
     <Compile Include="Models\EnumWrapper.cs" />
+    <Compile Include="Models\Extensions\DateTimeExtension.cs" />
     <Compile Include="Models\Extensions\StringExtension.cs" />
     <Compile Include="Models\Helpers\RelativeURLHelper.cs" />
     <Compile Include="Models\Helpers\EmailHelper.cs" />

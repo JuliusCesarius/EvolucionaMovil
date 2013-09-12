@@ -8,6 +8,7 @@ using System.Data.Objects;
 using cabinet.patterns.interfaces;
 using cabinet.patterns.clases;
 using cabinet.patterns.enums;
+using EvolucionaMovil.Models.Extensions;
 
 namespace EvolucionaMovil.Models.BR
 {
@@ -166,7 +167,7 @@ namespace EvolucionaMovil.Models.BR
 
                 var movimientoEmpresaPago = new MovimientoEmpresa
                 {
-                    Clave = DateTime.Now.ToString("yyyyMMdd") + "0" + ((Int16)enumMotivo.Financiamiento).ToString() + new Random().Next(0, 99999).ToString(),
+                    Clave = DateTime.UtcNow.GetCurrentTime().ToString("yyyyMMdd") + "0" + ((Int16)enumMotivo.Financiamiento).ToString() + new Random().Next(0, 99999).ToString(),
                     IsAbono = true,
                     Monto = (short)comision,
                     Motivo = (short)enumMotivo.Comision,
@@ -174,7 +175,7 @@ namespace EvolucionaMovil.Models.BR
                     SaldoActual = saldoActual,
                     Status = (short)enumEstatusMovimiento.Procesando,
                     UserName = PayCenterName,
-                    FechaCreacion = DateTime.UtcNow
+                    FechaCreacion = DateTime.UtcNow.GetCurrentTime()
                 };
                 movimientosEmpresaRepository.Add(movimientoEmpresaPago);
             }
@@ -186,7 +187,7 @@ namespace EvolucionaMovil.Models.BR
             {
                 var movimientoEmpresaPago = new MovimientoEmpresa
                 {
-                    Clave = DateTime.Now.ToString("yyyyMMdd") + "0" + ((Int16)enumMotivo.Financiamiento).ToString() + new Random().Next(0, 99999).ToString(),
+                    Clave = DateTime.UtcNow.GetCurrentTime().ToString("yyyyMMdd") + "0" + ((Int16)enumMotivo.Financiamiento).ToString() + new Random().Next(0, 99999).ToString(),
                     IsAbono = false,
                     Monto = financiamientoPago,
                     Motivo = (short)enumMotivo.Financiamiento,
@@ -194,7 +195,7 @@ namespace EvolucionaMovil.Models.BR
                     SaldoActual = saldoActual,
                     Status = (short)enumEstatusMovimiento.Procesando,
                     UserName = PayCenterName,
-                    FechaCreacion = DateTime.UtcNow
+                    FechaCreacion = DateTime.UtcNow.GetCurrentTime()
                 };
                 movimientosEmpresaRepository.Add(movimientoEmpresaPago);
             }
@@ -202,7 +203,7 @@ namespace EvolucionaMovil.Models.BR
             {
                 var movimientoEmpresaComision = new MovimientoEmpresa
                 {
-                    Clave = DateTime.Now.ToString("yyyyMMdd") + "0" + ((Int16)enumMotivo.Financiamiento).ToString() + new Random().Next(0, 99999).ToString(),
+                    Clave = DateTime.UtcNow.GetCurrentTime().ToString("yyyyMMdd") + "0" + ((Int16)enumMotivo.Financiamiento).ToString() + new Random().Next(0, 99999).ToString(),
                     IsAbono = false,
                     Monto = financiamientoComision,
                     Motivo = (short)enumMotivo.Financiamiento,
@@ -255,10 +256,10 @@ namespace EvolucionaMovil.Models.BR
         {
             Movimiento movimiento = new Movimiento();
 
-            movimiento.Clave = DateTime.Now.ToString("yyyyMMdd") + "0" + ((Int16)Motivo).ToString() + new Random().Next(0, 99999).ToString();
+            movimiento.Clave = DateTime.UtcNow.GetCurrentTime().ToString("yyyyMMdd") + "0" + ((Int16)Motivo).ToString() + new Random().Next(0, 99999).ToString();
             movimiento.CuentaId = CuentaId;
-            movimiento.FechaCreacion = DateTime.Now;
-            movimiento.FechaActualizacion = DateTime.Now;
+            movimiento.FechaCreacion = DateTime.UtcNow.GetCurrentTime();
+            movimiento.FechaActualizacion = DateTime.UtcNow.GetCurrentTime();
             movimiento.IsAbono = TipoMovimiento == enumTipoMovimiento.Abono;
             movimiento.Monto = Monto;
             movimiento.Motivo = (Int16)Motivo;
@@ -270,7 +271,7 @@ namespace EvolucionaMovil.Models.BR
             //BR01.04.b: La creación de un registro de movimiento, deberá venir acompañada de un registro de historial de estatus
             var currentUser = HttpContext.Current.User != null ? HttpContext.Current.User.Identity.Name : string.Empty;
             Int16 nuevoEstatusNumber = movimiento.Status;
-            var movimientos_Estatus = new Movimientos_Estatus { PayCenterId = PayCenterId, CuentaId = CuentaId, UserName = currentUser, Status = nuevoEstatusNumber, FechaCreacion = DateTime.Now };
+            var movimientos_Estatus = new Movimientos_Estatus { PayCenterId = PayCenterId, CuentaId = CuentaId, UserName = currentUser, Status = nuevoEstatusNumber, FechaCreacion = DateTime.UtcNow.GetCurrentTime() };
             movimiento.Movimientos_Estatus.Add(movimientos_Estatus);
             movimiento.UserName = currentUser;
             movimiento.SaldoActual = GetSaldoActual(PayCenterId);
@@ -422,7 +423,7 @@ namespace EvolucionaMovil.Models.BR
                             AddValidationMessage(enumMessageType.Notification, "No existen parámetros globales configurados");
                             return null;
                         }
-                        var dif = DateTime.Now - movimiento.FechaCreacion;
+                        var dif = DateTime.UtcNow.GetCurrentTime() - movimiento.FechaCreacion;
                         //Excede los minutos de prórroga?
                         if (dif.TotalMinutes > parametrosGlobales.MinutosProrrogaCancelacion)
                         {
@@ -443,14 +444,14 @@ namespace EvolucionaMovil.Models.BR
             var currentUser = HttpContext.Current.User != null ? HttpContext.Current.User.Identity.Name : string.Empty;
             Int16 nuevoEstatusNumber = (Int16)NuevoEstatus.GetHashCode();
             movimiento.Status = nuevoEstatusNumber;
-            movimiento.FechaActualizacion = DateTime.Now;
+            movimiento.FechaActualizacion = DateTime.UtcNow.GetCurrentTime();
             var movimientos_Estatus = new Movimientos_Estatus
             {
                 PayCenterId = movimiento.PayCenterId,
                 CuentaId = movimiento.CuentaId,
                 UserName = currentUser,
                 Status = nuevoEstatusNumber,
-                FechaCreacion = DateTime.Now,
+                FechaCreacion = DateTime.UtcNow.GetCurrentTime(),
                 Comentarios = Comentarios
             };
             movimiento.Movimientos_Estatus.Add(movimientos_Estatus);

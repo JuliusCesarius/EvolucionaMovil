@@ -59,8 +59,8 @@ namespace EvolucionaMovil.Controllers
             ViewBag.PageSize = parameters.pageSize;
             ViewBag.PageNumber = parameters.pageNumber;
             ViewBag.SearchString = parameters.searchString;
-            ViewBag.fechaInicio = parameters.fechaInicio != null ? ((DateTime)parameters.fechaInicio).ToShortDateString() : "";
-            ViewBag.FechaFin = parameters.fechaFin != null ? ((DateTime)parameters.fechaFin).ToShortDateString() : "";
+            ViewBag.fechaInicio = parameters.fechaInicio != null ? ((DateTime)parameters.fechaInicio).GetCurrentTime().ToShortDateString() : "";
+            ViewBag.FechaFin = parameters.fechaFin != null ? ((DateTime)parameters.fechaFin).GetCurrentTime().ToShortDateString() : "";
             ViewBag.OnlyAplicados = parameters.onlyAplicados;
             ViewBag.PayCenterId = parameters.PayCenterId;
             ViewBag.PayCenterName = parameters.PayCenterName;
@@ -197,7 +197,7 @@ namespace EvolucionaMovil.Controllers
                 Succeed = false;
             }
 
-            if (Convert.ToDateTime(model.FechaPago).CompareTo(DateTime.Now) == 1)
+            if (Convert.ToDateTime(model.FechaPago).CompareTo(DateTime.UtcNow.GetCurrentTime()) == 1)
             {
                 AddValidationMessage(enumMessageType.BRException, "La fecha de depósito debe ser menor o igual a la fecha actual.");
                 Succeed = false;
@@ -212,7 +212,7 @@ namespace EvolucionaMovil.Controllers
                 abonoVM.Status = (Int16)enumEstatusMovimiento.Procesando;
                 abonoVM.PayCenterId = PayCenterId;
                 abonoVM.PayCenterName = PayCenterName;
-                abonoVM.FechaCreacion = DateTime.Now;
+                abonoVM.FechaCreacion = DateTime.UtcNow.GetCurrentTime();
                 abonoVM.FechaPago = (DateTime)model.FechaPago;
                 abonoVM.ProveedorId = model.ProveedorId;
                 return View("Confirm", abonoVM);
@@ -239,7 +239,7 @@ namespace EvolucionaMovil.Controllers
                 exito = false;
             }
 
-            if (Convert.ToDateTime(model.FechaPago).CompareTo(DateTime.Now) == 1)
+            if (Convert.ToDateTime(model.FechaPago).CompareTo(DateTime.UtcNow.GetCurrentTime()) == 1)
             {
                 AddValidationMessage(enumMessageType.BRException, "La fecha de depósito debe ser menor o igual a la fecha actual.");
                 exito = false;
@@ -258,7 +258,7 @@ namespace EvolucionaMovil.Controllers
                         CuentaBancariaId = model.CuentaBancariaId,
                         CuentaId = model.CuentaId,
                         Status = (Int16)enumEstatusMovimiento.Procesando,
-                        FechaCreacion = DateTime.Now,
+                        FechaCreacion = DateTime.UtcNow.GetCurrentTime(),
                         FechaPago = (DateTime)model.FechaPago,
                         Monto = (Decimal)model.Monto,
                         PayCenterId = PayCenterId,
@@ -283,7 +283,7 @@ namespace EvolucionaMovil.Controllers
             {
                 AddValidationMessage(enumMessageType.BRException, "No fue posible guardar el reporte de depósito.");
             }
-            model.FechaCreacion = DateTime.Now;
+            model.FechaCreacion = DateTime.UtcNow.GetCurrentTime();
             return View(model);
         }
 
@@ -422,13 +422,13 @@ namespace EvolucionaMovil.Controllers
         private SimpleGridResult<DepositoVM> getDepositos(ServiceParameterVM Parameters = null)
         {
             IEnumerable<Abono> depositos;
-            if (PayCenterId == 0 && (Parameters.ProveedorId ==null || Parameters.ProveedorId == 0))
+            if (PayCenterId == 0 && Parameters.ProveedorId == 0)
             {
                 depositos = repository.ListAll().OrderByDescending(m => m.FechaCreacion);
             }
             else
             {
-                if (PayCenterId > 0 && (Parameters.ProveedorId != null && Parameters.ProveedorId > 0))
+                if (PayCenterId > 0 && Parameters.ProveedorId > 0)
                 {
                     depositos = repository.GetByPayCenterIdProveedorId(PayCenterId, Parameters.ProveedorId).OrderByDescending(m => m.FechaCreacion);
                 }
@@ -463,8 +463,8 @@ namespace EvolucionaMovil.Controllers
                     Banco = getBancoById(x.BancoId, ref bancos),
                     Comentarios = getComentarioCambioEstatus(x.AbonoId),
                     CuentaBancaria = getCuentaById(x.CuentaBancariaId, ref bancos),
-                    FechaPago = x.FechaPago.ToShortDateString(),
-                    FechaCreacion = x.FechaCreacion.ToShortDateString(),
+                    FechaPago = x.FechaPago.GetCurrentTime().ToShortDateString(),
+                    FechaCreacion = x.FechaCreacion.GetCurrentTime().ToShortDateString(),
                     Monto = x.Monto.ToString("C"),
                     PayCenter = x.PayCenter.UserName,
                     Referencia = x.Referencia,

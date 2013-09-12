@@ -13,6 +13,7 @@ using EvolucionaMovil.Models.Classes;
 using EvolucionaMovil.Attributes;
 using cabinet.patterns.enums;
 using EvolucionaMovil.Models.BR;
+using EvolucionaMovil.Models.Extensions;
 
 namespace EvolucionaMovil.Controllers
 {
@@ -98,14 +99,14 @@ namespace EvolucionaMovil.Controllers
                     AddValidationMessage(enumMessageType.BRException, "No se ha encontrado el paquete de " + paquete.Creditos.ToString() + "créditos");
                     break;
                 }
-                if (p.FechaVencimiento >= DateTime.Now)
+                if (p.FechaVencimiento >= DateTime.UtcNow.GetCurrentTime())
                 {
                     totalCompra += p.Creditos;
                     CompraEvento compraEvento = new CompraEvento
                     {
                         Consumidos = 0,
                         Eventos = p.Creditos,
-                        FechaCreacion = DateTime.Now,
+                        FechaCreacion = DateTime.UtcNow.GetCurrentTime(),
                         Monto = p.Precio,
                         PaqueteId = p.PaqueteId,
                         PayCenterId = PayCenterId

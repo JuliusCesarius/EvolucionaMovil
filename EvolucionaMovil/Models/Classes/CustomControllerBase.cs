@@ -9,6 +9,7 @@ using cabinet.patterns.interfaces;
 using EvolucionaMovil.Models.Interfaces;
 using EvolucionaMovil.Repositories;
 using cabinet.patterns.enums;
+using EvolucionaMovil.Models.Extensions;
 
 namespace EvolucionaMovil.Models.Classes
 {

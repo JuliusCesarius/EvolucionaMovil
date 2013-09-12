@@ -63,8 +63,8 @@ namespace EvolucionaMovil.Controllers
             ViewBag.PageSize = parameters.pageSize;
             ViewBag.PageNumber = parameters.pageNumber;
             ViewBag.SearchString = parameters.searchString;
-            ViewBag.fechaInicio = parameters.fechaInicio != null ? ((DateTime)parameters.fechaInicio).ToShortDateString() : "";
-            ViewBag.FechaFin = parameters.fechaFin != null ? ((DateTime)parameters.fechaFin).ToShortDateString() : "";
+            ViewBag.fechaInicio = parameters.fechaInicio != null ? ((DateTime)parameters.fechaInicio).GetCurrentTime().ToShortDateString() : "";
+            ViewBag.FechaFin = parameters.fechaFin != null ? ((DateTime)parameters.fechaFin).GetCurrentTime().ToShortDateString() : "";
             ViewBag.OnlyAplicados = parameters.onlyAplicados;
             ViewBag.PayCenterId = parameters.PayCenterId;
             ViewBag.PayCenterName = parameters.PayCenterName;
@@ -235,7 +235,7 @@ namespace EvolucionaMovil.Controllers
                         ((enumEstatusMovimiento)x.Status) == enumEstatusMovimiento.Cancelado ||
                         ((enumEstatusMovimiento)x.Status) == enumEstatusMovimiento.Rechazado ||
                         !x.SaldoActual.HasValue ? "-" : ((decimal)x.SaldoActual).ToString("C3", ci),
-                    FechaCreacion = x.FechaCreacion.ToShortDateString(),
+                    FechaCreacion = x.FechaCreacion.GetCurrentTime().ToShortDateString(),
                     Status  = x.Status
 
                 });

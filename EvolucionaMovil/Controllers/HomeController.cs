@@ -39,7 +39,7 @@ namespace EvolucionaMovil.Controllers
             //            {
             //                tipoDato = enumTipoDato.Dinero.GetHashCode();
             //            }
-            //            servicio.DetalleServicios.Add(new DetalleServicio { Campo = campo, Tipo = (short)tipoDato, FechaCreacion = DateTime.Now, ServicioId = servicioId });
+            //            servicio.DetalleServicios.Add(new DetalleServicio { Campo = campo, Tipo = (short)tipoDato, FechaCreacion = DateTime.UtcNow.GetCurrentTime(), ServicioId = servicioId });
             //        }
             //    }
             //}

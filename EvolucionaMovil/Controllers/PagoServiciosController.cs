@@ -17,6 +17,7 @@ using System.Globalization;
 using EvolucionaMovil.Models.BR;
 using EvolucionaMovil.Models.Helpers;
 using System.Text;
+using EvolucionaMovil.Models.Extensions;
 
 namespace EvolucionaMovil.Controllers
 {
@@ -54,8 +55,8 @@ namespace EvolucionaMovil.Controllers
             ViewBag.PageSize = parameters.pageSize;
             ViewBag.PageNumber = parameters.pageNumber;
             ViewBag.SearchString = parameters.searchString;
-            ViewBag.fechaInicio = parameters.fechaInicio != null ? ((DateTime)parameters.fechaInicio).ToShortDateString() : "";
-            ViewBag.FechaFin = parameters.fechaFin != null ? ((DateTime)parameters.fechaFin).ToShortDateString() : "";
+            ViewBag.fechaInicio = parameters.fechaInicio != null ? ((DateTime)parameters.fechaInicio).GetCurrentTime().ToShortDateString() : "";
+            ViewBag.FechaFin = parameters.fechaFin != null ? ((DateTime)parameters.fechaFin).GetCurrentTime().ToShortDateString() : "";
             ViewBag.OnlyAplicados = parameters.onlyAplicados;
             ViewBag.PayCenterId = parameters.PayCenterId;
             ViewBag.PayCenterName = parameters.PayCenterName;
@@ -263,7 +264,7 @@ namespace EvolucionaMovil.Controllers
                                 ticket.ClienteNombre = pago.ClienteNombre;
                                 ticket.ClienteTelefono = "";
                                 ticket.Comision = (parametrosPayCenter != null && parametrosPayCenter.ComisionCliente != null ? (Decimal)parametrosPayCenter.ComisionCliente : 0); //Comision configurada del paycenter
-                                ticket.FechaCreacion = DateTime.Now;
+                                ticket.FechaCreacion = DateTime.UtcNow.GetCurrentTime();
                                 ticket.Folio = createFolio(pago.PagoId);
                                 ticket.Importe = pago.Importe;
                                 ticket.Leyenda = parametrosGlobales != null ? parametrosGlobales.LeyendaTicket : null;
@@ -373,8 +374,8 @@ namespace EvolucionaMovil.Controllers
                      //todo:Optimizar esta consulta para que no haga un load por cada registro que levante.
                      Comentarios = x.Movimiento.Movimientos_Estatus.Count > 0 ? x.Movimiento.Movimientos_Estatus.OrderByDescending(y => y.Movimiento_EstatusId).FirstOrDefault().Comentarios : "Sin comentarios",
                      Monto = x.Importe.ToString("C"),
-                     FechaCreacion = x.FechaCreacion.ToShortDateString(),
-                     FechaVencimiento = x.FechaVencimiento.ToShortDateString(),
+                     FechaCreacion = x.FechaCreacion.GetCurrentTime().ToShortDateString(),
+                     FechaVencimiento = x.FechaVencimiento.GetCurrentTime().ToShortDateString(),
                      Status = ((enumEstatusMovimiento)x.Status).ToString()
                  });
 
@@ -428,9 +429,9 @@ namespace EvolucionaMovil.Controllers
         [NonAction]
         private string createFolio(int idTabla)
         {
-            var yy = DateTime.Now.Year.ToString().Substring(1, 2);
-            var mm = DateTime.Now.Month.ToString().Length < 2 ? "0" + DateTime.Now.Month.ToString() : DateTime.Now.Month.ToString();
-            var dd = DateTime.Now.Day.ToString().Length < 2 ? "0" + DateTime.Now.Day.ToString() : DateTime.Now.Day.ToString();
+            var yy = DateTime.UtcNow.GetCurrentTime().Year.ToString().Substring(1, 2);
+            var mm = DateTime.UtcNow.GetCurrentTime().Month.ToString().Length < 2 ? "0" + DateTime.UtcNow.GetCurrentTime().Month.ToString() : DateTime.UtcNow.GetCurrentTime().Month.ToString();
+            var dd = DateTime.UtcNow.GetCurrentTime().Day.ToString().Length < 2 ? "0" + DateTime.UtcNow.GetCurrentTime().Day.ToString() : DateTime.UtcNow.GetCurrentTime().Day.ToString();
             var tabla = idTabla.ToString("D6"); //999999
             return yy + mm + dd + tabla;
         }
@@ -469,7 +470,7 @@ namespace EvolucionaMovil.Controllers
                     HistorialEstatusVM h = new HistorialEstatusVM();
                     h.Comentarios = m.Comentarios;
                     h.Estatus = ((enumEstatusMovimiento)m.Status).ToString();
-                    h.Fecha = m.FechaCreacion.ToShortDateString();
+                    h.Fecha = m.FechaCreacion.GetCurrentTime().ToShortDateString();
                     h.UserName = m.UserName;
                     pagoVM.HistorialEstatusVM.Add(h);
                 }
@@ -495,7 +496,7 @@ namespace EvolucionaMovil.Controllers
             {
                 cadena.AppendLine("<tr><td>" + d.Campo + "</td><td>" + d.Valor + "</td></tr></tr>");
             }
-            cadena.AppendLine("<tr><td>Fecha Vencimiento</td><td>" + p.FechaVencimiento.ToShortDateString() + "</td></tr></tr>");
+            cadena.AppendLine("<tr><td>Fecha Vencimiento</td><td>" + p.FechaVencimiento.GetCurrentTime().ToShortDateString() + "</td></tr></tr>");
             cadena.AppendLine("<tr><td>Nombre Cliente</td><td><h3>" + p.ClienteNombre + "</h3></td></tr>");
             cadena.AppendLine("<tr><td>Importe</td><div class='display-field fwb fsxl'><h3>" + p.Importe.ToString("C", ci) + "</h3></td></tr>");
             cadena.AppendLine("<tr><td>Estatus</td><div class='display-field fwb fsxl '><span class='Procesando'><h2>" + ((enumEstatusMovimiento)p.Status).ToString() + "</h2></span></td></tr>");

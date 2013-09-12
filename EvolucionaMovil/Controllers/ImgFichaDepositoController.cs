@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using System.IO;
 using EvolucionaMovil.Models.Classes;
 using cabinet.patterns.enums;
+using EvolucionaMovil.Models.Extensions;
 namespace EvolucionaMovil.Controllers
 {
     public class ImgFichaDepositoController : CustomControllerBase
@@ -24,7 +25,7 @@ namespace EvolucionaMovil.Controllers
                 string extension = file.FileName.Substring(file.FileName.LastIndexOf(".")).ToLower();
                 if (extension.ToLower() == ".png" || extension.ToLower() == ".jpg")
                 {
-                    var fileName = "imgtemp_" + DateTime.Now.ToString("yyyyMMdd")  + new Random().Next(0, 99999).ToString()+extension.ToLower();
+                    var fileName = "imgtemp_" + DateTime.UtcNow.GetCurrentTime().ToString("yyyyMMdd")  + new Random().Next(0, 99999).ToString()+extension.ToLower();
                     var directoryTemp = Server.MapPath("~/temp/");
                     if (!Directory.Exists(directoryTemp))
                     {
