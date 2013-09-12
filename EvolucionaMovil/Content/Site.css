@@ -1216,3 +1216,5 @@ border-bottom-left-radius: 3px;margin-bottom:5px;background:#fff;cursor:pointer;
 
 #cuentaForm label, #cuentaDetail label{position:static}
 /*.labelForCheck{left: 23px;top: -9px;}*/
+
+article p{margin-bottom:1em}

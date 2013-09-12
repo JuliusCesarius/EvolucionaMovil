@@ -40,6 +40,11 @@ namespace EvolucionaMovil.Controllers
             return View(repository.ListAll().Select(x => new PaqueteVM { Creditos = x.Creditos, PaqueteId = x.PaqueteId, Precio = x.Precio }));
         }
 
+        public ViewResult QueSon()
+        {
+            return View();
+        }
+
         [HttpPost]
         [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.PayCenter })]
         public ViewResult Buy(IEnumerable<PaqueteVM> model)
