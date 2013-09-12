@@ -102,7 +102,7 @@ namespace EvolucionaMovil.Controllers
         //}
 
         // GET: /PayCenters/Create ProspectoId
-        public ActionResult Registrar(Guid id)
+        public ActionResult Registrar(Guid? id)
         {
             //Validar si no tiene usuario logueado, obligatoriamente debe pasar un Id
             if ((!HttpContext.User.Identity.IsAuthenticated) && (id == null))
@@ -673,7 +673,7 @@ namespace EvolucionaMovil.Controllers
                                             && (string.IsNullOrEmpty(filtroNombre) || x.UserName.Contains(filtroNombre)));
                 //</after>
             }
-
+            paycenters = paycenters.OrderByDescending(x => x.PayCenterId);
             SimpleGridResult<PayCenterVM> simpleGridResult = new SimpleGridResult<PayCenterVM>();
             IEnumerable<PayCenter> paycentersPaged = null;
             if (Parameters != null)
