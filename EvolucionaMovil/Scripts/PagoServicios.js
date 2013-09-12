@@ -129,7 +129,7 @@ function edoCuentaLoaded(){
     $(".qtip").qtip({content:$(this).attr("alt")});
     $(".saldo").each(function (i, item) {
         if (i == 0) {
-            $(item).addClass($(item).val().replace("$", "") > 0 ? "abono" : "cargo");
+            $(item).addClass($(item).val().replace("$", "") < 0 ? "cargo" : "abono");
         }
     });    
 }

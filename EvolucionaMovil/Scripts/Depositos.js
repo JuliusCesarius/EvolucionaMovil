@@ -144,7 +144,7 @@ function grdRowSelected(item) {
 function depositosLoaded() {
     $(".qtip").qtip({ content: $(this).attr("alt"), api: { beforeShow: comentariosBeforeShow, onRender: comentariosBeforeShow} });
     $(".sgCell.saldo").each(function (i, item) {
-        var clase = $(item).val().replace("$", "") > 0 ? "abono" : "cargo";
+        var clase = $(item).val().replace("$", "") < 0 ? "cargo" : "abono";
         $(item).addClass(clase);
     });
 }

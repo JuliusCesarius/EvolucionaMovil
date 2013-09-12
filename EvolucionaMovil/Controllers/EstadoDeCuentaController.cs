@@ -130,6 +130,7 @@ namespace EvolucionaMovil.Controllers
                             abono.Status = (Int16)nuevoEstatus;
                             
                             estadoCuentaBR.ActualizarMovimiento(Movimiento.MovimientoId, nuevoEstatus, comentario);
+
                             this.Succeed = estadoCuentaBR.Succeed;
                             this.ValidationMessages = estadoCuentaBR.ValidationMessages;
 
@@ -230,7 +231,10 @@ namespace EvolucionaMovil.Controllers
                     Concepto = getConceptoString(x),
                     Abono = x.IsAbono ? x.Monto.ToString("C3", ci) : string.Empty,
                     Cargo = !x.IsAbono ? x.Monto.ToString("C3", ci) : string.Empty,
-                    Saldo = ((enumEstatusMovimiento)x.Status) == enumEstatusMovimiento.Procesando || !x.SaldoActual.HasValue ? "-" : ((decimal)x.SaldoActual).ToString("C3", ci),
+                    Saldo = ((enumEstatusMovimiento)x.Status) == enumEstatusMovimiento.Procesando ||
+                        ((enumEstatusMovimiento)x.Status) == enumEstatusMovimiento.Cancelado ||
+                        ((enumEstatusMovimiento)x.Status) == enumEstatusMovimiento.Rechazado ||
+                        !x.SaldoActual.HasValue ? "-" : ((decimal)x.SaldoActual).ToString("C3", ci),
                     FechaCreacion = x.FechaCreacion.ToShortDateString(),
                     Status  = x.Status
 

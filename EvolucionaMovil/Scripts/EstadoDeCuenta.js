@@ -140,7 +140,7 @@ function grdRowSelected(item) {
 function edoCuentaLoaded(){
     $(".qtip").qtip({content:$(this).attr("alt")});
     $(".sgCell.saldo").each(function (i, item) {
-            var clase = $(item).val().replace("$", "") > 0 ? "abono" : "cargo";
+            var clase = $(item).val().replace("$", "") < 0 ? "cargo" : "abono";
             $(item).addClass(clase);
     });
 }
