@@ -65,5 +65,6 @@ namespace EvolucionaMovil.Models
         public string SaldoDisponible { get; set; }
         public string Eventos { get; set; }
         public string PagosRealizados { get; set; }
+        public string Logotipo { get; set; }
     }
 }
