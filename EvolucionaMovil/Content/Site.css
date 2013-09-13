@@ -1073,6 +1073,16 @@ legend{font-size:2em;font-weight:400}
 #FichaDeposito{text-align:center}
 #FichaDeposito, #FichaDeposito figure, #ImagenFicha{max-width: 540px;margin-left:auto!important}
 figcaption{font-size:1.2em; font-weight:bold}
+#divFinan
+{background-color: #FFF4A5;
+border-top-left-radius: 5px;
+border-top-right-radius: 5px;
+border-bottom-right-radius: 5px;
+border-bottom-left-radius: 5px;
+display:inline-block;
+padding: 5px;
+width:350px
+}
 
 #grdDepositos .banco{width:200px!important}
 #grdDepositos .monto{width:70px!important}

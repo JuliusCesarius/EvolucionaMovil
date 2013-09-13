@@ -165,17 +165,18 @@ namespace EvolucionaMovil.Controllers
         {
             PagoVM pagoVM = new PagoVM();
             pagoVM.PayCenterId = PayCenterId;
+            EstadoCuentaBR br = new EstadoCuentaBR();                
             if (PayCenterId > 0)
             {
-                EstadoCuentaBR br = new EstadoCuentaBR();                
                 var saldo = br.GetSaldosPagoServicio(PayCenterId);
                 ViewData["Eventos"] = saldo.EventosDisponibles;
                 ViewData["SaldoActual"] = saldo.SaldoActual.ToString("C");
                 ViewData["SaldoDisponible"] = saldo.SaldoDisponible.ToString("C");         
             }
             //TODO:Obtener el Máximo a financiar, esto es por pay center
-            ViewData["Comision"] = 5.5;
-            ViewData["MaximoFinanciar"] = 200;
+            var comisionFinanciamiento = br.GetComisionFinanciamiento(PayCenterId);
+            ViewData["Comision"] = comisionFinanciamiento.Comision;
+            ViewData["MaximoFinanciar"] = comisionFinanciamiento.Financiamiento;
             return View(pagoVM);
         }
 

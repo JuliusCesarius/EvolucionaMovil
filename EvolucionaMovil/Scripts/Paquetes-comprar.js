@@ -12,7 +12,7 @@ function checkbox_click(event) {
     $(":checked").each(function (i, item) {
         sumPrice += parseFloat($(item).data("precio"));
     });
-    var saldoActual = $("#saldoActual").html().replace("$", "").replace(",", "");
+    var saldoActual = $("#saldoDisponible").html().replace("$", "").replace(",", "");
     var total = saldoActual - sumPrice;
     $("#subtotal").html(sumPrice.toFixed(2));
     $("#subtotal").formatCurrency();
