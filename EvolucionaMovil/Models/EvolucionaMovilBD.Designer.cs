@@ -425,6 +425,22 @@ namespace EvolucionaMovil.Models
             }
         }
         private ObjectSet<PayCenter> _PayCenters;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<CuentaProveedorCaption> CuentaProveedorCaptions
+        {
+            get
+            {
+                if ((_CuentaProveedorCaptions == null))
+                {
+                    _CuentaProveedorCaptions = base.CreateObjectSet<CuentaProveedorCaption>("CuentaProveedorCaptions");
+                }
+                return _CuentaProveedorCaptions;
+            }
+        }
+        private ObjectSet<CuentaProveedorCaption> _CuentaProveedorCaptions;
 
         #endregion
 
@@ -596,6 +612,14 @@ namespace EvolucionaMovil.Models
         public void AddToPayCenters(PayCenter payCenter)
         {
             base.AddObject("PayCenters", payCenter);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the CuentaProveedorCaptions EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToCuentaProveedorCaptions(CuentaProveedorCaption cuentaProveedorCaption)
+        {
+            base.AddObject("CuentaProveedorCaptions", cuentaProveedorCaption);
         }
 
         #endregion
@@ -2216,6 +2240,116 @@ namespace EvolucionaMovil.Models
 
         #endregion
 
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="EvolucionaMovilBDModel", Name="CuentaProveedorCaption")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class CuentaProveedorCaption : EntityObject
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new CuentaProveedorCaption object.
+        /// </summary>
+        /// <param name="cuentaId">Initial value of the CuentaId property.</param>
+        /// <param name="proveedorId">Initial value of the ProveedorId property.</param>
+        public static CuentaProveedorCaption CreateCuentaProveedorCaption(global::System.Int32 cuentaId, global::System.Int32 proveedorId)
+        {
+            CuentaProveedorCaption cuentaProveedorCaption = new CuentaProveedorCaption();
+            cuentaProveedorCaption.CuentaId = cuentaId;
+            cuentaProveedorCaption.ProveedorId = proveedorId;
+            return cuentaProveedorCaption;
+        }
+
+        #endregion
+
+        #region Primitive Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 CuentaId
+        {
+            get
+            {
+                return _CuentaId;
+            }
+            set
+            {
+                if (_CuentaId != value)
+                {
+                    OnCuentaIdChanging(value);
+                    ReportPropertyChanging("CuentaId");
+                    _CuentaId = StructuralObject.SetValidValue(value);
+                    ReportPropertyChanged("CuentaId");
+                    OnCuentaIdChanged();
+                }
+            }
+        }
+        private global::System.Int32 _CuentaId;
+        partial void OnCuentaIdChanging(global::System.Int32 value);
+        partial void OnCuentaIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 ProveedorId
+        {
+            get
+            {
+                return _ProveedorId;
+            }
+            set
+            {
+                if (_ProveedorId != value)
+                {
+                    OnProveedorIdChanging(value);
+                    ReportPropertyChanging("ProveedorId");
+                    _ProveedorId = StructuralObject.SetValidValue(value);
+                    ReportPropertyChanged("ProveedorId");
+                    OnProveedorIdChanged();
+                }
+            }
+        }
+        private global::System.Int32 _ProveedorId;
+        partial void OnProveedorIdChanging(global::System.Int32 value);
+        partial void OnProveedorIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String ReferenceCaption
+        {
+            get
+            {
+                return _ReferenceCaption;
+            }
+            set
+            {
+                OnReferenceCaptionChanging(value);
+                ReportPropertyChanging("ReferenceCaption");
+                _ReferenceCaption = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("ReferenceCaption");
+                OnReferenceCaptionChanged();
+            }
+        }
+        private global::System.String _ReferenceCaption;
+        partial void OnReferenceCaptionChanging(global::System.String value);
+        partial void OnReferenceCaptionChanged();
+
+        #endregion
+
+    
     }
     
     /// <summary>

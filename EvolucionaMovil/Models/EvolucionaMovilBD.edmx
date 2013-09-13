@@ -9,6 +9,13 @@
           <EntitySet Name="Abonos" EntityType="EvolucionaMovilBDModel.Store.Abonos" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Bancos" EntityType="EvolucionaMovilBDModel.Store.Bancos" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="CompraEventos" EntityType="EvolucionaMovilBDModel.Store.CompraEventos" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="CuentaProveedorCaptions" EntityType="EvolucionaMovilBDModel.Store.CuentaProveedorCaptions" store:Type="Tables" store:Schema="dbo" store:Name="CuentaProveedorCaptions">
+            <DefiningQuery>SELECT 
+      [CuentaProveedorCaptions].[CuentaId] AS [CuentaId], 
+      [CuentaProveedorCaptions].[ProveedorId] AS [ProveedorId], 
+      [CuentaProveedorCaptions].[ReferenceCaption] AS [ReferenceCaption]
+      FROM [dbo].[CuentaProveedorCaptions] AS [CuentaProveedorCaptions]</DefiningQuery>
+          </EntitySet>
           <EntitySet Name="CuentasBancarias" EntityType="EvolucionaMovilBDModel.Store.CuentasBancarias" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="CuentasPayCenter" EntityType="EvolucionaMovilBDModel.Store.CuentasPayCenter" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="DetallePagos" EntityType="EvolucionaMovilBDModel.Store.DetallePagos" store:Type="Tables" Schema="dbo" />
@@ -164,6 +171,18 @@
           <Property Name="Consumidos" Type="smallint" Nullable="false" />
           <Property Name="FechaCreacion" Type="datetime" Nullable="false" />
           <Property Name="Baja" Type="bit" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+      warning 6002: The table/view 'EvolucionaMovilBD.dbo.CuentaProveedorCaptions' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      -->
+        <EntityType Name="CuentaProveedorCaptions">
+          <Key>
+            <PropertyRef Name="CuentaId" />
+            <PropertyRef Name="ProveedorId" />
+          </Key>
+          <Property Name="CuentaId" Type="int" Nullable="false" />
+          <Property Name="ProveedorId" Type="int" Nullable="false" />
+          <Property Name="ReferenceCaption" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="CuentasBancarias">
           <Key>
@@ -835,6 +854,7 @@
             <End Role="PayCenter" EntitySet="PayCenters" />
             <End Role="Ticket" EntitySet="Tickets" />
           </AssociationSet>
+          <EntitySet Name="CuentaProveedorCaptions" EntityType="EvolucionaMovilBDModel.CuentaProveedorCaption" />
           </EntityContainer>
         <EntityType Name="Banco">
           <Key>
@@ -1445,6 +1465,15 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="CuentaProveedorCaption">
+          <Key>
+            <PropertyRef Name="CuentaId" />
+            <PropertyRef Name="ProveedorId" />
+          </Key>
+          <Property Type="Int32" Name="CuentaId" Nullable="false" />
+          <Property Type="Int32" Name="ProveedorId" Nullable="false" />
+          <Property Type="String" Name="ReferenceCaption" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1784,6 +1813,15 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="CuentaProveedorCaptions">
+            <EntityTypeMapping TypeName="EvolucionaMovilBDModel.CuentaProveedorCaption">
+              <MappingFragment StoreEntitySet="CuentaProveedorCaptions">
+                <ScalarProperty Name="ReferenceCaption" ColumnName="ReferenceCaption" />
+                <ScalarProperty Name="ProveedorId" ColumnName="ProveedorId" />
+                <ScalarProperty Name="CuentaId" ColumnName="CuentaId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -1841,8 +1879,8 @@
           <ConnectorPoint PointX="5.8125" PointY="6.27830078125" />
         </AssociationConnector>
         <AssociationConnector Association="EvolucionaMovilBDModel.FK_CuentasPayCenter_Proveedores" >
-          <ConnectorPoint PointX="11.125" PointY="0.96875000000000011" />
-          <ConnectorPoint PointX="5.03125" PointY="0.96875000000000011" />
+          <ConnectorPoint PointX="11.125" PointY="0.96875" />
+          <ConnectorPoint PointX="5.03125" PointY="0.96875" />
           <ConnectorPoint PointX="5.03125" PointY="7.125" />
         </AssociationConnector>
         <AssociationConnector Association="EvolucionaMovilBDModel.FK_Movimientos_Cuentas" >
@@ -1853,7 +1891,7 @@
           <ConnectorPoint PointX="8.75" PointY="2.2785953776041694" />
           <ConnectorPoint PointX="11.125" PointY="2.2785953776041694" />
         </AssociationConnector>
-        <EntityTypeShape EntityType="EvolucionaMovilBDModel.DetalleServicio" Width="1.5" PointX="11.125" PointY="6.375" Height="2.749492187499996" />
+        <EntityTypeShape EntityType="EvolucionaMovilBDModel.DetalleServicio" Width="1.5" PointX="11.125" PointY="6.375" Height="1.2110807291666657" />
         <AssociationConnector Association="EvolucionaMovilBDModel.FK_DetalleServicios_Servicios" >
           <ConnectorPoint PointX="11.875" PointY="5.7398893229166665" />
           <ConnectorPoint PointX="11.875" PointY="6.375" />
@@ -1915,6 +1953,7 @@
           <ConnectorPoint PointX="3.3125025" PointY="14.7855029296875" />
           <ConnectorPoint PointX="3" PointY="14.7855029296875" />
         </AssociationConnector>
+        <EntityTypeShape EntityType="EvolucionaMovilBDModel.CuentaProveedorCaption" Width="1.5" PointX="13.375" PointY="0.75" Height="1.5956835937500102" />
         </Diagram>
     </Diagrams>
   </Designer>

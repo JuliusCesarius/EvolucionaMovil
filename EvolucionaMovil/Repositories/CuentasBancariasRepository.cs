@@ -10,6 +10,17 @@ namespace EvolucionaMovil.Repositories
     public class CuentasBancariasRepository : RepositoryBase<CuentaBancaria, EvolucionaMovilBDEntities>
     {
         /// <summary>
+        /// Devuelve la configuración de la Cuenta Bancaria relacionada con un proveedor específico.
+        /// </summary>
+        /// <param name="CuentaBancariaId"></param>
+        /// <param name="ProveedorId"></param>
+        /// <returns></returns>
+        internal IEnumerable<CuentaProveedorCaption> GetReferenceCaptions()
+        {
+            return this.context.CuentaProveedorCaptions;
+        }
+
+        /// <summary>
         /// Permite guardar la configuración de la cuenta bancaria con la lista de ProveedoresId proporcionada
         /// </summary>
         /// <param name="CuentaBancariaId"></param>

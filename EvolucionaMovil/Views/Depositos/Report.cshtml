@@ -70,7 +70,8 @@
             <input type="hidden"  id="hddCuentaBancariaId" value="@Model.CuentaBancariaId " />
             <input type="hidden" id="hddCuentas" value=""/>
             <input type="hidden" id="hddCuentaBancaria" name="CuentaBancaria"/>
-            <input type="hidden" id="hddBanco" name="Banco"/>
+            <input type="hidden" id="hddBanco" name="Banco"/>            
+            <input type="hidden" id="refCaptions" value="@ViewBag.ReferenceCaptions" />
             @Html.ValidationMessageFor(model => model.CuentaBancariaId)
         </div>
         <div id="details" style="display:none">
@@ -81,7 +82,7 @@
              @* @{Html.RenderPartial("../ImgFichaDeposito/IndexPartial");}*@
             </div>
         <div class="editor-label">
-            <label for="Referencia">Referencia</label>
+            <label id="refCap" for="Referencia">Referencia</label>
         </div>
         <div class="editor-field">
             @Html.EditorFor(model => model.Referencia)
@@ -102,7 +103,6 @@
             @Html.EditorFor(model => model.FechaPago)
             @Html.ValidationMessageFor(model => model.FechaPago)
         </div>
-
         
         <p class="nota">Aquí van algunas advertencias y avisos correspondientes al reporte de los depósitos que debe estar conciente el usuario al mommento de estar reportando el servicio.</p>
         <input type="checkbox" id="acceptTerms"/>

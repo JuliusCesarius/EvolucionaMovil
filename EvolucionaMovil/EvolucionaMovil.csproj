@@ -156,6 +156,7 @@
     <Compile Include="Models\Classes\CustomControllerBase.cs" />
     <Compile Include="Models\Classes\ErrorHandler.cs" />
     <Compile Include="Models\CompraEventoVM.cs" />
+    <Compile Include="Models\CuentaBancaria.cs" />
     <Compile Include="Models\Enums\enumTipoDato.cs" />
     <Compile Include="Models\Enums\enumRoles.cs" />
     <Compile Include="Models\Enums\enumTipoCuenta.cs" />
@@ -168,6 +169,7 @@
     <Compile Include="Models\Helpers\MvcHtmlHelpers.cs" />
     <Compile Include="Models\HistorialEstatusVM.cs" />
     <Compile Include="Models\Interfaces\IEvolucionaMovil.cs" />
+    <Compile Include="Models\Proveedor.cs" />
     <Compile Include="Models\ProveedorVM.cs" />
     <Compile Include="Models\PagoServicioVM.cs" />
     <Compile Include="Models\ReporteDepositoVM.cs" />

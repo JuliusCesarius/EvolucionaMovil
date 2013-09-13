@@ -77,6 +77,13 @@ function cuentaBancariaChanged() {
         $("#details").hide("blind", {}, 500);
     }
     $("#hddCuentaBancaria").val($("#CuentaBancariaId").find(":selected").text());
+    $.each($.parseJSON($("#refCaptions").val()), function (index, item) {
+        if ($("#CuentaBancariaId").val() == item.CuentaId && $("#ProveedorId").val() == item.ProveedorId) {
+            $("#refCap").html(item.ReferenceCaption);
+        } else {
+            $("#refCap").html("Referencia");
+        }
+    });
 }
 
 function createBancosDropdown(bancos) {
