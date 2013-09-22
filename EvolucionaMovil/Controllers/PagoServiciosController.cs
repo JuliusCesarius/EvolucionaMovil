@@ -129,13 +129,16 @@ namespace EvolucionaMovil.Controllers
                         Succeed = repository.Save();
                         if (Succeed)
                         {
+                            ModelState.Clear();
                             AddValidationMessage(enumMessageType.Succeed, "El reporte de depósito ha sido " + nuevoEstatus.ToString() + " correctamente");
                             var paycenter = pRepository.LoadById(pago.PayCenter.PayCenterId);
-                            if (paycenter != null)
+                            if (paycenter != null){
                                 Succeed = EmailHelper.Enviar(getMensajeCambioEstatus(nuevoEstatus.ToString(), pago), "El Pago de Servicio " + pago.Ticket.Folio + " ha sido " + nuevoEstatus.ToString(), paycenter.Email);
+                            }
                             //No obtuve lo errores por que es una clase estática y va a almacenar los de todas las sesiones
                             //ValidationMessages.AddRange(EmailHelper
-                            AddValidationMessage(enumMessageType.Notification, "No pueo enviarse el email de aviso. Comuníquelo al administrador");
+                            //AddValidationMessage(enumMessageType.Notification, "No pudo enviarse el email de aviso. Comuníquelo al administrador");
+                            return Details(id);
                         }
                         else
                         {
