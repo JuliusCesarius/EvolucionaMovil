@@ -8,9 +8,17 @@ $(document).on("ready", function () {
     $("[type='checkbox']").on("change", fixCheckbox);
     $("[type='checkbox']").val($("[type='checkbox']").attr('checked') == "checked");
     //jQuery.ajax({ cache: false });
-    $('.money').priceFormat({
-        prefix: '',
-        suffix: ''
+    $('.money').on("keydown", function (key) {
+        $(this).data("prev", $(this).val());
+        return true;
+    });
+    $('.money').on("keyup", function (key) {
+        if (/^(|\d+\.\d{0,2}|\d+)$/.test($(this).val())) {
+            return true;
+        } else {
+            $(this).val($(this).data("prev"));
+            return false;
+        }
     });
 
     //menu-drop-down
