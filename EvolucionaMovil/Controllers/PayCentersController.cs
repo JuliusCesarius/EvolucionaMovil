@@ -358,7 +358,7 @@ namespace EvolucionaMovil.Controllers
                 //<comments>Faltó esta linea, en el map esta ligando la propiedad PayCenterPadre del VM que es una cadena con la propiedad PayCenterPadre de la entidad que antes era PayCenters2</comments>
                 //<before>
                 //<after>
-                paycenterVM.PayCenterPadre = paycenter.PayCenterPadre.UserName;
+                paycenterVM.PayCenterPadre = paycenter.PayCenterPadre != null ? paycenter.PayCenterPadre.UserName : string.Empty;
                 //</after>
 
                 ////Buscar usuario para determinar si está activo
