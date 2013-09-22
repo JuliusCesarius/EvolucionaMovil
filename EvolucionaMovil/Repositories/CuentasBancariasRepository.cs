@@ -15,9 +15,9 @@ namespace EvolucionaMovil.Repositories
         /// <param name="CuentaBancariaId"></param>
         /// <param name="ProveedorId"></param>
         /// <returns></returns>
-        internal IEnumerable<CuentaProveedorCaption> GetReferenceCaptions()
+        internal IEnumerable<BancoCuentaCaption> GetReferenceCaptions()
         {
-            return this.context.CuentaProveedorCaptions;
+            return this.context.BancoCuentaCaptions;
         }
 
         /// <summary>

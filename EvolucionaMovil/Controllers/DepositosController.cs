@@ -174,7 +174,7 @@ namespace EvolucionaMovil.Controllers
                 ViewBag.Eventos = saldos.EventosDisponibles.ToString();
             }
             LlenarBancos_Cuentas();
-            ViewBag.ReferenceCaptions = Newtonsoft.Json.JsonConvert.SerializeObject(new CuentasBancariasRepository().GetReferenceCaptions().Select(x => new { CuentaId = x.CuentaId, ProveedorId = x.ProveedorId, ReferenceCaption = x.ReferenceCaption }));
+            ViewBag.ReferenceCaptions = Newtonsoft.Json.JsonConvert.SerializeObject(new CuentasBancariasRepository().GetReferenceCaptions().Select(x => new { BancoId = x.BancoId, CuentaId = x.CuentaId, ReferenceCaption = x.ReferenceCaption }));
             return View(model);
         }
 

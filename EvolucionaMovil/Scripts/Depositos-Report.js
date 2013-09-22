@@ -78,10 +78,16 @@ function cuentaBancariaChanged() {
     }
     $("#hddCuentaBancaria").val($("#CuentaBancariaId").find(":selected").text());
     $.each($.parseJSON($("#refCaptions").val()), function (index, item) {
-        if ($("#CuentaBancariaId").val() == item.CuentaId && $("#ProveedorId").val() == item.ProveedorId) {
+        if ($("#BancoId").val() == item.BancoId && $("#CuentaBancariaId").val() == item.CuentaId) {
             $("#refCap").html(item.ReferenceCaption);
+            return false;
         } else {
-            $("#refCap").html("Referencia");
+            if ($("#BancoId").val() == item.BancoId && item.CuentaId == 0) {
+                $("#refCap").html(item.ReferenceCaption);
+                return false;
+            } else {
+                $("#refCap").html("Referencia");
+            }
         }
     });
 }
