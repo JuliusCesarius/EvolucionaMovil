@@ -66,7 +66,7 @@ namespace EvolucionaMovil.Controllers
             ViewBag.PayCenterName = parameters.PayCenterName;
             ViewBag.ProveedorId = parameters.ProveedorId;
             ViewBag.ProveedorName = parameters.ProveedorName;
-
+            ModelState.Clear();
             return View(getDepositos(parameters));
         }
 

@@ -233,7 +233,6 @@ namespace EvolucionaMovil.Controllers
                     Cargo = !x.IsAbono ? x.Monto.ToString("C3", ci) : string.Empty,
                     Saldo = ((enumEstatusMovimiento)x.Status) == enumEstatusMovimiento.Procesando ||
                         ((enumEstatusMovimiento)x.Status) == enumEstatusMovimiento.Cancelado ||
-                        ((enumEstatusMovimiento)x.Status) == enumEstatusMovimiento.Rechazado ||
                         !x.SaldoActual.HasValue ? "-" : ((decimal)x.SaldoActual).ToString("C3", ci),
                     FechaCreacion = x.FechaCreacion.GetCurrentTime().ToShortDateString(),
                     Status  = x.Status
