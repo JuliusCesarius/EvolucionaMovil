@@ -95,6 +95,8 @@ namespace EvolucionaMovil.Controllers
             var action = model.CambioEstatusVM.Estatus;
             string comentario = model.CambioEstatusVM.Comentario != null ? model.CambioEstatusVM.Comentario.TrimEnd() : null;
             Pago pago = repository.ListAll().Where(x => x.PagoId == model.PagoId).FirstOrDefault();
+            //Reinicio el ModelState porque no valido sus valores
+            ModelState.Clear();
 
             if (id > 0)
             {

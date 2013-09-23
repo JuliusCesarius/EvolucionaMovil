@@ -399,7 +399,7 @@ namespace EvolucionaMovil.Models.BR
                     if (movimiento.Status != enumEstatusMovimiento.Procesando.GetHashCode())
                     {
                         Succeed = false;
-                        AddValidationMessage(enumMessageType.BRException, "No es posible Cancelar el movimiento si no se encuentra en estatus procesando.");
+                        AddValidationMessage(enumMessageType.BRException, "No es posible Cancelar el movimiento si no se encuentra en estatus 'Procesando'.");
                         return null;
                     }
                     else

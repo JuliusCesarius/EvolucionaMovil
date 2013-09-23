@@ -72,7 +72,7 @@
     <div>
     @if (@Model.Status != enumEstatusMovimiento.Cancelado.GetHashCode())
     {
-        if (ViewBag.Role == enumRoles.PayCenter.GetHashCode())
+        if (ViewBag.Role == enumRoles.PayCenter.GetHashCode() && @Model.Status == enumEstatusMovimiento.Procesando.GetHashCode())
         {
             <input type="button" id="Cancelar"  onclick="MuestraComentario()" name="action"  class="freshbutton-blue" value="Cancelar" />
              <div id="ComentarioPayCenter" style="display: none;">
