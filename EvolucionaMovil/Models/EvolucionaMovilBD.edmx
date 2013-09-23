@@ -148,6 +148,7 @@
           <Property Name="Baja" Type="bit" Nullable="false" />
           <Property Name="CuentaId" Type="int" Nullable="false" />
           <Property Name="RutaFichaDeposito" Type="varchar" MaxLength="200" />
+          <Property Name="ProveedorId" Type="smallint" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
       warning 6002: The table/view 'EvolucionaMovilBD.dbo.BancoCuentaCaptions' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
@@ -1022,6 +1023,7 @@
           <NavigationProperty Name="CuentasBancaria" Relationship="EvolucionaMovilBDModel.FK_Abonos_CuentasBancarias" FromRole="Abono" ToRole="CuentaBancaria" />
           <NavigationProperty Name="CuentaPayCenter" Relationship="EvolucionaMovilBDModel.FK_Abonos_Cuentas" FromRole="Abono" ToRole="CuentaPayCenter" />
           <NavigationProperty Name="PayCenter" Relationship="EvolucionaMovilBDModel.FK_Abonos_PayCenters" FromRole="Abono" ToRole="PayCenter" />
+          <Property Type="Int16" Name="ProveedorId" Nullable="false" />
         </EntityType>
         <Association Name="FK_Abonos_CuentasBancarias">
           <End Type="EvolucionaMovilBDModel.CuentaBancaria" Role="CuentaBancaria" Multiplicity="1" />
@@ -1602,6 +1604,7 @@
           <EntitySetMapping Name="Abonos">
             <EntityTypeMapping TypeName="EvolucionaMovilBDModel.Abono">
               <MappingFragment StoreEntitySet="Abonos">
+                <ScalarProperty Name="ProveedorId" ColumnName="ProveedorId" />
                 <ScalarProperty Name="RutaFichaDeposito" ColumnName="RutaFichaDeposito" />
                 <ScalarProperty Name="CuentaId" ColumnName="CuentaId" />
                 <ScalarProperty Name="Baja" ColumnName="Baja" />

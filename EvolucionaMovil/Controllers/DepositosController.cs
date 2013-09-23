@@ -266,7 +266,8 @@ namespace EvolucionaMovil.Controllers
                         Monto = (Decimal)model.Monto,
                         PayCenterId = PayCenterId,
                         Referencia = model.Referencia,
-                        RutaFichaDeposito = model.RutaFichaDeposito
+                        RutaFichaDeposito = model.RutaFichaDeposito,
+                        ProveedorId = (short)model.ProveedorId
                     };
                     repository.Add(abono);
 
@@ -473,7 +474,7 @@ namespace EvolucionaMovil.Controllers
                     Referencia = x.Referencia,
                     Status = x.Status,
                     TipoCuenta = ((enumTipoCuenta)x.CuentaPayCenter.TipoCuenta).ToString(),
-                    ProveedorName = "Jo"
+                    ProveedorName = GetNombreProveedor(x.ProveedorId)
                 });
 
             //Filtrar por searchString: Lo puse después del primer filtro porque se complicaba obtener los strings de las tablas referenciadas como bancos, cuenta bancaria, etc.
@@ -503,6 +504,20 @@ namespace EvolucionaMovil.Controllers
             simpleGridResult.Result = abonosVM;
 
             return simpleGridResult;
+        }
+
+        private string GetNombreProveedor(short ProveedorId)
+        {
+            ProveedoresRepository proveedoresRepository = new ProveedoresRepository();
+            var proveedor = proveedoresRepository.LoadById(ProveedorId);
+            if (proveedor != null)
+            {
+                return proveedor.Nombre;
+            }
+            else
+            {
+                return "--Desconocido--";
+            }
         }
 
         #endregion

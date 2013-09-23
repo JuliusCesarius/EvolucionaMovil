@@ -654,7 +654,8 @@ namespace EvolucionaMovil.Models
         /// <param name="fechaCreacion">Initial value of the FechaCreacion property.</param>
         /// <param name="baja">Initial value of the Baja property.</param>
         /// <param name="cuentaId">Initial value of the CuentaId property.</param>
-        public static Abono CreateAbono(global::System.Int32 abonoId, global::System.Int32 payCenterId, global::System.Int32 bancoId, global::System.Int32 cuentaBancariaId, global::System.Decimal monto, global::System.DateTime fechaPago, global::System.String referencia, global::System.Int16 status, global::System.DateTime fechaCreacion, global::System.Boolean baja, global::System.Int32 cuentaId)
+        /// <param name="proveedorId">Initial value of the ProveedorId property.</param>
+        public static Abono CreateAbono(global::System.Int32 abonoId, global::System.Int32 payCenterId, global::System.Int32 bancoId, global::System.Int32 cuentaBancariaId, global::System.Decimal monto, global::System.DateTime fechaPago, global::System.String referencia, global::System.Int16 status, global::System.DateTime fechaCreacion, global::System.Boolean baja, global::System.Int32 cuentaId, global::System.Int16 proveedorId)
         {
             Abono abono = new Abono();
             abono.AbonoId = abonoId;
@@ -668,6 +669,7 @@ namespace EvolucionaMovil.Models
             abono.FechaCreacion = fechaCreacion;
             abono.Baja = baja;
             abono.CuentaId = cuentaId;
+            abono.ProveedorId = proveedorId;
             return abono;
         }
 
@@ -965,6 +967,30 @@ namespace EvolucionaMovil.Models
         private global::System.String _RutaFichaDeposito;
         partial void OnRutaFichaDepositoChanging(global::System.String value);
         partial void OnRutaFichaDepositoChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int16 ProveedorId
+        {
+            get
+            {
+                return _ProveedorId;
+            }
+            set
+            {
+                OnProveedorIdChanging(value);
+                ReportPropertyChanging("ProveedorId");
+                _ProveedorId = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("ProveedorId");
+                OnProveedorIdChanged();
+            }
+        }
+        private global::System.Int16 _ProveedorId;
+        partial void OnProveedorIdChanging(global::System.Int16 value);
+        partial void OnProveedorIdChanged();
 
         #endregion
 
