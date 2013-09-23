@@ -80,9 +80,9 @@ function bindGrid(options) {
     var columns = [
          { name: 'FechaCreacion', displayName: 'Fecha', cssClass: 'fechacreacion' },
          { name: 'Folio', displayName: 'Folio', cssClass: 'folio', customTemplate: '<a href="/PagoServicios/Details/{PagoId}">{Folio}</a>' },
-         { name: 'NombreCliente', displayName: 'Cliente', cssClass: 'cliente'},
-         { name: 'PayCenterName', displayName: 'Paycenter', cssClass: 'paycenter' },
-         { name: 'Servicio', cssClass: 'servicio' },
+         { name: 'NombreCliente', displayName: 'Cliente', cssClass: 'cliente', showToolTip: true },
+         { name: 'PayCenterName', displayName: 'Paycenter', cssClass: 'paycenter', showToolTip: true },
+         { name: 'Servicio', cssClass: 'servicio', showToolTip: true },
          { name: 'Status', cssClass: 'status', displayName: 'Estatus', customTemplate: '<span alt="{Comentarios}" class=" {Status} qtip">{Status}</span>' },
          { name: 'FechaVencimiento', displayName: 'Vencimiento', cssClass: 'fechavencimiento' },
          { name: 'Monto', cssClass: 'monto' },

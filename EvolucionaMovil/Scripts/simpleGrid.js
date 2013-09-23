@@ -233,6 +233,9 @@
                     if (columns == undefined) {
                         $.each(item, function (property) {
                             var cell = jQuery("<div class='sgCell'>" + item[property] + "</div>");
+                            if(column.showToolTip == true){
+                                cell.attr("title", item[property]);
+                            }
                             if (column.cssClass != undefined) {
                                 cell.addClass(column.cssClass);
                             }
@@ -254,6 +257,9 @@
                                 content = (column.formatFunction != undefined ? column.formatFunction(item[column.name]) : item[column.name]);
                             }
                             var cell = jQuery("<div class='sgCell'>" + content + "</div>");
+                            if(column.showToolTip == true){
+                                cell.attr("title",content);
+                            }
                             cell.val(content);
                             if (column.width != undefined) {
                                 cell.width(column.width);

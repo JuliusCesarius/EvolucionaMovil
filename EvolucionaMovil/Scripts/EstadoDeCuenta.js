@@ -98,10 +98,10 @@ function rebindGrid(options) {
 
 function bindGrid(options) {
     var columns = [
-         { name: 'FechaCreacion', displayName: 'Fecha', cssClass: 'fechacreacion' },
+         { name: 'FechaCreacion', displayName: 'Fecha', cssClass: 'fechacreacion'},
          { name: 'Clave', displayName: 'Clave', cssClass: 'clave' },
-         { name: 'Concepto', cssClass: 'concepto' },
-         { name: 'Status', cssClass: 'status', displayName: 'Estatus', customTemplate: '<span alt="{Comentarios}" class=" {StatusString} qtip">{StatusString}</span>' },
+         { name: 'Concepto', cssClass: 'concepto', showToolTip: true },
+         { name: 'Status', cssClass: 'status', displayName: 'Estatus', showToolTip: true, customTemplate: '<span alt="{Comentarios}" class=" {StatusString} qtip">{StatusString}</span>' },
          { name: 'Abono', cssClass: 'abono' },
          { name: 'Cargo', cssClass: 'cargo' },
          { name: 'Saldo', cssClass: "saldo" }
