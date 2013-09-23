@@ -1,5 +1,6 @@
 ﻿var t;
 $(document).on("ready", function () {
+    fixHeight();
     $("label").inFieldLabels();
     $(":text").on("click", function () { this.select(); });
     $(".tooltip").qtip({ content: $(this).attr("alt") });
@@ -53,6 +54,15 @@ $(document).on("ready", function () {
     });
 
 });
+
+$(window).on("resize", function () {
+    fixHeight();
+});
+
+function fixHeight() {
+    var wh = $(window).height();
+    $(".page").css("min-height", wh - $("footer").height() - 7);
+}
 
 function fixCheckbox() {
     $(this).val($(this).attr('checked') == "checked");
