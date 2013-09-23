@@ -36,7 +36,10 @@ namespace EvolucionaMovil.Models.Helpers
                 }
 
                 mail.From = new MailAddress(from, "Evoluciona Móvil");
-                mail.To.Add(toMail);
+                foreach (var m in toMail.Split(','))
+                {
+                    mail.To.Add(m);
+                }
                 mail.Subject = subject;
                 mail.Body = mensaje;
                 mail.IsBodyHtml = true;

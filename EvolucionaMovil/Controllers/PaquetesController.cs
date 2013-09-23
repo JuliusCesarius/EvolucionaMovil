@@ -14,6 +14,9 @@ using EvolucionaMovil.Attributes;
 using cabinet.patterns.enums;
 using EvolucionaMovil.Models.BR;
 using EvolucionaMovil.Models.Extensions;
+using EvolucionaMovil.Models.Helpers;
+using System.Text;
+using System.Configuration;
 
 namespace EvolucionaMovil.Controllers
 {
@@ -90,6 +93,7 @@ namespace EvolucionaMovil.Controllers
 
             EstadoCuentaBR estadoCuentaBR = new EstadoCuentaBR(repository.context);
             decimal totalCompra = 0;
+            List<CompraEvento> paquetesComprados = new List<CompraEvento>();
             foreach (var paquete in model)
             {
                 //TODO:Esta validación debería estar en un BR aparte
@@ -111,6 +115,10 @@ namespace EvolucionaMovil.Controllers
                         PaqueteId = p.PaqueteId,
                         PayCenterId = PayCenterId
                     };
+                    //Agrego a la lista de paquetes que se van a agregar
+                    paquetesComprados.Add(compraEvento);
+
+                    //Agrego al repositorio
                     repository.Add(compraEvento);
                     estadoCuentaBR.CrearMovimiento(PayCenterId, enumTipoMovimiento.Cargo, 0, cuentaId, p.Precio, enumMotivo.Compra, PayCenterName, enumEstatusMovimiento.Aplicado);
                 }
@@ -126,6 +134,23 @@ namespace EvolucionaMovil.Controllers
             if (Succeed)
             {
                 AddValidationMessage(enumMessageType.Succeed, "Se ha realizado la compra de " + totalCompra + " créditos exitosamente.");
+
+                //Julius: Permite avisar a los emails configurados en el momento que se realizó la compra del paquete
+                StringBuilder emailMessage = new StringBuilder();
+                emailMessage.AppendLine("<p>El Paycenter <b>" + this.PayCenterName + "</b> ha realizado la compra de:<p>");
+                emailMessage.AppendLine("<table>");
+                paquetesComprados.ForEach(x =>
+                {
+                    emailMessage.AppendLine("<tr>");
+                    emailMessage.AppendLine("<td>Paquete: <b>PAQ" + x.PaqueteId + "</b></td>");
+                    emailMessage.AppendLine("<td>Eventos: <b>" + x.Eventos.ToString() + "</b></td>");
+                    emailMessage.AppendLine("<td>Monto: <b>" + x.Monto.ToString("C") + "</b></td>");
+                    emailMessage.AppendLine("</tr>");
+                });
+                emailMessage.AppendLine("<p>Fecha de compra: " + DateTime.Now.GetCurrentTime().ToString() + "</p>");
+                emailMessage.AppendLine("</table>");
+                var paquetesEmail = ConfigurationManager.AppSettings.Get("PaquetesEmail");
+                EmailHelper.Enviar(emailMessage.ToString(), "Compra Paquete - " + this.PayCenterName, paquetesEmail);
             }
             else
             {
