@@ -408,6 +408,10 @@
     <Content Include="Views\Proveedores\Create.cshtml" />
     <Content Include="Views\Proveedores\Edit.cshtml" />
     <Content Include="Views\Proveedores\Delete.cshtml" />
+    <Content Include="Views\Paquetes\Create.cshtml" />
+    <Content Include="Views\Paquetes\Details.cshtml" />
+    <Content Include="Views\Paquetes\Delete.cshtml" />
+    <Content Include="Views\Paquetes\Edit.cshtml" />
     <None Include="_bin_deployableAssemblies\System.Web.Mvc.dll" />
     <None Include="_bin_deployableAssemblies\WebMatrix.WebData.xml" />
     <None Include="_bin_deployableAssemblies\WebMatrix.WebData.dll" />
@@ -500,18 +504,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Paquetes\Index.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Paquetes\Details.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Paquetes\Create.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Paquetes\Edit.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Paquetes\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\EstadoDeCuenta\Index.cshtml" />

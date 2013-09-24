@@ -4,7 +4,7 @@
     ViewBag.Title = "Details";
 }
 
-<h1>Details</h1>
+<h2>Details</h2>
 
 <fieldset>
     <legend>Paquete</legend>
@@ -14,23 +14,32 @@
         @Html.DisplayFor(model => model.Creditos)
     </div>
 
+    <div class="display-label">PaqueteId</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.PaqueteId)
+    </div>
+
     <div class="display-label">Precio</div>
     <div class="display-field">
         @Html.DisplayFor(model => model.Precio)
     </div>
 
-    <div class="display-label">FechaVencimiento</div>
+    <div class="display-label">PrecioString</div>
     <div class="display-field">
-        @Html.DisplayFor(model => model.FechaVencimiento)
+        @Html.DisplayFor(model => model.PrecioString)
     </div>
 
-    <div class="display-label">FechaCreacion</div>
+    <div class="display-label">PrecioPorEvento</div>
     <div class="display-field">
-        @Html.DisplayFor(model => model.FechaCreacion)
+        @Html.DisplayFor(model => model.PrecioPorEvento)
     </div>
 
+    <div class="display-label">NumeroPaquete</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.NumeroPaquete)
+    </div>
 </fieldset>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id=Model.PaqueteId }) |
+    @Html.ActionLink("Edit", "Edit", new { /* id=Model.PrimaryKey */ }) |
     @Html.ActionLink("Back to List", "Index")
 </p>
