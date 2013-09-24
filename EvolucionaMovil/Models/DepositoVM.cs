@@ -20,5 +20,6 @@ namespace EvolucionaMovil.Models
         public string Referencia { get; set; }
         public string Comentarios { get; set; }
         public string ProveedorName { get; set; }
+        public string Clave { get; set; }
     }
 }

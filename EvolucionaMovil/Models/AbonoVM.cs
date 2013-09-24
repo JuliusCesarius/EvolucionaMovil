@@ -29,5 +29,6 @@ namespace EvolucionaMovil.Models
         public string RutaFichaDeposito { get; set; }
         public List<HistorialEstatusVM> HistorialEstatusVM { get; set; }
         public CambioEstatusVM CambioEstatusVM { get; set; }
+        public string Clave { get; set; }
     }
 }

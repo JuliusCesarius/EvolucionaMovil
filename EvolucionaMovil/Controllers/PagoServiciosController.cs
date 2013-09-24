@@ -380,10 +380,22 @@ namespace EvolucionaMovil.Controllers
                      //todo:Optimizar esta consulta para que no haga un load por cada registro que levante.
                      Comentarios = x.Movimiento.Movimientos_Estatus.Count > 0 ? x.Movimiento.Movimientos_Estatus.OrderByDescending(y => y.Movimiento_EstatusId).FirstOrDefault().Comentarios : "Sin comentarios",
                      Monto = x.Importe.ToString("C"),
-                     FechaCreacion = x.FechaCreacion.GetCurrentTime().ToShortDateString(),
-                     FechaVencimiento = x.FechaVencimiento.GetCurrentTime().ToShortDateString(),
+                     FechaCreacion = x.FechaCreacion.GetCurrentTime().ToLongDateString(),
+                     FechaVencimiento = x.FechaVencimiento.GetCurrentTime().ToLongDateString(),
                      Status = ((enumEstatusMovimiento)x.Status).ToString()
                  });
+
+            //Filtrar por searchString: Lo puse después del primer filtro porque se complicaba obtener los strings de las tablas referenciadas como bancos, cuenta bancaria, etc.
+            if (Parameters != null && !string.IsNullOrEmpty(Parameters.searchString))
+            {
+                pagosServicioVM = pagosServicioVM.Where(x => Parameters.searchString == null || (
+                    x.Comentarios.ContainsInvariant(Parameters.searchString) ||
+                    x.Folio.ContainsInvariant(Parameters.searchString) ||
+                    x.NombreCliente.ContainsInvariant(Parameters.searchString) ||
+                    x.Servicio.ContainsInvariant(Parameters.searchString) ||
+                    x.Status.ContainsInvariant(Parameters.searchString)
+                    ));
+            }
 
             if (Parameters != null && Parameters.onlyAplicados)
                 pagosServicioVM = pagosServicioVM.Where(x => x.Status == enumEstatusMovimiento.Aplicado.ToString());

@@ -273,6 +273,7 @@ namespace EvolucionaMovil.Controllers
 
                     EstadoCuentaBR estadoCuentaBR = new EstadoCuentaBR(repository.context);
                     var movimiento = estadoCuentaBR.CrearMovimiento(PayCenterId, enumTipoMovimiento.Abono, model.AbonoId, model.CuentaId, (Decimal)model.Monto, enumMotivo.Deposito, PayCenterName);
+                    abono.Clave = movimiento.Clave;
 
                     exito = repository.Save();
                     //Julius: Tuve que guardar otra vez para guardar el abonoId generado en la BD
@@ -336,7 +337,8 @@ namespace EvolucionaMovil.Controllers
                 Referencia = abono.Referencia,
                 RutaFichaDeposito = abono.RutaFichaDeposito,
                 TipoCuenta = (enumTipoCuenta)abono.CuentaPayCenter.TipoCuenta,
-                HistorialEstatusVM = movimiento != null ? movimiento.Movimientos_Estatus.OrderByDescending(x => x.FechaCreacion).Select(x => new HistorialEstatusVM { Fecha = x.FechaCreacion.ToString(), Estatus = ((enumEstatusMovimiento)x.Status).ToString(), Comentarios = x.Comentarios, UserName = x.UserName }).ToList() : null
+                HistorialEstatusVM = movimiento != null ? movimiento.Movimientos_Estatus.OrderByDescending(x => x.FechaCreacion).Select(x => new HistorialEstatusVM { Fecha = x.FechaCreacion.ToString(), Estatus = ((enumEstatusMovimiento)x.Status).ToString(), Comentarios = x.Comentarios, UserName = x.UserName }).ToList() : null,
+                Clave = abono.Clave
             };
             return abonoVM;
         }
@@ -474,7 +476,8 @@ namespace EvolucionaMovil.Controllers
                     Referencia = x.Referencia,
                     Status = x.Status,
                     TipoCuenta = ((enumTipoCuenta)x.CuentaPayCenter.TipoCuenta).ToString(),
-                    ProveedorName = GetNombreProveedor(x.ProveedorId)
+                    ProveedorName = GetNombreProveedor(x.ProveedorId),
+                    Clave = x.Clave
                 });
 
             //Filtrar por searchString: Lo puse después del primer filtro porque se complicaba obtener los strings de las tablas referenciadas como bancos, cuenta bancaria, etc.
@@ -486,7 +489,8 @@ namespace EvolucionaMovil.Controllers
                     x.CuentaBancaria.ContainsInvariant(Parameters.searchString) ||
                     x.TipoCuenta.ContainsInvariant(Parameters.searchString) ||
                     x.StatusString.ContainsInvariant(Parameters.searchString) ||
-                    ((enumEstatusMovimiento)x.Status).ToString().ContainsInvariant(Parameters.searchString)
+                    ((enumEstatusMovimiento)x.Status).ToString().ContainsInvariant(Parameters.searchString) ||
+                    x.Clave.ContainsInvariant(Parameters.searchString)
                     ));
             }
             if (Parameters != null)
