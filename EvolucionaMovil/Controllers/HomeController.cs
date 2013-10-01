@@ -14,7 +14,7 @@ namespace EvolucionaMovil.Controllers
 {
     public class HomeController : CustomControllerBase
     {
-        [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.Administrator, enumRoles.Staff,enumRoles.PayCenter })]
+        [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.Administrator, enumRoles.Staff, enumRoles.PayCenter })]
         public ActionResult Index()
         {
             //string[] lines = System.IO.File.ReadAllLines(@"C:\servicioscampos.txt");
@@ -44,6 +44,9 @@ namespace EvolucionaMovil.Controllers
             //    }
             //}
             //serviciosRepository.Save();
+            ServiciosRepository serviciosRepository = new ServiciosRepository();
+            //Le resto el número de servicios que aparecen en el Home
+            ViewBag.ServicesCount = serviciosRepository.GetServicesCount() - 12;
             return View();
             //return RedirectToAction("Logon","Account");
         }

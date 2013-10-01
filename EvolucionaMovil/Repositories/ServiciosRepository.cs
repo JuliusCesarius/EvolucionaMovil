@@ -14,5 +14,10 @@ namespace EvolucionaMovil.Repositories
             var detallesServicio = context.DetalleServicios.Where(x => !x.Baja && x.ServicioId == ServicioId);
             return detallesServicio;
         }
+
+        internal short GetServicesCount()
+        {
+            return (short)context.Servicios.Count();
+        }
     }
 }

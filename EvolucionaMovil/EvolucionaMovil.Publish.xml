@@ -16,8 +16,8 @@
     <file relUrl="Views/Users/Index.cshtml" publishTime="09/12/2013 16:51:13" />
     <file relUrl="Views/Usuarios/Edit.cshtml" publishTime="02/18/2013 23:19:40" />
     <file relUrl="Views/PagoServicios/Ticket.cshtml" publishTime="05/21/2013 21:14:52" />
-    <file relUrl="Views/Paquetes/Create.cshtml" publishTime="03/27/2013 19:14:38" />
-    <file relUrl="Views/Paquetes/Delete.cshtml" publishTime="02/18/2013 23:19:40" />
+    <file relUrl="Views/Paquetes/Create.cshtml" publishTime="09/23/2013 19:22:44" />
+    <file relUrl="Views/Paquetes/Delete.cshtml" publishTime="09/23/2013 19:33:21" />
     <file relUrl="bin/Microsoft.Web.Infrastructure.xml" publishTime="04/18/2013 19:58:26" />
     <file relUrl="Content/themes/base/images/qtip.png" publishTime="02/18/2013 23:19:40" />
     <file relUrl="Views/Depositos/Details.cshtml" publishTime="09/23/2013 19:08:28" />
@@ -38,7 +38,7 @@
     <file relUrl="Views/PagoServicios/Index.cshtml" publishTime="07/29/2013 23:29:36" />
     <file relUrl="Scripts/jquery-1.8.3.min.js" publishTime="02/18/2013 23:19:40" />
     <file relUrl="bin/System.Web.Razor.xml" publishTime="04/18/2013 19:58:27" />
-    <file relUrl="bin/cabinet.patterns.dll" publishTime="09/23/2013 18:32:51" />
+    <file relUrl="bin/cabinet.patterns.dll" publishTime="09/23/2013 19:24:34" />
     <file relUrl="Scripts/Preafiliacion.js" publishTime="05/29/2013 23:26:08" />
     <file relUrl="Areas/MvcMembership/Views/Users/Details.cshtml" publishTime="05/02/2013 20:54:34" />
     <file relUrl="Content/themes/base/jquery.ui.all.css" publishTime="02/18/2013 23:19:40" />
@@ -60,10 +60,10 @@
     <file relUrl="Scripts/jquery.formatCurrency.js" publishTime="02/18/2013 23:19:40" />
     <file relUrl="Views/Shared/_LogOnPartial.cshtml" publishTime="05/07/2013 17:51:20" />
     <file relUrl="Content/themes/base/images/images/axtel.jpg" publishTime="05/28/2013 23:58:39" />
-    <file relUrl="Views/Home/Index.cshtml" publishTime="05/29/2013 01:12:12" />
+    <file relUrl="Views/Home/Index.cshtml" publishTime="09/24/2013 00:21:41" />
     <file relUrl="Content/PagedList.css" publishTime="02/18/2013 23:19:39" />
     <file relUrl="Areas/MvcMembership/Views/Users/UsersRoles.cshtml" publishTime="05/02/2013 20:54:34" />
-    <file relUrl="bin/EvolucionaMovil.dll" publishTime="09/23/2013 19:07:11" />
+    <file relUrl="bin/EvolucionaMovil.dll" publishTime="09/24/2013 00:18:26" />
     <file relUrl="Views/Depositos/Index.cshtml" publishTime="09/13/2013 12:59:41" />
     <file relUrl="Content/themes/base/images/ui-bg_glass_55_fbf9ee_1x400.png" publishTime="02/18/2013 23:19:40" />
     <file relUrl="Scripts/jquery.infieldlabel.js" publishTime="02/18/2013 23:19:40" />
@@ -84,7 +84,7 @@
     <file relUrl="Scripts/MicrosoftMvcAjax.js" publishTime="02/18/2013 23:19:40" />
     <file relUrl="bin/System.Web.WebPages.Deployment.dll" publishTime="04/18/2013 19:58:27" />
     <file relUrl="Content/themes/base/redmond/images/ui-bg_inset-hard_100_f5f8f9_1x100.png" publishTime="02/18/2013 23:19:40" />
-    <file relUrl="Scripts/simpleGrid.js" publishTime="09/23/2013 17:10:54" />
+    <file relUrl="Scripts/simpleGrid.js" publishTime="09/24/2013 02:06:25" />
     <file relUrl="Views/Error/NotFound.cshtml" publishTime="05/10/2013 11:15:29" />
     <file relUrl="Views/Exceptions/Index.cshtml" publishTime="05/21/2013 21:14:52" />
     <file relUrl="Scripts/DetallePayCenter.js" publishTime="05/23/2013 23:55:58" />
@@ -106,14 +106,14 @@
     <file relUrl="Areas/MvcMembership/Views/Users/Password.cshtml" publishTime="05/02/2013 20:54:34" />
     <file relUrl="Views/Error/GenericError.cshtml" publishTime="05/21/2013 21:13:08" />
     <file relUrl="Content/themes/base/images/bg-footer.gif" publishTime="02/18/2013 23:19:40" />
-    <file relUrl="Web.config" publishTime="09/23/2013 19:08:38" />
+    <file relUrl="Web.config" publishTime="09/23/2013 21:36:54" />
     <file relUrl="Scripts/jquery.colorbox-min.js" publishTime="05/21/2013 21:13:08" />
     <file relUrl="Scripts/MicrosoftMvcValidation.debug.js" publishTime="02/18/2013 23:19:40" />
     <file relUrl="Content/themes/base/images/bg-footer.png" publishTime="02/18/2013 23:19:40" />
     <file relUrl="bin/System.Web.Mvc.dll" publishTime="04/18/2013 19:58:27" />
     <file relUrl="Views/CuentasBancarias/Create.cshtml" publishTime="07/29/2013 23:29:36" />
     <file relUrl="packages.config" publishTime="02/18/2013 23:19:40" />
-    <file relUrl="Scripts/PagoServicios.js" publishTime="09/23/2013 17:18:16" />
+    <file relUrl="Scripts/PagoServicios.js" publishTime="09/23/2013 21:42:57" />
     <file relUrl="Content/themes/base/redmond/images/ui-icons_6da8d5_256x240.png" publishTime="02/18/2013 23:19:40" />
     <file relUrl="Views/Paquetes/QueSon.cshtml" publishTime="09/11/2013 21:15:15" />
     <file relUrl="Areas/MvcMembership/Views/Users/Role.cshtml" publishTime="05/02/2013 20:54:34" />
@@ -126,7 +126,7 @@
     <file relUrl="Scripts/PayCenters.js" publishTime="05/21/2013 23:23:50" />
     <file relUrl="Views/PagoServicios/Details.cshtml" publishTime="09/23/2013 17:55:29" />
     <file relUrl="Content/themes/base/images/images/banamex.jpg" publishTime="05/28/2013 23:58:43" />
-    <file relUrl="Views/Paquetes/Edit.cshtml" publishTime="02/18/2013 23:19:40" />
+    <file relUrl="Views/Paquetes/Edit.cshtml" publishTime="09/23/2013 19:28:02" />
     <file relUrl="Content/themes/base/images/images/liverpool-10.jpg" publishTime="05/28/2013 23:14:22" />
     <file relUrl="Views/Shared/_InvisibleCaptcha.cshtml" publishTime="05/28/2013 09:59:34" />
     <file relUrl="Views/PayCenters/NotFound.cshtml" publishTime="03/20/2013 23:02:26" />
@@ -141,7 +141,7 @@
     <file relUrl="bin/PagedList.dll" publishTime="02/18/2013 23:19:43" />
     <file relUrl="Content/themes/base/jquery.ui.autocomplete.css" publishTime="02/18/2013 23:19:40" />
     <file relUrl="Content/themes/base/redmond/jquery-ui-1.9.2.custom.min.css" publishTime="02/18/2013 23:19:40" />
-    <file relUrl="Views/Paquetes/Details.cshtml" publishTime="02/18/2013 23:19:40" />
+    <file relUrl="Views/Paquetes/Details.cshtml" publishTime="09/23/2013 19:26:20" />
     <file relUrl="Scripts/PagoServicios-Details.js" publishTime="09/11/2013 18:43:39" />
     <file relUrl="Content/extracss.css" publishTime="05/09/2013 19:30:44" />
     <file relUrl="Content/MvcMembership.css" publishTime="02/18/2013 23:19:39" />
@@ -197,7 +197,7 @@
     <file relUrl="Content/themes/base/images/ui-bg_flat_0_aaaaaa_40x100.png" publishTime="02/18/2013 23:19:40" />
     <file relUrl="Content/themes/base/images/images/vetv.jpg" publishTime="05/28/2013 23:58:41" />
     <file relUrl="Content/themes/base/images/ui-icons_454545_256x240.png" publishTime="02/18/2013 23:19:40" />
-    <file relUrl="Views/Paquetes/Index.cshtml" publishTime="05/21/2013 21:14:52" />
+    <file relUrl="Views/Paquetes/Index.cshtml" publishTime="09/23/2013 19:22:28" />
     <file relUrl="Views/Servicios/Create.cshtml" publishTime="02/18/2013 23:19:40" />
     <file relUrl="Scripts/jquery.infieldlabel.min.js" publishTime="02/18/2013 23:19:40" />
     <file relUrl="Views/Bancos/Create.cshtml" publishTime="02/18/2013 23:19:40" />
@@ -261,7 +261,7 @@
     <file relUrl="Content/themes/base/images/bg-nav-main.gif" publishTime="02/18/2013 23:19:40" />
     <file relUrl="Content/themes/base/images/loading.gif" publishTime="05/21/2013 21:13:08" />
     <file relUrl="Content/themes/base/images/select-icon.gif" publishTime="02/18/2013 23:19:40" />
-    <file relUrl="Content/Site.css" publishTime="09/13/2013 14:09:53" />
+    <file relUrl="Content/Site.css" publishTime="09/24/2013 01:17:02" />
     <file relUrl="Views/Proveedores/Edit.cshtml" publishTime="09/11/2013 23:08:06" />
     <file relUrl="bin/WebMatrix.Data.xml" publishTime="04/18/2013 19:58:28" />
     <file relUrl="Scripts/jquery.validate-vsdoc.js" publishTime="02/18/2013 23:19:40" />

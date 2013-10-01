@@ -280,7 +280,8 @@
                     }
                     pager.find("a").on("click",function(event){
                         if(!$(event.target).hasClass("selected")){
-                            options.pageNumber=event.target.innerHTML-1;
+                            var target = event.currentTarget != undefined ? event.currentTarget : event.srcElement
+                            options.pageNumber=target.innerHTML-1;
                             bindTableGrid(options)
                             if (pageChangeFunction != undefined){
                                 pageChangeFunction(event);

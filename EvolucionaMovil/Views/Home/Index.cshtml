@@ -4,7 +4,7 @@
 }
 <div id="homemenu">
 <h1>¿Qué deseas hacer?</h1>    
-    <h2>Reportar un Pago de Servicio</h2> @Html.ActionLink("[ REPORTAR OTROS ]", "Create", "PagoServicios")
+    <h2>Reportar un Pago de Servicio</h2> 
     <div id="servicios">
     <ul>
     <li><a href="/PagoServicios/Create/1"><img alt="Telmex" class="tooltip" src="../../Content/themes/base/images/images/telmex.jpg" /></a></li>
@@ -21,6 +21,7 @@
     <li><a href="/PagoServicios/Create/15"><img alt="Gas Natural" class="tooltip" src="../../Content/themes/base/images/images/gasnatural.jpg" /></a></li>
     </ul>
     </div>
+    <a href="/PagoServicios/Create/15" id="moreServices">o reporta otros <span class='big'>@ViewBag.ServicesCount</span> servicios más!</a>
     <a href="@Url.Content("~/Depositos/Report")">
     <div id="repDep">
     <h2>Reportar un Depósito</h2></div></a>
