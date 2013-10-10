@@ -2,14 +2,14 @@
 using System.Data.Objects;
 using System.Data.Objects.DataClasses;
 using System.Linq;
-using cabinet.patterns.extensions;
 using System.Collections;
 using System.Data.Entity;
-//using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
 using System.Data;
 using System.Linq.Dynamic;
 using System;
+using cabinet.patterns.extensions;
+using cabinet.patterns.clases;
 
 namespace cabinet.patterns.clases
 {
@@ -64,7 +64,7 @@ namespace cabinet.patterns.clases
                         //Verifico si tiene campo FechaCreacion para agregar el default
                         if (Obj.GetType().GetProperties().Any(x => x.Name == "FechaCreacion"))
                         {
-                            Obj.GetType().GetProperty("FechaCreacion").SetValue(Obj, DateTime.UtcNow, null);
+                            Obj.GetType().GetProperty("FechaCreacion").SetValue(Obj, DateTime.UtcNow.GetCurrentTime(), null);
                         }
                         //Verifico si tiene campo GUID para agregar el default
                         if (Obj.GetType().GetProperties().Any(x => x.Name == "ID"))
