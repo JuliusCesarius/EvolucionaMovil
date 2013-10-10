@@ -34,3 +34,9 @@ Web.config
 ErrorLog.txt
 EvolucionaMovil/temp/imgtemp_2013052879701.jpg
 EvolucionaMovil/temp/
+packages/Isg.EntityFramework.0.4.2/Isg.EntityFramework.0.4.2.nupkg
+packages/Isg.EntityFramework.0.4.2/Isg.EntityFramework.0.4.2.nuspec
+packages/Isg.EntityFramework.0.4.2/tools/ReadMe.txt
+packages/Isg.EntityFramework.Interceptors.SoftDelete.0.4.2/Isg.EntityFramework.Interceptors.SoftDelete.0.4.2.nupkg
+packages/Isg.EntityFramework.Interceptors.SoftDelete.0.4.2/Isg.EntityFramework.Interceptors.SoftDelete.0.4.2.nuspec
+packages/Isg.EntityFramework.Interceptors.SoftDelete.0.4.2/tools/ReadMe.txt
