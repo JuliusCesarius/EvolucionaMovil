@@ -24,7 +24,7 @@ namespace EvolucionaMovil.Controllers
     {
         //Modificación prueba Karla
         private PaquetesRepository repository = new PaquetesRepository();
-        private const int PROVEEDOR_EVOLUCIONAMOVIL = 1;
+        private const int PROVEEDOR_EVOLUCIONAMOVIL = 9;
         //
         // GET: /PaqueteVMs/
         [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.Staff})]
@@ -120,8 +120,29 @@ namespace EvolucionaMovil.Controllers
 
                     //Agrego al repositorio
                     repository.Add(compraEvento);
-                    estadoCuentaBR.CrearMovimiento(PayCenterId, enumTipoMovimiento.Cargo, 0, cuentaId, p.Precio, enumMotivo.Compra, PayCenterName, enumEstatusMovimiento.Aplicado);
-                }
+                    var movimiento = estadoCuentaBR.CrearMovimiento(PayCenterId, enumTipoMovimiento.Cargo, 0, cuentaId, p.Precio, enumMotivo.Compra, PayCenterName, enumEstatusMovimiento.Aplicado);
+
+                    //Agrego movimiento de abono para la empresa
+                    //TODO: ESTO DEBE DE IR EN EstadoCuentaBR
+                    //TODO: Revisar el saldo actual
+                    //****************************************************************************************************+
+                    var movimientoEmpresaPago = new MovimientoEmpresa
+                    {
+                        Clave = DateTime.UtcNow.GetCurrentTime().ToString("yyyyMMdd") + "0" + ((Int16)enumMotivo.Financiamiento).ToString() + new Random().Next(0, 99999).ToString(),
+                        IsAbono = true,
+                        Monto = p.Precio,
+                        Motivo = (short)enumMotivo.Compra,
+                        Movimiento = movimiento,
+                        //SaldoActual = saldoActual,
+                        Status = (short)enumEstatusMovimiento.Procesando,
+                        UserName = PayCenterName,
+                        FechaCreacion = DateTime.UtcNow.GetCurrentTime(),
+                        FechaActualizacion = DateTime.UtcNow.GetCurrentTime()
+                    };
+                    MovimientosEmpresaRepository movimientosEmpresaRepository = new MovimientosEmpresaRepository(repository.context);
+                    movimientosEmpresaRepository.Add(movimientoEmpresaPago);
+                    //****************************************************************************************************+
+               }
             }
             var saldos = estadoCuentaBR.GetSaldosPagoServicio(PayCenterId);
             if (saldos.SaldoDisponible < totalCompra)

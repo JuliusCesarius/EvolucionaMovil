@@ -18,7 +18,7 @@ namespace EvolucionaMovil.Models.BR
     /// </summary>
     internal class EstadoCuentaBR : cabinet.patterns.clases.BusinessRulesBase<Movimiento>
     {
-        private const int PROVEEDOR_EVOLUCIONAMOVIL = 1;
+        private const int PROVEEDOR_EVOLUCIONAMOVIL = 9;
         private EvolucionaMovilBDEntities _context;
         private EstadoDeCuentaRepository _estadoDeCuentaRepository;
         private EstadoDeCuentaRepository estadoDeCuentaRepository
@@ -62,7 +62,8 @@ namespace EvolucionaMovil.Models.BR
         internal SaldosPagoServicio GetSaldosPagoServicio(int PayCenterId)
         {
             Succeed = true;
-            var movimientos = estadoDeCuentaRepository.GetMovimientos(enumTipoCuenta.Pago_de_Servicios.GetHashCode(), PayCenterId);
+            //Le paso el 9 para que solome traiga el estado de cuenta de EvolucionaMovil
+            var movimientos = estadoDeCuentaRepository.GetMovimientos(enumTipoCuenta.Pago_de_Servicios.GetHashCode(), PayCenterId, PROVEEDOR_EVOLUCIONAMOVIL);
             var abonosAplicados = movimientos.Where(x => x.IsAbono && x.Status == (short)enumEstatusMovimiento.Aplicado).Sum(x => x.Monto);
             var cargosAplicados = movimientos.Where(x => !x.IsAbono && x.Status == (short)enumEstatusMovimiento.Aplicado).Sum(x => x.Monto);
             SaldosPagoServicio saldosPagoServicio = new SaldosPagoServicio
@@ -86,7 +87,8 @@ namespace EvolucionaMovil.Models.BR
         internal decimal GetSaldoActual(int PayCenterId)
         {
             Succeed = true;
-            var movimientos = estadoDeCuentaRepository.GetMovimientos(enumTipoCuenta.Pago_de_Servicios.GetHashCode(), PayCenterId);
+            //Le paso el 9 para que solome traiga el estado de cuenta de EvolucionaMovil
+            var movimientos = estadoDeCuentaRepository.GetMovimientos(enumTipoCuenta.Pago_de_Servicios.GetHashCode(), PayCenterId, PROVEEDOR_EVOLUCIONAMOVIL);
             var abonosAplicados = movimientos.Where(x => x.IsAbono && x.Status == (short)enumEstatusMovimiento.Aplicado).Sum(x => x.Monto);
             var cargosAplicados = movimientos.Where(x => !x.IsAbono && x.Status == (short)enumEstatusMovimiento.Aplicado).Sum(x => x.Monto);
 
@@ -150,8 +152,8 @@ namespace EvolucionaMovil.Models.BR
             Movimiento movimientoComision = null;
             if (comision > 0)
             {
-                movimientoComision = CrearMovimiento(PayCenterId, enumTipoMovimiento.Cargo, 0, cuentaId, Monto, enumMotivo.Comision, PayCenterName);
-                movimientos.Add(movimientoComision);
+                movimientoComision = CrearMovimiento(PayCenterId, enumTipoMovimiento.Cargo, 0, cuentaId, comisionFinanciamiento.Comision, enumMotivo.Comision, PayCenterName);
+                movimientoPago.Hijos.Add(movimientoComision);
                 //Movimiento de comision a favor de la empresa
 
                 var movimientoEmpresaPago = new MovimientoEmpresa
@@ -164,9 +166,11 @@ namespace EvolucionaMovil.Models.BR
                     SaldoActual = saldoActual,
                     Status = (short)enumEstatusMovimiento.Procesando,
                     UserName = PayCenterName,
-                    FechaCreacion = DateTime.UtcNow.GetCurrentTime()
+                    FechaCreacion = DateTime.UtcNow.GetCurrentTime(),
+                    FechaActualizacion = DateTime.UtcNow.GetCurrentTime()
                 };
-                movimientosEmpresaRepository.Add(movimientoEmpresaPago);
+                //Estoy vinculando el momiviento de la empresa al del pago realizado
+                movimientoPago.MovimientosEmpresas.Add(movimientoEmpresaPago);
             }
 
             //Movimiento de financiamiento de la empresa
@@ -184,9 +188,11 @@ namespace EvolucionaMovil.Models.BR
                     SaldoActual = saldoActual,
                     Status = (short)enumEstatusMovimiento.Procesando,
                     UserName = PayCenterName,
-                    FechaCreacion = DateTime.UtcNow.GetCurrentTime()
+                    FechaCreacion = DateTime.UtcNow.GetCurrentTime(),
+                    FechaActualizacion = DateTime.UtcNow.GetCurrentTime()
                 };
-                movimientosEmpresaRepository.Add(movimientoEmpresaPago);
+                //Estoy vinculando el momiviento de la empresa al del pago realizado
+                movimientoPago.MovimientosEmpresas.Add(movimientoEmpresaPago);
             }
             if (financiamientoComision > 0)
             {
@@ -199,9 +205,11 @@ namespace EvolucionaMovil.Models.BR
                     Movimiento = movimientoComision,
                     SaldoActual = saldoActual,
                     Status = (short)enumEstatusMovimiento.Procesando,
-                    UserName = PayCenterName
+                    UserName = PayCenterName,
+                    FechaCreacion = DateTime.UtcNow.GetCurrentTime(),
+                    FechaActualizacion = DateTime.UtcNow.GetCurrentTime()
                 };
-                movimientosEmpresaRepository.Add(movimientoEmpresaComision);
+                movimientoComision.MovimientosEmpresas.Add(movimientoEmpresaComision);
             }
             if (_context == null)
             {
@@ -302,6 +310,13 @@ namespace EvolucionaMovil.Models.BR
             }
             movimiento.Id = Id;
 
+            //Obtiene los movimientos de los que es Padre
+            var movimientosVinculados = movimiento.Hijos;
+            foreach (var movtoVin in movimientosVinculados)
+            {
+                movtoVin.Id = Id;
+            }
+
             if (_context == null)
             {
                 estadoDeCuentaRepository.Save();
@@ -353,6 +368,12 @@ namespace EvolucionaMovil.Models.BR
                 AddValidationMessage(enumMessageType.BRException, "No es posible cambiar de estatus un movimiento Cancelado.");
                 return null;
             }
+            //Obtiene los movimientos de los que es Padre
+            var movimientosVinculados = movimiento.Hijos;
+            //Calculo cual será el monto que afectará al saldo actual de los movimientos vinculados
+            decimal montoMovVinculados = movimientosVinculados != null ? movimientosVinculados.Sum(x => (x.IsAbono ? 1 : -1) * x.Monto) : 0;
+            
+
             //Identifica si debe sumar o restar del saldo
             var factorSaldo = movimiento.IsAbono ? 1 : -1;
             switch (NuevoEstatus)
@@ -371,7 +392,7 @@ namespace EvolucionaMovil.Models.BR
                         return null;
                     }
                     //Actualiza el saldo. Lo multiplico por el valor de IsAbono, porque si NO es abono, es un cargo, y se tiene que restar del saldo, y bisaversa 
-                    movimiento.SaldoActual = (movimiento.Monto * factorSaldo) + GetSaldoActual(movimiento.PayCenterId);
+                    movimiento.SaldoActual = (movimiento.Monto * factorSaldo) + GetSaldoActual(movimiento.PayCenterId) + montoMovVinculados;
                     break;
                 case enumEstatusMovimiento.Rechazado:
                     //BR01.04.j: Un movimiento puede ser Rechazado únicamente si el usuario es de tipo Staff o Administrator.
@@ -384,7 +405,7 @@ namespace EvolucionaMovil.Models.BR
                     if (movimiento.Status == enumEstatusMovimiento.Aplicado.GetHashCode())
                     {
                         //Actualiza el saldo. Lo multiplico por el valor de IsAbono, porque si NO es abono, es un cargo, y se tiene que restar del saldo, y bisaversa 
-                        movimiento.SaldoActual = GetSaldoActual(movimiento.PayCenterId) - (movimiento.Monto * factorSaldo);
+                        movimiento.SaldoActual = GetSaldoActual(movimiento.PayCenterId) - (movimiento.Monto * factorSaldo) - montoMovVinculados;
                     }
                     break;
                 case enumEstatusMovimiento.Cancelado:
@@ -424,7 +445,7 @@ namespace EvolucionaMovil.Models.BR
                     if (movimiento.Status == enumEstatusMovimiento.Aplicado.GetHashCode())
                     {
                         //Actualiza el saldo. Lo multiplico por el valor de IsAbono, porque si NO es abono, es un cargo, y se tiene que restar del saldo, y bisaversa 
-                        movimiento.SaldoActual = GetSaldoActual(movimiento.PayCenterId) - (movimiento.Monto * factorSaldo);
+                        movimiento.SaldoActual = GetSaldoActual(movimiento.PayCenterId) - (movimiento.Monto * factorSaldo) - montoMovVinculados;
                     }
                     break;
             }
@@ -434,6 +455,8 @@ namespace EvolucionaMovil.Models.BR
             Int16 nuevoEstatusNumber = (Int16)NuevoEstatus.GetHashCode();
             movimiento.Status = nuevoEstatusNumber;
             movimiento.FechaActualizacion = DateTime.UtcNow.GetCurrentTime();
+
+            //Agrego registro del cambio de estatus del movimiento
             var movimientos_Estatus = new Movimientos_Estatus
             {
                 PayCenterId = movimiento.PayCenterId,
@@ -444,6 +467,31 @@ namespace EvolucionaMovil.Models.BR
                 Comentarios = Comentarios
             };
             movimiento.Movimientos_Estatus.Add(movimientos_Estatus);
+                        
+            //Actualizo los movimientos vinculados y agrego un registro de cambio de estatus de cada uno
+            foreach (var movtoVin in movimiento.Hijos)
+            {
+                movtoVin.Status = nuevoEstatusNumber;
+                movtoVin.FechaActualizacion = DateTime.UtcNow.GetCurrentTime();
+
+                var movtoVin_Estatus = new Movimientos_Estatus
+                {
+                    PayCenterId = movimiento.PayCenterId,
+                    CuentaId = movimiento.CuentaId,
+                    UserName = currentUser,
+                    Status = nuevoEstatusNumber,
+                    FechaCreacion = DateTime.UtcNow.GetCurrentTime(),
+                    Comentarios = Comentarios
+                };
+                movtoVin.Movimientos_Estatus.Add(movtoVin_Estatus);
+            }
+
+            //Actualizo los movimientos generados para la empresa
+            foreach (var movtoEmpresa in movimiento.MovimientosEmpresas)
+            {
+                movtoEmpresa.Status = nuevoEstatusNumber;
+                movtoEmpresa.FechaActualizacion = DateTime.UtcNow.GetCurrentTime();
+            }
 
             if (_context == null)
             {

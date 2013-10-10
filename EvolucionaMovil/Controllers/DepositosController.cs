@@ -147,15 +147,15 @@ namespace EvolucionaMovil.Controllers
                 }
                 else
                 {
-                    ViewBag.Mensaje = "No se encontró el movimiento para el depósito.";
+                    this.AddValidationMessage(enumMessageType.BRException, "No se encontró el movimiento para el depósito.");
                 }
 
             }
             else
             {
-                ViewBag.Mensaje = "No existe el depósito.";
+                this.AddValidationMessage(enumMessageType.BRException, "No existe el depósito.");
             }
-            ValidationMessages.ForEach(x => ViewBag.Mensaje += x.Message);
+
             //Llenar el VM con el método de llenado
             AbonoVM abonoVM = FillAbonoVM(id);
 
@@ -216,7 +216,7 @@ namespace EvolucionaMovil.Controllers
                 abonoVM.PayCenterId = PayCenterId;
                 abonoVM.PayCenterName = PayCenterName;
                 abonoVM.FechaCreacion = DateTime.UtcNow.GetCurrentTime();
-                abonoVM.FechaPago = (DateTime)model.FechaPago;
+                abonoVM.FechaPago = ((DateTime)model.FechaPago).GetCurrentTime();
                 abonoVM.ProveedorId = model.ProveedorId;
                 return View("Confirm", abonoVM);
             }
@@ -321,7 +321,7 @@ namespace EvolucionaMovil.Controllers
             }
             else
             {
-                ViewBag.Mensaje = "No existe el movimiento para el depósito.";
+                this.AddValidationMessage(enumMessageType.BRException, "No existe el movimiento para el depósito.");
             }
             //  var movimiento = estadoDeCuentaRepository.LoadById(movimientoId);
             AbonoVM abonoVM = new AbonoVM

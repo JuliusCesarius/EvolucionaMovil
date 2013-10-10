@@ -8,6 +8,8 @@ using System.Web.Mvc;
 using EvolucionaMovil.Models;
 using EvolucionaMovil.Repositories;
 using AutoMapper;
+using EvolucionaMovil.Attributes;
+using EvolucionaMovil.Models.Enums;
 
 namespace EvolucionaMovil.Controllers
 { 
@@ -17,7 +19,7 @@ namespace EvolucionaMovil.Controllers
 
         //
         // GET: /Servicios/
-
+        [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.Administrator })]
         public ViewResult Index()
         {
             return View(repository.ListAll().ToListOfDestination<ServicioVM>());
@@ -25,7 +27,7 @@ namespace EvolucionaMovil.Controllers
 
         //
         // GET: /Servicios/Details/5
-
+        [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.Administrator })]
         public ViewResult Details(int id)
         {
             ServicioVM servicioVM = new ServicioVM();
@@ -36,7 +38,7 @@ namespace EvolucionaMovil.Controllers
 
         //
         // GET: /Servicios/Create
-
+        [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.Administrator })]
         public ActionResult Create()
         {
             return View();
@@ -46,6 +48,7 @@ namespace EvolucionaMovil.Controllers
         // POST: /Servicios/Create
 
         [HttpPost]
+        [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.Administrator })]
         public ActionResult Create(ServicioVM servicioVM)
         {
             Servicio servicio = new Servicio();
@@ -62,7 +65,7 @@ namespace EvolucionaMovil.Controllers
         
         //
         // GET: /Servicios/Edit/5
- 
+        [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.Administrator })]
         public ActionResult Edit(int id)
         {
             ServicioVM servicioVM = new ServicioVM();
@@ -75,6 +78,7 @@ namespace EvolucionaMovil.Controllers
         // POST: /Servicios/Edit/5
 
         [HttpPost]
+        [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.Administrator })]
         public ActionResult Edit(ServicioVM servicioVM)
         {
             Servicio servicio = repository.LoadById(servicioVM.ServicioId);
@@ -91,7 +95,7 @@ namespace EvolucionaMovil.Controllers
 
         //
         // GET: /Servicios/Delete/5
- 
+        [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.Administrator })]
         public ActionResult Delete(int id)
         {
             ServicioVM servicioVM = new ServicioVM(); 
@@ -104,6 +108,7 @@ namespace EvolucionaMovil.Controllers
         // POST: /Servicios/Delete/5
 
         [HttpPost, ActionName("Delete")]
+        [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.Administrator })]
         public ActionResult DeleteConfirmed(int id)
         {
             ServicioVM servicioVM = new ServicioVM();

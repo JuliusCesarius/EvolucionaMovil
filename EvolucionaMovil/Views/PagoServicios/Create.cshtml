@@ -19,7 +19,7 @@
 
         <div class="pagservsal resumen saldos" @(Model.PayCenterId > 0 ? string.Empty : hiddenString)>
             <h3>
-                Saldo Disp. <span id="saldoDisponible">@ViewData["SaldoDisponible"]</span></h3>            
+                Saldo Disp. <span id="saldoDisponible">@ViewData["SaldoDisponibleString"]</span></h3>            
             <h3>
                 / Eventos <span id="eventoDisponible">@ViewData["Eventos"]</span></h3>
             <a href="/Paquetes/Buy">[comprar]</a>

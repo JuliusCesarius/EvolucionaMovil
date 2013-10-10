@@ -20,10 +20,10 @@ namespace EvolucionaMovil.Repositories
             : base(context)
         {
         }
-        public IEnumerable<Movimiento> GetMovimientos(int TipoCuentaId = -1, int PayCenterId = -1)
+        public IEnumerable<Movimiento> GetMovimientos(int TipoCuentaId = -1, int PayCenterId = -1, int ProveedorId = -1)
         {
             return context.Movimientos.Join(context.CuentasPayCenters, m => m.CuentaId, c => c.CuentaId, (m, c) => new { m, c })
-                .Where(mc => (mc.c.TipoCuenta == TipoCuentaId || TipoCuentaId == -1) && (mc.m.PayCenterId == PayCenterId || PayCenterId == -1))
+                .Where(mc => (mc.c.TipoCuenta == TipoCuentaId || TipoCuentaId == -1) && (mc.m.PayCenterId == PayCenterId || PayCenterId == -1) && (mc.c.ProveedorId == ProveedorId || ProveedorId == -1))
                 .Select(mc=>mc.m)
                 .OrderByDescending(m => m.FechaActualizacion) as ObjectQuery<Movimiento>;
         }
@@ -98,6 +98,10 @@ namespace EvolucionaMovil.Repositories
         public void AddAbono(Abono abono)
         {
             context.Abonos.AddObject(abono);
+        }
+        public IEnumerable<Movimiento> GetMovimientosByPadreId(int PadreId)
+        {
+            return context.Movimientos.Where(m => m.PadreId == PadreId && m.Baja == false).OrderByDescending(m => m.FechaActualizacion);
         }
         public IEnumerable<Movimiento> GetMovimientosByPayCenterId(int PayCenterId)
         {

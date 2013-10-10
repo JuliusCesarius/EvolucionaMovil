@@ -102,8 +102,8 @@ function rebindGrid(options) {
 
 function bindGrid(options) {
     var columns = [
-         { name: 'FechaCreacion', displayName: 'Fecha Captura', cssClass: 'fechacreacion' },
-         { name: 'FechaPago', displayName: 'Fecha Pago', cssClass: 'fechapago' },
+         { name: 'FechaCreacion', displayName: 'Fecha Captura', cssClass: 'fechacreacion', showToolTip: true },
+         { name: 'FechaPago', displayName: 'Fecha Pago', cssClass: 'fechapago', showToolTip: true },
          { name: 'Referencia', displayName: 'Referencia', cssClass: 'referencia', showToolTip: true },
           { name: 'ProveedorName', displayName: 'Proveedor', cssClass: 'proveedor', showToolTip: true },
          { name: 'PayCenter', displayName: 'PayCenter', cssClass: 'PayCenter', showToolTip: true },

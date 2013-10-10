@@ -84,7 +84,7 @@ function bindGrid(options) {
          { name: 'PayCenterName', displayName: 'Paycenter', cssClass: 'paycenter', showToolTip: true },
          { name: 'Servicio', cssClass: 'servicio', showToolTip: true },
          { name: 'Status', cssClass: 'status', displayName: 'Estatus', customTemplate: '<span alt="{Comentarios}" class=" {Status} qtip">{Status}</span>' },
-         { name: 'FechaVencimiento', displayName: 'Vencimiento', cssClass: 'fechavencimiento' },
+         { name: 'FechaVencimiento', displayName: 'Vencimiento', cssClass: 'fechavencimiento', showToolTip: true },
          { name: 'Monto', cssClass: 'monto' },
          ];
     if (options == undefined) {

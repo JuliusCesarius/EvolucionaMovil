@@ -40,9 +40,9 @@ $(document).on("ready", function () {
     $("#ServicioId").trigger("change");
     $("#ImporteString").on("keyup", function () {
         $("#Importe").val($("#ImporteString").val().replace(",", ""));
-        if ($("#hddSaldoDisponible")[0].textContent != "") {
-            var SaldoDisp = $("#hddSaldoDisponible")[0].value;
-            var Importe = $("#Importe")[0].value;
+        if ($("#hddSaldoDisponible").val() != "") {
+            var SaldoDisp = parseFloat($("#hddSaldoDisponible")[0].value);
+            var Importe = parseFloat($("#Importe")[0].value);
 
             var MontoFinanciamiento = parseFloat($("#hddMaximoFinanciar").val());
             var Comision = parseFloat($("#hddComision")[0].value);

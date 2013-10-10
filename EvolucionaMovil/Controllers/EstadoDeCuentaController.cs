@@ -23,6 +23,8 @@ namespace EvolucionaMovil.Controllers
 { 
     public class EstadoDeCuentaController : CustomControllerBase
     {
+        private const int PROVEEDOR_EVOLUCIONAMOVIL = 9;
+
         private List<string> Mensajes = new List<string>();
         private EstadoDeCuentaRepository repository = new EstadoDeCuentaRepository();
         private EstadoDeCuentaRepository _tempEstadoDeCuentaRepository;
@@ -200,17 +202,19 @@ namespace EvolucionaMovil.Controllers
             IEnumerable<Movimiento> movimientos;
             if (PayCenterId == 0)
             {
-                movimientos = repository.GetMovimientos(enumTipoCuenta.Pago_de_Servicios.GetHashCode());
+                //Le paso el 9 para que solome traiga el estado de cuenta de EvolucionaMovil
+                movimientos = repository.GetMovimientos(enumTipoCuenta.Pago_de_Servicios.GetHashCode(), ProveedorId: PROVEEDOR_EVOLUCIONAMOVIL);
             }
             else
             {
                 //Julius:Comenté esta línea porque no filtraba solo los de Pago de servicios
                 //movimientos = repository.GetMovimientosByPayCenterId(PayCenterId);
-                movimientos = repository.GetMovimientos(enumTipoCuenta.Pago_de_Servicios.GetHashCode(), PayCenterId);
+                //Le paso el 9 para que solome traiga el estado de cuenta de EvolucionaMovil
+                movimientos = repository.GetMovimientos(enumTipoCuenta.Pago_de_Servicios.GetHashCode(), PayCenterId, PROVEEDOR_EVOLUCIONAMOVIL);
             }
 
             SimpleGridResult<EstadoCuentaVM> simpleGridResult = new SimpleGridResult<EstadoCuentaVM>();
-            var estadosDeCuentaVM = movimientos .Where(x =>
+            var estadosDeCuentaVM = movimientos.Where(x =>
                     ( Parameters == null || (                            
                                 (Parameters.fechaInicio == null || (Parameters.fechaInicio < x.FechaCreacion))
                         && (Parameters.fechaFin == null || Parameters.fechaFin > x.FechaCreacion)
@@ -229,12 +233,12 @@ namespace EvolucionaMovil.Controllers
                     Clave = x.Clave,
                     Comentarios = getComentarioCambioEstatus(x),
                     Concepto = getConceptoString(x),
-                    Abono = x.IsAbono ? x.Monto.ToString("C3", ci) : string.Empty,
-                    Cargo = !x.IsAbono ? x.Monto.ToString("C3", ci) : string.Empty,
+                    Abono = x.IsAbono ? x.Monto.ToString("C2", ci) : string.Empty,
+                    Cargo = !x.IsAbono ? x.Monto.ToString("C2", ci) : string.Empty,
                     Saldo = ((enumEstatusMovimiento)x.Status) == enumEstatusMovimiento.Procesando ||
                         ((enumEstatusMovimiento)x.Status) == enumEstatusMovimiento.Cancelado ||
-                        !x.SaldoActual.HasValue ? "-" : ((decimal)x.SaldoActual).ToString("C3", ci),
-                    FechaCreacion = x.FechaCreacion.GetCurrentTime().ToShortDateString(),
+                        !x.SaldoActual.HasValue ? "-" : ((decimal)x.SaldoActual).ToString("C2", ci),
+                    FechaCreacion = x.FechaCreacion.GetCurrentTime().ToString(),
                     Status  = x.Status
 
                 });
