@@ -57,10 +57,20 @@ $(document).on("ready", function () {
                 SaldoFinal = parseFloat(SaldoDisp - Importe);
             }
             //var SaldoFinal = parseFloat(SaldoDisp - Importe);
+            if (ContEventos > 0) {
+                $("#detail-comision").html("NA");
+            } else {
+                $("#detail-comision").html(Comision * -1);
+                $("#detail-comision").formatCurrency();
+            }
+
+            $("#detail-importe").html(Importe * -1);
+            $("#detail-importe").formatCurrency();
 
             $("#saldoFinal")[0].value = SaldoFinal.toString();
             $("#saldoFinal")[0].textContent = SaldoFinal.toString();
             $("#saldoFinal").formatCurrency();
+
             if (SaldoFinal < 0) {
 
                 $("#saldoFinal").removeClass("saldos");
@@ -98,9 +108,15 @@ $(document).on("ready", function () {
             var label = ui.item.label;
             var v = ui.item.value;
             $('#hddPayCenterId').val(v);
+            $.getJSON("/PayCenters/GetComisionFinanciamiento/" + v, function (data) {
+                $("#hddComision").val(data.Comision);
+                $("#hddMaximoFinanciar").html(data.Financiamiento);
+            });
             $.getJSON("/PayCenters/GetSaldosPagoServicio?PayCenterId=" + v, function (data) {
                 $("#saldoDisponible").html(data.SaldoDisponible);
                 $("#saldoDisponible").formatCurrency();
+                $("#detail-saldo").html(data.SaldoDisponible);
+                $("#detail-saldo").formatCurrency();
                 $("#eventoDisponible").html(data.EventosDisponibles);
                 $("#hddSaldoDisponible")[0].value = data.SaldoDisponible;
                 $("#hddSaldoDisponible").html(data.SaldoDisponible);
@@ -109,17 +125,29 @@ $(document).on("ready", function () {
                     $("#ImporteString")[0].value = 0;
                 }
                 $("#ImporteString").formatCurrency();
+                if ($("#detail-importe")[0].value != "") {
+                    $("#detail-importe")[0].value = 0;
+                }
+                $("#detail-importe").formatCurrency();
                 $('#btnCreate').removeAttr('disabled');
                 $("#saldoFinal").html(data.SaldoDisponible);
                 $("#saldoFinal").formatCurrency();
+
                 $("#Mensaje")[0].textContent = "";
                 //Todo: Aqui se carga de nuevo el finaciamiento y los eventos del paycenter.
                 //$("#hddComision").html(data.SaldoDisponible);
                 //$("#hddMaximoFinanciar").html(data.EventosDisponibles);
                 //Eventos
                 var EventosDisp = parseInt($("#hddEventos")[0].value);
+                $("#eventoFinal").html(EventosDisp > 0 ? EventosDisp - 1 : 0);
                 if (EventosDisp > 0) {
-                    $("#eventoFinal")[0].textContent = EventosDisp - 1;
+                    $("#detail-eventosFinales").show("blind");
+                    $("#detail-comision").html("NA");
+                } else {
+                    $("#detail-eventosFinales").hide("blind");
+                    var Comision = parseFloat($("#hddComision").val());
+                    $("#detail-comision").html(Comision);
+                    $("#detail-comision").formatCurrency();
                 }
 
                 $(".saldos").show();

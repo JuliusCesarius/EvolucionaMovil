@@ -1,42 +1,46 @@
 ﻿@CHARSET "UTF-8";
-/* HEADINGS   
-----------------------------------------------------------*/
-h1, h2, h3, h4, h5, h6 {
-    font-size: 1.5em;
-    color: #000;
-}
 
-h1 {
-    font-size: 2em;
-    padding-bottom: 0;
-    margin-bottom: 0;
-}
+/*          
+border-radius:5px;
+-webkit-border-radius:5px;
+-mz-border-radius:5px;
+-o-border-radius:5px;
+-ms-border-radius:5px
 
-h2 
-{
-    font-size: 2em;
-    padding: 0 0 10px 0;
-    color:#1094D6;
-}
 
-h3 {
-    color:#000;font-size:1.5em;
-    display:inline;
-}
+opacity: 0.45;
+-webkit-opacity: 0.45;
+-moz-opacity: 0.45;
+-ms-opacity: 0.45;
+-o-opacity: 0.45;
 
-h4 {
-    font-size: 1.1em;
-}
+filter: alpha(opacity=45);
+-webkit-filter: alpha(opacity=45);
+-moz-filter: alpha(opacity=45);
+-o-filter: alpha(opacity=45);
+-ms-filter: alpha(opacity=45);
 
-h5, h6 {
-    font-size: 1em;
-}
+text-shadow:1px 1px 2px #111;
+-webkit-text-shadow:1px 1px 2px #111;
+-mz-text-shadow:1px 1px 2px #111;
+-o-text-shadow:1px 1px 2px #111;
+-ms-text-shadow:1px 1px 2px #111
 
-/* PRIMARY LAYOUT ELEMENTS   
-----------------------------------------------------------*/
+transition:color .2s linear 0;
+-webkit-transition:color .2s linear 0;
+-moz-transition:color .2s linear 0;
+-o-transition:color .2s linear 0;
+-ms-transition:color .2s linear 0;
+*/
 
-/* you can specify a greater or lesser percentage for the 
-page width. Or, you can specify an exact pixel width. */
+h1,h2,h3,h4,h5,h6{color:#000;font-size:1.5em}
+h1{font-size:2em;margin-bottom:0;padding-bottom:0}
+h2{color:#1094D6;font-size:2em;padding:0 0 10px}
+h3{color:#000;display:inline;font-size:1.5em}
+h4{font-size:1.1em}
+h5,h6{font-size:1em}
+
+/* PRIMARY LAYOUT ELEMENTS*/
 .page {
     width: 1000px;
     margin-left: auto;
@@ -74,7 +78,11 @@ header h1, #header h1 {
     border: none;
     line-height: 2em;
     font-size: 32px !important;
-    text-shadow: 1px 1px 2px #111;
+    text-shadow:1px 1px 2px #111;
+    -webkit-text-shadow:1px 1px 2px #111;
+    -mz-text-shadow:1px 1px 2px #111;
+    -o-text-shadow:1px 1px 2px #111;
+    -ms-text-shadow:1px 1px 2px #111
 }
 
 #main {
@@ -396,6 +404,8 @@ font-size:13px;
 .focused input[type="text"],.focused textarea {
 border:1px solid #a0a0a0;
 }
+
+fieldset.noInFieldLabel div label{position:static!important}
 
 .focused label {
 color:#ccc;
@@ -1057,7 +1067,7 @@ legend{font-size:2em;font-weight:400}
 
 
 /**Estado de cuenta**/
-.resumen{height:30px;margin-top:0}
+.resumen{min-height:30px;margin-top:0}
 .resumen h1,.resumen h2,.resumen h3,.resumen a{display:inline-block}
 .resumen.saldos{padding-top:0.7em}
 .resumen.saldos h3{padding-left:.0em}
@@ -1065,9 +1075,14 @@ legend{font-size:2em;font-weight:400}
 .resumen.saldos #eventoDisponible, #eventoFinal{font-weight:bold}
 .resumen.saldos span{color:#222}
 .resumen.saldos span.cargo{color:Red}
+.resumen.saldos #detail{border-bottom:1px solid #ccc}
+.resumen.saldos #detail span{display:inline-block;font-size:1.3em;min-width:100px}
+.resumen.saldos #detail span:nth-child(2){font-weight:600}
 .resumen.h2{font-size:1.6em}
 .reportadeposito{background:#fff url("../Content/themes/base/images/repdep.jpg") no-repeat 50% 0%;min-height:390px;width:50%}
 .formRight .message{width:342px}
+
+#final h3 span, #ResumenSaldos h3 span{display:inline-block;min-width:100px}
 
 .cuentadeposito{margin-bottom:.5em;padding-left:20px}
 .cuentadeposito label{display:inline-block;position:static;width:150px;}
@@ -1080,7 +1095,6 @@ legend{font-size:2em;font-weight:400}
     margin-right: 69px;
     margin-bottom: 3px;
     background-color: #F3F3F3;
-    height:2em!important;
     padding:.3em!important;
     padding-right:.6em!important;
     -webkit-border-radius:4px;

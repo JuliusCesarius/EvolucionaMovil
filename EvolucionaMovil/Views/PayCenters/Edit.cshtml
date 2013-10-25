@@ -9,7 +9,7 @@
 
 @using (Html.BeginForm()) {
     @Html.ValidationSummary(true)
-     <fieldset @if (ViewBag.GuardadoExito != null)
+     <fieldset class="noInFieldLabel" @if (ViewBag.GuardadoExito != null)
                {
                    @Html.AttributeEncode("disabled='disabled'") 
                }

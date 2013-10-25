@@ -518,6 +518,17 @@ namespace EvolucionaMovil.Controllers
             return View(paycenterVM);
         }
 
+        [HttpGet]
+        [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.Staff, enumRoles.Administrator })]
+        public JsonResult GetComisionFinanciamiento(int id)
+        {
+            if (id > 0)
+            {
+                return Json(new EstadoCuentaBR().GetComisionFinanciamiento(id), JsonRequestBehavior.AllowGet);
+            }
+            return null;
+        }
+
         public ViewResult NotFound()
         {
             return View();

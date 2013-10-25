@@ -1,7 +1,7 @@
 ﻿var t;
 $(document).on("ready", function () {
     fixHeight();
-    $("label").inFieldLabels();
+    $("label").not("fieldset.noInFieldLabel div label").inFieldLabels();
     $(":text").on("click", function () { this.select(); });
     $(".tooltip").qtip({ content: $(this).attr("alt") });
     t = window.setInterval(fixLabels, 200);
@@ -69,7 +69,7 @@ function fixCheckbox() {
 }
 function fixLabels() {
     clearInterval(t);
-    $("label").inFieldLabels('refresh');
+    $("label").not("fieldset.noInFieldLabel div label").inFieldLabels('refresh');
 }
 
 //validamos el navegador

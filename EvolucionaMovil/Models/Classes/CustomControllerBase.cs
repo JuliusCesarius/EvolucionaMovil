@@ -13,7 +13,7 @@ using EvolucionaMovil.Models.Extensions;
 
 namespace EvolucionaMovil.Models.Classes
 {
-    public class CustomControllerBase:Controller, ICrossValidation, IEvolucionaMovil
+    public class CustomControllerBase:AsyncController, ICrossValidation, IEvolucionaMovil
     {
         private const string HTTPMETHODPOST = "POST";
         private const string HTTPMETHODGET = "GET";

@@ -77,19 +77,22 @@ function cuentaBancariaChanged() {
         $("#details").hide("blind", {}, 500);
     }
     $("#hddCuentaBancaria").val($("#CuentaBancariaId").find(":selected").text());
+    var found = false;
     $.each($.parseJSON($("#refCaptions").val()), function (index, item) {
-        if ($("#BancoId").val() == item.BancoId && $("#CuentaBancariaId").val() == item.CuentaId) {
+        if ($("#BancoId").val() == item.BancoId && parseInt($("#CuentaBancariaId").val()) == item.CuentaId) {
             $("#refCap").html(item.ReferenceCaption);
+            found = true;
             return false;
         } else {
             if ($("#BancoId").val() == item.BancoId && item.CuentaId == 0) {
                 $("#refCap").html(item.ReferenceCaption);
-                return false;
-            } else {
-                $("#refCap").html("Referencia");
+                found = true;
             }
         }
     });
+    if (!found) {
+        $("#refCap").html("Referencia");
+    }
 }
 
 function createBancosDropdown(bancos) {

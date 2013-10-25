@@ -4,7 +4,7 @@
     ViewBag.Title = "Index";
 }
 
-<h1>Index</h1>
+<h1>Configuración de Paquetes</h1>
 
 <p>
     @Html.ActionLink("Create New", "Create")
@@ -12,19 +12,16 @@
 <table>
     <tr>
         <th>
-            Creditos
+            Paquete
         </th>
         <th>
-            Precio
+            Eventos
         </th>
         <th>
-            Precio
+            Precio Evento
         </th>
         <th>
-            Precio por Evento
-        </th>
-        <th>
-            Baja
+            Precio Paquete
         </th>
         <th></th>
     </tr>
@@ -32,13 +29,16 @@
 @foreach (var item in Model) {
     <tr>
         <td>
+            @Html.DisplayFor(modelItem => item.PaqueteId)
+        </td>
+        <td>
             @Html.DisplayFor(modelItem => item.Creditos)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.PrecioString)
+            @Html.DisplayFor(modelItem => item.PrecioPorEvento)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.PrecioPorEvento)
+            @Html.DisplayFor(modelItem => item.PrecioString)
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.PaqueteId }) |

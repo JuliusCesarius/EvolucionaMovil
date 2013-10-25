@@ -36,6 +36,9 @@ namespace EvolucionaMovil.Controllers
 
         private const int PROVEEDOR_EVOLUCIONAMOVIL = 9;
 
+        public delegate void EnviarCambioEstatusDelegate(enumEstatusMovimiento EstatusMovimiento, Pago Pago, PayCenter PayCenter);
+        public delegate void EnviarTicketDelegate(Pago Pago);
+
         [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.Staff, enumRoles.PayCenter })]
         public ViewResult Index()
         {
@@ -134,13 +137,17 @@ namespace EvolucionaMovil.Controllers
                             ModelState.Clear();
                             AddValidationMessage(enumMessageType.Succeed, "El reporte de depósito ha sido " + nuevoEstatus.ToString() + " correctamente");
                             var paycenter = pRepository.LoadById(pago.PayCenter.PayCenterId);
-                            if (paycenter != null){
-                                Succeed = EmailHelper.Enviar(getMensajeCambioEstatus(nuevoEstatus.ToString(), pago), "El Pago de Servicio " + pago.Ticket.Folio + " ha sido " + nuevoEstatus.ToString(), paycenter.Email);
+                            if (paycenter != null)
+                            {
+                                //Ejecuta el envío de correo de forma asíncrona
+                                EnviarCambioEstatusDelegate enviarDelegate = new EnviarCambioEstatusDelegate(EnviarCambioEstatusEmail);
+                                var result = enviarDelegate.BeginInvoke(nuevoEstatus, pago,paycenter, null, null);
+                                EnviarCambioEstatusEmail(nuevoEstatus, pago, paycenter);
                             }
                             //No obtuve lo errores por que es una clase estática y va a almacenar los de todas las sesiones
                             //ValidationMessages.AddRange(EmailHelper
                             //AddValidationMessage(enumMessageType.Notification, "No pudo enviarse el email de aviso. Comuníquelo al administrador");
-                            return Details(id);
+                            //return Details(id);
                         }
                         else
                         {
@@ -160,10 +167,9 @@ namespace EvolucionaMovil.Controllers
                 AddValidationMessage(enumMessageType.BRException, "No existe el depósito.");
             }
 
-            PagoVM pagoVM = FillPagoVM(id);
-            return View(pagoVM);
+            return Details(id);
         }
-
+        
         [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.Staff, enumRoles.PayCenter })]
         public ActionResult Create()
         {
@@ -181,6 +187,7 @@ namespace EvolucionaMovil.Controllers
             //TODO:Obtener el Máximo a financiar, esto es por pay center
             var comisionFinanciamiento = br.GetComisionFinanciamiento(PayCenterId);
             ViewData["Comision"] = comisionFinanciamiento.Comision;
+            ViewData["ComisionString"] = comisionFinanciamiento.Comision.ToString("C");
             ViewData["MaximoFinanciar"] = comisionFinanciamiento.Financiamiento;
             return View(pagoVM);
         }
@@ -287,9 +294,10 @@ namespace EvolucionaMovil.Controllers
                     {
                         AddValidationMessage(enumMessageType.UnhandledException, "Su pago ha sido Registrado con éxito. Sin embargo, no se pudo generar el ticket, favor de comunicarse con un ejecutivo. ");
                     }
-                    //TODO: Enviar email de confirmación
-                    PayCentersRepository PayCentersRepository = new PayCentersRepository();
-                    EmailHelper.Enviar(getMensajeConfirmacion(pago), "El Pago de Servicio se ha sido registrado. ", PayCentersRepository.GetPayCenterEmail(PayCenterName));
+
+                    //Ejecuta el envío de correo de forma asíncrona
+                    EnviarTicketDelegate enviarDelegate = new EnviarTicketDelegate(EnviarTicketEmail);
+                    var result = enviarDelegate.BeginInvoke(pago,null, null);
 
                     return RedirectToAction("Ticket/" + ticket.PagoId.ToString());
                 }
@@ -440,6 +448,18 @@ namespace EvolucionaMovil.Controllers
         }
 
         [NonAction]
+        private void EnviarCambioEstatusEmail(enumEstatusMovimiento EstatusMovimiento, Pago Pago, PayCenter PayCenter)
+        {
+            EmailHelper.Enviar(getMensajeCambioEstatus(EstatusMovimiento.ToString(), Pago), "El Pago de Servicio " + Pago.Ticket.Folio + " ha sido " + EstatusMovimiento.ToString(), PayCenter.Email);
+        }
+
+        [NonAction]
+        private void EnviarTicketEmail(Pago Pago)
+        {
+            EmailHelper.Enviar(getMensajeConfirmacion(Pago), "El Pago de Servicio se ha sido registrado. ", new PayCentersRepository().GetPayCenterEmail(PayCenterName));
+        }
+
+        [NonAction]
         private string createFolio(int idTabla)
         {
             var yy = DateTime.UtcNow.GetCurrentTime().Year.ToString().Substring(1, 2);
@@ -472,7 +492,11 @@ namespace EvolucionaMovil.Controllers
             PagoVM pagoVM = new PagoVM();
             try
             {
-                Pago pago = repository.ListAll().Where(x => x.PagoId == id).FirstOrDefault();
+                Pago pago = repository.LoadById(id);
+
+                //Me aseguro de obtener el pago tal y como estaba en la BD y sin cambios
+                repository.context.Refresh(System.Data.Objects.RefreshMode.StoreWins, pago);
+
                 Mapper.CreateMap<Pago, PagoVM>().ForMember(dest => dest.Servicios, opt => opt.Ignore());
                 Mapper.Map(pago, pagoVM);
                 pagoVM.PayCenterName = pago.PayCenter.Nombre;

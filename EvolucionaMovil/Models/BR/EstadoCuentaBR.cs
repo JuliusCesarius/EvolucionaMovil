@@ -74,8 +74,8 @@ namespace EvolucionaMovil.Models.BR
             };
             saldosPagoServicio.SaldoPendiente = saldosPagoServicio.SaldoPorAbonar - saldosPagoServicio.SaldoPorCobrar;
             saldosPagoServicio.SaldoDisponible = saldosPagoServicio.SaldoActual - saldosPagoServicio.SaldoPorCobrar;
-            saldosPagoServicio.EventosDisponibles = estadoDeCuentaRepository.GetEventosDisponibles(PayCenterId);
-            saldosPagoServicio.EventosActuales = estadoDeCuentaRepository.GetEventosActuales(PayCenterId);
+            saldosPagoServicio.EventosDisponibles = Convert.ToInt16(estadoDeCuentaRepository.GetEventosDisponibles(PayCenterId));
+            saldosPagoServicio.EventosActuales = Convert.ToInt16(estadoDeCuentaRepository.GetEventosActuales(PayCenterId));
             return saldosPagoServicio;
         }
 
@@ -570,11 +570,11 @@ namespace EvolucionaMovil.Models.BR
             /// <summary>
             /// Número de eventos de pago de servicio disponibles
             /// </summary>
-            public decimal EventosDisponibles { get; set; }
+            public short EventosDisponibles { get; set; }
             /// <summary>
             /// Número de eventos de pago de servicio Aplicados
             /// </summary>
-            public decimal EventosActuales { get; set; }
+            public short EventosActuales { get; set; }
         }
 
         public class ComisionFinanciamiento
@@ -583,7 +583,7 @@ namespace EvolucionaMovil.Models.BR
             public decimal Financiamiento { get; set; }
         }
 
-        internal ComisionFinanciamiento GetComisionFinanciamiento(int PayCenterId)
+        public ComisionFinanciamiento GetComisionFinanciamiento(int PayCenterId)
         {
             //Valido primero parámetros del paycenter
             ParametrosRepository parametrosRepository = new ParametrosRepository();
@@ -594,15 +594,19 @@ namespace EvolucionaMovil.Models.BR
             var comision = parametrosPayCenter != null && parametrosPayCenter.ComisionPayCenter != null ? parametrosPayCenter.ComisionPayCenter : null;
             if (comision == null)
             {
-                comision = parametrosGlobales != null && parametrosGlobales.ComisionPayCenter != null ? parametrosPayCenter.ComisionPayCenter : null;
+                comision = parametrosGlobales != null && parametrosGlobales.ComisionPayCenter != null ? parametrosGlobales.ComisionPayCenter : null;
             }
             if (comision == null)
             {
                 comision = 0;
-                AddValidationMessage(enumMessageType.BRException, "Está intentando reportar un pago de servicio pero no tiene configurada una comisión de cobro. Favor de reportarlo con un asesor.");
+                AddValidationMessage(enumMessageType.BRException, "No tiene configurada una comisión de cobro. Favor de reportarlo con un asesor.");
                 Succeed = false;
             }
+
+            var financiamiento = parametrosPayCenter != null && parametrosPayCenter.MaximoAFinanciar != null ? parametrosPayCenter.MaximoAFinanciar : 0;
+
             comisionFinanciamiento.Comision = (Decimal)comision;
+            comisionFinanciamiento.Financiamiento = (Decimal)financiamiento;
             return comisionFinanciamiento;
         }
     }

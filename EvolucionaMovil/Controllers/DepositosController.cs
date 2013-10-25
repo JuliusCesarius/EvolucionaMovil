@@ -16,6 +16,7 @@ using EvolucionaMovil.Models.Classes;
 using EvolucionaMovil.Attributes;
 using cabinet.patterns.enums;
 using EvolucionaMovil.Models.Extensions;
+using System.Web.Mvc.Async;
 
 namespace EvolucionaMovil.Controllers
 {
@@ -137,7 +138,7 @@ namespace EvolucionaMovil.Controllers
                         {
                             ModelState.Clear();
                             AddValidationMessage(enumMessageType.Succeed, "El reporte de depósito ha sido " + nuevoEstatus.ToString() + " correctamente");
-                            return Details(id);
+                            //return Details(id);
                         }
                         else
                         {
@@ -156,10 +157,7 @@ namespace EvolucionaMovil.Controllers
                 this.AddValidationMessage(enumMessageType.BRException, "No existe el depósito.");
             }
 
-            //Llenar el VM con el método de llenado
-            AbonoVM abonoVM = FillAbonoVM(id);
-
-            return View(abonoVM);
+            return Details(id);
         }
 
         [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.PayCenter, enumRoles.Staff })]
@@ -307,8 +305,11 @@ namespace EvolucionaMovil.Controllers
         /// <returns></returns>
         private AbonoVM FillAbonoVM(int id)
         {
-
             Abono abono = repository.LoadById(id);
+
+            //Me aseguro de obtener el abono tal y como estaba en la BD y sin cambios
+            repository.context.Refresh(System.Data.Objects.RefreshMode.StoreWins, abono);
+
             BancosRepository bancosRepository = new BancosRepository();
             var banco = bancosRepository.LoadById(abono.BancoId);
 
