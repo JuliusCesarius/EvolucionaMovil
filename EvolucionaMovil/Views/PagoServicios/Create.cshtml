@@ -82,7 +82,7 @@
                     <span class="fwb">Saldo Final</span><span id="saldoFinal">@ViewData["SaldoDisponibleString"]</span>
                </h3>
            </div>
-           @if (Convert.ToInt16(ViewData["Eventos"]) >= 0)
+           @if (Convert.ToInt16(ViewData["Eventos"]) > 0)
            {
              <div id="detail-eventosFinales">
                 <h3>

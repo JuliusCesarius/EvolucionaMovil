@@ -124,7 +124,7 @@ namespace EvolucionaMovil.Models.BR
                 //Si no tiene saldo, checar financiamiento configurado
                 var maximoAFinanciar = comisionFinanciamiento.Financiamiento;
                 decimal saldoFinal = saldos.SaldoDisponible - montoTotal;
-                if (maximoAFinanciar >= saldoFinal)
+                if (maximoAFinanciar < -saldoFinal)
                 {
                     AddValidationMessage(enumMessageType.BRException, "No cuenta con saldo suficiente para reportar este pago y tampoco es posible otorgar un financiamiento.");
                     Succeed = false;
@@ -174,8 +174,19 @@ namespace EvolucionaMovil.Models.BR
             }
 
             //Movimiento de financiamiento de la empresa
-            var financiamientoPago = Monto - saldos.SaldoDisponible;
-            var financiamientoComision = comision > 0 ? montoTotal - saldos.SaldoDisponible + financiamientoPago : 0;
+            var financiamientoPago = saldos.SaldoDisponible >0 ? -(Monto - saldos.SaldoDisponible) : Monto;
+            decimal financiamientoComision = 0;
+            if (comision > 0)
+            {
+                if (financiamientoComision > 0)
+                {
+                    financiamientoComision = -(montoTotal - saldos.SaldoDisponible + financiamientoPago);
+                }
+                else
+                {
+                    financiamientoComision = (decimal)comision;
+                }
+            }
             if (financiamientoPago > 0)
             {
                 var movimientoEmpresaPago = new MovimientoEmpresa

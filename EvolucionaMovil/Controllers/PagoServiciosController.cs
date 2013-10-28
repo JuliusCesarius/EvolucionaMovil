@@ -169,7 +169,7 @@ namespace EvolucionaMovil.Controllers
 
             return Details(id);
         }
-        
+
         [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.Staff, enumRoles.PayCenter })]
         public ActionResult Create()
         {
@@ -183,12 +183,13 @@ namespace EvolucionaMovil.Controllers
                 ViewData["SaldoActual"] = saldo.SaldoActual.ToString("C");
                 ViewData["SaldoDisponible"] = saldo.SaldoDisponible;
                 ViewData["SaldoDisponibleString"] = saldo.SaldoDisponible.ToString("C");
+
+                var comisionFinanciamiento = br.GetComisionFinanciamiento(PayCenterId);
+                ViewData["Comision"] = comisionFinanciamiento.Comision;
+                ViewData["ComisionString"] = comisionFinanciamiento.Comision.ToString("C");
+                //Le resto lo que tiene como saldo negativo al máximo a financiar.
+                ViewData["MaximoFinanciar"] = saldo.SaldoDisponible < 0 ? comisionFinanciamiento.Financiamiento + saldo.SaldoDisponible : comisionFinanciamiento.Financiamiento;
             }
-            //TODO:Obtener el Máximo a financiar, esto es por pay center
-            var comisionFinanciamiento = br.GetComisionFinanciamiento(PayCenterId);
-            ViewData["Comision"] = comisionFinanciamiento.Comision;
-            ViewData["ComisionString"] = comisionFinanciamiento.Comision.ToString("C");
-            ViewData["MaximoFinanciar"] = comisionFinanciamiento.Financiamiento;
             return View(pagoVM);
         }
 

@@ -46,11 +46,13 @@ $(document).on("ready", function () {
 
             var MontoFinanciamiento = parseFloat($("#hddMaximoFinanciar").val());
             var Comision = parseFloat($("#hddComision")[0].value);
+            var ComisionACobrar = 0;
             var ContEventos = parseInt($("#hddEventos")[0].value);
             var SaldoFinal = 0;
             if (Comision > 0 && ContEventos <= 0) {
                 if (ContEventos <= 0) {
                     SaldoFinal = SaldoDisp - (Importe + Comision);
+                    ComisionACobrar = Comision;
                 }
             }
             else {
@@ -76,7 +78,7 @@ $(document).on("ready", function () {
                 $("#saldoFinal").removeClass("saldos");
                 $("#saldoFinal").addClass("cargo");
 
-                if ((MontoFinanciamiento + SaldoFinal) < 0) {
+                if ((MontoFinanciamiento - (Importe +ComisionACobrar) < 0)) {
                     $("#btnCreate").hide("blind");
                     $("#divFinan").show();
                     $("#Mensaje").html("No cuenta con saldo disponible para realizar el pago y no está autorizado para realizar un finaciamiento");
@@ -110,7 +112,8 @@ $(document).on("ready", function () {
             $('#hddPayCenterId').val(v);
             $.getJSON("/PayCenters/GetComisionFinanciamiento/" + v, function (data) {
                 $("#hddComision").val(data.Comision);
-                $("#hddMaximoFinanciar").html(data.Financiamiento);
+                var financiamentoFinal = $("#hddSaldoDisponible").val() < 0 ? data.Financiamiento + parseFloat($("#hddSaldoDisponible").val()) : data.Financiamiento;
+                $("#hddMaximoFinanciar").val(financiamentoFinal);
             });
             $.getJSON("/PayCenters/GetSaldosPagoServicio?PayCenterId=" + v, function (data) {
                 $("#saldoDisponible").html(data.SaldoDisponible);
@@ -118,8 +121,7 @@ $(document).on("ready", function () {
                 $("#detail-saldo").html(data.SaldoDisponible);
                 $("#detail-saldo").formatCurrency();
                 $("#eventoDisponible").html(data.EventosDisponibles);
-                $("#hddSaldoDisponible")[0].value = data.SaldoDisponible;
-                $("#hddSaldoDisponible").html(data.SaldoDisponible);
+                $("#hddSaldoDisponible").val(data.SaldoDisponible);
                 $("#hddEventos")[0].value = data.EventosDisponibles;
                 if ($("#ImporteString")[0].value != "") {
                     $("#ImporteString")[0].value = 0;
