@@ -29,9 +29,9 @@
     {
             <div class="resumen fr saldos">
                 <h3>
-                    Saldo Actual <span id="saldoActual" title="Detalle de los saldos disponibles">@ViewData["SaldoActual"]</span></h3> 
+                    Saldo Actual <span id="saldoActual" title="El Saldo Actual es la suma de los Abonos Aplicados menos la suma de los Cargos Aplicados.">@ViewData["SaldoActual"]</span></h3> 
                 <h3>
-                    / Saldo Disponible <span id="saldoDisponible" title="Detalle de los saldos disponibles">@ViewData["SaldoDisponible"]</span></h3>
+                    / Saldo Disponible <span id="saldoDisponible" title="El Saldo Disponible es el Saldo Actual menos la suma de los Cargos con estatus Procesando.">@ViewData["SaldoDisponible"]</span></h3>
                 <h3>
                     / Eventos <span id="eventoDisponible">@ViewData["Eventos"]</span></h3>
                 <a href="/Paquetes/Buy">[comprar eventos]</a>

@@ -170,6 +170,7 @@
     <Compile Include="Models\Interfaces\IEvolucionaMovil.cs" />
     <Compile Include="Models\ProveedorVM.cs" />
     <Compile Include="Models\PagoServicioVM.cs" />
+    <Compile Include="Models\RecoveryVM.cs" />
     <Compile Include="Models\ReporteDepositoVM.cs" />
     <Compile Include="Models\SimpleGridResult.cs" />
     <Compile Include="Models\CuentaBancariaVM.cs" />
@@ -234,6 +235,7 @@
     <Content Include="Content\themes\base\images\images\telcel.jpg" />
     <Content Include="Content\themes\base\images\images\telmex.jpg" />
     <Content Include="Content\themes\base\images\images\vetv.jpg" />
+    <Content Include="Content\themes\base\images\signup.jpg" />
     <Content Include="Content\themes\base\images\ticketOK.jpg" />
     <Content Include="Content\Ticket.css" />
     <Content Include="Content\extracss.css" />
@@ -412,6 +414,9 @@
     <Content Include="Views\Paquetes\Details.cshtml" />
     <Content Include="Views\Paquetes\Delete.cshtml" />
     <Content Include="Views\Paquetes\Edit.cshtml" />
+    <Content Include="Views\Prospectos\Delete.cshtml" />
+    <Content Include="Views\Users\PasswordRecovery.cshtml" />
+    <Content Include="Views\Users\RecoveryResult.cshtml" />
     <None Include="_bin_deployableAssemblies\System.Web.Mvc.dll" />
     <None Include="_bin_deployableAssemblies\WebMatrix.WebData.xml" />
     <None Include="_bin_deployableAssemblies\WebMatrix.WebData.dll" />

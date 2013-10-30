@@ -92,7 +92,7 @@
 	}
 
 	@using(Html.BeginForm("CreateRole", "Users")){
-		<fieldset>
+		<fieldset class="noInFieldLabel">
 			<label for="id">Role:</label>
 			@Html.TextBox("id")
 			<input type="submit" value="Create Role" />

@@ -12,12 +12,12 @@
 	@using(Html.BeginForm("CreateUser", "Users")){ 
 		@Html.ValidationSummary(true)
 
-	 	<fieldset>
+	 	<fieldset class="noInFieldLabel">
 			@Html.EditorForModel()
 		</fieldset>
 
 		if (Model.InitialRoles.Count > 0) {
-			<fieldset>
+			<fieldset class="noInFieldLabel">
 				<h3 class="mvcMembership">Initial Roles</h3>
 				@for(var i = 0; i < Model.InitialRoles.Count; i++){ 
 					var role = Model.InitialRoles.ElementAt(i);

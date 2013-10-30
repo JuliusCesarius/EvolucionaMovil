@@ -1,0 +1,18 @@
+﻿@{
+    ViewBag.Title = "RecoveryResult";
+}
+
+<h2>Recuperación de correo</h2>
+@if (ViewBag.Succeed)
+{
+    <h3>Su nuevo password ha sido enviado a su correo electrónico!</h3>
+    <h4>Ingrese nuevamente con su usuario y nueva contraseña</h4>
+}
+else
+{
+    <h3>La información proporcionada no corresponde a un usuario en el sistema</h3>
+    <h4> Para dudas y asistencia escríbanos a <a href="mailto:servicioalcliente@evolucionamovil.mx">servicioalcliente@evolucionamovil.mx</a> o comuníquese al </h4>
+    <span class="tel">Tel. </span><span class="tel">01 (55) 5715 0880</span>
+}
+
+

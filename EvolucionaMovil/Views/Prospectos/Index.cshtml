@@ -61,9 +61,7 @@
             @Html.DisplayFor(modelItem => item.FechaCreacion)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.ProspectoId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.ProspectoId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.ProspectoId })
+            @Html.ActionLink("Eliminar", "Delete", new { id=item.ProspectoId })
         </td>
     </tr>
 }

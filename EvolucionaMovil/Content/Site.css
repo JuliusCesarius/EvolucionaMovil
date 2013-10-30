@@ -405,7 +405,7 @@ font-size:13px;
 border:1px solid #a0a0a0;
 }
 
-fieldset.noInFieldLabel div label{position:static!important}
+fieldset.noInFieldLabel div label,fieldset.noInFieldLabel p label{position:static!important}
 
 .focused label {
 color:#ccc;

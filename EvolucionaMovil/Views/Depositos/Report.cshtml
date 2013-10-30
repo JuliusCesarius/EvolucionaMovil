@@ -104,7 +104,7 @@
             @Html.ValidationMessageFor(model => model.FechaPago)
         </div>
         
-        <p class="nota">Aquí van algunas advertencias y avisos correspondientes al reporte de los depósitos que debe estar conciente el usuario al mommento de estar reportando el servicio.</p>
+        <p class="nota">El tiempo aproximado para aplicacion de depósitos es de 30 a 90 minutos en un horario de lunes a viernes de 9:00 hrs a 18:00 hrs y sábados de 9:00 hrs a 12:30 hrs. Los  depósitos reportados después de ese horario serán aplicados hasta el siguiente dia hábil.</p>
         <input type="checkbox" id="acceptTerms"/>
         <label for="acceptTerms" class="checkbox">Acepto las <a href="@Url.Content("~/home/Politicas_de_Uso")">Políticas de uso de Evoluciona Móvil ®</a></label>
         @if (ViewBag.Mensajes != null && ViewBag.Mensajes.Count > 0)
@@ -118,7 +118,7 @@
             </div>
         }
         <p>
-            <input type="submit" id="btnSave" class="freshbutton-blue"  value="Guardar" />
+            <input type="submit" id="btnSave" class="freshbutton-blue"  value="Reportar" />
         </p>
     </fieldset>
 }

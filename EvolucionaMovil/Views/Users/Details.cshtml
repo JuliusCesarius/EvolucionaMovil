@@ -51,7 +51,7 @@
 <h3 class="mvcMembership">Email Address & Comments</h3>
 <div class="mvcMembership-emailAndComments">
 	@using(Html.BeginForm("Details", "Users", new{ id = Model.User.ProviderUserKey })){
-	<fieldset>
+	<fieldset class="noInFieldLabel">
 		<p>
 			<label for="email">Email Address:</label>
 			@Html.TextBox("email", Model.User.Email)
