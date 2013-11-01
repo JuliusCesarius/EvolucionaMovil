@@ -1,4 +1,5 @@
-﻿@model EvolucionaMovil.Models.PayCenterVM
+﻿@using System.Globalization;
+@model EvolucionaMovil.Models.PayCenterVM
 @{
     ViewBag.Title = "Información del PayCenter";
 }
@@ -123,8 +124,57 @@
                 @Html.DisplayFor(model => model.PagosRealizados)
             </div>
         </div>
+        <div class="infoPaycenter">
+            <h2>Información del usuario del sistema</h2>
+            @Html.ActionLink("[Cambiar password]", "ChangePassword", "Account")
+        </div>
+        <div class="DetailsField">
+            <div class="DetailsFieldLabel">
+                User Name:
+            </div>
+            <div class="DetailsFieldValue">
+                @Model.User.UserName
+            </div>
+            <div class="DetailsFieldLabel">
+                Email Address:</div>
+            <div class="DetailsFieldValue">
+                <a href="mailto:@Model.User.Email">@Model.User.Email</a>
+            </div>
+            @if(Model.User.LastActivityDate == Model.User.CreationDate){
+                <div class="DetailsFieldLabel">
+                    Last Active:</div>
+                <div class="DetailsFieldValue">
+                    <em>Never</em>
+                </div>
+                <div class="DetailsFieldLabel">
+                    Last Login:</div>
+                <div class="DetailsFieldValue">
+                    <em>Never</em>
+                </div>
+		}else{
+                <div class="DetailsFieldLabel">
+                    Last Active:</div>
+                <div class="DetailsFieldValue">
+                    @Model.User.LastActivityDate.ToString("MMMM dd, yyyy h:mm:ss tt", CultureInfo.InvariantCulture)
+                </div>
+                <div class="DetailsFieldLabel">
+                    Last Login:</div>
+                <div class="DetailsFieldValue">
+                    @Model.User.LastLoginDate.ToString("MMMM dd, yyyy h:mm:ss tt", CultureInfo.InvariantCulture)
+                </div>
+		}
+            <div class="DetailsFieldLabel">
+                Fecha de creación:</div>
+            <div class="DetailsFieldValue">
+                @Model.User.CreationDate.ToString("MMMM dd, yyyy h:mm:ss tt", CultureInfo.InvariantCulture)
+            </div>
+
+        </div>
     </div>
 </fieldset>
+
+
+
 @if (User.IsInRole("Administrator") || User.IsInRole("Staff"))
 {
     <div id="Estatus">

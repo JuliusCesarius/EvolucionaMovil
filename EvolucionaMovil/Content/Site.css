@@ -1162,7 +1162,7 @@ width:350px
 .fieldsPaycenter div{height:22px; margin:3px 0 3px 0; position:relative;}
 .fieldsPaycenter a{font-size:12px;}*/
 .DetailsField{font-size:15px; margin:3px 0 3px 0; overflow:hidden;}
-.DetailsFieldLabel{color:#999; float:left;}
+.DetailsFieldLabel{color:#999; float:left;min-width:122px}
 .DetailsFieldValue{float:right; width:57%;}
 .DetailsFieldValue a{font-size:12px;}
 .formRightPaycenter{vertical-align:top; padding-top:3em;}

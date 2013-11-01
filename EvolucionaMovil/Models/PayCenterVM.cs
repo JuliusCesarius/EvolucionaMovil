@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Web.Security;
 namespace EvolucionaMovil.Models
 {
     public class PayCenterVM
@@ -66,5 +67,17 @@ namespace EvolucionaMovil.Models
         public string Eventos { get; set; }
         public string PagosRealizados { get; set; }
         public string Logotipo { get; set; }
+        private MembershipUser _user;
+        public MembershipUser User
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(this.UserName))
+                {
+                    _user = Membership.GetUser(this.UserName);
+                }
+                return _user;
+            }
+        }
     }
 }
