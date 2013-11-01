@@ -1,7 +1,7 @@
 ﻿@model EvolucionaMovil.Models.LogOnModel
 
 @{
-    ViewBag.Title = "Log On";
+    ViewBag.Title = "Acceder";
 }
 
 <script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
@@ -9,7 +9,8 @@
 
 @Html.ValidationSummary(true, "El usuario o contraseña no son correctos. Por favor, intente de nuevo.")
 
-@using (Html.BeginForm()) {
+@using (Html.BeginForm("LogOn", "Account", FormMethod.Post, new { @class = "formRight" }))
+{
     <div>
         <fieldset>
             <legend>Iniciar Sesión</legend>
@@ -27,9 +28,18 @@
             <div class="editor-label">
                 <a href="/Users/PasswordRecovery">He olvidado mi nombre de usuario o contraseña</a>
             </div>
-            <p>
+            <div class="editor-field">
+            <br />
                 <input type="submit" class="freshbutton-blue" value="Acceder" />
-            </p>
+            </div>
         </fieldset>
     </div>
 }
+<div class="formRight">
+<div class="loginAdvise">
+<h2>¿Aún no estás dado de alta?</h2>
+<h4>Te invitamos a que te <a href="../Prospectos/Preafiliacion">Preafilies AQUÍ</a> o que conozcas nuestra plataforma mediante nuestro usuario demo:</h4>
+<h3 >Usuario: <strong class="fwb">demo</strong></h3><br />
+<h3>Password: <strong class="fwb">passworddemo</strong></h3>
+</div>
+</div>
