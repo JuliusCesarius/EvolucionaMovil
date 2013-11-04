@@ -9,6 +9,7 @@ using EvolucionaMovil.Models.Enums;
 using EvolucionaMovil.Models.Extensions;
 using EvolucionaMovil.Models.Classes;
 using EvolucionaMovil.Attributes;
+using EvolucionaMovil.Models.Helpers;
 
 namespace EvolucionaMovil.Controllers
 {
@@ -53,6 +54,33 @@ namespace EvolucionaMovil.Controllers
 
         public ActionResult About()
         {
+            string[] lines = System.IO.File.ReadAllLines(@"C:\mailsinvitacion.txt");
+            string emailInvitacion = System.IO.File.ReadAllText(Server.MapPath("~/Content/Templates/invitacion.htm"));
+            string emailUsuarios = System.IO.File.ReadAllText(Server.MapPath("~/Content/Templates/emailusuarios.htm"));
+            ServiciosRepository serviciosRepository = new ServiciosRepository();
+
+            string finalEmailInvitacion=string.Empty;
+            string finalEmailUsuarios = string.Empty;
+            string nombreContacto = string.Empty;
+            string email = string.Empty;
+            string username = string.Empty;
+            string password = string.Empty;
+
+            foreach (string line in lines)
+            {
+                var collumns = line.Split('\t');
+                nombreContacto = collumns[0].Trim();
+                email = collumns[1].Trim();
+                username = collumns[2].Trim();
+                password = collumns[3].Trim();
+
+                finalEmailInvitacion = emailInvitacion.Replace("@nombrecontacto", nombreContacto);
+                finalEmailUsuarios = emailUsuarios.Replace("@username", username);
+                finalEmailUsuarios = finalEmailUsuarios.Replace("@password", password);
+
+                EmailHelper.Enviar(finalEmailInvitacion, "Invitación Pago de Servicios - Evoluciona Móvil", email, "Evoluciona Móvil");
+                EmailHelper.Enviar(finalEmailUsuarios, "Información de acceso - Evoluciona Móvil", email, "Evoluciona Móvil");
+            }
 
             return View();
         }

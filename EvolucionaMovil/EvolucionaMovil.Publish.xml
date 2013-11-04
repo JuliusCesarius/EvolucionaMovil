@@ -136,7 +136,7 @@
     <file relUrl="Views/Usuarios/Delete.cshtml" publishTime="02/18/2013 23:19:40" />
     <file relUrl="Views/Bancos/Create.cshtml" publishTime="02/18/2013 23:19:40" />
     <file relUrl="Views/_ViewStart.cshtml" publishTime="02/18/2013 23:19:40" />
-    <file relUrl="Views/Prospectos/Preafiliacion.cshtml" publishTime="10/29/2013 22:16:59" />
+    <file relUrl="Views/Prospectos/Preafiliacion.cshtml" publishTime="11/01/2013 00:12:35" />
     <file relUrl="bin/PagedList.dll" publishTime="09/27/2013 16:31:17" />
     <file relUrl="Content/themes/base/jquery.ui.autocomplete.css" publishTime="02/18/2013 23:19:40" />
     <file relUrl="Content/themes/base/redmond/jquery-ui-1.9.2.custom.min.css" publishTime="02/18/2013 23:19:40" />
@@ -201,7 +201,7 @@
     <file relUrl="Views/Bancos/Details.cshtml" publishTime="02/18/2013 23:19:40" />
     <file relUrl="Scripts/jquery.infieldlabel.min.js" publishTime="02/18/2013 23:19:40" />
     <file relUrl="Content/simpleGrid.css" publishTime="02/18/2013 23:19:40" />
-    <file relUrl="Views/Account/LogOn.cshtml" publishTime="10/31/2013 23:00:24" />
+    <file relUrl="Views/Account/LogOn.cshtml" publishTime="11/01/2013 00:08:42" />
     <file relUrl="Scripts/SubirImagenPaycenter.js" publishTime="05/22/2013 22:45:40" />
     <file relUrl="Scripts/jquery-ui-1.9.2.custom.min.js" publishTime="05/21/2013 21:14:52" />
     <file relUrl="Areas/MvcMembership/Views/Users/Password.cshtml" publishTime="05/02/2013 20:54:34" />
@@ -263,7 +263,7 @@
     <file relUrl="Content/themes/base/images/images/telmex.jpg" publishTime="05/28/2013 23:58:39" />
     <file relUrl="Content/themes/base/images/loading.gif" publishTime="05/21/2013 21:13:08" />
     <file relUrl="Content/themes/base/images/select-icon.gif" publishTime="02/18/2013 23:19:40" />
-    <file relUrl="Content/Site.css" publishTime="10/31/2013 23:33:44" />
+    <file relUrl="Content/Site.css" publishTime="11/01/2013 00:06:22" />
     <file relUrl="Views/Proveedores/Edit.cshtml" publishTime="09/11/2013 23:08:06" />
     <file relUrl="Content/themes/base/redmond/images/ui-bg_inset-hard_100_f5f8f9_1x100.png" publishTime="02/18/2013 23:19:40" />
     <file relUrl="Scripts/jquery.validate-vsdoc.js" publishTime="02/18/2013 23:19:40" />
