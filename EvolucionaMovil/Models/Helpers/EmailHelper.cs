@@ -13,7 +13,7 @@ namespace EvolucionaMovil.Models.Helpers
 {
     public static class EmailHelper
     {
-        public static Boolean Enviar(string mensaje, string subject, string toMail, string from = "")
+        public static Boolean Enviar(string mensaje, string subject, string toMail, string from = "", string cc = "", string cco="")
         {
             Succeed = true;
             try
@@ -33,6 +33,22 @@ namespace EvolucionaMovil.Models.Helpers
                 if (string.IsNullOrEmpty(from))
                 {
                     from = smtpUser;
+                }
+
+                if (!string.IsNullOrEmpty(cc))
+                {
+                    var ccs=cc.Split(',');
+                    foreach(var c in ccs){
+                        mail.CC.Add(c);
+                    }
+                }
+                if (!string.IsNullOrEmpty(cco))
+                {
+                    var ccos = cco.Split(',');
+                    foreach (var co in ccos)
+                    {
+                        mail.Bcc.Add(co);
+                    }
                 }
 
                 mail.From = new MailAddress(from, "Evoluciona Móvil");

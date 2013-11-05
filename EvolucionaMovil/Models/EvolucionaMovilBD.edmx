@@ -316,6 +316,7 @@
           <Property Name="PayCenterId" Type="int" />
           <Property Name="CuentaId" Type="int" />
           <Property Name="FechaActualizacion" Type="datetime" Nullable="false" />
+          <Property Name="ReferenciaId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Pagos">
           <Key>
@@ -784,7 +785,6 @@
           <EntitySet Name="ParametrosPayCenters" EntityType="EvolucionaMovilBDModel.ParametrosPayCenter" />
           <EntitySet Name="Politicas" EntityType="EvolucionaMovilBDModel.Politica" />
           <EntitySet Name="Prospectos" EntityType="EvolucionaMovilBDModel.Prospecto" />
-          <EntitySet Name="Servicios" EntityType="EvolucionaMovilBDModel.Servicio" />
           <AssociationSet Name="FK_CuentasBancarias_Bancos" Association="EvolucionaMovilBDModel.FK_CuentasBancarias_Bancos">
             <End Role="Banco" EntitySet="Bancos" />
             <End Role="CuentasBancaria" EntitySet="CuentaBancarias" />
@@ -815,10 +815,6 @@
             <End Role="Proveedore" EntitySet="Proveedors" />
           </AssociationSet>
           <EntitySet Name="DetalleServicios" EntityType="EvolucionaMovilBDModel.DetalleServicio" />
-          <AssociationSet Name="FK_DetalleServicios_Servicios" Association="EvolucionaMovilBDModel.FK_DetalleServicios_Servicios">
-            <End Role="Servicio" EntitySet="Servicios" />
-            <End Role="DetalleServicio" EntitySet="DetalleServicios" />
-          </AssociationSet>
           <EntitySet Name="Parametros" EntityType="EvolucionaMovilBDModel.Parametro" />
           <EntitySet Name="Tickets" EntityType="EvolucionaMovilBDModel.Ticket" />
           <EntitySet Name="Pagos" EntityType="EvolucionaMovilBDModel.Pago" />
@@ -881,6 +877,11 @@
           <AssociationSet Name="FK_Pagos_Movimientos" Association="EvolucionaMovilBDModel.FK_Pagos_Movimientos">
             <End Role="Movimiento" EntitySet="Movimientos" />
             <End Role="Pago" EntitySet="Pagos" />
+          </AssociationSet>
+          <EntitySet Name="Servicios" EntityType="EvolucionaMovilBDModel.Servicio" />
+          <AssociationSet Name="FK_DetalleServicios_Servicios" Association="EvolucionaMovilBDModel.FK_DetalleServicios_Servicios">
+            <End Role="Servicio" EntitySet="Servicios" />
+            <End Role="DetalleServicio" EntitySet="DetalleServicios" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="Banco">
@@ -993,18 +994,6 @@
           <Property Type="Boolean" Name="Baja" Nullable="false" />
           <NavigationProperty Name="PayCenters" Relationship="EvolucionaMovilBDModel.FK_PayCenters_Prospectos" FromRole="Prospecto" ToRole="PayCenter" />
           <Property Type="Guid" Name="ID" Nullable="false" />
-        </EntityType>
-        <EntityType Name="Servicio">
-          <Key>
-            <PropertyRef Name="ServicioId" />
-          </Key>
-          <Property Type="Int32" Name="ServicioId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Type="String" Name="Nombre" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Type="String" Name="Imagen" Nullable="false" MaxLength="800" FixedLength="false" Unicode="false" />
-          <Property Type="DateTime" Name="FechaCreacion" Nullable="false" />
-          <Property Type="Boolean" Name="Baja" Nullable="false" />
-          <Property Type="String" Name="TipoServicio" MaxLength="50" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="DetalleServicios" Relationship="EvolucionaMovilBDModel.FK_DetalleServicios_Servicios" FromRole="Servicio" ToRole="DetalleServicio" />
         </EntityType>
         <Association Name="FK_CuentasBancarias_Bancos">
           <End Type="EvolucionaMovilBDModel.Banco" Role="Banco" Multiplicity="1" />
@@ -1171,18 +1160,6 @@
           <Property Type="Boolean" Name="EsReferencia" Nullable="false" />
           <NavigationProperty Name="Servicio" Relationship="EvolucionaMovilBDModel.FK_DetalleServicios_Servicios" FromRole="DetalleServicio" ToRole="Servicio" />
         </EntityType>
-        <Association Name="FK_DetalleServicios_Servicios">
-          <End Type="EvolucionaMovilBDModel.Servicio" Role="Servicio" Multiplicity="1" />
-          <End Type="EvolucionaMovilBDModel.DetalleServicio" Role="DetalleServicio" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Servicio">
-              <PropertyRef Name="ServicioId" />
-            </Principal>
-            <Dependent Role="DetalleServicio">
-              <PropertyRef Name="ServicioId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="Parametro">
           <Key>
             <PropertyRef Name="AnchoTicket" />
@@ -1289,6 +1266,7 @@
           <Property Type="Int32" Name="CuentaId" />
           <Property Type="DateTime" Name="FechaActualizacion" Nullable="false" />
           <NavigationProperty Name="Movimiento" Relationship="EvolucionaMovilBDModel.FK_MovimientosEmpresa_Movimientos" FromRole="MovimientoEmpresa" ToRole="Movimiento" />
+          <Property Type="Int32" Name="ReferenciaId" Nullable="false" />
         </EntityType>
         <EntityType Name="PayCenter">
           <Key>
@@ -1522,6 +1500,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="Servicio">
+          <Key>
+            <PropertyRef Name="ServicioId" />
+          </Key>
+          <Property Type="Int32" Name="ServicioId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Nombre" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Imagen" MaxLength="800" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="FechaCreacion" Nullable="false" />
+          <Property Type="Boolean" Name="Baja" Nullable="false" />
+          <Property Type="String" Name="TipoServicio" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="DetalleServicios" Relationship="EvolucionaMovilBDModel.FK_DetalleServicios_Servicios" FromRole="Servicio" ToRole="DetalleServicio" />
+        </EntityType>
+        <Association Name="FK_DetalleServicios_Servicios">
+          <End Type="EvolucionaMovilBDModel.Servicio" Role="Servicio" Multiplicity="1" />
+          <End Type="EvolucionaMovilBDModel.DetalleServicio" Role="DetalleServicio" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Servicio">
+              <PropertyRef Name="ServicioId" />
+            </Principal>
+            <Dependent Role="DetalleServicio">
+              <PropertyRef Name="ServicioId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1632,18 +1634,6 @@
                 <ScalarProperty Name="Nombre" ColumnName="Nombre" />
                 <ScalarProperty Name="Email" ColumnName="Email" />
                 <ScalarProperty Name="ProspectoId" ColumnName="ProspectoId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Servicios">
-            <EntityTypeMapping TypeName="EvolucionaMovilBDModel.Servicio">
-              <MappingFragment StoreEntitySet="Servicios">
-                <ScalarProperty Name="TipoServicio" ColumnName="TipoServicio" />
-                <ScalarProperty Name="Baja" ColumnName="Baja" />
-                <ScalarProperty Name="FechaCreacion" ColumnName="FechaCreacion" />
-                <ScalarProperty Name="Imagen" ColumnName="Imagen" />
-                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
-                <ScalarProperty Name="ServicioId" ColumnName="ServicioId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1800,6 +1790,7 @@
           <EntitySetMapping Name="MovimientoEmpresas">
             <EntityTypeMapping TypeName="EvolucionaMovilBDModel.MovimientoEmpresa">
               <MappingFragment StoreEntitySet="MovimientosEmpresa">
+                <ScalarProperty Name="ReferenciaId" ColumnName="ReferenciaId" />
                 <ScalarProperty Name="FechaActualizacion" ColumnName="FechaActualizacion" />
                 <ScalarProperty Name="CuentaId" ColumnName="CuentaId" />
                 <ScalarProperty Name="PayCenterId" ColumnName="PayCenterId" />
@@ -1873,6 +1864,18 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="Servicios">
+            <EntityTypeMapping TypeName="EvolucionaMovilBDModel.Servicio">
+              <MappingFragment StoreEntitySet="Servicios">
+                <ScalarProperty Name="TipoServicio" ColumnName="TipoServicio" />
+                <ScalarProperty Name="Baja" ColumnName="Baja" />
+                <ScalarProperty Name="FechaCreacion" ColumnName="FechaCreacion" />
+                <ScalarProperty Name="Imagen" ColumnName="Imagen" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="ServicioId" ColumnName="ServicioId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -1902,7 +1905,6 @@
         <EntityTypeShape EntityType="EvolucionaMovilBDModel.ParametrosPayCenter" Width="1.5" PointX="0.625" PointY="6.5" Height="2.9417936197916674" />
         <EntityTypeShape EntityType="EvolucionaMovilBDModel.Politica" Width="1.5" PointX="7.625" PointY="13.75" Height="1.7879850260416674" />
         <EntityTypeShape EntityType="EvolucionaMovilBDModel.Prospecto" Width="1.5" PointX="0.625" PointY="3.125" Height="2.9417936197916656" />
-        <EntityTypeShape EntityType="EvolucionaMovilBDModel.Servicio" Width="1.5" PointX="11.125" PointY="3.375" Height="2.3648893229166665" />
         <AssociationConnector Association="EvolucionaMovilBDModel.FK_CuentasBancarias_Bancos" >
           <ConnectorPoint PointX="9.125" PointY="4.1151432291666694" />
           <ConnectorPoint PointX="8.75" PointY="4.1151432291666694" />
@@ -1934,10 +1936,6 @@
           <ConnectorPoint PointX="11.125" PointY="2.2785953776041694" />
         </AssociationConnector>
         <EntityTypeShape EntityType="EvolucionaMovilBDModel.DetalleServicio" Width="1.5" PointX="11.125" PointY="6.375" Height="1.2110807291666657" />
-        <AssociationConnector Association="EvolucionaMovilBDModel.FK_DetalleServicios_Servicios" >
-          <ConnectorPoint PointX="11.875" PointY="5.7398893229166665" />
-          <ConnectorPoint PointX="11.875" PointY="6.375" />
-        </AssociationConnector>
         <EntityTypeShape EntityType="EvolucionaMovilBDModel.Parametro" Width="1.5" PointX="5.875" PointY="14.125" Height="2.7494921875000067" />
         <EntityTypeShape EntityType="EvolucionaMovilBDModel.Ticket" Width="1.5" PointX="1.5" PointY="10.625" Height="4.2879036458333371" />
         <EntityTypeShape EntityType="EvolucionaMovilBDModel.Pago" Width="1.5" PointX="3.625" PointY="10.5" Height="4.0956022135416683" />
@@ -2009,6 +2007,11 @@
         <AssociationConnector Association="EvolucionaMovilBDModel.FK_Pagos_Movimientos" >
           <ConnectorPoint PointX="7" PointY="10.687205403645834" />
           <ConnectorPoint PointX="5.125" PointY="10.687205403645834" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="EvolucionaMovilBDModel.Servicio" Width="1.5" PointX="11.25" PointY="3.5" Height="2.3648893229166674" />
+        <AssociationConnector Association="EvolucionaMovilBDModel.FK_DetalleServicios_Servicios" >
+          <ConnectorPoint PointX="11.9375" PointY="5.8648893229166674" />
+          <ConnectorPoint PointX="11.9375" PointY="6.375" />
         </AssociationConnector>
         </Diagram>
     </Diagrams>

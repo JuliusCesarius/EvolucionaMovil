@@ -85,7 +85,7 @@ namespace EvolucionaMovil.Controllers
             if (ModelState.IsValid)
             {
                 Mapper.Map(servicioVM, servicio);
-                repository.Add(servicio);
+                //repository.Add(servicio);
                 repository.Save();
                 servicioVM.ServicioId = servicio.ServicioId;
                 return RedirectToAction("Index");

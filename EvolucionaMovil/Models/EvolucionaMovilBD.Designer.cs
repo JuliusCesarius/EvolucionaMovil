@@ -25,7 +25,6 @@ using System.Xml.Serialization;
 [assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_Abonos_Cuentas", "CuentaPayCenter", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.CuentaPayCenter), "Abono", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EvolucionaMovil.Models.Abono), true)]
 [assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_CuentasPayCenter_Proveedores", "Proveedore", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.Proveedor), "CuentasPayCenter", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EvolucionaMovil.Models.CuentaPayCenter), true)]
 [assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "Proveedores_CuentasBancarias", "CuentaBancaria", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EvolucionaMovil.Models.CuentaBancaria), "Proveedore", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EvolucionaMovil.Models.Proveedor))]
-[assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_DetalleServicios_Servicios", "Servicio", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.Servicio), "DetalleServicio", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EvolucionaMovil.Models.DetalleServicio), true)]
 [assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_DetallePagos_Pagos", "Pago", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.Pago), "DetallePago", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EvolucionaMovil.Models.DetallePago), true)]
 [assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_Tickets_Pagos", "Pago", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.Pago), "Ticket", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(EvolucionaMovil.Models.Ticket), true)]
 [assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_Abonos_PayCenters", "PayCenter", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.PayCenter), "Abono", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EvolucionaMovil.Models.Abono), true)]
@@ -40,6 +39,7 @@ using System.Xml.Serialization;
 [assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_Movimientos_Movimientos", "Movimiento", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(EvolucionaMovil.Models.Movimiento), "Movimiento1", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EvolucionaMovil.Models.Movimiento), true)]
 [assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_MovimientosEmpresa_Movimientos", "Movimiento", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(EvolucionaMovil.Models.Movimiento), "MovimientoEmpresa", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EvolucionaMovil.Models.MovimientoEmpresa), true)]
 [assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_Pagos_Movimientos", "Movimiento", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.Movimiento), "Pago", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EvolucionaMovil.Models.Pago), true)]
+[assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_DetalleServicios_Servicios", "Servicio", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.Servicio), "DetalleServicio", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EvolucionaMovil.Models.DetalleServicio), true)]
 
 #endregion
 
@@ -218,22 +218,6 @@ namespace EvolucionaMovil.Models
             }
         }
         private ObjectSet<Prospecto> _Prospectos;
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        public ObjectSet<Servicio> Servicios
-        {
-            get
-            {
-                if ((_Servicios == null))
-                {
-                    _Servicios = base.CreateObjectSet<Servicio>("Servicios");
-                }
-                return _Servicios;
-            }
-        }
-        private ObjectSet<Servicio> _Servicios;
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -442,6 +426,22 @@ namespace EvolucionaMovil.Models
             }
         }
         private ObjectSet<Movimiento> _Movimientos;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<Servicio> Servicios
+        {
+            get
+            {
+                if ((_Servicios == null))
+                {
+                    _Servicios = base.CreateObjectSet<Servicio>("Servicios");
+                }
+                return _Servicios;
+            }
+        }
+        private ObjectSet<Servicio> _Servicios;
 
         #endregion
 
@@ -509,14 +509,6 @@ namespace EvolucionaMovil.Models
         public void AddToProspectos(Prospecto prospecto)
         {
             base.AddObject("Prospectos", prospecto);
-        }
-    
-        /// <summary>
-        /// Deprecated Method for adding a new object to the Servicios EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
-        /// </summary>
-        public void AddToServicios(Servicio servicio)
-        {
-            base.AddObject("Servicios", servicio);
         }
     
         /// <summary>
@@ -621,6 +613,14 @@ namespace EvolucionaMovil.Models
         public void AddToMovimientos(Movimiento movimiento)
         {
             base.AddObject("Movimientos", movimiento);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the Servicios EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToServicios(Servicio servicio)
+        {
+            base.AddObject("Servicios", servicio);
         }
 
         #endregion
@@ -3807,7 +3807,8 @@ namespace EvolucionaMovil.Models
         /// <param name="fechaCreacion">Initial value of the FechaCreacion property.</param>
         /// <param name="baja">Initial value of the Baja property.</param>
         /// <param name="fechaActualizacion">Initial value of the FechaActualizacion property.</param>
-        public static MovimientoEmpresa CreateMovimientoEmpresa(global::System.Int32 movimientoEmpresaId, global::System.String clave, global::System.Decimal monto, global::System.Int16 motivo, global::System.String userName, global::System.Boolean isAbono, global::System.Int16 status, global::System.Decimal saldoActual, global::System.DateTime fechaCreacion, global::System.Boolean baja, global::System.DateTime fechaActualizacion)
+        /// <param name="referenciaId">Initial value of the ReferenciaId property.</param>
+        public static MovimientoEmpresa CreateMovimientoEmpresa(global::System.Int32 movimientoEmpresaId, global::System.String clave, global::System.Decimal monto, global::System.Int16 motivo, global::System.String userName, global::System.Boolean isAbono, global::System.Int16 status, global::System.Decimal saldoActual, global::System.DateTime fechaCreacion, global::System.Boolean baja, global::System.DateTime fechaActualizacion, global::System.Int32 referenciaId)
         {
             MovimientoEmpresa movimientoEmpresa = new MovimientoEmpresa();
             movimientoEmpresa.MovimientoEmpresaId = movimientoEmpresaId;
@@ -3821,6 +3822,7 @@ namespace EvolucionaMovil.Models
             movimientoEmpresa.FechaCreacion = fechaCreacion;
             movimientoEmpresa.Baja = baja;
             movimientoEmpresa.FechaActualizacion = fechaActualizacion;
+            movimientoEmpresa.ReferenciaId = referenciaId;
             return movimientoEmpresa;
         }
 
@@ -4166,6 +4168,30 @@ namespace EvolucionaMovil.Models
         private global::System.DateTime _FechaActualizacion;
         partial void OnFechaActualizacionChanging(global::System.DateTime value);
         partial void OnFechaActualizacionChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 ReferenciaId
+        {
+            get
+            {
+                return _ReferenciaId;
+            }
+            set
+            {
+                OnReferenciaIdChanging(value);
+                ReportPropertyChanging("ReferenciaId");
+                _ReferenciaId = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("ReferenciaId");
+                OnReferenciaIdChanged();
+            }
+        }
+        private global::System.Int32 _ReferenciaId;
+        partial void OnReferenciaIdChanging(global::System.Int32 value);
+        partial void OnReferenciaIdChanged();
 
         #endregion
 
@@ -7239,15 +7265,13 @@ namespace EvolucionaMovil.Models
         /// </summary>
         /// <param name="servicioId">Initial value of the ServicioId property.</param>
         /// <param name="nombre">Initial value of the Nombre property.</param>
-        /// <param name="imagen">Initial value of the Imagen property.</param>
         /// <param name="fechaCreacion">Initial value of the FechaCreacion property.</param>
         /// <param name="baja">Initial value of the Baja property.</param>
-        public static Servicio CreateServicio(global::System.Int32 servicioId, global::System.String nombre, global::System.String imagen, global::System.DateTime fechaCreacion, global::System.Boolean baja)
+        public static Servicio CreateServicio(global::System.Int32 servicioId, global::System.String nombre, global::System.DateTime fechaCreacion, global::System.Boolean baja)
         {
             Servicio servicio = new Servicio();
             servicio.ServicioId = servicioId;
             servicio.Nombre = nombre;
-            servicio.Imagen = imagen;
             servicio.FechaCreacion = fechaCreacion;
             servicio.Baja = baja;
             return servicio;
@@ -7311,7 +7335,7 @@ namespace EvolucionaMovil.Models
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
         public global::System.String Imagen
         {
@@ -7323,7 +7347,7 @@ namespace EvolucionaMovil.Models
             {
                 OnImagenChanging(value);
                 ReportPropertyChanging("Imagen");
-                _Imagen = StructuralObject.SetValidValue(value, false);
+                _Imagen = StructuralObject.SetValidValue(value, true);
                 ReportPropertyChanged("Imagen");
                 OnImagenChanged();
             }
