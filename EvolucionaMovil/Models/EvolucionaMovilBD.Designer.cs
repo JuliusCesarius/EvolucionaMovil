@@ -37,9 +37,9 @@ using System.Xml.Serialization;
 [assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_Movimientos_CuentasPayCenter", "CuentaPayCenter", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.CuentaPayCenter), "Movimiento", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EvolucionaMovil.Models.Movimiento), true)]
 [assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_Movimientos_Estatus_Movimientos", "Movimiento", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.Movimiento), "Movimientos_Estatus", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EvolucionaMovil.Models.Movimientos_Estatus), true)]
 [assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_Movimientos_Movimientos", "Movimiento", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(EvolucionaMovil.Models.Movimiento), "Movimiento1", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EvolucionaMovil.Models.Movimiento), true)]
-[assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_MovimientosEmpresa_Movimientos", "Movimiento", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(EvolucionaMovil.Models.Movimiento), "MovimientoEmpresa", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EvolucionaMovil.Models.MovimientoEmpresa), true)]
 [assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_Pagos_Movimientos", "Movimiento", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.Movimiento), "Pago", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EvolucionaMovil.Models.Pago), true)]
 [assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_DetalleServicios_Servicios", "Servicio", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EvolucionaMovil.Models.Servicio), "DetalleServicio", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EvolucionaMovil.Models.DetalleServicio), true)]
+[assembly: EdmRelationshipAttribute("EvolucionaMovilBDModel", "FK_MovimientosEmpresa_Movimientos", "Movimiento", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(EvolucionaMovil.Models.Movimiento), "MovimientosEmpresa", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EvolucionaMovil.Models.MovimientoEmpresa), true)]
 
 #endregion
 
@@ -366,22 +366,6 @@ namespace EvolucionaMovil.Models
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        public ObjectSet<MovimientoEmpresa> MovimientoEmpresas
-        {
-            get
-            {
-                if ((_MovimientoEmpresas == null))
-                {
-                    _MovimientoEmpresas = base.CreateObjectSet<MovimientoEmpresa>("MovimientoEmpresas");
-                }
-                return _MovimientoEmpresas;
-            }
-        }
-        private ObjectSet<MovimientoEmpresa> _MovimientoEmpresas;
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
         public ObjectSet<PayCenter> PayCenters
         {
             get
@@ -442,6 +426,22 @@ namespace EvolucionaMovil.Models
             }
         }
         private ObjectSet<Servicio> _Servicios;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<MovimientoEmpresa> MovimientoEmpresas
+        {
+            get
+            {
+                if ((_MovimientoEmpresas == null))
+                {
+                    _MovimientoEmpresas = base.CreateObjectSet<MovimientoEmpresa>("MovimientoEmpresas");
+                }
+                return _MovimientoEmpresas;
+            }
+        }
+        private ObjectSet<MovimientoEmpresa> _MovimientoEmpresas;
 
         #endregion
 
@@ -584,14 +584,6 @@ namespace EvolucionaMovil.Models
         }
     
         /// <summary>
-        /// Deprecated Method for adding a new object to the MovimientoEmpresas EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
-        /// </summary>
-        public void AddToMovimientoEmpresas(MovimientoEmpresa movimientoEmpresa)
-        {
-            base.AddObject("MovimientoEmpresas", movimientoEmpresa);
-        }
-    
-        /// <summary>
         /// Deprecated Method for adding a new object to the PayCenters EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
         /// </summary>
         public void AddToPayCenters(PayCenter payCenter)
@@ -621,6 +613,14 @@ namespace EvolucionaMovil.Models
         public void AddToServicios(Servicio servicio)
         {
             base.AddObject("Servicios", servicio);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the MovimientoEmpresas EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToMovimientoEmpresas(MovimientoEmpresa movimientoEmpresa)
+        {
+            base.AddObject("MovimientoEmpresas", movimientoEmpresa);
         }
 
         #endregion
@@ -3741,28 +3741,6 @@ namespace EvolucionaMovil.Models
         [XmlIgnoreAttribute()]
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("EvolucionaMovilBDModel", "FK_MovimientosEmpresa_Movimientos", "MovimientoEmpresa")]
-        public EntityCollection<MovimientoEmpresa> MovimientosEmpresas
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<MovimientoEmpresa>("EvolucionaMovilBDModel.FK_MovimientosEmpresa_Movimientos", "MovimientoEmpresa");
-            }
-            set
-            {
-                if ((value != null))
-                {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<MovimientoEmpresa>("EvolucionaMovilBDModel.FK_MovimientosEmpresa_Movimientos", "MovimientoEmpresa", value);
-                }
-            }
-        }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [XmlIgnoreAttribute()]
-        [SoapIgnoreAttribute()]
-        [DataMemberAttribute()]
         [EdmRelationshipNavigationPropertyAttribute("EvolucionaMovilBDModel", "FK_Pagos_Movimientos", "Pago")]
         public EntityCollection<Pago> Pagos
         {
@@ -3775,6 +3753,28 @@ namespace EvolucionaMovil.Models
                 if ((value != null))
                 {
                     ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Pago>("EvolucionaMovilBDModel.FK_Pagos_Movimientos", "Pago", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("EvolucionaMovilBDModel", "FK_MovimientosEmpresa_Movimientos", "MovimientosEmpresa")]
+        public EntityCollection<MovimientoEmpresa> MovimientosEmpresas
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<MovimientoEmpresa>("EvolucionaMovilBDModel.FK_MovimientosEmpresa_Movimientos", "MovimientosEmpresa");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<MovimientoEmpresa>("EvolucionaMovilBDModel.FK_MovimientosEmpresa_Movimientos", "MovimientosEmpresa", value);
                 }
             }
         }

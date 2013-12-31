@@ -747,6 +747,10 @@ namespace EvolucionaMovil.Controllers
         /// <returns></returns>
         private bool ValidaActivacion(ref PayCenterVM paycenterVM)
         {
+            if (HttpContext.User.IsInRole(enumRoles.Administrator.ToString()))
+            {
+                return true;
+            }
             if (string.IsNullOrWhiteSpace(paycenterVM.Nombre) || string.IsNullOrWhiteSpace(paycenterVM.Representante) ||
                 string.IsNullOrWhiteSpace(paycenterVM.UserName) || string.IsNullOrWhiteSpace(paycenterVM.Telefono) ||
                 string.IsNullOrWhiteSpace(paycenterVM.Email) || // || string.IsNullOrWhiteSpace(paycenterVM.Email2) ||
@@ -769,6 +773,10 @@ namespace EvolucionaMovil.Controllers
         /// <returns></returns>
         private bool ValidaActivacion(PayCenter paycenter)
         {
+            if (HttpContext.User.IsInRole(enumRoles.Administrator.ToString()))
+            {
+                return true;
+            }
             if (string.IsNullOrWhiteSpace(paycenter.Nombre) || string.IsNullOrWhiteSpace(paycenter.Representante) ||
                 string.IsNullOrWhiteSpace(paycenter.UserName) || string.IsNullOrWhiteSpace(paycenter.Telefono) ||
                 string.IsNullOrWhiteSpace(paycenter.Email) || // || string.IsNullOrWhiteSpace(paycenterVM.Email2) ||

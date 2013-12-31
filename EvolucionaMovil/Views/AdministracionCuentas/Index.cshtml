@@ -1,0 +1,111 @@
+﻿@model IEnumerable<EvolucionaMovil.Models.MovimientoEmpresa>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table>
+    <tr>
+        <th>
+            MovimientoOrigenId
+        </th>
+        <th>
+            Clave
+        </th>
+        <th>
+            Monto
+        </th>
+        <th>
+            Motivo
+        </th>
+        <th>
+            UserName
+        </th>
+        <th>
+            IsAbono
+        </th>
+        <th>
+            Status
+        </th>
+        <th>
+            SaldoActual
+        </th>
+        <th>
+            FechaCreacion
+        </th>
+        <th>
+            Baja
+        </th>
+        <th>
+            Movimiento
+        </th>
+        <th>
+            CuentaId
+        </th>
+        <th>
+            FechaActualizacion
+        </th>
+        <th>
+            ReferenciaId
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.MovimientoOrigenId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Clave)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Monto)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Motivo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.UserName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IsAbono)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Status)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SaldoActual)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.FechaCreacion)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Baja)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Movimiento.Clave)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CuentaId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.FechaActualizacion)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ReferenciaId)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.MovimientoEmpresaId }) |
+            @Html.ActionLink("Details", "Details", new { id=item.MovimientoEmpresaId }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.MovimientoEmpresaId })
+        </td>
+    </tr>
+}
+
+</table>

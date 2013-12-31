@@ -1,0 +1,85 @@
+﻿@model EvolucionaMovil.Models.MovimientoEmpresa
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<fieldset>
+    <legend>MovimientoEmpresa</legend>
+
+    <div class="display-label">MovimientoOrigenId</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.MovimientoOrigenId)
+    </div>
+
+    <div class="display-label">Clave</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Clave)
+    </div>
+
+    <div class="display-label">Monto</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Monto)
+    </div>
+
+    <div class="display-label">Motivo</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Motivo)
+    </div>
+
+    <div class="display-label">UserName</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.UserName)
+    </div>
+
+    <div class="display-label">IsAbono</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.IsAbono)
+    </div>
+
+    <div class="display-label">Status</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Status)
+    </div>
+
+    <div class="display-label">SaldoActual</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.SaldoActual)
+    </div>
+
+    <div class="display-label">FechaCreacion</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.FechaCreacion)
+    </div>
+
+    <div class="display-label">Baja</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Baja)
+    </div>
+
+    <div class="display-label">Movimiento</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Movimiento.Clave)
+    </div>
+
+    <div class="display-label">CuentaId</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.CuentaId)
+    </div>
+
+    <div class="display-label">FechaActualizacion</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.FechaActualizacion)
+    </div>
+
+    <div class="display-label">ReferenciaId</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.ReferenciaId)
+    </div>
+</fieldset>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id=Model.MovimientoEmpresaId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

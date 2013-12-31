@@ -17,7 +17,7 @@ namespace EvolucionaMovil.Controllers
 {    
     public class UsersController : Controller
     {
-        private const int PageSize = 10;
+        private const int PageSize = 15;
         private const string ResetPasswordBody = "Su nuevo password es: ";
         private const string ResetPasswordSubject = "Evoluciona Móvil - Nuevo password";
         private const string PasswordCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";

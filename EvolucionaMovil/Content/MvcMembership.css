@@ -44,8 +44,30 @@ div.mvcMembership-account > form{
 div.mvcMembership-allUsers ul{
 	margin: 0;
 }
-div.mvcMembership-allUsers ul.mvcMembership-users > li{
-	margin: .5em 0 .5em 0;
+div.mvcMembership-allUsers ul.mvcMembership-users > li{	
+    border: solid 1px #EBEBEB;
+    display: inline-block;
+    padding: 3px 12px;
+    width: 257px;
+    margin: 0 5px 5px 0;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -ms-border-radius: 5px;
+    -o-border-radius: 5px;
+    background: #F5F5F5;
+    height: 96px;
+}
+.mvcMembership-username a
+{
+    text-decoration: none;
+    font-size: 26px;
+    color: gray;
+    border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    -ms-border-radius: 3px;
+    -o-border-radius: 3px;
 }
 div.mvcMembership-allUsers ul.mvcMembership-users > li > span.mvcMembership-isOnline{
 	display: block;

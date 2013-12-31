@@ -124,6 +124,7 @@
     <Compile Include="Attributes\CustomAuthorizeAttribute.cs" />
     <Compile Include="Attributes\MaskAttribute.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AdministracionCuentasController.cs" />
     <Compile Include="Models\Classes\DateTimeUtil.cs" />
     <Compile Include="Models\ConfigProvCuentaVM.cs" />
     <Compile Include="Controllers\CuentasBancariasController.cs" />
@@ -418,6 +419,11 @@
     <Content Include="Views\Prospectos\Delete.cshtml" />
     <Content Include="Views\Users\PasswordRecovery.cshtml" />
     <Content Include="Views\Users\RecoveryResult.cshtml" />
+    <Content Include="Views\AdministracionCuentas\Index.cshtml" />
+    <Content Include="Views\AdministracionCuentas\Details.cshtml" />
+    <Content Include="Views\AdministracionCuentas\Create.cshtml" />
+    <Content Include="Views\AdministracionCuentas\Edit.cshtml" />
+    <Content Include="Views\AdministracionCuentas\Delete.cshtml" />
     <None Include="_bin_deployableAssemblies\System.Web.Mvc.dll" />
     <None Include="_bin_deployableAssemblies\WebMatrix.WebData.xml" />
     <None Include="_bin_deployableAssemblies\WebMatrix.WebData.dll" />

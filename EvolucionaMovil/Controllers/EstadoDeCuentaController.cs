@@ -47,7 +47,7 @@ namespace EvolucionaMovil.Controllers
         public ViewResult Index()
         {
 
-            ViewBag.PageSize = 10;
+            ViewBag.PageSize = 30;
             ViewBag.PageNumber = 0;
             ViewBag.SearchString = string.Empty;
             ViewBag.fechaInicio = string.Empty;
