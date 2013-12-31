@@ -9,6 +9,10 @@ namespace EvolucionaMovil.Models.Extensions
     {
         public static bool ContainsInvariant(this string mainText, string queryText)
         {
+            if (string.IsNullOrEmpty(mainText))
+            {
+                return false;
+            }
             return mainText.ToUpperInvariant().Contains(queryText.ToUpperInvariant());
         }
     }

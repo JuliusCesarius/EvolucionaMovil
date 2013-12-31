@@ -78,7 +78,7 @@ $(document).on("ready", function () {
                 $("#saldoFinal").removeClass("saldos");
                 $("#saldoFinal").addClass("cargo");
 
-                if ((MontoFinanciamiento - (Importe +ComisionACobrar) < 0)) {
+                if (((SaldoDisp+MontoFinanciamiento) - (Importe +ComisionACobrar) < 0)) {
                     $("#btnCreate").hide("blind");
                     $("#divFinan").show();
                     $("#Mensaje").html("No cuenta con saldo disponible para realizar el pago y no está autorizado para realizar un finaciamiento");
@@ -87,7 +87,7 @@ $(document).on("ready", function () {
                     $("#divFinan").show();
                     $("#btnCreate").show("blind");
                     $("#Mensaje").html("No cuenta con saldo disponible para realizar el pago pero tiene finaciamiento de ");
-                    var $montoFinan = $("<span class='montoFinan'><span>");
+                    var $montoFinan = $("<span class='montoFinan fxl fwb'><span>");
                     $montoFinan.html(MontoFinanciamiento)
                     $montoFinan.formatCurrency();
                     $("#Mensaje").append($montoFinan);

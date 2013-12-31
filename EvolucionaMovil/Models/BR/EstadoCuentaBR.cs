@@ -174,18 +174,11 @@ namespace EvolucionaMovil.Models.BR
             }
 
             //Movimiento de financiamiento de la empresa
-            var financiamientoPago = saldos.SaldoDisponible >0 ? -(Monto - saldos.SaldoDisponible) : Monto;
+            var financiamientoPago = Monto - saldos.SaldoDisponible;
             decimal financiamientoComision = 0;
             if (comision > 0)
             {
-                if (financiamientoComision > 0)
-                {
-                    financiamientoComision = -(montoTotal - saldos.SaldoDisponible + financiamientoPago);
-                }
-                else
-                {
-                    financiamientoComision = (decimal)comision;
-                }
+                financiamientoComision = montoTotal - saldos.SaldoDisponible + financiamientoPago;
             }
             if (financiamientoPago > 0)
             {
