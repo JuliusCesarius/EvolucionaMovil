@@ -1,4 +1,4 @@
-﻿@model IEnumerable<EvolucionaMovil.Models.MovimientoEmpresa>
+﻿@model IEnumerable<EvolucionaMovil.Models.Resumen_Movimientos>
 
 @{
     ViewBag.Title = "Index";
@@ -12,98 +12,75 @@
 <table>
     <tr>
         <th>
-            MovimientoOrigenId
+            MovimientoOrigen
         </th>
         <th>
-            Clave
-        </th>
-        <th>
-            Monto
+            Tipo
         </th>
         <th>
             Motivo
         </th>
         <th>
-            UserName
+            Monto
         </th>
         <th>
-            IsAbono
+            PayCenter
         </th>
         <th>
-            Status
+            Estatus
         </th>
         <th>
-            SaldoActual
+            Saldo Actual
         </th>
-        <th>
-            FechaCreacion
-        </th>
-        <th>
-            Baja
-        </th>
-        <th>
-            Movimiento
-        </th>
-        <th>
-            CuentaId
-        </th>
-        <th>
-            FechaActualizacion
-        </th>
-        <th>
-            ReferenciaId
-        </th>
-        <th></th>
     </tr>
 
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.MovimientoOrigenId)
-        </td>
-        <td>
             @Html.DisplayFor(modelItem => item.Clave)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Monto)
+            @if (item.IsAbono)
+            {
+                <span>ABONO</span>
+            }
+            else
+            {
+                <span class="cargo">CARGO</span>
+            }
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Motivo)
+            <span class="fwb">
+                @item.Motivo
+            </span>
         </td>
+        <td>
+        @if (item.IsAbono)
+            {
+                <span>@item.Monto</span>
+            }
+            else
+            {
+                <span class="cargo">@item.Monto</span>
+            }
+         </td>
         <td>
             @Html.DisplayFor(modelItem => item.UserName)
         </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.IsAbono)
+        <td class="status">
+            <span class="@item.Status">@Html.DisplayFor(modelItem => item.Status)</span>
         </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Status)
-        </td>
-        <td>
+        <td class="fwb" align="right">
+        @if (item.SaldoActual < 0)
+        {
+            <span class="cargo">
             @Html.DisplayFor(modelItem => item.SaldoActual)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.FechaCreacion)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Baja)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Movimiento.Clave)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.CuentaId)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.FechaActualizacion)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ReferenciaId)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.MovimientoEmpresaId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.MovimientoEmpresaId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.MovimientoEmpresaId })
+            </span>
+        }
+        else
+        {
+            @Html.DisplayFor(modelItem => item.SaldoActual)
+        }
         </td>
     </tr>
 }

@@ -163,7 +163,7 @@ namespace EvolucionaMovil.Models.BR
                     Monto = (short)comision,
                     Motivo = (short)enumMotivo.Comision,
                     Movimiento = movimientoComision,
-                    SaldoActual = saldoActual,
+                    SaldoActual = movimientosEmpresaRepository.GetSaldoActual(),
                     Status = (short)enumEstatusMovimiento.Procesando,
                     UserName = PayCenterName,
                     FechaCreacion = DateTime.UtcNow.GetCurrentTime(),
@@ -189,7 +189,7 @@ namespace EvolucionaMovil.Models.BR
                     Monto = financiamientoPago,
                     Motivo = (short)enumMotivo.Financiamiento,
                     Movimiento = movimientoPago,
-                    SaldoActual = saldoActual,
+                    SaldoActual = movimientosEmpresaRepository.GetSaldoActual(),
                     Status = (short)enumEstatusMovimiento.Procesando,
                     UserName = PayCenterName,
                     FechaCreacion = DateTime.UtcNow.GetCurrentTime(),
@@ -207,7 +207,7 @@ namespace EvolucionaMovil.Models.BR
                     Monto = financiamientoComision,
                     Motivo = (short)enumMotivo.Financiamiento,
                     Movimiento = movimientoComision,
-                    SaldoActual = saldoActual,
+                    SaldoActual = movimientosEmpresaRepository.GetSaldoActual(),
                     Status = (short)enumEstatusMovimiento.Procesando,
                     UserName = PayCenterName,
                     FechaCreacion = DateTime.UtcNow.GetCurrentTime(),
@@ -280,6 +280,7 @@ namespace EvolucionaMovil.Models.BR
             {
                 movimiento.SaldoActual += Monto;
             }
+            //TODO: ojo: Si es de tipo Motivo.Deposito y el saldo del paycenter es negativo, genera un movimiento en la empresa
 
             estadoDeCuentaRepository.Add(movimiento);
             if (_context == null)
@@ -490,12 +491,39 @@ namespace EvolucionaMovil.Models.BR
                 movtoVin.Movimientos_Estatus.Add(movtoVin_Estatus);
             }
 
+            var saldoEmpresaActual = new MovimientosEmpresaRepository().GetSaldoActual();
+
             //Actualizo los movimientos generados para la empresa
             foreach (var movtoEmpresa in movimiento.MovimientosEmpresas)
             {
+                //Reutilizo el factorSaldo dependiendo de la naturaleza del movimiento
+                factorSaldo = movtoEmpresa.IsAbono ? 1 : -1;
+                //Ejecuto el case similar al que calcula el nuevo saldo según el nuevo estatus,
+                //almaceno el saldoEmpresaActual en una variable fuera del for, para pasarlo a 
+                //la siguiente iteración, y tomar como base este último saldoActual para continuar afectandolo con el nuevo movimiento
+                saldoEmpresaActual = GenerateSaldoActual(movtoEmpresa.Monto, (enumEstatusMovimiento)movtoEmpresa.Status, NuevoEstatus, factorSaldo, saldoEmpresaActual);
+                movtoEmpresa.SaldoActual = saldoEmpresaActual;
                 movtoEmpresa.Status = nuevoEstatusNumber;
                 movtoEmpresa.FechaActualizacion = DateTime.UtcNow.GetCurrentTime();
             }
+
+            //Actualizo los movimientos de la empresa de los movimientos vinculados
+            foreach (var movtoVin in movimiento.Hijos)
+            {
+                foreach (var movtoEmpresa in movtoVin.MovimientosEmpresas)
+                {
+                    //Reutilizo el factorSaldo dependiendo de la naturaleza del movimiento
+                    factorSaldo = movtoEmpresa.IsAbono ? 1 : -1;
+                    //Ejecuto el case similar al que calcula el nuevo saldo según el nuevo estatus,
+                    //almaceno el saldoEmpresaActual en una variable fuera del for, para pasarlo a 
+                    //la siguiente iteración, y tomar como base este último saldoActual para continuar afectandolo con el nuevo movimiento
+                    saldoEmpresaActual = GenerateSaldoActual(movtoEmpresa.Monto, (enumEstatusMovimiento)movtoEmpresa.Status, NuevoEstatus, factorSaldo, saldoEmpresaActual);
+                    movtoEmpresa.SaldoActual = saldoEmpresaActual;
+                    movtoEmpresa.Status = nuevoEstatusNumber;
+                    movtoEmpresa.FechaActualizacion = DateTime.UtcNow.GetCurrentTime();
+                }
+            }
+
 
             if (_context == null)
             {
@@ -504,6 +532,41 @@ namespace EvolucionaMovil.Models.BR
             return movimiento;
         }
 
+        private decimal GenerateSaldoActual(decimal monto, enumEstatusMovimiento status, enumEstatusMovimiento nuevoStatus, int factorSaldo, decimal saldoActual)
+        {
+            decimal saldoFinal = 0;
+            //Identifica si debe sumar o restar del saldo
+            switch (nuevoStatus)
+            {
+                case enumEstatusMovimiento.Procesando:
+                    //No hacer nada
+                    break;
+                case enumEstatusMovimiento.Aplicado:
+                    //Actualiza el saldo. Lo multiplico por el valor de IsAbono, porque si NO es abono, es un cargo, y se tiene que restar del saldo, y bisaversa 
+                    saldoFinal = (monto * factorSaldo) + saldoActual;
+                    break;
+                case enumEstatusMovimiento.Rechazado:
+                    if (status == enumEstatusMovimiento.Aplicado)
+                    {
+                        //Actualiza el saldo. Lo multiplico por el valor de IsAbono, porque si NO es abono, es un cargo, y se tiene que restar del saldo, y bisaversa 
+                        saldoFinal = saldoActual - (monto * factorSaldo);
+                    }
+                    break;
+                case enumEstatusMovimiento.Cancelado:
+                    if (status == enumEstatusMovimiento.Aplicado)
+                    {
+                        //Actualiza el saldo. Lo multiplico por el valor de IsAbono, porque si NO es abono, es un cargo, y se tiene que restar del saldo, y bisaversa 
+                        saldoFinal = saldoActual - (monto * factorSaldo);
+                    }
+                    break;
+                default:
+                    saldoFinal = saldoActual;
+                    break;
+            }
+
+            return saldoFinal;
+        }
+        
         internal Movimiento RealizarTraspaso(int CuentaOrigenId, int CuentaDestinoId, decimal Monto)
         {
             throw new NotImplementedException();
@@ -613,5 +676,6 @@ namespace EvolucionaMovil.Models.BR
             comisionFinanciamiento.Financiamiento = (Decimal)financiamiento;
             return comisionFinanciamiento;
         }
+
     }
 }

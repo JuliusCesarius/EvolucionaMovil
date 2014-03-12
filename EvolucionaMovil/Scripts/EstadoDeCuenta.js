@@ -1,7 +1,7 @@
 ﻿$(document).on("ready", function () {
     bindGrid();
     if ($("#pageSize").val() == "") {
-        $("#pageSize").val(10);
+        $("#pageSize").val(30);
     }
     $("#fechaInicio").datepicker({ "dateFormat": "dd/mm/yy" });
     $("#fechaFin").datepicker({ "dateFormat": "dd/mm/yy" });

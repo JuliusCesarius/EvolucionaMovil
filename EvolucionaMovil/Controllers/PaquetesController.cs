@@ -142,7 +142,12 @@ namespace EvolucionaMovil.Controllers
                     MovimientosEmpresaRepository movimientosEmpresaRepository = new MovimientosEmpresaRepository(repository.context);
                     movimientosEmpresaRepository.Add(movimientoEmpresaPago);
                     //****************************************************************************************************+
-               }
+                }
+                else
+                {
+                    AddValidationMessage(enumMessageType.BRException, "El paquete seleccionado ha expirado.  Intente con otro paquete o pongase en contacto con soporte");
+                    break;
+                }
             }
             var saldos = estadoCuentaBR.GetSaldosPagoServicio(PayCenterId);
             if (saldos.SaldoDisponible < totalCompra)

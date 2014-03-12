@@ -1,7 +1,7 @@
 ﻿$(document).on("ready", function () {
     bindGrid();
     if ($("#pageSize").val() == "") {
-        $("#pageSize").val(10);
+        $("#pageSize").val(30);
     }
     $("#fechaInicio").datepicker({ "dateFormat": "dd/mm/yy" });
     $("#fechaFin").datepicker({ "dateFormat": "dd/mm/yy" });
@@ -113,7 +113,7 @@ function bindGrid(options) {
          { name: 'Monto', displayName: 'Monto', cssClass: 'monto' }   
          ];
     if (options == undefined) {
-        options = { pageSize: 20, pageNumber: 0 };
+        options = { pageSize: 30, pageNumber: 0 };
     }
     var pageSize = options.pageSize;
     var pageNumber = options.pageNumber;

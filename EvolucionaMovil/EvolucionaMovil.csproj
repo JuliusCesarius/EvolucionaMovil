@@ -419,11 +419,8 @@
     <Content Include="Views\Prospectos\Delete.cshtml" />
     <Content Include="Views\Users\PasswordRecovery.cshtml" />
     <Content Include="Views\Users\RecoveryResult.cshtml" />
-    <Content Include="Views\AdministracionCuentas\Index.cshtml" />
     <Content Include="Views\AdministracionCuentas\Details.cshtml" />
-    <Content Include="Views\AdministracionCuentas\Create.cshtml" />
-    <Content Include="Views\AdministracionCuentas\Edit.cshtml" />
-    <Content Include="Views\AdministracionCuentas\Delete.cshtml" />
+    <Content Include="Views\AdministracionCuentas\Index.cshtml" />
     <None Include="_bin_deployableAssemblies\System.Web.Mvc.dll" />
     <None Include="_bin_deployableAssemblies\WebMatrix.WebData.xml" />
     <None Include="_bin_deployableAssemblies\WebMatrix.WebData.dll" />

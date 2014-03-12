@@ -18,7 +18,7 @@ namespace EvolucionaMovil.Controllers
 
         public ViewResult Index()
         {
-            var movimientoempresas = db.MovimientoEmpresas.Include("Movimiento");
+            var movimientoempresas = db.Resumen_Movimientos;
             return View(movimientoempresas.OrderByDescending(x=>x.FechaActualizacion).ToList());
         }
 

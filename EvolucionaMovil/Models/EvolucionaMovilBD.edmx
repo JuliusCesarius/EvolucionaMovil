@@ -47,6 +47,27 @@
           <EntitySet Name="Proveedores_CuentasBancarias" EntityType="EvolucionaMovilBDModel.Store.Proveedores_CuentasBancarias" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Servicios" EntityType="EvolucionaMovilBDModel.Store.Servicios" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Tickets" EntityType="EvolucionaMovilBDModel.Store.Tickets" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Resumen_Movimientos" EntityType="EvolucionaMovilBDModel.Store.Resumen_Movimientos" store:Type="Views" store:Schema="dbo" store:Name="Resumen_Movimientos">
+            <DefiningQuery>SELECT 
+      [Resumen_Movimientos].[MovimientoEmpresaId] AS [MovimientoEmpresaId], 
+      [Resumen_Movimientos].[MovimientoOrigenId] AS [MovimientoOrigenId], 
+      [Resumen_Movimientos].[MovimientoOrigen] AS [MovimientoOrigen], 
+      [Resumen_Movimientos].[Clave] AS [Clave], 
+      [Resumen_Movimientos].[IsAbonoOrigen] AS [IsAbonoOrigen], 
+      [Resumen_Movimientos].[MontoOrigen] AS [MontoOrigen], 
+      [Resumen_Movimientos].[ReferenciaId] AS [ReferenciaId], 
+      [Resumen_Movimientos].[Monto] AS [Monto], 
+      [Resumen_Movimientos].[Motivo] AS [Motivo], 
+      [Resumen_Movimientos].[UserName] AS [UserName], 
+      [Resumen_Movimientos].[IsAbono] AS [IsAbono], 
+      [Resumen_Movimientos].[Status] AS [Status], 
+      [Resumen_Movimientos].[SaldoActual] AS [SaldoActual], 
+      [Resumen_Movimientos].[FechaCreacion] AS [FechaCreacion], 
+      [Resumen_Movimientos].[PayCenterId] AS [PayCenterId], 
+      [Resumen_Movimientos].[CuentaId] AS [CuentaId], 
+      [Resumen_Movimientos].[FechaActualizacion] AS [FechaActualizacion]
+      FROM [dbo].[Resumen_Movimientos] AS [Resumen_Movimientos]</DefiningQuery>
+          </EntitySet>
           <AssociationSet Name="FK_Abonos_Cuentas" Association="EvolucionaMovilBDModel.Store.FK_Abonos_Cuentas">
             <End Role="CuentasPayCenter" EntitySet="CuentasPayCenter" />
             <End Role="Abonos" EntitySet="Abonos" />
@@ -156,7 +177,7 @@
           <Property Name="Clave" Type="varchar" MaxLength="50" />
         </EntityType>
         <!--Errors Found During Generation:
-      warning 6002: The table/view 'EvolucionaMovilBD.dbo.BancoCuentaCaptions' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      warning 6002: The table/view 'EvolucionaMovilBD_PROD.dbo.BancoCuentaCaptions' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
       -->
         <EntityType Name="BancoCuentaCaptions">
           <Key>
@@ -347,7 +368,7 @@
           <Property Name="Baja" Type="bit" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-      warning 6002: The table/view 'EvolucionaMovilBD.dbo.Parametros' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      warning 6002: The table/view 'EvolucionaMovilBD_PROD.dbo.Parametros' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
       -->
         <EntityType Name="Parametros">
           <Key>
@@ -483,6 +504,41 @@
           <Property Name="Baja" Type="bit" Nullable="false" />
           <Property Name="FechaVencimiento" Type="datetime" Nullable="false" />
           <Property Name="PayCenterName" Type="varchar" Nullable="false" MaxLength="50" />
+        </EntityType>
+        <!--Errors Found During Generation:
+      warning 6002: The table/view 'EvolucionaMovilBD_PROD.dbo.Resumen_Movimientos' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      -->
+        <EntityType Name="Resumen_Movimientos">
+          <Key>
+            <PropertyRef Name="MovimientoEmpresaId" />
+            <PropertyRef Name="Clave" />
+            <PropertyRef Name="ReferenciaId" />
+            <PropertyRef Name="Monto" />
+            <PropertyRef Name="Motivo" />
+            <PropertyRef Name="UserName" />
+            <PropertyRef Name="IsAbono" />
+            <PropertyRef Name="Status" />
+            <PropertyRef Name="SaldoActual" />
+            <PropertyRef Name="FechaCreacion" />
+            <PropertyRef Name="FechaActualizacion" />
+          </Key>
+          <Property Name="MovimientoEmpresaId" Type="int" Nullable="false" />
+          <Property Name="MovimientoOrigenId" Type="int" />
+          <Property Name="MovimientoOrigen" Type="varchar" MaxLength="15" />
+          <Property Name="Clave" Type="varchar" Nullable="false" MaxLength="15" />
+          <Property Name="IsAbonoOrigen" Type="bit" />
+          <Property Name="MontoOrigen" Type="money" />
+          <Property Name="ReferenciaId" Type="int" Nullable="false" />
+          <Property Name="Monto" Type="money" Nullable="false" />
+          <Property Name="Motivo" Type="varchar" Nullable="false" MaxLength="15" />
+          <Property Name="UserName" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="IsAbono" Type="bit" Nullable="false" />
+          <Property Name="Status" Type="varchar" Nullable="false" MaxLength="11" />
+          <Property Name="SaldoActual" Type="money" Nullable="false" />
+          <Property Name="FechaCreacion" Type="datetime" Nullable="false" />
+          <Property Name="PayCenterId" Type="int" />
+          <Property Name="CuentaId" Type="int" />
+          <Property Name="FechaActualizacion" Type="datetime" Nullable="false" />
         </EntityType>
         <Association Name="FK_Abonos_Cuentas">
           <End Role="CuentasPayCenter" Type="EvolucionaMovilBDModel.Store.CuentasPayCenter" Multiplicity="1" />
@@ -883,6 +939,7 @@
             <End Role="Movimiento" EntitySet="Movimientos" />
             <End Role="MovimientosEmpresa" EntitySet="MovimientoEmpresas" />
           </AssociationSet>
+          <EntitySet Name="Resumen_Movimientos" EntityType="EvolucionaMovilBDModel.Resumen_Movimientos" />
           </EntityContainer>
         <EntityType Name="Banco">
           <Key>
@@ -1524,6 +1581,38 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="Resumen_Movimientos">
+          <Key>
+            <PropertyRef Name="MovimientoEmpresaId" />
+            <PropertyRef Name="Clave" />
+            <PropertyRef Name="ReferenciaId" />
+            <PropertyRef Name="Monto" />
+            <PropertyRef Name="Motivo" />
+            <PropertyRef Name="UserName" />
+            <PropertyRef Name="IsAbono" />
+            <PropertyRef Name="Status" />
+            <PropertyRef Name="SaldoActual" />
+            <PropertyRef Name="FechaCreacion" />
+            <PropertyRef Name="FechaActualizacion" />
+          </Key>
+          <Property Type="Int32" Name="MovimientoEmpresaId" Nullable="false" />
+          <Property Type="Int32" Name="MovimientoOrigenId" />
+          <Property Type="String" Name="MovimientoOrigen" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Clave" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Type="Boolean" Name="IsAbonoOrigen" />
+          <Property Type="Decimal" Name="MontoOrigen" Precision="19" Scale="4" />
+          <Property Type="Int32" Name="ReferenciaId" Nullable="false" />
+          <Property Type="Decimal" Name="Monto" Nullable="false" Precision="19" Scale="4" />
+          <Property Type="String" Name="Motivo" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="UserName" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="Boolean" Name="IsAbono" Nullable="false" />
+          <Property Type="String" Name="Status" Nullable="false" MaxLength="11" FixedLength="false" Unicode="false" />
+          <Property Type="Decimal" Name="SaldoActual" Nullable="false" Precision="19" Scale="4" />
+          <Property Type="DateTime" Name="FechaCreacion" Nullable="false" />
+          <Property Type="Int32" Name="PayCenterId" />
+          <Property Type="Int32" Name="CuentaId" />
+          <Property Type="DateTime" Name="FechaActualizacion" Nullable="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1876,6 +1965,29 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="Resumen_Movimientos">
+            <EntityTypeMapping TypeName="EvolucionaMovilBDModel.Resumen_Movimientos">
+              <MappingFragment StoreEntitySet="Resumen_Movimientos">
+                <ScalarProperty Name="FechaActualizacion" ColumnName="FechaActualizacion" />
+                <ScalarProperty Name="CuentaId" ColumnName="CuentaId" />
+                <ScalarProperty Name="PayCenterId" ColumnName="PayCenterId" />
+                <ScalarProperty Name="FechaCreacion" ColumnName="FechaCreacion" />
+                <ScalarProperty Name="SaldoActual" ColumnName="SaldoActual" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="IsAbono" ColumnName="IsAbono" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="Motivo" ColumnName="Motivo" />
+                <ScalarProperty Name="Monto" ColumnName="Monto" />
+                <ScalarProperty Name="ReferenciaId" ColumnName="ReferenciaId" />
+                <ScalarProperty Name="MontoOrigen" ColumnName="MontoOrigen" />
+                <ScalarProperty Name="IsAbonoOrigen" ColumnName="IsAbonoOrigen" />
+                <ScalarProperty Name="Clave" ColumnName="Clave" />
+                <ScalarProperty Name="MovimientoOrigen" ColumnName="MovimientoOrigen" />
+                <ScalarProperty Name="MovimientoOrigenId" ColumnName="MovimientoOrigenId" />
+                <ScalarProperty Name="MovimientoEmpresaId" ColumnName="MovimientoEmpresaId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -2013,6 +2125,7 @@
           <ConnectorPoint PointX="8.5" PointY="10.21875" />
           <ConnectorPoint PointX="11.375" PointY="10.21875" />
         </AssociationConnector>
+        <EntityTypeShape EntityType="EvolucionaMovilBDModel.Resumen_Movimientos" Width="1.5" PointX="13.375" PointY="3.75" Height="4.2879036458333246" />
         </Diagram>
     </Diagrams>
   </Designer>

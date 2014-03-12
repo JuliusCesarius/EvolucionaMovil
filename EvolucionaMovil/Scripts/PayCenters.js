@@ -1,6 +1,6 @@
 ﻿$(document).on("ready", function () {
     bindGrid();
-    $("#pageSize").val(20);
+    $("#pageSize").val(30);
     $("#fechaInicio").datepicker({ "dateFormat": "dd/mm/yy" });
     $("#fechaFin").datepicker({ "dateFormat": "dd/mm/yy" });
 
@@ -76,7 +76,7 @@ function bindGrid(options) {
          {displayName: '', width: Actions.colwidth, customTemplate: Actions.links },
          ];
     if (options == undefined) {
-        options = { pageSize: 20, pageNumber: 0 };
+        options = { pageSize: 30, pageNumber: 0 };
     }
     var pageSize = options.pageSize;
     var pageNumber = options.pageNumber;
