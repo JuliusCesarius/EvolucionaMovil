@@ -91,5 +91,72 @@ namespace EvolucionaMovil.Controllers
             "</html>");
             return bodyString.ToString();
         }
+
+        [HttpPost]
+        [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.Staff, enumRoles.Administrator })]
+        public string GetProspectos(ServiceParameterVM parameters)
+        {
+            var ProspectosResult = getProspectos(parameters);
+            return Newtonsoft.Json.JsonConvert.SerializeObject(ProspectosResult);
+        }
+
+        private SimpleGridResult<ProspectoVM> getProspectos(ServiceParameterVM Parameters = null)
+        {
+            var prospectos = repository.ListAll();
+
+            //Aplicar filtros
+           if (Parameters != null && (Parameters.fechaInicio != null || Parameters.fechaFin != null || Parameters.searchString != null))
+            {
+                 prospectos = prospectos.Where(x => (Parameters.fechaInicio == null || Parameters.fechaInicio <= x.FechaCreacion)
+                                            && (Parameters.fechaFin == null || Parameters.fechaFin >= x.FechaCreacion)
+                                            && ((string.IsNullOrEmpty(Parameters.searchString) || x.Nombre.Contains(Parameters.searchString))
+                                             || (string.IsNullOrEmpty(Parameters.searchString) || x.Email.Contains(Parameters.searchString)))
+                                            );
+            
+            }
+
+            prospectos = prospectos.OrderByDescending(x => x.ProspectoId);
+            SimpleGridResult<ProspectoVM> simpleGridResult = new SimpleGridResult<ProspectoVM>();
+            IEnumerable<Prospecto> ProspectosPaged = null;
+            if (Parameters != null)
+            {
+                simpleGridResult.CurrentPage = Parameters.pageNumber;
+                simpleGridResult.PageSize = Parameters.pageSize;
+                if (Parameters.pageSize > 0)
+                {
+                    var pageNumber = Parameters.pageNumber >= 0 ? Parameters.pageNumber : 0;
+                    simpleGridResult.CurrentPage = pageNumber;
+                    simpleGridResult.TotalRows = prospectos.Count();
+                    ProspectosPaged = prospectos.Skip(pageNumber * Parameters.pageSize).Take(Parameters.pageSize);
+                }
+            }
+            simpleGridResult.Result = ProspectosPaged.ToListOfDestination<ProspectoVM>().OrderByDescending(x => x.FechaCreacion);
+
+            return simpleGridResult;
+        }
+
+
+        ////
+        //// GET: /PayCenters/Delete/5
+        //public ActionResult Delete(int id)
+        //{
+        //    PayCenter paycenter = repository.LoadById(id);
+        //    PayCenterVM paycenterVM = new PayCenterVM();
+        //    Mapper.Map(paycenter, paycenterVM);
+        //    return View(paycenterVM);
+        //}
+
+        //
+        // POST: /PayCenters/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.Administrator,enumRoles.Staff })]
+        public string Delete(int id)
+        {
+            Prospecto Prospecto = repository.LoadById(id);
+            repository.Delete(Prospecto);
+            repository.Save();
+            return "El Prospecto se ha eliminado con éxito.";
+        }
+
     }
 }
