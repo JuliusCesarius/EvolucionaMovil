@@ -86,7 +86,7 @@ $(document).on("ready", function () {
                 else {
                     $("#divFinan").show();
                     $("#btnCreate").show("blind");
-                    $("#Mensaje").html("No cuenta con saldo disponible para realizar el pago pero tiene financiamiento de ");
+                    $("#Mensaje").html("No cuenta con saldo disponible para realizar el pago. Sin embargo, cuenta con un financiamiento por parte de la empresa de ");
                     var $montoFinan = $("<span class='montoFinan fxl fwb'><span>");
                     $montoFinan.html(MontoFinanciamiento)
                     $montoFinan.formatCurrency();

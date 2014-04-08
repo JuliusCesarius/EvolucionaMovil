@@ -1,5 +1,12 @@
 ﻿$(document).on("ready", function () {
     $("#FechaPago").datepicker({ "dateFormat": "dd/mm/yy", maxDate: '0' });
+    $("#IdRefConfirm").attr("autocomplete", "off");
+    $("#IdRefConfirm")[0].value = $("#Referencia")[0].value;
+    ValidateRefencia();
+    $("#Referencia").on("blur", ReferenciaChanged);
+    $("#Referencia").on("focus", ChangetoText);
+    $("#IdRefConfirm").on("blur", ValidateRefencia);
+    $("#IdRefConfirm").on("focus", ChangetoPw);
     $("#ProveedorId").on("change", proveedorChanged);
     if (!$("[name='TipoCuenta']").is(':checked')) {
         $($("[name='TipoCuenta']")[0]).prop('checked', true);
@@ -153,6 +160,14 @@ function Save(event) {
     if (!CuentasDepositoChanged(null)) {
         event.preventDefault();
     }
+
+    if (!ValidateRefencia()) {
+        event.preventDefault();
+    }
+    else {
+        ChangetoText();
+    }
+
 }
 function createProvedoresDropdown(TipoCuenta) {
     $("#ProveedorId").html("");
@@ -204,3 +219,74 @@ function BancoIdChanged() {
     }
 }
 
+function ValidateRefencia() {
+    var refvalid = true;
+    if (!($("#Referencia").val().trim()) == "") {
+
+        if ($("#IdRefConfirm").val().trim() != $("#Referencia").val().trim()) {
+            $("#msgRefConfirm").show("slow");
+            $("#msgRefConfirm").removeClass("field-validation-valid");
+            $("#msgRefConfirm").addClass("field-validation-error");
+           // $("#msgRefConfirm").css("display", "block");
+            $("#msgRefConfirm")[0].textContent = "La Referencia no es igual con la referencia de confirmación."
+            $("#IdRefConfirm")[0].value = "";
+            //$("#IdRefConfirm").focus();
+            refvalid = false;
+        }
+        else {
+             $("#msgRefConfirm").hide();
+        }
+
+     }
+      else { $("#msgRefConfirm").hide(); }
+
+    return refvalid;
+}
+
+function ReferenciaChanged(event) {
+   changeType("#Referencia", "password");
+}
+
+function ChangetoText(event) {
+    changeType("#Referencia", "text");
+}
+
+function ChangetoPw(event) {
+    if ($("#Referencia")[0].value.trim() != "" && $("#Referencia").prop('type') == "text") {
+        changeType("#Referencia", "password");
+    }
+}
+
+function changeType(x, type) {
+    x = $(x);
+    if (x.prop('type') == type)
+        return x; //That was easy.
+    try {
+        return x.prop('type', type); //Stupid IE security will not allow this
+    } catch (e) {
+        //Try re-creating the element (yep... this sucks)
+        //jQuery has no html() method for the element, so we have to put into a div first
+        var html = $("<div>").append(x.clone()).html();
+        var regex = /type=(\")?([^\"\s]+)(\")?/; //matches type=text or type="text"
+        //If no match, we add the type attribute to the end; otherwise, we replace
+        var tmp = $(html.match(regex) == null ?
+            html.replace(">", ' type="' + type + '">') :
+            html.replace(regex, 'type="' + type + '"'));
+        //Copy data from old element
+        tmp.data('type', x.data('type'));
+        var events = x.data('events');
+        var cb = function (events) {
+            return function () {
+                //Bind all prior events
+                for (i in events) {
+                    var y = events[i];
+                    for (j in y)
+                        tmp.bind(i, y[j].handler);
+                }
+            }
+        } (events);
+        x.replaceWith(tmp);
+        setTimeout(cb, 10); //Wait a bit to call function
+        return tmp;
+    }
+}
