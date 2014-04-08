@@ -280,9 +280,9 @@ namespace EvolucionaMovil.Models.BR
             {
                 movimiento.SaldoActual += Monto;
             }
-            //TODO: ojo: Si es de tipo Motivo.Deposito y el saldo del paycenter es negativo, genera un movimiento en la empresa
 
             estadoDeCuentaRepository.Add(movimiento);
+
             if (_context == null)
             {
                 estadoDeCuentaRepository.Save();
@@ -377,7 +377,8 @@ namespace EvolucionaMovil.Models.BR
             var movimientosVinculados = movimiento.Hijos;
             //Calculo cual será el monto que afectará al saldo actual de los movimientos vinculados
             decimal montoMovVinculados = movimientosVinculados != null ? movimientosVinculados.Sum(x => (x.IsAbono ? 1 : -1) * x.Monto) : 0;
-            
+
+            var saldoActual = GetSaldoActual(movimiento.PayCenterId);
 
             //Identifica si debe sumar o restar del saldo
             var factorSaldo = movimiento.IsAbono ? 1 : -1;
@@ -397,7 +398,7 @@ namespace EvolucionaMovil.Models.BR
                         return null;
                     }
                     //Actualiza el saldo. Lo multiplico por el valor de IsAbono, porque si NO es abono, es un cargo, y se tiene que restar del saldo, y bisaversa 
-                    movimiento.SaldoActual = (movimiento.Monto * factorSaldo) + GetSaldoActual(movimiento.PayCenterId) + montoMovVinculados;
+                    movimiento.SaldoActual = (movimiento.Monto * factorSaldo) + saldoActual + montoMovVinculados;
                     break;
                 case enumEstatusMovimiento.Rechazado:
                     //BR01.04.j: Un movimiento puede ser Rechazado únicamente si el usuario es de tipo Staff o Administrator.
@@ -410,7 +411,7 @@ namespace EvolucionaMovil.Models.BR
                     if (movimiento.Status == enumEstatusMovimiento.Aplicado.GetHashCode())
                     {
                         //Actualiza el saldo. Lo multiplico por el valor de IsAbono, porque si NO es abono, es un cargo, y se tiene que restar del saldo, y bisaversa 
-                        movimiento.SaldoActual = GetSaldoActual(movimiento.PayCenterId) - (movimiento.Monto * factorSaldo) - montoMovVinculados;
+                        movimiento.SaldoActual = saldoActual - (movimiento.Monto * factorSaldo) - montoMovVinculados;
                     }
                     break;
                 case enumEstatusMovimiento.Cancelado:
@@ -450,7 +451,7 @@ namespace EvolucionaMovil.Models.BR
                     if (movimiento.Status == enumEstatusMovimiento.Aplicado.GetHashCode())
                     {
                         //Actualiza el saldo. Lo multiplico por el valor de IsAbono, porque si NO es abono, es un cargo, y se tiene que restar del saldo, y bisaversa 
-                        movimiento.SaldoActual = GetSaldoActual(movimiento.PayCenterId) - (movimiento.Monto * factorSaldo) - montoMovVinculados;
+                        movimiento.SaldoActual = saldoActual - (movimiento.Monto * factorSaldo) - montoMovVinculados;
                     }
                     break;
             }
@@ -524,6 +525,34 @@ namespace EvolucionaMovil.Models.BR
                 }
             }
 
+            //Si es de tipo Abono y el saldo del paycenter es negativo, genera un nuevo movimiento de Cargo en el paycenter y un Abono en la empresa que "Mate" completa o parcialmente el saldo negativo (financiado por la empresa)
+            if (movimiento.IsAbono && saldoActual < 0)
+            {
+                //Calculo monto que tomará del depósito para cubrir el financiamiento
+                var montoCobroFinanciamiento = movimiento.Monto >= -saldoActual ? -saldoActual : movimiento.Monto;
+                //Creo el movimiento de Cargo correspondiente con estatus Aplicado
+                //var movimientoCargoFinanciamiento = CrearMovimiento(movimiento.PayCenterId, enumTipoMovimiento.Cargo, movimiento.Id, movimiento.CuentaId, montoCobroFinanciamiento, enumMotivo.Financiamiento, string.Empty, enumEstatusMovimiento.Aplicado);
+                //estadoDeCuentaRepository.Add(movimientoCargoFinanciamiento);
+
+                //Creo el movimiento de Abono correspondiente a la empresa con estatus Aplicado
+                var movimientoAbonoAFinanciamientoEmpresa = new MovimientoEmpresa
+                {
+                    Clave = DateTime.UtcNow.GetCurrentTime().ToString("yyyyMMdd") + "0" + ((Int16)enumMotivo.Financiamiento).ToString() + new Random().Next(0, 99999).ToString(),
+                    IsAbono = true,
+                    Monto = montoCobroFinanciamiento,
+                    Motivo = (short)enumMotivo.Financiamiento,
+                    //Movimiento = movimiento,
+                    SaldoActual = new MovimientosEmpresaRepository().GetSaldoActual() + montoCobroFinanciamiento,
+                    Status = (short)enumEstatusMovimiento.Aplicado,
+                    UserName = "PROCESO",
+                    FechaCreacion = DateTime.UtcNow.GetCurrentTime(),
+                    FechaActualizacion = DateTime.UtcNow.GetCurrentTime(),
+                    MovimientoOrigenId = MovimientoId
+                    
+                };
+                //Estoy vinculando el momiviento de la empresa al del pago realizado
+                movimiento.MovimientosEmpresas.Add(movimientoAbonoAFinanciamientoEmpresa);
+            }
 
             if (_context == null)
             {
