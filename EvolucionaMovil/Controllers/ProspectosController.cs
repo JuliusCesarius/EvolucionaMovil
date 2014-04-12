@@ -104,8 +104,7 @@ namespace EvolucionaMovil.Controllers
         private SimpleGridResult<ProspectoPaycenterVM> getProspectos(ServiceParameterVM Parameters = null)
         {
             var prospectos = repository.GetProspectosPayCenter();
-            PayCentersRepository PayCentersRepository = new PayCentersRepository();
-
+            
             //Aplicar filtros
            if (Parameters != null && (Parameters.fechaInicio != null || Parameters.fechaFin != null || Parameters.searchString != null))
             {
