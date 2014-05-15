@@ -9,5 +9,6 @@ namespace EvolucionaMovil.Models
         public int ServicioId { get; set; }
         public string Valor { get; set; }
         public int Tipo { get; set; }
+        public Boolean  EsReferencia { get; set; }
     }
 }

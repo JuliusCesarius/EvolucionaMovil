@@ -181,9 +181,33 @@ function getDetalleServicio() {
                 $(divEditor).append($('<input/>').attr('id', nombre).attr('name', nombre).attr('type', 'Text').attr('data-val', true).attr('data-val-required', "El campo es requerido").addClass('text-box single-line'));
                 $(divEditor).append($('<span/>').attr('data-valmsg-for', nombre).attr('data-valmsg-replace', true).addClass('field-validation-error'));
                 setValidation(nombre, this.Tipo);
+
+                var EsRefencia = this.EsReferencia;
+                if (EsRefencia) 
+                { //typeof EsRefencia === 'string' &&
+                    var CampoReferencia = "<div class='editor-field'><input class='text-box single-line ui-autocomplete-input' id='IdRefConfirm' name='Referencia' type='text' value='' autocomplete='off'>" +
+                    "<span id='msgRefConfirm' class='field-validation-error' generate='true' data-valmsg-for='IdRefConfirm' data-valmsg-replace='true'>" +
+                    "<span id='msgRefConfirm1' for='IdRefConfirm' generated='true' class=''>El campo Confirmar Referencia es requerido.</span></span>"+
+                    "<input type='hidden' id='hdReferencia' name='hdReferencia' value='" + nombre + "' /></div>";
+
+                    divCampos.append("<div class='editor-label'><label id='refCapConfirmacion' for='IdRefConfirm'>Confirmar Referencia</label> </div>" + CampoReferencia);                   
+                }
+
             });
             $("label").inFieldLabels();
             $.validator.unobtrusive.parseDynamicContent($(divCampos));
+            if ($("#hdReferencia"))
+            {
+                if ($("#" + $("#hdReferencia").val())[0])
+                {
+
+                    $("#" + $("#hdReferencia").val()).on("blur", ReferenciaChanged);
+                    $("#" + $("#hdReferencia").val()).on("focus", ChangetoText);
+                     $("#IdRefConfirm").on("blur", ValidateRefencia);
+                     $("#IdRefConfirm").on("focus", ChangetoPw);
+                }
+            }
+
         });
     }
 }
@@ -214,3 +238,86 @@ function setValidation(nombre, tipo) {
     $(nombre).attr('value', '');
 }
 
+function ValidateRefencia() {
+    var refvalid = true;
+    var nombreRef = $("#hdReferencia").val();
+    if (!($("#" + nombreRef).val().trim()) == "") {
+
+        if ($("#IdRefConfirm").val().trim() != $("#" + nombreRef).val().trim()) {
+            $("#msgRefConfirm").show("slow");
+            $("#msgRefConfirm").removeClass("field-validation-valid");
+            $("#msgRefConfirm").addClass("field-validation-error");
+            // $("#msgRefConfirm").css("display", "block");
+            $("#msgRefConfirm")[0].textContent = "La Referencia no es igual con la referencia de confirmación."
+            $("#IdRefConfirm")[0].value = "";
+            //$("#IdRefConfirm").focus();
+            refvalid = false;
+        }
+        else {
+            $("#msgRefConfirm").hide();
+        }
+
+    }
+    else { $("#msgRefConfirm").hide(); }
+
+    if (refvalid) {
+        $("#btnCreate").show();
+    }
+    else {
+
+        $("#btnCreate").hide();
+    }
+    return refvalid;
+}
+
+
+function ReferenciaChanged(event) {
+    var nombreRef = $("#hdReferencia").val();
+    changeType("#" + nombreRef, "password");
+}
+
+function ChangetoText(event) {
+    var nombreRef = $("#hdReferencia").val();
+    changeType("#" + nombreRef, "text");
+}
+
+function ChangetoPw(event) {
+    var nombreRef = $("#hdReferencia").val();
+    if ($("#" + nombreRef)[0].value.trim() != "" && $("#" + nombreRef).prop('type') == "text") {
+        changeType("#" + nombreRef, "password");
+    }
+}
+
+function changeType(x, type) {
+    x = $(x);
+    if (x.prop('type') == type)
+        return x; //That was easy.
+    try {
+        return x.prop('type', type); //Stupid IE security will not allow this
+    } catch (e) {
+        //Try re-creating the element (yep... this sucks)
+        //jQuery has no html() method for the element, so we have to put into a div first
+        var html = $("<div>").append(x.clone()).html();
+        var regex = /type=(\")?([^\"\s]+)(\")?/; //matches type=text or type="text"
+        //If no match, we add the type attribute to the end; otherwise, we replace
+        var tmp = $(html.match(regex) == null ?
+            html.replace(">", ' type="' + type + '">') :
+            html.replace(regex, 'type="' + type + '"'));
+        //Copy data from old element
+        tmp.data('type', x.data('type'));
+        var events = x.data('events');
+        var cb = function (events) {
+            return function () {
+                //Bind all prior events
+                for (i in events) {
+                    var y = events[i];
+                    for (j in y)
+                        tmp.bind(i, y[j].handler);
+                }
+            }
+        } (events);
+        x.replaceWith(tmp);
+        setTimeout(cb, 10); //Wait a bit to call function
+        return tmp;
+    }
+}

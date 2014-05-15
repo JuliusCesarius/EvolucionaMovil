@@ -1,12 +1,12 @@
 ﻿$(document).on("ready", function () {
     $("#FechaPago").datepicker({ "dateFormat": "dd/mm/yy", maxDate: '0' });
-    $("#IdRefConfirm").attr("autocomplete", "off");
+   /* $("#IdRefConfirm").attr("autocomplete", "off");
     $("#IdRefConfirm")[0].value = $("#Referencia")[0].value;
     ValidateRefencia();
     $("#Referencia").on("blur", ReferenciaChanged);
     $("#Referencia").on("focus", ChangetoText);
     $("#IdRefConfirm").on("blur", ValidateRefencia);
-    $("#IdRefConfirm").on("focus", ChangetoPw);
+    $("#IdRefConfirm").on("focus", ChangetoPw);*/
     $("#ProveedorId").on("change", proveedorChanged);
     if (!$("[name='TipoCuenta']").is(':checked')) {
         $($("[name='TipoCuenta']")[0]).prop('checked', true);
@@ -219,6 +219,7 @@ function BancoIdChanged() {
     }
 }
 
+/*
 function ValidateRefencia() {
     var refvalid = true;
     if (!($("#Referencia").val().trim()) == "") {
@@ -290,3 +291,4 @@ function changeType(x, type) {
         return tmp;
     }
 }
+*/
