@@ -14,6 +14,7 @@ using EvolucionaMovil.Models.Enums;
 using EvolucionaMovil.Models.Classes;
 using EvolucionaMovil.Models.Helpers;
 using System.Text;
+using System.Collections;
 
 namespace EvolucionaMovil.Controllers
 {
@@ -100,10 +101,10 @@ namespace EvolucionaMovil.Controllers
             return Newtonsoft.Json.JsonConvert.SerializeObject(ProspectosResult);
         }
 
-        private SimpleGridResult<ProspectoVM> getProspectos(ServiceParameterVM Parameters = null)
+        private SimpleGridResult<ProspectoPaycenterVM> getProspectos(ServiceParameterVM Parameters = null)
         {
-            var prospectos = repository.ListAll();
-
+            var prospectos = repository.GetProspectosPayCenter();
+            
             //Aplicar filtros
            if (Parameters != null && (Parameters.fechaInicio != null || Parameters.fechaFin != null || Parameters.searchString != null))
             {
@@ -116,8 +117,10 @@ namespace EvolucionaMovil.Controllers
             }
 
             prospectos = prospectos.OrderByDescending(x => x.ProspectoId);
-            SimpleGridResult<ProspectoVM> simpleGridResult = new SimpleGridResult<ProspectoVM>();
-            IEnumerable<Prospecto> ProspectosPaged = null;
+
+
+            SimpleGridResult<ProspectoPaycenterVM> simpleGridResult = new SimpleGridResult<ProspectoPaycenterVM>();
+            IEnumerable<ProspectoPaycenterVM> ProspectosPaged = null;
             if (Parameters != null)
             {
                 simpleGridResult.CurrentPage = Parameters.pageNumber;
@@ -130,24 +133,13 @@ namespace EvolucionaMovil.Controllers
                     ProspectosPaged = prospectos.Skip(pageNumber * Parameters.pageSize).Take(Parameters.pageSize);
                 }
             }
-            simpleGridResult.Result = ProspectosPaged.ToListOfDestination<ProspectoVM>().OrderByDescending(x => x.FechaCreacion);
-
+            simpleGridResult.Result = ProspectosPaged.OrderByDescending(x => x.FechaCreacion);
+       
             return simpleGridResult;
         }
 
 
-        ////
-        //// GET: /PayCenters/Delete/5
-        //public ActionResult Delete(int id)
-        //{
-        //    PayCenter paycenter = repository.LoadById(id);
-        //    PayCenterVM paycenterVM = new PayCenterVM();
-        //    Mapper.Map(paycenter, paycenterVM);
-        //    return View(paycenterVM);
-        //}
-
-        //
-        // POST: /PayCenters/Delete/5
+    
         [HttpPost, ActionName("Delete")]
         [CustomAuthorize(AuthorizedRoles = new[] { enumRoles.Administrator,enumRoles.Staff })]
         public string Delete(int id)

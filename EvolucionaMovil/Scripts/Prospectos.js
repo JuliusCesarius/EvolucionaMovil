@@ -24,14 +24,14 @@
 });
 function bindGrid(options) {
     var columns = [
-         { name: 'Nombre', displayName: 'Nombre', width: '120px' },
-         { name: 'Empresa',  displayName: 'Empresa', width: '120px' },
-         { name: 'Telefono', displayName: 'Teléfono'},
-         { name: 'Celular'},
-         { name: 'Email', width: '130px' },
-          { name: 'Comentario', width: '160px' },
+         { name: 'Nombre', displayName: 'Nombre', width: '100px' },
+         { name: 'Empresa',  displayName: 'Empresa', width: '110px' },
+         { name: 'Telefono', displayName: 'Teléfono', formatFunction: ValidaNull },
+         { name: 'Celular', formatFunction: ValidaNull },
+         { name: 'Email', width: '100px' },
+          { name: 'Comentario', width: '130px', formatFunction: ValidaNull },
          { name: 'FechaCreacion', displayName: 'Fecha', formatFunction: FormatoFecha },
-         {displayName: '', width: Actions.colwidth, customTemplate: Actions.links },
+         { name: 'PayCenterName', displayName: 'Paycenter' }, { displayName: '', width: Actions.colwidth, customTemplate: Actions.links },
          ];
     if (options == undefined) {
         options = { pageSize: 30, pageNumber: 0 };
@@ -77,11 +77,6 @@ function MostrarConfirmacion(id, accion) {
 }
 
 function FormatoFecha(value) {
-    //value = value.replace(/\-0/g, '-00');
-    //value = value.replace(/\-1/g, '-01');
-    //value = value.replace(/\-2/g, '-02');
-    //value = value.replace(/\-3/g, '-03');
-    //return $.datepicker.formatDate('dd/mm/yy', value);
     year = value.substring(0, 4);
     month = value.substring(5, 7);
     day = value.substring(8, 10);
@@ -89,11 +84,11 @@ function FormatoFecha(value) {
 }
 
 function ValidaNull(value) {
-    if (value == null) 
+    if (value == null || value == "undefined") 
     {
         value = "";
     }
-    return "";
+    return value;
 }
 
 function FiltrarRegistros() {

@@ -17,6 +17,7 @@ using EvolucionaMovil.Attributes;
 using cabinet.patterns.enums;
 using EvolucionaMovil.Models.Extensions;
 using System.Web.Mvc.Async;
+using Newtonsoft.Json;
 
 namespace EvolucionaMovil.Controllers
 {
@@ -374,10 +375,12 @@ namespace EvolucionaMovil.Controllers
                 proveedorVM.Bancos = cuentasGrupedByBanco.Select(x => x.Key).ToListOfDestination<BancoVM>();
                 foreach (var bancoVM in proveedorVM.Bancos)
                 {
-                    bancoVM.CuentasBancarias = cuentasBancarias.Where(x => x.BancoId == bancoVM.BancoId).ToListOfDestination<CuentaBancariaVM>();
+                    bancoVM.CuentasBancarias = cuentasBancarias.Where(x => x.BancoId == bancoVM.BancoId).Select(x => new CuentaBancaria() { BancoId = x.BancoId, CuentaId = x.CuentaId, NumeroCuenta = x.NumeroCuenta, NumeroDeTarjeta = x.NumeroDeTarjeta, Nombre = x.Nombre, Titular = x.Titular }).ToListOfDestination<CuentaBancariaVM>().ToList();
                 }
             }
-            ViewBag.Proveedores = proveedoresVM;
+            var jsonSerializerSettings = new JsonSerializerSettings();
+            jsonSerializerSettings.MaxDepth = 2;
+            ViewBag.Proveedores = Newtonsoft.Json.JsonConvert.SerializeObject(proveedoresVM,jsonSerializerSettings);
         }
         private string getBancoById(int BancoId, ref IEnumerable<Banco> Bancos)
         {

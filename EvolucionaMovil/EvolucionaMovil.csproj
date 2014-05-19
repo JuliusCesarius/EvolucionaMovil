@@ -169,6 +169,7 @@
     <Compile Include="Models\Helpers\MvcHtmlHelpers.cs" />
     <Compile Include="Models\HistorialEstatusVM.cs" />
     <Compile Include="Models\Interfaces\IEvolucionaMovil.cs" />
+    <Compile Include="Models\ProspectoPaycenterVM.cs" />
     <Compile Include="Models\ProveedorVM.cs" />
     <Compile Include="Models\PagoServicioVM.cs" />
     <Compile Include="Models\RecoveryVM.cs" />
