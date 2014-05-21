@@ -48,7 +48,7 @@ namespace EvolucionaMovil.Controllers
             ViewBag.fechaInicio = string.Empty;
             ViewBag.FechaFin = string.Empty;
             ViewBag.OnlyAplicados = false;
-            return View(getPagosServicio(new ServiceParameterVM { pageNumber = 0, pageSize = 10 }));
+            return View(getPagosServicio(new ServiceParameterVM { pageNumber = 0, pageSize = 30 }));
         }
 
         [HttpPost]
@@ -248,7 +248,7 @@ namespace EvolucionaMovil.Controllers
                 var iDetalles = serviciosRepository.LoadDetallesServicioByServicioID(pago.ServicioId);
                 foreach (DetalleServicio d in iDetalles)
                 {
-                    var valor = Request.Form[d.Campo.Replace(' ', '_').Replace('.', '_')];
+                    var valor = Request.Form[d.DetalleServicioId.ToString()];
                     if (d.EsReferencia)
                         Referencia = valor;
 

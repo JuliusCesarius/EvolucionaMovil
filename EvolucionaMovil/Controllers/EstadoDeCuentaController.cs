@@ -54,7 +54,7 @@ namespace EvolucionaMovil.Controllers
             ViewBag.FechaFin = string.Empty;
             ViewBag.OnlyAplicados = false;
 
-            return View(getEstadoDeCuenta(new ServiceParameterVM { pageNumber = 0, pageSize = 10 }));
+            return View(getEstadoDeCuenta(new ServiceParameterVM { pageNumber = 0, pageSize = 30 }));
         }
 
         [HttpPost]
