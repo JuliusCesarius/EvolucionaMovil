@@ -17,7 +17,7 @@ namespace EvolucionaMovil.Attributes
             string captchaValue = filterContext.HttpContext.Request.Form.Get("CaptchaValue");
             string invisibleCaptchaValue = filterContext.HttpContext.Request.Form.Get("InvisibleCaptchaValue");
 
-            bool cv = CaptchaController.IsValidCaptchaValue(captchaValue.ToUpper());
+            bool cv = CaptchaController.IsValidCaptchaValue(String.IsNullOrEmpty(captchaValue) ? "" : captchaValue.ToUpper());
             bool icv = invisibleCaptchaValue == "";
 
             if (!cv || !icv)

@@ -375,7 +375,7 @@ namespace EvolucionaMovil.Controllers
                 proveedorVM.Bancos = cuentasGrupedByBanco.Select(x => x.Key).ToListOfDestination<BancoVM>();
                 foreach (var bancoVM in proveedorVM.Bancos)
                 {
-                    bancoVM.CuentasBancarias = cuentasBancarias.Where(x => x.BancoId == bancoVM.BancoId).Select(x => new CuentaBancaria() { BancoId = x.BancoId, CuentaId = x.CuentaId, NumeroCuenta = x.NumeroCuenta, NumeroDeTarjeta = x.NumeroDeTarjeta, Nombre = x.Nombre, Titular = x.Titular }).ToListOfDestination<CuentaBancariaVM>().ToList();
+                    bancoVM.CuentasBancarias = cuentasBancarias.Where(x => x.BancoId == bancoVM.BancoId).Select(x => new CuentaBancaria() { BancoId = x.BancoId, CuentaId = x.CuentaId, NumeroCuenta = x.NumeroCuenta, NumeroDeTarjeta = x.NumeroDeTarjeta, Nombre = x.Nombre, Titular = x.Titular,Comprobante =x.Comprobante  }).ToListOfDestination<CuentaBancariaVM>().ToList();
                 }
             }
             var jsonSerializerSettings = new JsonSerializerSettings();
