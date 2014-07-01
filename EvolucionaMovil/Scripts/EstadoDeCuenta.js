@@ -12,9 +12,9 @@
     }
     $("#aplicadosOnly").on("click", function () {
         if ($("#aplicadosOnly").prop("checked")) {
-            $(".Rechazado,.Procesando,.Cancelado").parent().parent().hide("blind", {}, 1000);
+            $(".Rechazado,.Aplicado,.Cancelado").parent().parent().hide("blind", {}, 1000);
         } else {
-            $(".Rechazado,.Procesando,.Cancelado").parent().parent().show("blind", {}, 1000);
+            $(".Rechazado,.Aplicado,.Cancelado").parent().parent().show("blind", {}, 1000);
         }
     });
     $("#pageSize").on("keyup", function (event) {

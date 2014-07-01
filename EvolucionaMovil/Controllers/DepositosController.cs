@@ -87,6 +87,11 @@ namespace EvolucionaMovil.Controllers
              }
 
             AbonoVM abonoVM = FillAbonoVM(id);
+            if (abonoVM == null)
+            {
+                Response.Redirect("Depositos", true);
+                return View("Index");
+            }
             //Leer el usuario que viene en la sesión
             int RoleUser = GetRolUser(HttpContext.User.Identity.Name);
 
@@ -307,6 +312,10 @@ namespace EvolucionaMovil.Controllers
         private AbonoVM FillAbonoVM(int id)
         {
             Abono abono = repository.LoadById(id);
+            if (abono == null)
+            {
+                return null;
+            }
 
             //Me aseguro de obtener el abono tal y como estaba en la BD y sin cambios
             repository.context.Refresh(System.Data.Objects.RefreshMode.StoreWins, abono);
@@ -463,7 +472,8 @@ namespace EvolucionaMovil.Controllers
                 (Parameters == null || (
                                 (Parameters.fechaInicio == null || (Parameters.fechaInicio < x.FechaCreacion))
                         && (Parameters.fechaFin == null || Parameters.fechaFin > x.FechaCreacion)
-                        && (Parameters.onlyAplicados ? x.Status == enumEstatusMovimiento.Aplicado.GetHashCode() : true)
+                        //Se modificó el valor APLICADO por PROCESANDO, debido a que es mas conveniente y no necesita mayor cambio
+                        && (Parameters.onlyAplicados ? x.Status == enumEstatusMovimiento.Procesando.GetHashCode() : true)
                         )
                     )
                 ).Select(x => new DepositoVM

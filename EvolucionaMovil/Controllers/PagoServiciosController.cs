@@ -63,6 +63,7 @@ namespace EvolucionaMovil.Controllers
             ViewBag.OnlyAplicados = parameters.onlyAplicados;
             ViewBag.PayCenterId = parameters.PayCenterId;
             ViewBag.PayCenterName = parameters.PayCenterName;
+            ModelState.Clear();
             return View(getPagosServicio(parameters));
         }
 
@@ -70,19 +71,24 @@ namespace EvolucionaMovil.Controllers
         public ViewResult Details(int id)
         {
             PagoVM pagoVM;
-             bool isValid = true;
-             if (User.IsInRole(enumRoles.PayCenter.ToString()))
-             {
-                 isValid = repository.IsAuthorized(PayCenterId, id);
-             }
-             if (!isValid)
-             {
-                 AddValidationMessage(enumMessageType.BRException, "No tiene autorización para este pago.");
-                 pagoVM = new PagoVM();
-                 pagoVM.FechaVencimiento = Convert.ToDateTime ("01/01/1999");
-                 return View(pagoVM);
-             }
-             pagoVM = FillPagoVM(id);
+            bool isValid = true;
+            if (User.IsInRole(enumRoles.PayCenter.ToString()))
+            {
+                isValid = repository.IsAuthorized(PayCenterId, id);
+            }
+            if (!isValid)
+            {
+                AddValidationMessage(enumMessageType.BRException, "No tiene autorización para este pago.");
+                pagoVM = new PagoVM();
+                pagoVM.FechaVencimiento = Convert.ToDateTime("01/01/1999");
+                return View(pagoVM);
+            }
+            pagoVM = FillPagoVM(id);
+            if (pagoVM == null)
+            {
+                Response.Redirect("PagoServicios", true);
+                return View("Index");
+            }
             int RoleUser = GetRolUser(HttpContext.User.Identity.Name);
             ViewBag.Role = RoleUser;
 
@@ -370,7 +376,8 @@ namespace EvolucionaMovil.Controllers
                 (Parameters == null || (
                                 (Parameters.fechaInicio == null || (Parameters.fechaInicio < x.FechaCreacion))
                         && (Parameters.fechaFin == null || Parameters.fechaFin > x.FechaCreacion)
-                        && (Parameters.onlyAplicados ? x.Status == enumEstatusMovimiento.Aplicado.GetHashCode() : true)
+                        //Se modificó el valor APLICADO por PROCESANDO, debido a que es mas conveniente y no necesita mayor cambio
+                        && (Parameters.onlyAplicados ? x.Status == enumEstatusMovimiento.Procesando.GetHashCode() : true)
                         )
                     )
                 ).Select(x => new PagoServicioVM
@@ -401,8 +408,10 @@ namespace EvolucionaMovil.Controllers
                     ));
             }
 
-            if (Parameters != null && Parameters.onlyAplicados)
-                pagosServicioVM = pagosServicioVM.Where(x => x.Status == enumEstatusMovimiento.Aplicado.ToString());
+            //Estas líneas están de más, ya que el filtro se aplicó arriba
+            //if (Parameters != null && Parameters.onlyAplicados)
+            //    //Se modificó el valor APLICADO por PROCESANDO, debido a que es mas conveniente y no necesita mayor cambio
+            //    pagosServicioVM = pagosServicioVM.Where(x => x.Status == enumEstatusMovimiento.Procesando.ToString());
 
             if (Parameters != null && !string.IsNullOrEmpty(Parameters.searchString))
                 pagosServicioVM = pagosServicioVM.Where(x => x.NombreCliente.ToLower().Contains(Parameters.searchString.ToLower()) || x.Servicio.ToLower().Contains(Parameters.searchString.ToLower()));
@@ -494,6 +503,10 @@ namespace EvolucionaMovil.Controllers
             try
             {
                 Pago pago = repository.LoadById(id);
+                if (pago == null)
+                {
+                    return null;
+                }
 
                 //Me aseguro de obtener el pago tal y como estaba en la BD y sin cambios
                 repository.context.Refresh(System.Data.Objects.RefreshMode.StoreWins, pago);

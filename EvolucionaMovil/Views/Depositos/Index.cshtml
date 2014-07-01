@@ -52,8 +52,8 @@
             Últimos
             <input type="text" id="pageSize" name="pageSize" class="small" value="@ViewBag.PageSize"/>
             movimientos
-            <input type="checkbox" class="small" id="aplicadosOnly" @(ViewBag.OnlyAplicados ? "Checked" : "")/>
-            <label id="lblAplicadosOnly" for="aplicadosOnly">Sólo aplicados</label>
+            <input type="checkbox" class="small" name="onlyAplicados" id="aplicadosOnly" @(ViewBag.OnlyAplicados ? "Checked" : "")/>
+            <label id="lblAplicadosOnly" for="aplicadosOnly">Sólo Pendientes</label>
           </div>
     </div>
 </form>

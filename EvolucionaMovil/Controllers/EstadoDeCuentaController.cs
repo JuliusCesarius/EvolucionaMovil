@@ -219,7 +219,8 @@ namespace EvolucionaMovil.Controllers
                                 (Parameters.fechaInicio == null || (Parameters.fechaInicio < x.FechaCreacion))
                         && (Parameters.fechaFin == null || Parameters.fechaFin > x.FechaCreacion)
                         && (Parameters.searchString == null || (x.UserName.ContainsInvariant(Parameters.searchString) || x.Clave.ContainsInvariant(Parameters.searchString) || ((enumMotivo)x.Motivo).ToString().ContainsInvariant(Parameters.searchString) || ((enumEstatusMovimiento)x.Status).ToString().ContainsInvariant(Parameters.searchString)))
-                        && (Parameters.onlyAplicados?x.Status == enumEstatusMovimiento.Aplicado.GetHashCode():true)
+                        //Se modificó el valor APLICADO por PROCESANDO, debido a que es mas conveniente y no necesita mayor cambio
+                        && (Parameters.onlyAplicados?x.Status == enumEstatusMovimiento.Procesando.GetHashCode():true)
                         )
                     )
                 ).Select(x => new EstadoCuentaVM

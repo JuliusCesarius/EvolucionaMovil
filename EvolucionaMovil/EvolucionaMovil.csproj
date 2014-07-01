@@ -358,6 +358,7 @@
     <Content Include="Scripts\PayCenters.js" />
     <Content Include="Scripts\Preafiliacion.js" />
     <Content Include="Scripts\prefixfree.min.js" />
+    <Content Include="Scripts\Prospectos.js" />
     <Content Include="Scripts\RegistroPaycenter.js" />
     <Content Include="Scripts\Depositos-Report.js" />
     <Content Include="Scripts\simpleGrid.js" />

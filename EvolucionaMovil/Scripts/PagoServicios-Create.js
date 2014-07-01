@@ -176,35 +176,33 @@ function getDetalleServicio() {
             divCampos.html("");
             $(data).each(function (i, item) {
                 var divEditor = ("#div" + this.DetalleServicioId);
-                var nombre = this.DetalleServicioId;
-                divCampos.append("<div class='editor-label'><label for='" + nombre + "'>" + this.Campo + "</label></div><div id='div" + this.DetalleServicioId + "'  class='editor-field'></div>");
-                $(divEditor).append($('<input/>').attr('id', nombre).attr('name', nombre).attr('type', 'Text').attr('data-val', true).attr('data-val-required', "El campo es requerido").addClass('text-box single-line'));
-                $(divEditor).append($('<span/>').attr('data-valmsg-for', nombre).attr('data-valmsg-replace', true).addClass('field-validation-error'));
-                setValidation(nombre, this.Tipo);
+                var nombre = this.Campo;
+                var id = this.DetalleServicioId;
+                divCampos.append("<div class='editor-label'><label for='" + id + "'>" + nombre + "</label></div><div id='div" + this.DetalleServicioId + "'  class='editor-field'></div>");
+                $(divEditor).append($('<input/>').attr('id', id).attr('name', id).attr('type', 'Text').attr('data-val', true).attr('data-val-required', "El campo es requerido").addClass('text-box single-line'));
+                $(divEditor).append($('<span/>').attr('data-valmsg-for', id).attr('data-valmsg-replace', true).addClass('field-validation-error'));
+                setValidation(id, this.Tipo);
 
                 var EsRefencia = this.EsReferencia;
-                if (EsRefencia) 
-                { //typeof EsRefencia === 'string' &&
+                if (EsRefencia) { //typeof EsRefencia === 'string' &&
                     var CampoReferencia = "<div class='editor-field'><input class='text-box single-line ui-autocomplete-input' id='IdRefConfirm' name='Referencia' type='text' value='' autocomplete='off'>" +
                     "<span id='msgRefConfirm' class='field-validation-error' generate='true' data-valmsg-for='IdRefConfirm' data-valmsg-replace='true'>" +
-                    "<span id='msgRefConfirm1' for='IdRefConfirm' generated='true' class=''>El campo Confirmar Referencia es requerido.</span></span>"+
+                    "<span id='msgRefConfirm1' for='IdRefConfirm' generated='true' class=''>El campo Confirmar Referencia es requerido.</span></span>" +
                     "<input type='hidden' id='hdReferencia' name='hdReferencia' value='" + nombre + "' /></div>";
 
-                    divCampos.append("<div class='editor-label'><label id='refCapConfirmacion' for='IdRefConfirm'>Confirmar " + this.Campo + "</label> </div>" + CampoReferencia);                   
+                    divCampos.append("<div class='editor-label'><label id='refCapConfirmacion' for='IdRefConfirm'>Confirmar " + this.Campo + "</label> </div>" + CampoReferencia);
                 }
 
             });
             $("label").inFieldLabels();
             $.validator.unobtrusive.parseDynamicContent($(divCampos));
-            if ($("#hdReferencia"))
-            {
-                if ($("#" + $("#hdReferencia").val())[0])
-                {
+            if ($("#hdReferencia")) {
+                if ($("#" + $("#hdReferencia").val())[0]) {
 
                     $("#" + $("#hdReferencia").val()).on("blur", ReferenciaChanged);
                     $("#" + $("#hdReferencia").val()).on("focus", ChangetoText);
-                     $("#IdRefConfirm").on("blur", ValidateRefencia);
-                     $("#IdRefConfirm").on("focus", ChangetoPw);
+                    $("#IdRefConfirm").on("blur", ValidateRefencia);
+                    $("#IdRefConfirm").on("focus", ChangetoPw);
                 }
             }
 

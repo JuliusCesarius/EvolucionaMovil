@@ -20,7 +20,7 @@ namespace EvolucionaMovil.Models
         [DisplayName("Fecha de vencimiento")]
         public DateTime? FechaVencimiento { get; set; }
         public string FechaCreacionString { get { return FechaCreacion.ToString("dd/MMMM/yyy") + " " + FechaCreacion.ToShortTimeString(); } }
-        public String FechaVencimientoString { get { return ((DateTime)FechaVencimiento).ToString("dd/MMMM/yyy"); } }
+        public String FechaVencimientoString { get { return FechaVencimiento!=null?((DateTime)FechaVencimiento).ToString("dd/MMMM/yyy"):string.Empty; } }
         [Min(10)]
         [Required(ErrorMessage = "El importe es requerido")]
         public decimal? Importe { get; set; }

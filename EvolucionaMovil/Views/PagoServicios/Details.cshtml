@@ -139,5 +139,15 @@
             }
          </div>
     </div>
-    @Html.ActionLink("Regresar", "Index", null, new { @class = "freshbutton-blue small" }) 
+    @if (ViewBag.Role == enumRoles.Staff.GetHashCode() || ViewBag.Role == enumRoles.Administrator.GetHashCode())
+    {
+        @Html.ActionLink("Anterior", "Details/" + (Model.PagoId - 1).ToString(), null, new { @class = "freshbutton-blue small" })
+    }
+    
+    @Html.ActionLink("Ir a listado", "Index", null, new { @class = "freshbutton-blue small" }) 
+
+    @if (ViewBag.Role == enumRoles.Staff.GetHashCode() || ViewBag.Role == enumRoles.Administrator.GetHashCode())
+    {
+        @Html.ActionLink("Siguiente", "Details/" + (Model.PagoId + 1).ToString(), null, new { @class = "freshbutton-blue small" }) 
+    }
 </fieldset>
