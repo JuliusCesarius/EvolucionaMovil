@@ -18,6 +18,11 @@ namespace EvolucionaMovil.Repositories
         {
             return context.Pagos.Any(x => x.PayCenterId == PayCenterId && x.PagoId == PagoId);
         }
+
+        public IEnumerable<SP_PagosSel_Result> GetPagosList(int PayCenterId)
+        {
+            return context.SP_PagosSel(PayCenterId).ToList();
+        }
     }
 
 }

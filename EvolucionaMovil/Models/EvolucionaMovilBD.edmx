@@ -177,7 +177,7 @@
           <Property Name="Clave" Type="varchar" MaxLength="50" />
         </EntityType>
         <!--Errors Found During Generation:
-      warning 6002: The table/view 'EvolucionaMovilBD_PROD.dbo.BancoCuentaCaptions' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      warning 6002: The table/view 'EvolucionaMovilBD.dbo.BancoCuentaCaptions' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
       -->
         <EntityType Name="BancoCuentaCaptions">
           <Key>
@@ -368,7 +368,7 @@
           <Property Name="Baja" Type="bit" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-      warning 6002: The table/view 'EvolucionaMovilBD_PROD.dbo.Parametros' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      warning 6002: The table/view 'EvolucionaMovilBD.dbo.Parametros' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
       -->
         <EntityType Name="Parametros">
           <Key>
@@ -506,7 +506,7 @@
           <Property Name="PayCenterName" Type="varchar" Nullable="false" MaxLength="50" />
         </EntityType>
         <!--Errors Found During Generation:
-      warning 6002: The table/view 'EvolucionaMovilBD_PROD.dbo.Resumen_Movimientos' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      warning 6002: The table/view 'EvolucionaMovilBD.dbo.Resumen_Movimientos' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
       -->
         <EntityType Name="Resumen_Movimientos">
           <Key>
@@ -828,6 +828,9 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="SP_PagosSel" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="PayCenterId" Type="int" Mode="In" />
+        </Function>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
@@ -940,6 +943,9 @@
             <End Role="MovimientosEmpresa" EntitySet="MovimientoEmpresas" />
           </AssociationSet>
           <EntitySet Name="Resumen_Movimientos" EntityType="EvolucionaMovilBDModel.Resumen_Movimientos" />
+          <FunctionImport Name="SP_PagosSel" ReturnType="Collection(EvolucionaMovilBDModel.SP_PagosSel_Result)" >
+            <Parameter Name="PayCenterId" Mode="In" Type="Int32" />
+          </FunctionImport>
           </EntityContainer>
         <EntityType Name="Banco">
           <Key>
@@ -1613,6 +1619,19 @@
           <Property Type="Int32" Name="CuentaId" />
           <Property Type="DateTime" Name="FechaActualizacion" Nullable="false" />
         </EntityType>
+        <ComplexType Name="SP_PagosSel_Result">
+          <Property Type="Int32" Name="PagoId" Nullable="false" />
+          <Property Type="String" Name="Folio" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Servicio" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="ClienteNombre" Nullable="true" MaxLength="80" />
+          <Property Type="Int32" Name="PayCenterId" Nullable="true" />
+          <Property Type="String" Name="Nombre" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Comentarios" Nullable="true" MaxLength="500" />
+          <Property Type="Decimal" Name="Importe" Nullable="false" Precision="19" />
+          <Property Type="DateTime" Name="FechaCreacion" Nullable="false" Precision="23" />
+          <Property Type="DateTime" Name="FechaVencimiento" Nullable="false" Precision="23" />
+          <Property Type="Int16" Name="Status" Nullable="true" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1988,6 +2007,23 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="SP_PagosSel" FunctionName="EvolucionaMovilBDModel.Store.SP_PagosSel">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="EvolucionaMovilBDModel.SP_PagosSel_Result">
+                <ScalarProperty Name="PagoId" ColumnName="PagoId" />
+                <ScalarProperty Name="Folio" ColumnName="Folio" />
+                <ScalarProperty Name="Servicio" ColumnName="Servicio" />
+                <ScalarProperty Name="ClienteNombre" ColumnName="ClienteNombre" />
+                <ScalarProperty Name="PayCenterId" ColumnName="PayCenterId" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Comentarios" ColumnName="Comentarios" />
+                <ScalarProperty Name="Importe" ColumnName="Importe" />
+                <ScalarProperty Name="FechaCreacion" ColumnName="FechaCreacion" />
+                <ScalarProperty Name="FechaVencimiento" ColumnName="FechaVencimiento" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

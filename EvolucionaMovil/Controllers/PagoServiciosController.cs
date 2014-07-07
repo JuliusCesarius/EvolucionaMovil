@@ -360,15 +360,8 @@ namespace EvolucionaMovil.Controllers
         private SimpleGridResult<PagoServicioVM> getPagosServicio(ServiceParameterVM Parameters = null)
         {
 
-            IEnumerable<Pago> pagos;
-            if (PayCenterId == 0)
-            {
-                pagos = repository.ListAll().OrderByDescending(m => m.FechaCreacion);
-            }
-            else
-            {
-                pagos = repository.GetByPayCenterId(PayCenterId).OrderByDescending(m => m.FechaCreacion);
-            }
+            IEnumerable<SP_PagosSel_Result> pagos;
+            pagos = repository.GetPagosList(PayCenterId);
 
             SimpleGridResult<PagoServicioVM> simpleGridResult = new SimpleGridResult<PagoServicioVM>();
 
@@ -382,16 +375,16 @@ namespace EvolucionaMovil.Controllers
                     )
                 ).Select(x => new PagoServicioVM
                  {
-                     PayCenterId = x.PayCenterId,
-                     Folio = x.Ticket != null ? x.Ticket.Folio : "NA",
+                     PayCenterId = x.PayCenterId != null ? (int)x.PayCenterId : 0,
+                     Folio = x.Folio != null ? x.Folio : "NA",
                      Servicio = x.Servicio,
                      NombreCliente = x.ClienteNombre,
-                     PayCenterName = x.PayCenter != null ? x.PayCenter.Nombre : "[Desconocido]",
+                     PayCenterName = x.Nombre != null ? x.Nombre : "[Desconocido]",
                      PagoId = x.PagoId,
                      //todo:Optimizar esta consulta para que no haga un load por cada registro que levante.
-                     Comentarios = x.Movimiento.Movimientos_Estatus.Count > 0 ? x.Movimiento.Movimientos_Estatus.OrderByDescending(y => y.Movimiento_EstatusId).FirstOrDefault().Comentarios : "Sin comentarios",
+                     Comentarios = x.Comentarios != null? x.Comentarios : "Sin comentarios",
                      Monto = x.Importe.ToString("C"),
-                     FechaCreacion = x.Movimiento.FechaCreacion.GetCurrentTime().ToString(),
+                     FechaCreacion = x.FechaCreacion.GetCurrentTime().ToString(),
                      FechaVencimiento = x.FechaVencimiento.GetCurrentTime().ToString(),
                      Status = ((enumEstatusMovimiento)x.Status).ToString()
                  });
