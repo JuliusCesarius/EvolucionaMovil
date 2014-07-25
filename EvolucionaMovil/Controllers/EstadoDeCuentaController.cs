@@ -199,18 +199,18 @@ namespace EvolucionaMovil.Controllers
 
         private SimpleGridResult<EstadoCuentaVM> getEstadoDeCuenta(ServiceParameterVM Parameters = null)
         {
-            IEnumerable<Movimiento> movimientos;
+            IEnumerable<SP_MovimientosSel_Result> movimientos;
             if (PayCenterId == 0)
             {
                 //Le paso el 9 para que solome traiga el estado de cuenta de EvolucionaMovil
-                movimientos = repository.GetMovimientos(enumTipoCuenta.Pago_de_Servicios.GetHashCode(), ProveedorId: PROVEEDOR_EVOLUCIONAMOVIL);
+                movimientos = repository.GetMovimientosList(enumTipoCuenta.Pago_de_Servicios.GetHashCode(), ProveedorId: PROVEEDOR_EVOLUCIONAMOVIL);
             }
             else
             {
                 //Julius:Comenté esta línea porque no filtraba solo los de Pago de servicios
                 //movimientos = repository.GetMovimientosByPayCenterId(PayCenterId);
                 //Le paso el 9 para que solome traiga el estado de cuenta de EvolucionaMovil
-                movimientos = repository.GetMovimientos(enumTipoCuenta.Pago_de_Servicios.GetHashCode(), PayCenterId, PROVEEDOR_EVOLUCIONAMOVIL);
+                movimientos = repository.GetMovimientosList(enumTipoCuenta.Pago_de_Servicios.GetHashCode(), PayCenterId, PROVEEDOR_EVOLUCIONAMOVIL);
             }
 
             SimpleGridResult<EstadoCuentaVM> simpleGridResult = new SimpleGridResult<EstadoCuentaVM>();
@@ -232,8 +232,8 @@ namespace EvolucionaMovil.Controllers
                     Id = x.Id,
                     CuentaOrigenId = x.CuentaOrigenId,
                     Clave = x.Clave,
-                    Comentarios = getComentarioCambioEstatus(x),
-                    Concepto = getConceptoString(x),
+                    Comentarios =x.Comentarios,
+                    Concepto = x.Concepto + " - " + ((enumMotivo)x.Motivo).ToString(),
                     Abono = x.IsAbono ? x.Monto.ToString("C2", ci) : string.Empty,
                     Cargo = !x.IsAbono ? x.Monto.ToString("C2", ci) : string.Empty,
                     Saldo = ((enumEstatusMovimiento)x.Status) == enumEstatusMovimiento.Procesando ||

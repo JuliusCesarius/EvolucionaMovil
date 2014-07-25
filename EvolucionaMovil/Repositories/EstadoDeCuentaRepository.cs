@@ -108,5 +108,9 @@ namespace EvolucionaMovil.Repositories
             //ToDo: Checar si hay que validar algún estatus
             return context.Movimientos.Where(m => m.PayCenterId == PayCenterId && m.Baja == false).OrderByDescending(m => m.FechaActualizacion);
         }
+        public IEnumerable<SP_MovimientosSel_Result> GetMovimientosList(int TipoCuentaId = -1, int PayCenterId = -1, int ProveedorId = -1)
+        {
+            return context.SP_MovimientosSel(TipoCuentaId, PayCenterId, ProveedorId).ToList();
+        }
     }
 }

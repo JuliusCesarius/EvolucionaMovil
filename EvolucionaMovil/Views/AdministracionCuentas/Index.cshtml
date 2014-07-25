@@ -1,4 +1,4 @@
-﻿@model IEnumerable<EvolucionaMovil.Models.Resumen_Movimientos>
+﻿@model IEnumerable<EvolucionaMovil.Models.SP_ResumenMovimientosEmpresaSel_Result>
 
 @{
     ViewBag.Title = "Index";
@@ -6,9 +6,15 @@
 
 <h2>Index</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
+<form method="post" name="filterForm" action="">
+    <input type="text" name="PayCenterName" placeholder = "PayCenter" value="@ViewBag.Filtro.PayCenterName"/>
+    <input type="text" name="Status" placeholder = "Status" value="@ViewBag.Filtro.Status"/>
+    <input type="text" name="Motivo" placeholder = "Motivo" value="@ViewBag.Filtro.Motivo"/>
+    <input type="text" name="MovimientoOrigen" placeholder = "Movimiento" value="@ViewBag.Filtro.MovimientoOrigen"/>
+    <input type="text" name="FechaIni" placeholder = "Fecha Inicial" value="@ViewBag.Filtro.FechaIni"/>
+    <input type="text" name="FechaFin" placeholder = "Fecha Final" value="@ViewBag.Filtro.FechaFin"/>
+    <input type="submit" value ="Filtrar"/>
+</form>
 <table>
     <tr>
         <th>

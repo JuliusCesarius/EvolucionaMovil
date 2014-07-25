@@ -18,8 +18,25 @@ namespace EvolucionaMovil.Controllers
 
         public ViewResult Index()
         {
-            var movimientoempresas = db.Resumen_Movimientos;
-            return View(movimientoempresas.OrderByDescending(x=>x.FechaActualizacion).ToList());
+            var movimientoempresas = db.SP_ResumenMovimientosEmpresaSel(null,null,null,null,null,null);
+            ViewBag.Filtro = new MovimientoEmpresaFilterVM();
+            return View(movimientoempresas.ToList());
+        }
+
+        [HttpPost]
+        public ViewResult Index(string PayCenterName, int? Status, int? Motivo, string MovimientoOrigen, DateTime? FechaIni, DateTime? FechaFin)
+        {
+            var movimientoempresas = db.SP_ResumenMovimientosEmpresaSel(PayCenterName, Status, Motivo, MovimientoOrigen, FechaIni, FechaFin);
+            ViewBag.Filtro = new MovimientoEmpresaFilterVM
+            {
+                FechaFin = FechaFin,
+                FechaIni = FechaIni,
+                Motivo = Motivo,
+                MovimientoOrigen = MovimientoOrigen,
+                PayCenterName = PayCenterName,
+                Status = Status
+            };
+            return View(movimientoempresas.ToList());
         }
 
         //
